@@ -1,13 +1,13 @@
 import React from 'react';
 
+
 function NavUser() {
     return (
-        <div className="wrapper">
-            <nav className="topnav navbar navbar-light">
-                <button type="button" className="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
-                    <i className="fe fe-menu navbar-toggler-icon"></i>
+        <div class="wrapper">
+            <nav class="topnav navbar navbar-light">
+                <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+                    <i class="fe fe-menu navbar-toggler-icon"></i>
                 </button>
-
                 <ul className="nav">
                     <li className="nav-item">
                         <a className="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="dark">
@@ -36,6 +36,8 @@ function NavUser() {
             </nav>
         </div>
     );
+
 }
+
 
 export default NavUser;
