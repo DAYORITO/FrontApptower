@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ContainerTable } from "./Components/ContainerTable";
+import Nav from "./Components/Nav/Nav";
+import NavUser from "./Components/Nav/NavUser";
 
 ReactDOM.createRoot(document.getElementById('main')).render(
 
