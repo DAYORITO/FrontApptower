@@ -1,9 +1,9 @@
-
 export const Nav = () => {
     return (
+        <>
 
         <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
-            <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+            <a href="#" class="btn collapseSidebar d-lg-none toggle-btn text-muted ml-2 mt-3" data-toggle="toggle">
                 <i class="fe fe-x"><span class="sr-only"></span></i>
             </a>
             <nav class="vertnav navbar navbar-light">
@@ -86,6 +86,7 @@ export const Nav = () => {
             </nav >
 
         </aside >
+        </>
     )
 }
 

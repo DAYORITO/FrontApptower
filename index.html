@@ -281,5 +281,33 @@
       gtag('js', new Date());
       gtag('config', 'UA-56159088-1');
     </script>
+    <script>
+      // Función para mostrar/ocultar el sidebar
+      function toggleSidebar() {
+        $("#leftSidebar").toggleClass("show");
+      }
+    
+      // Evento de clic en el botón para mostrar/ocultar el sidebar
+      $(".toggle-btn").click(function(e) {
+        e.preventDefault();
+        toggleSidebar();
+      });
+    
+      // Verifica el tamaño de la pantalla al cargar la página
+      $(document).ready(function() {
+        if ($(window).width() < 992) {
+          $("#leftSidebar").removeClass("show");
+        }
+      });
+    
+      // Escucha cambios en el tamaño de la pantalla
+      $(window).resize(function() {
+        if ($(window).width() < 992) {
+          $("#leftSidebar").removeClass("show");
+        } else {
+          $("#leftSidebar").addClass("show");
+        }
+      });
+    </script>
   </body>
 </html>
