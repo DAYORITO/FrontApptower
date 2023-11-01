@@ -1,16 +1,12 @@
-
-
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Nav } from "./Components/Nav";
-import NavUser from "./Components/NavUser";
+import { ContainerTable } from "./Components/ContainerTable";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('main')).render(
 
     <React.StrictMode>
-        <NavUser></NavUser>
-        <Nav></Nav>
-
+    
+        <ContainerTable title = 'Owners'></ContainerTable>
 
     </React.StrictMode>
 )
