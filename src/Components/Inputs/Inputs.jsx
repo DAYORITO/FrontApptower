@@ -3,7 +3,7 @@ import React from 'react'
 function Inputs({name, value, onChange, placeholder, type, id}) {
   return (
     <>
-      <div className='form-group mb-3 col-sm-12 col-md-12 bg-danger'>
+      <div className='form-group mb-3 col-sm-12 col-md-12'>
         <label htmlFor={name} className='form-label'>{name}</label>
         <input
           type={type}
