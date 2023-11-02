@@ -1,13 +1,13 @@
 /* ===== Scrollbar CSS ===== */
   /* Firefox */
   * {
-    scrollbar-width: thin;
-    scrollbar-color: #dedede #ffffff;
+    scrollbar-width: auto;
+    scrollbar-color: #e6e6e6 #ffffff;
   }
 
   /* Chrome, Edge, and Safari */
   *::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
   }
 
   *::-webkit-scrollbar-track {
@@ -15,7 +15,7 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #dedede;
-    border-radius: 7px;
-    border: 2px inset #85a9ff;
+    background-color: #e6e6e6;
+    border-radius: 10px;
+    border: 1px solid #e5edff;
   }
