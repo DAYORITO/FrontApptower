@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ContainerTable } from "./Components/ContainerTable";
+import { Owners } from "./Pages/Owners/owners";
+import { Residents } from "./Pages/Residents/Residents";
 
 ReactDOM.createRoot(document.getElementById('main')).render(
-
     <React.StrictMode>
-    
-        <ContainerTable title = 'Owners'></ContainerTable>
+
+        <Residents/>
 
     </React.StrictMode>
-)
+);
