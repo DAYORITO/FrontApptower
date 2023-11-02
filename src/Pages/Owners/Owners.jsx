@@ -23,7 +23,9 @@ export const Owners = () => {
                 </Thead>
                 <Tbody>
                     <Row>
+                        <Actions accion='Edit owner'></Actions>
                         <Actions></Actions>
+
                     </Row>
                     <Row>
                         <Actions></Actions>
