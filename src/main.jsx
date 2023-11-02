@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { ContainerTable } from "./Components/ContainerTable";
 import { PageLayout } from "./Components/PageLayout";
 import VisitorsCreate from "./Pages/Visitors/VisitorsCreate";
+import LogIn from "./Pages/LogIn/LogIn";
 ReactDOM.createRoot(document.getElementById('main')).render(
 
     <React.StrictMode>
@@ -12,7 +13,8 @@ ReactDOM.createRoot(document.getElementById('main')).render(
        
         {/* Vista de residentes, tabla */}
         {/* <ContainerTable></ContainerTable> */}
-        <VisitorsCreate/>
+        {/* <VisitorsCreate /> */}
+        <LogIn />
 
     </React.StrictMode>
 )
