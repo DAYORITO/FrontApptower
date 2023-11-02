@@ -1,13 +1,15 @@
-import "./MyCss/RowsStyle.css"
-const RowsOwner = ({
-    module = 'owner',
-    name = 'Owner name',
-    lastName = 'last name owner',
-    docType = 'CC',
-    docNumber = '123456788',
-    phone = '3218298888',
+import "./RowsStyle.css"
+
+export const Row = ({
+    module = 'module name',
+    name = 'name',
+    lastName = 'last name',
+    docType = 'ID',
+    docNumber = '##########',
+    phone = '##########',
     email = 'example@email.com',
-    status = 'Active'
+    status = 'Active',
+    children
 
 }) => {
 
@@ -25,21 +27,24 @@ const RowsOwner = ({
 
             </td>
             <th scope="row">
-                { name + ' ' + lastName } <br />
-                <span className="badge badge-light text-muted">{ docType }</span>
-                <em class="text-muted ml-2">{ docNumber }</em>
+                {name + ' ' + lastName} <br />
+                <span className="badge badge-light text-muted">{docType}</span>
+                <em class="text-muted ml-2">{docNumber}</em>
             </th>
-            <td class="text-muted">{ phone }</td>
-            <td class="text-muted">{ email }</td>
+            <td class="text-muted">{phone}</td>
+            <td class="text-muted">{email}</td>
             <td>
 
                 <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="text-muted sr-only">Action</span>
                 </button>
+
                 <div class="dropdown-menu m-2">
-                    <a class="dropdown-item" href="#"><i class="fe fe-edit fe-12 mr-4"></i>Edit { module } </a>
-                    <a class="dropdown-item" href="#"><i class="fe fe-user-plus fe-12 mr-4"></i>Assing spaces</a>
-        
+
+                    {/* Children must be Actions Components */}
+
+                    {children}
+
                 </div>
 
             </td>
@@ -47,4 +52,3 @@ const RowsOwner = ({
     )
 }
 
-export {RowsOwner}

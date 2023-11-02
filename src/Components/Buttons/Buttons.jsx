@@ -1,4 +1,4 @@
-const ButtonGoTo = ({ value }) => {
+const ButtonGoTo = ({ value = 'New module' }) => {
     return (
         <div className="col-auto">
             <a href="Create" type="button" className="btn btn-primary">
