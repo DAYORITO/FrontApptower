@@ -1,12 +1,13 @@
 import React from 'react'
-import FormContainer from '../../Components/FormContainer/FormContainer'
-import FormColumn from '../../Components/FormContainer/FormColumn'
+import FormContainer from '../../Components/Forms/FormContainer'
+import FormColumn from '../../Components/Forms/FormColumn'
 import Inputs from '../../Components/Inputs/Inputs'
+import FormButton from '../../Components/Forms/FormButton'
 
 function VisitorsCreate() {
   return (
     <>
-         <FormContainer name='Crear visitante'>
+         <FormContainer name='Crear visitante' botones={<FormButton/>}>
                 <Inputs name="Nombre" placeholder="Ingresa tu nombre"></Inputs>
                 <Inputs name="Apellido"></Inputs>
                 <Inputs name="Edad"></Inputs>
@@ -16,6 +17,7 @@ function VisitorsCreate() {
                 <Inputs name="Password" type="Password"></Inputs>
                 <Inputs name="Cabello" type="Password"></Inputs>
                 <Inputs name="Ojos" type="Password"></Inputs>
+                
         </FormContainer>
     </>
   )

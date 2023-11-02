@@ -1,7 +1,7 @@
 import React from 'react'
 import './FormContainer.css'
 
-function FormContainer({name, children}) {
+function FormContainer({name, children, botones}) {
   return (
     <>
         <h1 className="h3 mb-3 text-gray-800">{name}</h1>
@@ -17,6 +17,7 @@ function FormContainer({name, children}) {
                 <div className="row">
                     {children}
                 </div>
+                {botones}
             </div>
         </div>
     </>
