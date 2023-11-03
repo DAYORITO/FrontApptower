@@ -1,4 +1,3 @@
-import React from 'react'
 
 export const Actions = ({accion = "Module name", icon = "fe fe-edit fe-12 mr-4"}) => {
     return (
