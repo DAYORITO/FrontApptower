@@ -46,7 +46,7 @@ export const Aside = () => {
                                     class="ml-1 item-text">Propietarios</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pl-3" asp-controller="Residentes" asp-action="Index"><span
+                                <a class="nav-link pl-3" href="/#/residents/" asp-action="Index"><span
                                     class="ml-1 item-text">Residentes</span></a>
                             </li>
                         </ul>

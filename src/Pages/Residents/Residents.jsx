@@ -14,11 +14,7 @@ import { Aside } from '../../Components/Aside/Aside'
 export const Residents = () => {
     return (
         <>
-            <ContainerHeader>
-                <Nav />
-                <Aside />
-            </ContainerHeader>
-
+            
             <ContainerTable>
                 <DropdownExcel />
                 <SearchButton />
