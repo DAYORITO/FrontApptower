@@ -11,7 +11,7 @@ import { ContainerHeader } from '../../Components/ContainerHeader/containerHeade
 import { Nav } from '../../Components/Nav/Nav'
 import { Aside } from '../../Components/Aside/Aside'
 
-export const Residents = () => {
+export const Users = () => {
     return (
         <>
             <ContainerHeader>
@@ -26,12 +26,15 @@ export const Residents = () => {
                 <TablePerson>
                     <Thead>
                         <Th></Th>
-                        <Th name={'Resident information'}></Th>
-                        <Th name={'Phone'}></Th>
-                        <Th name={'Email'}></Th>
+                        <Th name={'Información Usuario'}></Th>
+                        <Th></Th>
+                        <Th name={'Rol'}></Th>
+                        <Th name={'Telefono'}></Th>
+                        <Th name={'Correo'}></Th>
+
                     </Thead>
                     <Tbody>
-                        <Row>
+                        <Row module='Users' docType='CC' docNumber='102340121' name='Alejandra' lastName='Aguirre' role='Administrador' >
                             <Actions></Actions>
                         </Row>
                         <Row>

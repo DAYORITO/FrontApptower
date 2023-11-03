@@ -38,18 +38,19 @@ import LogIn from './Pages/LogIn/LogIn';
 import { Owners } from './Pages/Owners/owners';
 import { Residents } from './Pages/Residents/Residents';
 import { Nav } from './Components/Nav/Nav';
+import { Users } from "./Pages/Users/UsersList";
 
 const App = () => {
     return (
 
         <HashRouter basename='/'>
-                <Routes>
-                    <Route path='/' element={<LogIn />} />
+            <Routes>
+                <Route path='/' element={<LogIn />} />
+                <Route path='/users/*' element={<Users />} />
+                <Route path='/owners/*' element={<Owners />} />
+                <Route path='/residents/*' element={<Residents />} />
 
-                    <Route path='/owners/*' element={<Owners />}/>
-                    <Route path='/residents/*' element={<Residents />}/>
-
-                </Routes>
+            </Routes>
         </HashRouter>
     )
 }

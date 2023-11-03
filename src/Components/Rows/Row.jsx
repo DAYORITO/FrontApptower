@@ -33,6 +33,7 @@ export const Row = ({
             </th>
             <td class="text-muted">{phone}</td>
             <td class="text-muted">{email}</td>
+
             <td>
 
                 <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

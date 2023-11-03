@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './LogIn.css';
-import Inputs from '../../Components/Inputs/Inputs';
 import ImageIcono from '../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../assets/Person.jpg';
 
@@ -25,7 +24,7 @@ const LogIn = () => {
 
     return (
 
-        <>
+        <div className='container-login'>
             <div className="container-form login">
                 <div className="information">
                     <div className="info-childs">
@@ -37,7 +36,7 @@ const LogIn = () => {
                 <div className="form-information">
                     <div className="form-information-childs">
                         <img src={ImagenPerson} width="70" height="70" alt="" />
-                        <h2>Iniciar Sesión</h2>
+
                         <form className="form">
                             <label>
                                 <i className='bx bx-user'></i>
@@ -68,7 +67,7 @@ const LogIn = () => {
                 <div className="form-information">
                     <div className="form-information-childs">
                         <img src={ImagenPerson} width="70" height="70" alt="" />
-                        <h2>Regístrate</h2>
+
                         <form className="form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridGap: '10px' }}>
                             <label>
 
@@ -104,8 +103,7 @@ const LogIn = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
-
 export default LogIn;
