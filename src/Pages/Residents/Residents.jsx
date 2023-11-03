@@ -14,54 +14,50 @@ import { Aside } from '../../Components/Aside/Aside'
 export const Residents = () => {
     return (
         <>
-        <ContainerHeader>
-            <Nav/>
-            <Aside/>
-        </ContainerHeader>
-        
-        <ContainerTable>
-            <DropdownExcel />
-            <SearchButton />
-            <ButtonGoTo />
-            <TablePerson>
-                <Thead>
-                    <Th></Th>
-                    <Th name={'Resident information'}></Th>
-                    <Th name={'Phone'}></Th>
-                    <Th name={'Email'}></Th>
-                </Thead>
-                <Tbody>
-                    <Row>
-                        <Actions></Actions>
-                    </Row>
-                    <Row>
-                        <Actions></Actions>
-                    </Row>
-                    <Row>
-                        <Actions></Actions>
-                    </Row>
-                    <Row>
-                        <Actions></Actions>
-                    </Row><Row>
-                        <Actions></Actions>
-                    </Row>
-                    <Row>
-                        <Actions></Actions>
-                    </Row><Row>
-                        <Actions></Actions>
-                    </Row>
-                    <Row>
-                        <Actions></Actions>
-                    </Row><Row>
-                        <Actions></Actions>
-                    </Row>
-                    <Row>
-                        <Actions></Actions>
-                    </Row>
-                </Tbody>
-            </TablePerson>
-        </ContainerTable>
+            
+            <ContainerTable>
+                <DropdownExcel />
+                <SearchButton />
+                <ButtonGoTo />
+                <TablePerson>
+                    <Thead>
+                        <Th></Th>
+                        <Th name={'Resident information'}></Th>
+                        <Th name={'Phone'}></Th>
+                        <Th name={'Email'}></Th>
+                    </Thead>
+                    <Tbody>
+                        <Row>
+                            <Actions></Actions>
+                        </Row>
+                        <Row>
+                            <Actions></Actions>
+                        </Row>
+                        <Row>
+                            <Actions></Actions>
+                        </Row>
+                        <Row>
+                            <Actions></Actions>
+                        </Row><Row>
+                            <Actions></Actions>
+                        </Row>
+                        <Row>
+                            <Actions></Actions>
+                        </Row><Row>
+                            <Actions></Actions>
+                        </Row>
+                        <Row>
+                            <Actions></Actions>
+                        </Row><Row>
+                            <Actions></Actions>
+                        </Row>
+                        <Row>
+                            <Actions></Actions>
+                        </Row>
+                    </Tbody>
+                </TablePerson>
+            </ContainerTable>
         </>
-        
+
     )
 }
