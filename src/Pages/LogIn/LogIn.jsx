@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './LogIn.css';
-import Inputs from '../../Components/Inputs/Inputs';
 import ImageIcono from '../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../assets/Person.jpg';
 
