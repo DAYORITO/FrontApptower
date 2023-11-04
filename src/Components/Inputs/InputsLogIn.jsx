@@ -1,22 +1,39 @@
-import React from 'react'
 import './inputsLogIn.css';
+import React, { useState } from 'react';
 
 
-export const InputsLogIn = () => {
+export const InputsLogIn = ({
+  type,
+  name,
+  value,
+  onChange,
+  placeholder,
+  id
+}) => {
+
+  const [inputValue, setInputValue] = useState('');
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  }
+
+  const inputFilled = !!inputValue;
+
   return (
-    <form className="form">
-      <label>
-        <i className={className}></i>
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className={className}
-          id={id} />
-      </label>
-    </form>
+    <label className="input-label">
+      <input
+        type={type}
+        name={name}
+        value={inputValue}
+        onChange={handleChange}
+        id={id}
+        className={inputFilled ? 'input-filled' : ''}
+      />
+
+      <span className="placeholder-label">
+        {placeholder}
+      </span>
+
+    </label>
   );
 }
-

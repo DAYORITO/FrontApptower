@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import './LogIn.css';
 import ImageIcono from '../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../assets/Person.jpg';
+import { InputsLogIn } from '../../Components/Inputs/InputsLogIn';
+import { SelectInput } from '../../Components/Inputs/selectLogIn';
+
 
 const LogIn = () => {
 
@@ -26,32 +29,29 @@ const LogIn = () => {
 
         <div className='container-login'>
             <div className="container-form login">
-                <div className="information">
+                <div className="informations">
                     <div className="info-childs">
                         <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" />
                         <h2>Bienvenido</h2>
-                        <p>Inicia sesión para interactuar con nuestra comunidad residencial.</p>
+                        <p className='loginp'>Inicia sesión para interactuar con nuestra comunidad residencial.</p>
                     </div>
                 </div>
-                <div className="form-information">
+                <div className="form-informations">
                     <div className="form-information-childs">
-                        <img src={ImagenPerson} width="70" height="70" alt="" />
+                        <img src={ImagenPerson} width="75" height="75" alt="" />
 
                         <form className="form">
-                            <label>
-                                <i className='bx bx-user'></i>
-                                <input type="text" placeholder='Usuario' />
-                            </label>
-                            <label>
 
-                                <input type="password" placeholder='Contraseña' />
-                            </label>
+                            <InputsLogIn placeholder='Usuario' type='text' />
+
+                            <InputsLogIn placeholder='Contraseña' type='password' />
                             <div>
                                 <a href="#" className='buttonStyle'>¿Olvidaste la contraseña?</a>
                             </div>
-                            <input type="submit" value="Iniciar Sesión" /><br />
-                            <a href="#" class="buttonStyle" id="sign-up">¿No puedes acceder? Registrarse</a>
+                            <button className='boton-login'>Iniciar Sesión</button><br />
+                            <a href="#" class="buttonStyle" id="sign-up">¿No puedes acceder? Registrate</a>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -61,45 +61,35 @@ const LogIn = () => {
                     <div className="info-childs">
                         <img src={ImageIcono} width="140" height="140" alt="Apptower" />
                         <h2>Bienvenido</h2>
-                        <p>Para unirte a nuestra comunidad por favor regístrate con tus datos</p>
+                        <p className='registerp'>Para unirte a nuestra comunidad por favor regístrate con tus datos</p>
+
+
                     </div>
                 </div>
                 <div className="form-information">
                     <div className="form-information-childs">
-                        <img src={ImagenPerson} width="70" height="70" alt="" />
+                        <img src={ImagenPerson} width="75" height="75" alt="" />
+                        <form className="form-register">
+                            <SelectInput
+                                options={[
+                                    { value: 'CC', label: 'Cédula' },
+                                    { value: 'CE', label: 'Cédula de extranjería' }
+                                ]}
+                                placeholder="Tipo de documento"
 
-                        <form className="form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridGap: '10px' }}>
-                            <label>
+                            />
+                            <InputsLogIn placeholder='Documento' type='number' />
+                            <InputsLogIn placeholder='Nombre' type='text' />
+                            <InputsLogIn placeholder='Apellido' type='text' />
+                            <InputsLogIn placeholder='Correo' type='email' />
+                            <InputsLogIn placeholder='Teléfono' type='number' />
+                            <InputsLogIn placeholder='Contraseña' type='password' />
+                            <InputsLogIn placeholder='Confirmar Contraseña' type='password' />
 
-                                <select name="tipoDoc" id="dropDown">
-                                    <option value="CC">CC</option>
-                                    <option value="CE">CE</option>
-                                </select>
-                            </label>
-                            <label>
-                                <input type="number" placeholder='Documento' />
-                            </label>
-                            <label>
-                                <input type="text" placeholder='Nombre' />
-                            </label>
-                            <label>
-                                <input type="text" placeholder='Apellido' />
-                            </label>
-                            <label>
-                                <input type="email" placeholder='Correo' />
-                            </label>
-                            <label>
-                                <input type="number" placeholder='Teléfono' />
-                            </label>
-                            <label>
-                                <input type="password" placeholder='Contraseña' />
-                            </label>
-                            <label>
-                                <input type="password" placeholder='Confirmar Contraseña' />
-                            </label>
+                            <button className='boton-register'>Registrate</button>
+                            <a href="#" class="buttonStyle" id="sign-in">¿Ya tienes acceso? Inicia sesión</a>
+
                         </form>
-                        <input type="submit" value="Registrarse" id="boton" /><br />
-                        <a href="#" class="buttonStyle" id="sign-in">¿Ya tienes acceso? Inicia sesión</a>
                     </div>
                 </div>
             </div>
