@@ -1,9 +1,8 @@
 import React from 'react'
+import './ModalInputs.css'
 import { useEffect, useRef } from 'react';
-import './Inputs.css'
-
-function Inputs({name, value, onChange, placeholder, type, id}) {
-  const inputRef = useRef(null);
+function ModalInputs({name, value, onChange, placeholder, type, id}) {
+    const inputRef = useRef(null);
     const labelRef = useRef(null);
     console.log(inputRef.current);
     useEffect(() => {
@@ -30,11 +29,9 @@ function Inputs({name, value, onChange, placeholder, type, id}) {
             });
         }
     }, [])
-
   return (
     <>
-
-      <div className='form-group mb-3 col-sm-12 col-md-12 inputContainer'>
+        <div className='form-group mb-3 col-sm-12 col-md-12 inputContainer'>
         <span className='inputSpan'>
         <input
           type={type}
@@ -53,4 +50,4 @@ function Inputs({name, value, onChange, placeholder, type, id}) {
   )
 }
 
-export default Inputs;
+export default ModalInputs

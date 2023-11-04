@@ -1,13 +1,13 @@
 import React from 'react'
 import './FormContainer.css'
 
-function FormContainer({name, children, botones}) {
+function FormContainer({name, children, botones, botonModal}) {
   return (
     <>
-        <h1 className="h3 mb-3 text-gray-800">{name}</h1>
         <div className="card shadow mb-4 rojo">
-            <div className="card-header">
-                <strong className="card-title">{name}</strong>
+            <div className="card-header mt-2 d-flex justify-content-between">
+                <strong className="card-tittle"><h4>{name}</h4></strong>
+                <div>{botonModal}</div>
             </div>
             <div className="card-body" style={{
                 maxHeight: '65vh',
