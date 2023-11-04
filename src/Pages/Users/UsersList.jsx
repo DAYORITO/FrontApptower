@@ -7,18 +7,10 @@ import { Th } from '../../Components/Th/Th'
 import { Tbody } from '../../Components/Tbody/Tbody'
 import { Row } from '../../Components/Rows/Row'
 import { Actions } from '../../Components/Actions/Actions'
-import { ContainerHeader } from '../../Components/ContainerHeader/containerHeader'
-import { Nav } from '../../Components/Nav/Nav'
-import { Aside } from '../../Components/Aside/Aside'
 
 export const Users = () => {
     return (
         <>
-            <ContainerHeader>
-                <Nav />
-                <Aside />
-            </ContainerHeader>
-
             <ContainerTable>
                 <DropdownExcel />
                 <SearchButton />
@@ -27,38 +19,22 @@ export const Users = () => {
                     <Thead>
                         <Th></Th>
                         <Th name={'Información Usuario'}></Th>
-                        <Th></Th>
                         <Th name={'Rol'}></Th>
                         <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>
 
                     </Thead>
                     <Tbody>
-                        <Row module='Users' docType='CC' docNumber='102340121' name='Alejandra' lastName='Aguirre' role='Administrador' >
+                        <Row docType='CC' docNumber='102340121' name='Alejandra' lastName='Aguirre' rol={'Administador'} email='aleja@gmail.com' phone='3145678904'  >
                             <Actions></Actions>
                         </Row>
-                        <Row>
+                        <Row docType='CC' docNumber='104567899' name='Emmanuel' lastName='Tabares' rol={'Residente'} email='emanuel@gmail.com' phone='3156789043'>
                             <Actions></Actions>
                         </Row>
-                        <Row>
+                        <Row docType='CC' docNumber='105678905' name='Daniel' lastName='Rivera' rol={'Residente'} email='daniel@gmail.com' phone='3167890987'>
                             <Actions></Actions>
-                        </Row>
-                        <Row>
-                            <Actions></Actions>
-                        </Row><Row>
-                            <Actions></Actions>
-                        </Row>
-                        <Row>
-                            <Actions></Actions>
-                        </Row><Row>
-                            <Actions></Actions>
-                        </Row>
-                        <Row>
-                            <Actions></Actions>
-                        </Row><Row>
-                            <Actions></Actions>
-                        </Row>
-                        <Row>
+                        </Row >
+                        <Row docType='CC' docNumber='104568291' name='Samuel' lastName='Osorio' rol={'Residente'} email='samuel@gmail.com' phone='300124433 '>
                             <Actions></Actions>
                         </Row>
                     </Tbody>

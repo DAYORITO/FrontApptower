@@ -1,17 +1,19 @@
 import "./RowsStyle.css"
 
 export const Row = ({
-    
+
     module = 'module name',
-    name = 'name',
-    lastName = 'last name',
-    docType = 'ID',
-    docNumber = '##########',
-    phone = '##########',
-    email = 'example@email.com',
+    name,
+    lastName,
+    namerole,
+    docType,
+    docNumber,
+    phone,
+    email,
     status = 'Active',
     rol,
-    children
+    children,
+    descripcion
 
 }) => {
 
@@ -30,16 +32,17 @@ export const Row = ({
             </td>
             <th scope="row">
 
-                {name + ' ' + lastName} <br />
+                {name != null & name != null ? name + ' ' + lastName : null} <br />
                 {/* {rol != null ? <span className="badge  text-success mr-2">{rol}</span> : null} */}
-                <span className="badge badge-light text-secondary ">{docType}</span>
-                <em class="text-muted ml-2">{docNumber}</em>
+                {docType != null ? <span className="badge badge-light text-secondary ">{docType}</span> : null}
+                {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
 
             </th>
-
+            {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
-            <td class="text-muted">{phone}</td>
-            <td class="text-muted">{email}</td>
+            {email != null ? <td class="text-secondary">{email}</td> : null}
+            {phone != null ? <td class="text-secondary">{phone}</td> : null}
+            {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
 
             <td>
 

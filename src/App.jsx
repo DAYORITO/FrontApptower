@@ -8,6 +8,9 @@ import { Residents } from './Pages/Residents/Residents';
 import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
 import VisitorsCreate from "./Pages/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
+import { Users } from "./Pages/Users/UsersList";
+import { Watchman } from "./Pages/Watchmans/WatchmanList";
+import { Rols } from "./Pages/Rols/RolsList";
 
 const App = () => {
     return (
@@ -20,6 +23,9 @@ const App = () => {
                     <Route path='/admin/*' element={<Layout />}>
                         <Route path='residents/' element={<Residents />} />
                         <Route path='residents/create' element={<ResidentCreate />} />
+                        <Route path='users/' element={<Users />} />
+                        <Route path='watchman/' element={<Watchman />} />
+                        <Route path='rols/' element={<Rols />} />
                     </Route>
                     <Route path='/owners/*' element={<Owners />} />
 
