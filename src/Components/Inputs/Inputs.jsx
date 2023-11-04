@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Inputs({name, value, onChange, placeholder, type, id}) {
+function Inputs({ name, value, onChange, placeholder, type, id }) {
   return (
     <>
       <div className='form-group mb-3 col-sm-12 col-md-12'>

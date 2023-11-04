@@ -1,0 +1,14 @@
+.logo {
+    align-items: center;
+    width: 125px;
+    height: 135px;
+    margin-bottom: 0.5px;
+}
+
+#contenedorLogo {
+    border-bottom: 1px solid rgb(201, 201, 201);
+}
+
+#contenedorli {
+    margin-top: 0.7px;
+}

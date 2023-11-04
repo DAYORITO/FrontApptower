@@ -10,4 +10,4 @@ ReactDOM.createRoot(document.getElementById('main')).render(
         <App />
 
     </React.StrictMode>
-);
+)
