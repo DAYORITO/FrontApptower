@@ -7,14 +7,11 @@ import { Th } from '../../Components/Th/Th'
 import { Tbody } from '../../Components/Tbody/Tbody'
 import { Row } from '../../Components/Rows/Row'
 import { Actions } from '../../Components/Actions/Actions'
-import { ContainerHeader } from '../../Components/ContainerHeader/containerHeader'
-import { Nav } from '../../Components/Nav/Nav'
-import { Aside } from '../../Components/Aside/Aside'
 
 export const Residents = () => {
     return (
         <>
-            
+
             <ContainerTable>
                 <DropdownExcel />
                 <SearchButton />
@@ -23,11 +20,20 @@ export const Residents = () => {
                     <Thead>
                         <Th></Th>
                         <Th name={'Resident information'}></Th>
+                        <Th></Th>
+
                         <Th name={'Phone'}></Th>
                         <Th name={'Email'}></Th>
                     </Thead>
                     <Tbody>
-                        <Row>
+                        <Row rol={'Administrador'}
+                            docType='CC'
+                            docNumber='1007238447'
+                            name='Emmanuel'
+                            lastName='Tabares'
+                            phone='3218298707'
+                            email='emanueltabares@gmail.com'
+                        >
                             <Actions></Actions>
                         </Row>
                         <Row>

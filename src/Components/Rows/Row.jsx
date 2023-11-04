@@ -1,6 +1,7 @@
 import "./RowsStyle.css"
 
 export const Row = ({
+    
     module = 'module name',
     name = 'name',
     lastName = 'last name',
@@ -9,6 +10,7 @@ export const Row = ({
     phone = '##########',
     email = 'example@email.com',
     status = 'Active',
+    rol,
     children
 
 }) => {
@@ -27,10 +29,15 @@ export const Row = ({
 
             </td>
             <th scope="row">
+
                 {name + ' ' + lastName} <br />
-                <span className="badge badge-light text-muted">{docType}</span>
+                {/* {rol != null ? <span className="badge  text-success mr-2">{rol}</span> : null} */}
+                <span className="badge badge-light text-secondary ">{docType}</span>
                 <em class="text-muted ml-2">{docNumber}</em>
+
             </th>
+
+            {rol != null ? <td class="text-secondary">{rol}</td> : null}
             <td class="text-muted">{phone}</td>
             <td class="text-muted">{email}</td>
 
