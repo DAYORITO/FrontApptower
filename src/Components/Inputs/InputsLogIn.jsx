@@ -1,11 +1,39 @@
-import React from 'react'
+import './inputsLogIn.css';
+import React, { useState } from 'react';
 
-const InputsLogIn = () => {
+
+export const InputsLogIn = ({
+  type,
+  name,
+  value,
+  onChange,
+  placeholder,
+  id
+}) => {
+
+  const [inputValue, setInputValue] = useState('');
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  }
+
+  const inputFilled = !!inputValue;
+
   return (
-    <div>
-        
-    </div>
-  )
-}
+    <label className="input-label">
+      <input
+        type={type}
+        name={name}
+        value={inputValue}
+        onChange={handleChange}
+        id={id}
+        className={inputFilled ? 'input-filled' : ''}
+      />
 
-export default InputsLogIn
+      <span className="placeholder-label">
+        {placeholder}
+      </span>
+
+    </label>
+  );
+}

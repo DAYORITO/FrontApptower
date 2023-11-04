@@ -13,6 +13,9 @@ import { ParkingSpaces } from "./Pages/ParkingSpaces/ParkingSpaces";
 import { ParkingSpacesCreate } from "./Pages/ParkingSpaces/ParkingSpacesCreate";
 import { Spaces } from "./Pages/Spaces/Spaces";
 import { SpacesCreate } from "./Pages/Spaces/SpacesCreate";
+import { Users } from "./Pages/Users/UsersList";
+import { Watchman } from "./Pages/Watchmans/WatchmanList";
+import { Rols } from "./Pages/Rols/RolsList";
 
 const App = () => {
     return (
@@ -35,6 +38,9 @@ const App = () => {
                         <Route path='spaces/' element={<Spaces />} />
                         <Route path='spaces/create' element={<SpacesCreate />} />
 
+                        <Route path='users/' element={<Users />} />
+                        <Route path='watchman/' element={<Watchman />} />
+                        <Route path='rols/' element={<Rols />} />
                     </Route>
 
                     <Route path='/visitors/create' element={<VisitorsCreate />} />
