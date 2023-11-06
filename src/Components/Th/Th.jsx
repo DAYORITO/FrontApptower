@@ -2,6 +2,6 @@ import React from 'react'
 
 export const Th = ({ name }) => {
   return (
-    <th >{ name }</th>
+    <th class="text-muted">{name}</th>
   )
 }

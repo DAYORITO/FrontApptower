@@ -16,6 +16,9 @@ import { SpacesCreate } from "./Pages/Spaces/SpacesCreate";
 import { Users } from "./Pages/Users/UsersList";
 import { Watchman } from "./Pages/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
+import {RecoverPassword} from './Pages/LogIn/RecoverPassword';
+import { UsersCreate} from "./Pages/Users/UsersCreate";
+
 
 const App = () => {
     return (
@@ -24,6 +27,7 @@ const App = () => {
             <div className='App'>
                 <Routes>
                     <Route path='/' element={<LogIn />} />
+                    <Route path='/recoverpassword' element={<RecoverPassword />} />
 
                     <Route path='/admin/*' element={<Layout />}>
                         <Route path='residents/' element={<Residents />} />
@@ -39,6 +43,7 @@ const App = () => {
                         <Route path='spaces/create' element={<SpacesCreate />} />
 
                         <Route path='users/' element={<Users />} />
+                        <Route path='users/create' element={<UsersCreate />} />
                         <Route path='watchman/' element={<Watchman />} />
                         <Route path='rols/' element={<Rols />} />
                     </Route>

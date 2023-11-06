@@ -1,13 +1,13 @@
-const ButtonGoTo = ({ value = 'New module' }) => {
+const ButtonGoTo = ({ value = 'New module', href }) => {
     return (
         <div className="col-auto">
-            <a href="Create" type="button" className="btn btn-primary">
+            <a href={href} type="button" className="btn btn-primary">
                 <span>{value}</span>
-
             </a>
         </div>
     )
 }
+
 
 const DropdownExcel = () => {
     return (
