@@ -1,0 +1,6 @@
+.table-responsive {
+    max-height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 15px 0px 15px;
+}

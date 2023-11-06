@@ -1,14 +1,12 @@
-import IconHeader from "./IconHeader/IconHeader";
-import ColHeader from "./ColHeader/ColHeader";
+/* eslint-disable react/prop-types */
 
-const Header = () => {
+export const Header = ({ children }) => {
     return (
-        <div className="row mt-5 align-items-center">
-            <IconHeader />
-                        
-            <ColHeader />
-        </div>
-    );
-};
+        <div className="container">
 
-export default Header;
+            <div className="row mt-5 align-items-center table-responsive">
+                {children}
+            </div>
+        </div>
+        )
+}

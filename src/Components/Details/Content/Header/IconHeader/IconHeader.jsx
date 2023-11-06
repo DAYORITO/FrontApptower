@@ -1,11 +1,8 @@
-const IconHeader = () => {
+/* eslint-disable react/prop-types */
+export const IconHeader = ({ name }) => {
     return (
         <div className="col-md-3 text-center mb-5">
-            <div className="avatar avatar-xl">
-                <img src="./assets/avatars/face-1.jpg" alt="User Avatar" className="avatar-img rounded-circle" />
-            </div>
+            <i className={name}></i>
         </div>
-    );
+    )
 }
-
-export default IconHeader;

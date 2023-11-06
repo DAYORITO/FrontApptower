@@ -1,13 +1,13 @@
 
 import "./Pages/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import React from 'react'
 import LogIn from './Pages/LogIn/LogIn';
 import { Owners } from './Pages/Owners/owners';
 import { Residents } from './Pages/Residents/Residents';
 import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
 import VisitorsCreate from "./Pages/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
+import { ResidentDetail } from "./Pages/Residents/ResidentDetail";
 
 const App = () => {
     return (
@@ -18,9 +18,11 @@ const App = () => {
                     <Route path='/' element={<LogIn />} />
 
                     <Route path='/admin/*' element={<Layout />}>
-                        <Route path='residents/' element={<Residents />} />
+                        <Route path='residents/*' element={<Residents />} />
                         <Route path='residents/create' element={<ResidentCreate />} />
+                        <Route path='residents/detail' element={<ResidentDetail />} />
                     </Route>
+                                    
                     <Route path='/owners/*' element={<Owners />} />
 
                     <Route path='/visitors/create' element={<VisitorsCreate />} />
