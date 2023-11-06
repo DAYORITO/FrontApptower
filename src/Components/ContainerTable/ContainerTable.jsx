@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ContainerTable = ({ title = 'Nombre modulo', children   }) => {
+export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
     return (
         <div className="container-fluid" >
             <div className="card-body">
-                <div style={{ padding: "0 2% 0 2%" }} className="toolbar">
+                <div style={{ padding: "2% 2% 0 2%" }} className="toolbar">
                     <form className="form">
 
                         <div className="row align-items-center my-4">
@@ -13,7 +13,7 @@ export const ContainerTable = ({ title = 'Nombre modulo', children   }) => {
                                 <h2 className="h3 mb-0 page-title ml-2">{title}</h2>
 
                             </div>
-                            
+
                             {/* Children must be Table Components */}
                             {children}
 
@@ -24,11 +24,11 @@ export const ContainerTable = ({ title = 'Nombre modulo', children   }) => {
 
                 </div>
 
-                <nav aria-label="Table Paging" className="mb-0 text-muted my-4">
+                <nav aria-label="Table Paging" className="mb- text-muted my-4">
                     <ul className="pagination justify-content-center mb-0">
                         <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                        <li className="page-item"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item active"><a className="page-link" href="#">2</a></li>
+                        <li className="page-item  active"><a className="page-link" href="#">1</a></li>
+                        <li className="page-item"><a className="page-link" href="#">2</a></li>
                         <li className="page-item"><a className="page-link" href="#">3</a></li>
                         <li className="page-item"><a className="page-link" href="#">Next</a></li>
                     </ul>

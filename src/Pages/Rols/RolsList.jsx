@@ -11,10 +11,10 @@ import { Actions } from '../../Components/Actions/Actions'
 export const Rols = () => {
     return (
         <>
-            <ContainerTable>
+            <ContainerTable title='Roles'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo />
+                <ButtonGoTo value='Crear Rol' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -23,14 +23,14 @@ export const Rols = () => {
 
                     </Thead>
                     <Tbody>
-                        <Row namerole={'Administrador'} descripcion={'Todas las funcionalidades'}  >
-                            <Actions></Actions>
+                        <Row icon='fe fe-settings fe-16 text-muted' namerole={'Administrador'} descripcion={'Todas las funcionalidades'}  >
+                            <Actions accion='Editar'></Actions>
                         </Row>
-                        <Row namerole={'Residente'} descripcion={'Habitante del conjunto residencial'}>
-                            <Actions></Actions>
+                        <Row icon='fe fe-settings fe-16 text-muted' namerole={'Residente'} descripcion={'Habitante del conjunto residencial'}>
+                            <Actions accion='Editar'></Actions>
                         </Row>
-                        <Row namerole={'Vigilante'} descripcion={'Seguridad del conjunto'}>
-                            <Actions></Actions>
+                        <Row icon='fe fe-settings fe-16 text-muted' namerole={'Vigilante'} descripcion={'Seguridad del conjunto'}>
+                            <Actions accion='Editar'></Actions>
                         </Row >
                     </Tbody>
                 </TablePerson>

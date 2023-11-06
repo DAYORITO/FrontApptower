@@ -1,10 +1,10 @@
 import React from 'react'
 
-function FormColumn({children}) {
+function FormColumn({ children }) {
   return (
-        <div className="col-xl-6 col-sm-12">
-            {children}
-        </div>
+    <div className="col-xl-6 col-sm-12">
+      {children}
+    </div>
   )
 }
 
