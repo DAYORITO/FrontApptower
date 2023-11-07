@@ -1,6 +1,6 @@
 import React from 'react'
-import FormContainer from '../../Components/FormContainer/FormContainer'
-import FormColumn from '../../Components/FormContainer/FormColumn'
+import FormContainer from '../../Components/Forms/FormContainer'
+import FormColumn from '../../Components/Forms/FormColumn'
 import Inputs from '../../Components/Inputs/Inputs'
 
 export const ResidentCreate = () => {
