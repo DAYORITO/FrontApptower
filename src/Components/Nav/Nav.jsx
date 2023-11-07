@@ -5,13 +5,6 @@ export const Nav = () => {
     return (
         <div className="wrapper">
             <nav className="topnav navbar navbar-light">
-                <button
-                    type="button"
-                    className="navbar-toggler text-muted mt-2 p-0 mr-3"
-                    data-toggle="collapse"
-                    data-target="#navbarNav">
-                    <i className="fe fe-menu navbar-toggler-icon"></i>
-                </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="nav">
                         <li className="nav-item">

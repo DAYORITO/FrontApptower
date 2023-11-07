@@ -76,7 +76,7 @@ const LogIn = () => {
                                     { value: 'CC', label: 'Cédula' },
                                     { value: 'CE', label: 'Cédula de extranjería' }
                                 ]}
-                                placeholder="Tipo de documento"
+
 
                             />
                             <InputsLogIn placeholder='Documento' type='number' />

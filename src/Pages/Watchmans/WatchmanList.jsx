@@ -15,7 +15,7 @@ export const Watchman = () => {
                 <DropdownExcel />
                 <SearchButton />
 
-                <ButtonGoTo value='Crear Vigilante' />
+                <ButtonGoTo value='Crear Vigilante' href='/#/admin/watchman/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>

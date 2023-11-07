@@ -11,8 +11,9 @@ import { Layout } from "./Pages/Layout/Layout";
 import { Users } from "./Pages/Users/UsersList";
 import { Watchman } from "./Pages/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
-import {RecoverPassword} from './Pages/LogIn/RecoverPassword';
-import { UsersCreate} from "./Pages/Users/UsersCreate";
+import { RecoverPassword } from './Pages/LogIn/RecoverPassword';
+import { UsersCreate } from "./Pages/Users/UsersCreate";
+import { WatchmanCreate } from "./Pages/Watchmans/WatchmanCreate";
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />
                         <Route path='watchman/' element={<Watchman />} />
+                        <Route path='watchman/create' element={<WatchmanCreate />} />
                         <Route path='rols/' element={<Rols />} />
                     </Route>
                     <Route path='/owners/*' element={<Owners />} />
