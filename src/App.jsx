@@ -6,6 +6,7 @@ import LogIn from './Pages/LogIn/LogIn';
 import { Owners } from './Pages/Owners/owners';
 import { Residents } from './Pages/Residents/Residents';
 import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
+
 import VisitorsCreate from "./Pages/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
 import { OwnersCreate } from "./Pages/Owners/OwnersCreate";
@@ -18,6 +19,9 @@ import { Watchman } from "./Pages/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
 import {RecoverPassword} from './Pages/LogIn/RecoverPassword';
 import { UsersCreate} from "./Pages/Users/UsersCreate";
+import Visitors from "./Pages/Visitors/Visitors";
+import GuestIncomeCreate from "./Pages/GuestIncome/GuestIncomeCreate";
+import GuestIncome from "./Pages/GuestIncome/GuestIncome";
 
 
 const App = () => {
@@ -41,8 +45,13 @@ const App = () => {
 
                         <Route path='spaces/' element={<Spaces />} />
                         <Route path='spaces/create' element={<SpacesCreate />} />
-                        <Route path='visitors/create' element={<VisitorsCreate />} />
 
+                        <Route path='visitors/create' element={<VisitorsCreate />} />
+                        <Route path='visitors/' element={<Visitors />} />
+
+                        <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                        <Route path='guest_income/' element={<GuestIncome />} />
+                        
 
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />
