@@ -19,7 +19,7 @@ export const Owners = () => {
             <ContainerTable title='Propietarios'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Add new ower' />
+                <ButtonGoTo value='Add new ower' href='/#/admin/owners/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>

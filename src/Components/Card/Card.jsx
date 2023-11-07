@@ -1,3 +1,4 @@
+import "./Card.css"
 
 export const Card = ({ icon = 'fe fe-home fe-16 ', children, name = 'Name', type = 'type', residents, notions, status='Active' }) => {
 
@@ -13,7 +14,7 @@ export const Card = ({ icon = 'fe fe-home fe-16 ', children, name = 'Name', type
 
 
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow mb-4">
+            <div id="Card" class="card shadow mb-4">
                 <div class="card-body file-list">
                     <div class="d-flex align-items-center">
                         <div class="circle circle-md bg-light">

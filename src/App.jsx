@@ -41,6 +41,8 @@ const App = () => {
 
                         <Route path='spaces/' element={<Spaces />} />
                         <Route path='spaces/create' element={<SpacesCreate />} />
+                        <Route path='visitors/create' element={<VisitorsCreate />} />
+
 
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />
