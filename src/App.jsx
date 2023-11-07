@@ -46,9 +46,9 @@ const App = () => {
                         <Route path='users/create' element={<UsersCreate />} />
                         <Route path='watchman/' element={<Watchman />} />
                         <Route path='rols/' element={<Rols />} />
+                        
                     </Route>
 
-                    <Route path='/visitors/create' element={<VisitorsCreate />} />
 
 
                 </Routes>

@@ -7,7 +7,7 @@ export const Layout = () => {
     return (
         <>
             <ContainerHeader>
-                {/* <Nav /> */}
+                <Nav />
                 <Aside />
             </ContainerHeader>
             <div className='appContent' onClick={() => setUserOptionsOpen(false)}>

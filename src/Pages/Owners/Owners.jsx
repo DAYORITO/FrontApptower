@@ -15,14 +15,11 @@ import { Aside } from '../../Components/Aside/Aside'
 export const Owners = () => {
     return (
         <>
-            <ContainerHeader>
-                <Nav />
-                <Aside />
-            </ContainerHeader>
-            <ContainerTable>
+
+            <ContainerTable title='Propietarios'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Add new owern' />
+                <ButtonGoTo value='Add new ower' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>

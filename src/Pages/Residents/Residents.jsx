@@ -12,7 +12,6 @@ export const Residents = () => {
     return (
         <>
 
-            <ContainerTable title='Residentes'>
             <ContainerTable title='Residents'>
                 <DropdownExcel />
                 <SearchButton />
