@@ -31,10 +31,12 @@ const App = () => {
                         <Route path='users/create' element={<UsersCreate />} />
                         <Route path='watchman/' element={<Watchman />} />
                         <Route path='rols/' element={<Rols />} />
+                        <Route path='visitors/create' element={<VisitorsCreate />} />
                     </Route>
                     <Route path='/owners/*' element={<Owners />} />
+                    
 
-                    <Route path='/visitors/create' element={<VisitorsCreate />} />
+                    
 
 
                 </Routes>
