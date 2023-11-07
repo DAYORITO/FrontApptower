@@ -70,7 +70,7 @@ export const Aside = () => {
                                 subprocess={"Residentes"}
                             />
                             <DropDownList
-                                href='/#/admin'
+                                href='/#/admin/visitors'
                                 subprocess={"Visitantes"}
                             />
                             <DropDownList
@@ -90,6 +90,7 @@ export const Aside = () => {
                             module={'Ingresos'}>
                             <DropDownList
                                 subprocess={"Ingresos"}
+                                href='/#/admin/guest_income/'
                             />
 
                             <DropDownList
