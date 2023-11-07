@@ -11,10 +11,10 @@ import { Actions } from '../../Components/Actions/Actions'
 export const Users = () => {
     return (
         <>
-            <ContainerTable>
+            <ContainerTable title='Usuarios'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo />
+                <ButtonGoTo value='Crear Usuario' href='/#/admin/users/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -26,16 +26,16 @@ export const Users = () => {
                     </Thead>
                     <Tbody>
                         <Row docType='CC' docNumber='102340121' name='Alejandra' lastName='Aguirre' rol={'Administador'} email='aleja@gmail.com' phone='3145678904'  >
-                            <Actions></Actions>
+                            <Actions accion='Editar'></Actions>
                         </Row>
                         <Row docType='CC' docNumber='104567899' name='Emmanuel' lastName='Tabares' rol={'Residente'} email='emanuel@gmail.com' phone='3156789043'>
-                            <Actions></Actions>
+                            <Actions accion='Editar'></Actions>
                         </Row>
                         <Row docType='CC' docNumber='105678905' name='Daniel' lastName='Rivera' rol={'Residente'} email='daniel@gmail.com' phone='3167890987'>
-                            <Actions></Actions>
+                            <Actions accion='Editar'></Actions>
                         </Row >
                         <Row docType='CC' docNumber='104568291' name='Samuel' lastName='Osorio' rol={'Residente'} email='samuel@gmail.com' phone='300124433 '>
-                            <Actions></Actions>
+                            <Actions accion='Editar'></Actions>
                         </Row>
                     </Tbody>
                 </TablePerson>

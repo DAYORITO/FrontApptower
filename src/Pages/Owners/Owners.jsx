@@ -15,10 +15,10 @@ import { Aside } from '../../Components/Aside/Aside'
 export const Owners = () => {
     return (
         <>
-        <ContainerHeader>
-            <Nav/>
-            <Aside/>
-        </ContainerHeader>
+            <ContainerHeader>
+                <Nav />
+                <Aside />
+            </ContainerHeader>
             <ContainerTable>
                 <DropdownExcel />
                 <SearchButton />

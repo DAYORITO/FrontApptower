@@ -11,10 +11,11 @@ import { Actions } from '../../Components/Actions/Actions'
 export const Watchman = () => {
     return (
         <>
-            <ContainerTable>
+            <ContainerTable title='Vigilantes'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo />
+
+                <ButtonGoTo value='Crear Vigilante' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -24,17 +25,19 @@ export const Watchman = () => {
 
                     </Thead>
                     <Tbody>
-                        <Row docType='CC' docNumber='102340121' name='Andres' lastName='Amaya' email='andres@gmail.com' phone='315678943'  >
-                            <Actions></Actions>
+                        <Row icon='fe fe-shield fe-16 text-muted' module='Vigilantes' docType='CC' docNumber='102340121' name='Andres' lastName='Amaya' email='andres@gmail.com' phone='315678943'  >
+                            <Actions accion='Editar'></Actions>
                         </Row>
-                        <Row docType='CC' docNumber='104567832' name='Willian' lastName='Torres' email='willian@gmail.com' phone='321456789'>
-                            <Actions></Actions>
+                        <Row icon='fe fe-shield fe-16 text-muted' docType='CC' docNumber='104567832' name='Willian' lastName='Torres' email='willian@gmail.com' phone='321456789'>
+                            <Actions accion='Editar'></Actions>
                         </Row>
-                        <Row docType='CC' docNumber='120382842' name='Jorge' lastName='Orozco' email='jorge@gmail.com' phone='312123564'>
-                            <Actions></Actions>
+                        <Row icon='fe fe-shield fe-16 text-muted' docType='CC' docNumber='120382842' name='Jorge' lastName='Orozco' email='jorge@gmail.com' phone='312123564'>
+                            <Actions
+                                accion='Editar'
+                            ></Actions>
                         </Row >
-                        <Row docType='CC' docNumber='139288383' name='Juan' lastName='Lopéz' email='juan@gmail.com' phone='301224223'>
-                            <Actions></Actions>
+                        <Row icon='fe fe-shield fe-16 text-muted' docType='CC' docNumber='139288383' name='Juan' lastName='Lopéz' email='juan@gmail.com' phone='301224223'>
+                            <Actions accion='Editar'></Actions>
                         </Row>
                     </Tbody>
                 </TablePerson>

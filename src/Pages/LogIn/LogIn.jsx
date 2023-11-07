@@ -6,6 +6,7 @@ import { InputsLogIn } from '../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../Components/Inputs/selectLogIn';
 
 
+
 const LogIn = () => {
 
     useEffect(() => {
@@ -46,7 +47,7 @@ const LogIn = () => {
 
                             <InputsLogIn placeholder='Contraseña' type='password' />
                             <div>
-                                <a href="#" className='buttonStyle'>¿Olvidaste la contraseña?</a>
+                                <a href="/#/recoverpassword" className='buttonStyle'>¿Olvidaste la contraseña?</a>
                             </div>
                             <button className='boton-login'>Iniciar Sesión</button><br />
                             <a href="#" class="buttonStyle" id="sign-up">¿No puedes acceder? Registrate</a>

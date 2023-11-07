@@ -1,14 +1,21 @@
 .logo {
     align-items: center;
-    width: 125px;
-    height: 135px;
-    margin-bottom: 0.5px;
+    width: 135px;
+    height: 145px;
+    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
-#contenedorLogo {
-    border-bottom: 1px solid rgb(201, 201, 201);
-}
 
 #contenedorli {
     margin-top: 0.7px;
+}
+
+.nav-link:hover {
+    background-color: #ec0000;
+    color: #555;
+}
+
+.fe-menu {
+    margin-top: 2px !important;
 }

@@ -12,10 +12,10 @@ export const Residents = () => {
     return (
         <>
 
-            <ContainerTable>
+            <ContainerTable title='Residentes'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo />
+                <ButtonGoTo value='Crear Residente' href='/#/admin/residents/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
