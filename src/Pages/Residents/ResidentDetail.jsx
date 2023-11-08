@@ -21,57 +21,71 @@ export const ResidentDetail = () => {
         <Header>
           <IconHeader name="fe fe-24 fe-user" />
           <ColHeader name={'Residente'}>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit nisl ullamcorper, rutrum metus in, congue lectus. In hac habitasse platea dictumst. Cras urna quam, malesuada vitae risus at, pretium blandit sapien.</p>
+
+
           </ColHeader>
           <ActionHeader>
 
           </ActionHeader>
         </Header>
         <NavTab>
-          <NavItem name={'uno'}/>
-          <NavItem name={'dos'}/>
-          <NavItem name={'tres'}/>
-          <NavItem name={'cuatro'}/>
-          <NavItem name={'cinco'}/>
-          <NavItem name={'seis'}/>
+
+          <NavItem name={'Reservas'} />
+          <NavItem name={'Apartamentos'} />
+
         </NavTab>
-        <TablePerson>
+        <TablePerson id={'detail'}>
           <Thead>
             <Th></Th>
             <Th name={'Resident information'}></Th>
-            <Th></Th>
-
-            <Th name={'Phone'}></Th>
             <Th name={'Email'}></Th>
+            <Th name={'Phone'}></Th>
           </Thead>
           <Tbody>
-            <Row>
-              <Actions></Actions>
+            <Row
+              docType='TI'
+              docNumber='2001234567'
+              name='Maria'
+              lastName='Lopez'
+              phone='3216666666'
+              email='maria@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
             </Row>
-            <Row>
-              <Actions></Actions>
+            <Row
+              docType='CC'
+              docNumber='3003456789'
+              name='Carlos'
+              lastName='Rodriguez'
+              phone='3217777777'
+              email='carlos@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
             </Row>
-            <Row>
-              <Actions></Actions>
+
+            <Row
+              docType='CC'
+              docNumber='4004567890'
+              name='Laura'
+              lastName='Gonzalez'
+              phone='3218888888'
+              email='laura@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
             </Row>
-            <Row>
-              <Actions></Actions>
-            </Row><Row>
-              <Actions></Actions>
+
+            <Row
+              docType='CC'
+              docNumber='5005678901'
+              name='Pedro'
+              lastName='Martinez'
+              phone='3219999999'
+              email='pedro@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
             </Row>
-            <Row>
-              <Actions></Actions>
-            </Row><Row>
-              <Actions></Actions>
-            </Row>
-            <Row>
-              <Actions></Actions>
-            </Row><Row>
-              <Actions></Actions>
-            </Row>
-            <Row>
-              <Actions></Actions>
-            </Row>
+
+
           </Tbody>
         </TablePerson>
       </Details>

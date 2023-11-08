@@ -1,4 +1,4 @@
-
+import "./NavTab.css";
 /* eslint-disable react/prop-types */
 export const NavTab = ({ children }) => {
   return (

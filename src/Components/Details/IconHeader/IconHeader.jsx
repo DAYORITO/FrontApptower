@@ -1,15 +1,14 @@
-/* eslint-disable react/prop-types */
-export const IconHeader = ({ name }) => {
-    const divStyle = {
-        width: '20%',  
-        height: '40px',
-}
+import "./IconHeader.css";
+
+export const IconHeader = ({ name = "fe fe-24 fe-user" }) => {
+
+
 return (
-    <div className="col-md-3 text-center mb-5">
-        <div className="circle bg-dark" style={divStyle}>
-            <span className="fe fe-user fe-32 text-muted"></span>
+    <div className="col-md-3 text-center mb-5" >
+        <div className="circle bg-muted ml-5" id='circle' >
+            <span className={name}></span>
         </div>
-        <span className="dot dot-md bg-success mr-1"></span>
+        <span className="dot dot-lg bg-success ml-2 "></span>
     </div>
 )
 }

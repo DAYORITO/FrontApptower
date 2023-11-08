@@ -3,7 +3,7 @@ import "./Pages/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import React from 'react'
 import LogIn from './Pages/LogIn/LogIn';
-import { Owners } from './Pages/Owners/owners';
+import { Owners } from './Pages/Owners/Owners';
 import { Residents } from './Pages/Residents/Residents';
 import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
 
@@ -23,6 +23,7 @@ import Visitors from "./Pages/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Watchmans/WatchmanCreate";
+import { ResidentDetail } from "./Pages/Residents/ResidentDetail";
 
 
 const App = () => {
@@ -37,6 +38,8 @@ const App = () => {
                     <Route path='/admin/*' element={<Layout />}>
                         <Route path='residents/' element={<Residents />} />
                         <Route path='residents/create' element={<ResidentCreate />} />
+                        <Route path='residents/details' element={<ResidentDetail />} />
+
 
                         <Route path='owners/' element={<Owners />} />
                         <Route path='owners/create' element={<OwnersCreate />} />
