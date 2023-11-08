@@ -5,8 +5,6 @@ import ImagenPerson from '../../assets/Person.jpg';
 import { InputsLogIn } from '../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../Components/Inputs/selectLogIn';
 
-
-
 const LogIn = () => {
 
     useEffect(() => {
