@@ -1,26 +1,20 @@
-import React from 'react'
-import './FormContainer.css'
+import React from 'react';
+import './FormContainer.css'; 
 
 function FormContainer({name, children, buttons, modalButton}) {
   return (
     <>
-        <div className="card shadow mb-4 pl-5 pr-5">
+        <div id='formContainer' className="card shadow mb-4 pl-5 pr-5">
             <div className="card-header mt-2 d-flex justify-content-between">
-                <strong className="card-tittle"><h4>{name}</h4></strong>
+                <strong className="card-title"><h4>{name}</h4></strong>
                 <div>{modalButton}</div>
             </div>
-            <div className="card-body" style={{
-                maxHeight: '80vh',
-                overflow: 'hidden',
-                overflowY: 'scroll',
-            }}>
+            <div className="card-body">
                 <form>
-                <div className="row">
-                    
-                    {children}
-                    {buttons}
-                    
-                </div>
+                  <div className="row">
+                      {children}
+                      {buttons}
+                  </div>
                 </form>
             </div>
         </div>
@@ -28,4 +22,4 @@ function FormContainer({name, children, buttons, modalButton}) {
   )
 }
 
-export default FormContainer
+export default FormContainer;

@@ -1,7 +1,7 @@
 import React from 'react'
 import './FormContainer.css'
 
-function FormButton({name, funcion, backButton}) {
+function FormButton({name, funcion, backButton, ref}) {
   return (
     <>
         <div className='botones'>
@@ -9,7 +9,7 @@ function FormButton({name, funcion, backButton}) {
                 <input type="submit" value={name} class="btn btn-primary btn-block" />
             </div>
             <div class="form-group">
-                <a class="btn btn-light btn-block">{backButton}</a>
+                <a href={ref} class="btn btn-light btn-block">{backButton}</a>
             </div>
         </div>
     </>

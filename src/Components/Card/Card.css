@@ -1,0 +1,11 @@
+#Card {
+    border-radius: 15px;
+    /* min-height: 32rem; */
+  
+    max-height: 32rem;
+    /* margin: 0 50px 0 50px; */
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: #e6e6e6 #ffffff; 
+  }
