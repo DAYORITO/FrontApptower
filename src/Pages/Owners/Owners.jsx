@@ -29,6 +29,7 @@ export const Owners = () => {
                     </Thead>
                     <Tbody>
                         <Row
+                            
                             name='Emmanuel'
                             lastName='Tabares Ortiz'
                             docType='CC'

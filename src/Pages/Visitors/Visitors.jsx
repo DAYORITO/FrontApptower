@@ -10,11 +10,11 @@ import { Actions } from '../../Components/Actions/Actions'
 
 
 function Visitors() {
-    
-  return (
-    
-    <>
-     <ContainerTable title='Visitors'>
+
+    return (
+
+        <>
+            <ContainerTable title='Visitantes'>
                 <DropdownExcel />
                 <SearchButton />
                 <ButtonGoTo value='Crear Visitante' href='/#/admin/visitors/create' />
@@ -96,8 +96,8 @@ function Visitors() {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
-    </>
-  )
+        </>
+    )
 }
 
 export default Visitors
