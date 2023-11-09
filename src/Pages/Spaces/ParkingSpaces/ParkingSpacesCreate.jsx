@@ -1,6 +1,4 @@
-import React, {useState} from 'react'
 import FormContainer from '../../../Components/Forms/FormContainer'
-import FormColumn from '../../../Components/Forms/FormColumn'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 

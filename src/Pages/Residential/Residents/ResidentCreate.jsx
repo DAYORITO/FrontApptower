@@ -1,7 +1,6 @@
-import React, {useState} from 'react'
-import FormContainer from '../../Components/Forms/FormContainer'
-import Inputs from '../../Components/Inputs/Inputs'
-import FormButton from '../../Components/Forms/FormButton'
+import FormContainer from '../../../Components/Forms/FormContainer'
+import Inputs from '../../../Components/Inputs/Inputs'
+import FormButton from '../../../Components/Forms/FormButton'
 
 export const ResidentCreate = () => {
     return (

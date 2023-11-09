@@ -1,7 +1,7 @@
 import React from 'react'
-import FormContainer from '../../Components/Forms/FormContainer'
-import FormButton from '../../Components/Forms/FormButton'
-import Inputs from '../../Components/Inputs/Inputs'
+import FormContainer from '../../../Components/Forms/FormContainer'
+import FormButton from '../../../Components/Forms/FormButton'
+import Inputs from '../../../Components/Inputs/Inputs'
 
 function GuestIncomeCreate() {
   return (

@@ -1,28 +1,28 @@
 
-import "./Pages/LogIn/LogIn.css"
+import "./Pages/Users/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import LogIn from './Pages/LogIn/LogIn';
-import { Owners } from './Pages/Owners/Owners';
-import { Residents } from './Pages/Residents/Residents';
-import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
-import VisitorsCreate from "./Pages/Visitors/VisitorsCreate";
+import LogIn from './Pages/Users/LogIn/LogIn';
+import { Owners } from './Pages/Residential/Owners/Owners';
+import { Residents } from './Pages/Residential/Residents/Residents';
+import { ResidentCreate } from "./Pages/Residential/Residents/ResidentCreate";
+import VisitorsCreate from "./Pages/Residential/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
-import { OwnersCreate } from "./Pages/Owners/OwnersCreate";
-import { ParkingSpaces } from "./Pages/ParkingSpaces/ParkingSpaces";
-import { ParkingSpacesCreate } from "./Pages/ParkingSpaces/ParkingSpacesCreate";
-import { Spaces } from "./Pages/Spaces/Spaces";
-import { SpacesCreate } from "./Pages/Spaces/SpacesCreate";
-import { Users } from "./Pages/Users/UsersList";
-import { Watchman } from "./Pages/Watchmans/WatchmanList";
-import { Rols } from "./Pages/Rols/RolsList";
-import { RecoverPassword } from './Pages/LogIn/RecoverPassword';
-import { UsersCreate } from "./Pages/Users/UsersCreate";
-import Visitors from "./Pages/Visitors/Visitors";
-import GuestIncomeCreate from "./Pages/GuestIncome/GuestIncomeCreate";
-import GuestIncome from "./Pages/GuestIncome/GuestIncome";
-import { WatchmanCreate } from "./Pages/Watchmans/WatchmanCreate";
-import { ResidentDetail } from "./Pages/Residents/ResidentDetail";
-
+import { OwnersCreate } from "./Pages/Residential/Owners/OwnersCreate";
+import { ParkingSpaces } from "./Pages/Spaces/ParkingSpaces/ParkingSpaces";
+import { ParkingSpacesCreate } from "./Pages/Spaces/ParkingSpaces/ParkingSpacesCreate";
+import { Spaces } from "./Pages/Spaces/Spaces/Spaces";
+import { SpacesCreate } from "./Pages/Spaces/Spaces/SpacesCreate";
+import { Users } from "./Pages/Users/Users/UsersList";
+import { Watchman } from "./Pages/Surveillance/Watchmans/WatchmanList";
+import { Rols } from "./Pages/Users/Rols/RolsList";
+import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
+import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
+import Visitors from "./Pages/Residential/Visitors/Visitors";
+import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
+import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
+import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
+import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
+import { Booking } from "./Pages/Booking/Booking/booking";
 
 const App = () => {
     return (
@@ -50,6 +50,7 @@ const App = () => {
 
                         {/* Bookings */}
                             {/* Booking */}
+                            <Route path='booking/' element={<Booking/>}/>
 
                             {/* GuestIncome */}
                             <Route path='guest_income/create' element={<GuestIncomeCreate />} />
