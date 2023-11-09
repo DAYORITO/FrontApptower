@@ -1,9 +1,9 @@
-import { Actions } from "../../Components/Actions/Actions"
-import { ButtonGoTo, DropdownExcel, SearchButton } from "../../Components/Buttons/Buttons"
-import { Card } from "../../Components/Card/Card"
-import { ContainerCard } from "../../Components/ContainerCard/ContainerCard"
-import { ContainerTable } from "../../Components/ContainerTable/ContainerTable"
-import { TablePerson } from "../../Components/Tables/Tables"
+import { Actions } from "../../../Components/Actions/Actions"
+import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons"
+import { Card } from "../../../Components/Card/Card"
+import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard"
+import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
+import { TablePerson } from "../../../Components/Tables/Tables"
 
 export const Spaces = () => {
   return (
