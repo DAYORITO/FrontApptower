@@ -1,0 +1,16 @@
+.container-fluid {
+
+    background-color: white !important;
+    border-radius: 15px;
+    height: 90vh;
+    width: auto;
+    margin: 5vh 20vh 5vh 20vh;
+    padding-top: 0vh ;
+    
+}
+
+#align-items-center {
+
+    padding: 0;
+    margin: 5px;
+}

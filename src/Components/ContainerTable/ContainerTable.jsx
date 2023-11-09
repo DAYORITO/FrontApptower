@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './ContainerTable.css'
 
 export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
     return (
         <div className="container-fluid" >
             <div className="card-body">
-                <div style={{ padding: "2% 2% 0 2%" }} className="toolbar">
-                    <div className="row align-items-center my-4">
+                <div className="toolbar">
+                    <div id="align-items-center" className="row align-items-center my-4">
                         <div className="col">
                             <h2 className="h3 mb-0 page-title ml-2">{title}</h2>
 
