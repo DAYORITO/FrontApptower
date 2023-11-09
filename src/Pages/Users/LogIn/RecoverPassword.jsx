@@ -1,7 +1,7 @@
 import './LogIn.css';
 import ImageIcono from '../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../assets/Person.jpg';
-import { InputsLogIn } from '../../Components/Inputs/InputsLogIn';
+import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import React from 'react'
 
 

@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import FormContainer from '../../Components/Forms/FormContainer'
-import FormColumn from '../../Components/Forms/FormColumn'
-import Inputs from '../../Components/Inputs/Inputs'
-import FormButton from '../../Components/Forms/FormButton'
-import InputsSelect from '../../Components/Inputs/InputsSelect'
+import FormContainer from '../../../Components/Forms/FormContainer'
+import FormColumn from '../../../Components/Forms/FormColumn'
+import Inputs from '../../../Components/Inputs/Inputs'
+import FormButton from '../../../Components/Forms/FormButton'
+import InputsSelect from '../../../Components/Inputs/InputsSelect'
 
 
 function VisitorsCreate() {

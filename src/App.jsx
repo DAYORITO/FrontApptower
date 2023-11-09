@@ -1,12 +1,10 @@
 
 import "./Pages/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import React from 'react'
 import LogIn from './Pages/LogIn/LogIn';
 import { Owners } from './Pages/Owners/Owners';
 import { Residents } from './Pages/Residents/Residents';
 import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
-
 import VisitorsCreate from "./Pages/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
 import { OwnersCreate } from "./Pages/Owners/OwnersCreate";
@@ -36,37 +34,57 @@ const App = () => {
                     <Route path='/recoverpassword' element={<RecoverPassword />} />
 
                     <Route path='/admin/*' element={<Layout />}>
-                        <Route path='residents/' element={<Residents />} />
-                        <Route path='residents/create' element={<ResidentCreate />} />
-                        <Route path='residents/details' element={<ResidentDetail />} />
+                        {/* Configuration */}
+                            {/* Rols */}
+                            <Route path='rols/' element={<Rols />} />
 
+                        {/* Users */}
+                            {/* User */}
+                            <Route path='users/' element={<Users />} />
+                            <Route path='users/create' element={<UsersCreate />} />
 
-                        <Route path='owners/' element={<Owners />} />
-                        <Route path='owners/create' element={<OwnersCreate />} />
+                        {/* Surveillance */}
+                            {/* Watchman */}
+                            <Route path='watchman/' element={<Watchman />} />
+                            <Route path='watchman/create' element={<WatchmanCreate />} />
 
-                        <Route path='parkingSpaces/' element={<ParkingSpaces />} />
-                        <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
+                        {/* Bookings */}
+                            {/* Booking */}
 
-                        <Route path='spaces/' element={<Spaces />} />
-                        <Route path='spaces/create' element={<SpacesCreate />} />
+                            {/* GuestIncome */}
+                            <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                            <Route path='guest_income/' element={<GuestIncome />} />
 
-                        <Route path='visitors/create' element={<VisitorsCreate />} />
-                        <Route path='visitors/' element={<Visitors />} />
+                        {/* Spaces */}
+                            {/* Space */}
+                            <Route path='spaces/' element={<Spaces />} />
+                            <Route path='spaces/create' element={<SpacesCreate />} />
 
-                        <Route path='guest_income/create' element={<GuestIncomeCreate />} />
-                        <Route path='guest_income/' element={<GuestIncome />} />
+                            {/* Parking Spaces */}
+                            <Route path='parkingSpaces/' element={<ParkingSpaces />} />
+                            <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
 
+                        {/* Residential */}
+                            {/* Vehicles */}
 
-                        <Route path='users/' element={<Users />} />
-                        <Route path='users/create' element={<UsersCreate />} />
-                        <Route path='watchman/' element={<Watchman />} />
-                        <Route path='watchman/create' element={<WatchmanCreate />} />
-                        <Route path='rols/' element={<Rols />} />
+                            {/* Owners */}
+                            <Route path='owners/' element={<Owners />} />
+                            <Route path='owners/create' element={<OwnersCreate />} />
+
+                            {/* Visitors */}
+                            <Route path='visitors/create' element={<VisitorsCreate />} />
+                            <Route path='visitors/' element={<Visitors />} />
+
+                            {/* Residents */}
+                            <Route path='residents/' element={<Residents />} />
+                            <Route path='residents/create' element={<ResidentCreate />} />
+                            <Route path='residents/details' element={<ResidentDetail />} />
+                        {/* Notifications */}
+                            {/* Notification */}
+
+                            {/* Fines */}
 
                     </Route>
-
-
-
                 </Routes>
             </div>
         </HashRouter>
