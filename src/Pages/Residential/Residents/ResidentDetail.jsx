@@ -1,18 +1,18 @@
 /* eslint-disable no-undef */
 
-import { Thead } from '../../Components/Thead/Thead'
-import { Th } from '../../Components/Th/Th'
-import { Header } from "../../Components/Details/Header/Header"
-import { IconHeader } from "../../Components/Details/IconHeader/IconHeader"
-import { ColHeader } from "../../Components/Details/ColHeader/ColHeader"
-import { Tbody } from "../../Components/Tbody/Tbody"
-import { TablePerson } from "../../Components/Tables/Tables"
-import { NavItem } from "../../Components/Details/NavTab/NavItem"
-import { NavTab } from "../../Components/Details/NavTab/NavTab"
-import { Row } from "../../Components/Rows/Row"
-import { Actions } from "../../Components/Actions/Actions"
-import { Details } from "../../Components/Details/details"
-import { ActionHeader } from "../../Components/Details/ActionHeader/ActionHeader"
+import { Thead } from '../../../Components/Thead/Thead'
+import { Th } from '../../../Components/Th/Th'
+import { Header } from "../../../Components/Details/Header/Header"
+import { IconHeader } from "../../../Components/Details/IconHeader/IconHeader"
+import { ColHeader } from "../../../Components/Details/ColHeader/ColHeader"
+import { Tbody } from "../../../Components/Tbody/Tbody"
+import { TablePerson } from "../../../Components/Tables/Tables"
+import { NavItem } from "../../../Components/Details/NavTab/NavItem"
+import { NavTab } from "../../../Components/Details/NavTab/NavTab"
+import { Row } from "../../../Components/Rows/Row"
+import { Actions } from "../../../Components/Actions/Actions"
+import { Details } from "../../../Components/Details/details"
+import { ActionHeader } from "../../../Components/Details/ActionHeader/ActionHeader"
 
 export const ResidentDetail = () => {
   return (
