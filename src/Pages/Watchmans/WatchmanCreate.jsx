@@ -5,24 +5,23 @@ import Inputs from '../../Components/Inputs/Inputs'
 import { ContainerHeader } from '../../Components/ContainerHeader/containerHeader'
 import FormButton from '../../Components/Forms/FormButton'
 
-export const UsersCreate = () => {
+export const WatchmanCreate = () => {
     return (
         <>
 
-            <FormContainer name='Crear Usuario' buttons={<FormButton name='Crear' backButton='Cancelar' />}>
+            <FormContainer name='Crear Vigilante' buttons={<FormButton name='Crear' backButton='Cancelar' />}>
                 <FormColumn>
                     <Inputs name="Tipo Documento" placeholder="Ingresa tipo de documento"></Inputs>
                     <Inputs name="Nombre" type='text' placeholder="Ingresa tu nombre"></Inputs>
                     <Inputs name="Correo" placeholder="Ingresa tu correo"></Inputs>
-                    <Inputs name="Contraseña" type='password' placeholder="Ingresa tu contraseña"></Inputs>
-                    <Inputs name="Rol"  placeholder="Ingrese un rol"></Inputs>
+                    <Inputs name="Fecha Nacimiento" type="Date" placeholder="Ingresa tu fecha de nacimiento"></Inputs>
+
                 </FormColumn>
 
                 <FormColumn>
                     <Inputs name="Documento" type='number' placeholder="Ingresa tu documento"></Inputs>
                     <Inputs name="Apellido" type='text' placeholder="Ingresa tu apellido"></Inputs>
                     <Inputs name="Teléfono" placeholder="Ingresa tu teléfono"></Inputs>
-                    <Inputs name="Confirmar Contraseña" type='password' placeholder='Ingresa tu contraseña'></Inputs>
 
                 </FormColumn>
 

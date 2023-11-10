@@ -9,10 +9,10 @@ export const Layout = () => {
             <ContainerHeader>
                 <Nav />
                 <Aside />
+                <div className='appContent' onClick={() => setUserOptionsOpen(false)}>
+                    <Outlet />
+                </div>
             </ContainerHeader>
-            <div className='appContent' onClick={() => setUserOptionsOpen(false)}>
-                <Outlet />
-            </div>
         </>
     )
 }

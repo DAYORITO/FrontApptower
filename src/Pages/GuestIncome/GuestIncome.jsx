@@ -11,7 +11,7 @@ import { Actions } from '../../Components/Actions/Actions'
 function GuestIncome() {
   return (
     <>
-        <ContainerTable title='Visitors'>
+        <ContainerTable title='Ingresos'>
                 <DropdownExcel />
                 <SearchButton />
                 <ButtonGoTo value='Crear Visitante' href='/#/admin/guest_income/create' />

@@ -5,8 +5,6 @@ import ImagenPerson from '../../assets/Person.jpg';
 import { InputsLogIn } from '../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../Components/Inputs/selectLogIn';
 
-
-
 const LogIn = () => {
 
     useEffect(() => {
@@ -76,7 +74,7 @@ const LogIn = () => {
                                     { value: 'CC', label: 'Cédula' },
                                     { value: 'CE', label: 'Cédula de extranjería' }
                                 ]}
-                                placeholder="Tipo de documento"
+                                placeholder={'Tipo Documento'}
 
                             />
                             <InputsLogIn placeholder='Documento' type='number' />

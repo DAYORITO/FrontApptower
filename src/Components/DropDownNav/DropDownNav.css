@@ -1,0 +1,33 @@
+.span {
+    position: relative;
+    top: 1px;
+    margin-left: 30px;
+}
+
+.nav-item {
+    list-style-type: none;
+}
+
+#fas {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    top: 3px;
+    margin-left: 17px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.nav-link {
+    position: relative;
+    color: #555;
+    font-size: 16px;
+    display: table;
+    width: 300px;
+    text-decoration: none;
+
+}
+
+.navlink:hover {
+    color: #090057;
+}

@@ -1,21 +1,65 @@
+.myNav {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    background-color: #fff;
+    width: 96px;
+    transition: width 0.2s linear;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+
 .logo {
-    align-items: center;
-    width: 135px;
-    height: 145px;
-    margin-bottom: 20px;
-    margin-top: 10px;
+    text-align: center;
+    display: flex;
+    transition: all 0.5s ease;
+    margin: 0 auto;
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    text-align: center;
+    padding-bottom: 1px;
+}
+
+.logoApptower {
+    padding-top: 10px;
+    text-align: center;
 }
 
 
-#contenedorli {
-    margin-top: 0.7px;
+img {
+    text-align: center;
 }
 
-.nav-link:hover {
-    background-color: #ec0000;
-    color: #555;
+
+.myNav:hover {
+    width: 240px;
+    transition: all 0.5s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.fe-menu {
-    margin-top: 2px !important;
+.myNav:hover .logo {
+    text-align: center;
+    width: 85px;
+    height: 85px;
+    transition: all 0.5s ease;
+}
+
+#main {
+
+    padding: 0 1rem 0 7.5rem;
+    margin: 0;
+}
+
+.appContent {
+    /* margin-left: 0px !important; */
+    transition: .3s;
+}
+
+.myNav:hover~.appContent {
+    margin-left: 7.5rem !important;
 }

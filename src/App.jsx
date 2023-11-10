@@ -3,7 +3,7 @@ import "./Pages/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import React from 'react'
 import LogIn from './Pages/LogIn/LogIn';
-import { Owners } from './Pages/Owners/owners';
+import { Owners } from './Pages/Owners/Owners';
 import { Residents } from './Pages/Residents/Residents';
 import { ResidentCreate } from "./Pages/Residents/ResidentCreate";
 
@@ -17,11 +17,13 @@ import { SpacesCreate } from "./Pages/Spaces/SpacesCreate";
 import { Users } from "./Pages/Users/UsersList";
 import { Watchman } from "./Pages/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
-import {RecoverPassword} from './Pages/LogIn/RecoverPassword';
-import { UsersCreate} from "./Pages/Users/UsersCreate";
+import { RecoverPassword } from './Pages/LogIn/RecoverPassword';
+import { UsersCreate } from "./Pages/Users/UsersCreate";
 import Visitors from "./Pages/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/GuestIncome/GuestIncome";
+import { WatchmanCreate } from "./Pages/Watchmans/WatchmanCreate";
+import { ResidentDetail } from "./Pages/Residents/ResidentDetail";
 
 
 const App = () => {
@@ -36,6 +38,8 @@ const App = () => {
                     <Route path='/admin/*' element={<Layout />}>
                         <Route path='residents/' element={<Residents />} />
                         <Route path='residents/create' element={<ResidentCreate />} />
+                        <Route path='residents/details' element={<ResidentDetail />} />
+
 
                         <Route path='owners/' element={<Owners />} />
                         <Route path='owners/create' element={<OwnersCreate />} />
@@ -51,13 +55,14 @@ const App = () => {
 
                         <Route path='guest_income/create' element={<GuestIncomeCreate />} />
                         <Route path='guest_income/' element={<GuestIncome />} />
-                        
+
 
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />
                         <Route path='watchman/' element={<Watchman />} />
+                        <Route path='watchman/create' element={<WatchmanCreate />} />
                         <Route path='rols/' element={<Rols />} />
-                        
+
                     </Route>
 
 

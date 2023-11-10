@@ -4,3 +4,9 @@
     transition: transform 0.3s;
 }
 
+.file-list:nth-child(even){
+    background-color: rgba(248, 249, 250, 1) !important;
+}
+/* .file-list:nth-child(re){
+    background-color: #6c757d !important;
+} */
