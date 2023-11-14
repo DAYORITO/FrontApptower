@@ -2,6 +2,7 @@
 
 import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
+import { Text } from '../../../Components/Details/Text/text'
 import { Header } from "../../../Components/Details/Header/Header"
 import { IconHeader } from "../../../Components/Details/IconHeader/IconHeader"
 import { ColHeader } from "../../../Components/Details/ColHeader/ColHeader"
@@ -13,6 +14,7 @@ import { Row } from "../../../Components/Rows/Row"
 import { Actions } from "../../../Components/Actions/Actions"
 import { Details } from "../../../Components/Details/details"
 import { ActionHeader } from "../../../Components/Details/ActionHeader/ActionHeader"
+import { ColHelper } from '../../../Components/Details/ColHelper/ColHelper'
 
 export const ResidentDetail = () => {
   return (
@@ -20,9 +22,26 @@ export const ResidentDetail = () => {
       <Details>
         <Header>
           <IconHeader name="fe fe-24 fe-user" />
-          <ColHeader name={'Residente'}>
-
-
+          <ColHeader title={'Maria Lopez'}>
+            <ColHelper>
+              <Text>pdf: ##########</Text>
+              <Text>docType:###########</Text>
+              <Text>docNumber:$$$$$$$$$</Text>
+            </ColHelper>
+            <ColHelper>              
+              <Text>Name:##############</Text>
+              <Text>LastName:##########</Text>
+              <Text>Sex:#########</Text>
+            </ColHelper>
+            <ColHelper>              
+              <Text>Birthday:##/##/####</Text>
+              <Text>Email:##############</Text>
+              <Text>Phone number:############</Text>
+            </ColHelper>
+            <ColHelper>              
+              <Text>ResidentType:###########</Text>
+              <Text>Status:###########</Text>
+            </ColHelper>
           </ColHeader>
           <ActionHeader>
 
