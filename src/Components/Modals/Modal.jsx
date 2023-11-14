@@ -2,8 +2,8 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function ModalContainer({show, handleClose, children}) {
-  
+function ModalContainer({ show, handleClose, children }) {
+
   return (
     <>
 
@@ -12,8 +12,8 @@ function ModalContainer({show, handleClose, children}) {
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-                
-             {children} 
+
+          {children}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

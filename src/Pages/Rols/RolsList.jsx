@@ -7,14 +7,19 @@ import { Th } from '../../Components/Th/Th'
 import { Tbody } from '../../Components/Tbody/Tbody'
 import { Row } from '../../Components/Rows/Row'
 import { Actions } from '../../Components/Actions/Actions'
+import { useFetchget } from '../../Hooks/useFetch'
 
 export const Rols = () => {
+    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/rols')
+    console.log(data.rols)
+
+
     return (
         <>
             <ContainerTable title='Roles'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Rol' />
+                <ButtonGoTo value='Crear Rol' href='/#/admin/rols/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -26,12 +31,16 @@ export const Rols = () => {
                         <Row icon='fe fe-settings fe-16 text-muted' namerole={'Administrador'} descripcion={'Todas las funcionalidades'}  >
                             <Actions accion='Editar'></Actions>
                         </Row>
-                        <Row icon='fe fe-settings fe-16 text-muted' namerole={'Residente'} descripcion={'Habitante del conjunto residencial'}>
-                            <Actions accion='Editar'></Actions>
-                        </Row>
-                        <Row icon='fe fe-settings fe-16 text-muted' namerole={'Vigilante'} descripcion={'Seguridad del conjunto'}>
-                            <Actions accion='Editar'></Actions>
-                        </Row >
+                        {load && <p>Cargando...</p>}
+                        {!load && data.rols?.map(rols => (
+                            <Row
+                                namerole={rols.namerole}
+                                descripcion={rols.description}
+                                status={rols.state}
+                            >
+                                <Actions accion='Editar' />
+                            </Row>
+                        ))}
                     </Tbody>
                 </TablePerson>
             </ContainerTable>

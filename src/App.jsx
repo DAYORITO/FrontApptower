@@ -17,6 +17,7 @@ import { SpacesCreate } from "./Pages/Spaces/SpacesCreate";
 import { Users } from "./Pages/Users/UsersList";
 import { Watchman } from "./Pages/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
+import { RolsCreate } from "./Pages/Rols/RolsCreate";
 import { RecoverPassword } from './Pages/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/UsersCreate";
 import Visitors from "./Pages/Visitors/Visitors";
@@ -62,6 +63,7 @@ const App = () => {
                         <Route path='watchman/' element={<Watchman />} />
                         <Route path='watchman/create' element={<WatchmanCreate />} />
                         <Route path='rols/' element={<Rols />} />
+                        <Route path='rols/create' element={<RolsCreate />} />
 
                     </Route>
 
