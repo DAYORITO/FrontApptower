@@ -2,7 +2,6 @@
 
 import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
-import { Text } from '../../../Components/Details/Text/text'
 import { Header } from "../../../Components/Details/Header/Header"
 import { IconHeader } from "../../../Components/Details/IconHeader/IconHeader"
 import { ColHeader } from "../../../Components/Details/ColHeader/ColHeader"
@@ -14,7 +13,6 @@ import { Row } from "../../../Components/Rows/Row"
 import { Actions } from "../../../Components/Actions/Actions"
 import { Details } from "../../../Components/Details/details"
 import { ActionHeader } from "../../../Components/Details/ActionHeader/ActionHeader"
-import { ColHelper } from '../../../Components/Details/ColHelper/ColHelper'
 
 export const ResidentDetail = () => {
   return (

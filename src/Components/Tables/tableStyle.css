@@ -1,6 +1,7 @@
 .table-responsive {
-    max-height: 350px;
-    min-height: 350px;
+    height: 70vh;
+    /* min-height: 2.0rem; */
+    /* max-height: 350px; */
 
     overflow-x: hidden;
     padding: 0 15px 0px 15px;

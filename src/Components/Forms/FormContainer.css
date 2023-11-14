@@ -6,10 +6,8 @@
 }
 #formContainer {
   border-radius: 15px;
-  min-height: 32rem;
-
-  max-height: 32rem;
-  margin: 0 50px 0 50px;
+  height: 90vh;
+  margin: 5vh 25vh 5vh 25vh;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin; 
