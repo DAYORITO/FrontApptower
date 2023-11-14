@@ -28,7 +28,7 @@
     justify-content: center;
     height: 100vh;
     width: 100vw;
-    background-image: url('../../assets/ed.jpg');
+    background-image: url('../../../assets/ed.jpg');
     background-size: cover;
 }
 
@@ -206,10 +206,10 @@
     border: none;
     padding: 8px 5px;
     cursor: pointer;
-    margin-top: 3px;
+    margin-top: 5px;
     width: 190px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     margin-left: 20px;
 
 }

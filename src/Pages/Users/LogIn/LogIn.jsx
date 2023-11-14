@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import './LogIn.css';
 import ImageIcono from '../../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../../Components/Inputs/selectLogIn';
+import { Link } from 'react-router-dom';
+
 
 const LogIn = () => {
 
@@ -46,7 +49,9 @@ const LogIn = () => {
                             <div>
                                 <a href="/#/recoverpassword" className='buttonStyle'>¿Olvidaste la contraseña?</a>
                             </div>
-                            <button className='boton-login'>Iniciar Sesión</button><br />
+                            <Link to="/admin/residents/">
+                                <button className='boton-login' >Iniciar Sesión</button><br />
+                            </Link>
                             <a href="#" class="buttonStyle" id="sign-up">¿No puedes acceder? Registrate</a>
                         </form>
 
