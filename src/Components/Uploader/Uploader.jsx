@@ -1,16 +1,17 @@
+import "./Uploader.css"
 
-export const Uploader = ({action = 'Sube una imagen del espacio.'}) => {
+export const Uploader = ({ label = 'Imagen de espacio', formatos = ".png, .jpg" }) => {
     return (
-        <div class="card-body">
-            <form action="/file-upload" class="dropzone bg-light rounded-lg" id="tinydash-dropzone">
+        <div class="card-body" id="uploader">
+            <label>{label}</label>
+            <div class="dropzone bg-light rounded-lg" id="tinydash-dropzone" >
                 <div class="dz-message needsclick">
                     <div class="circle circle-lg bg-primary">
-                        <i class="fe fe-upload fe-24 text-white"></i>
+                        <i class="fe fe-upload fe-24 text-white" />
+                        <input type="file" name="src-file1" aria-label="Archivo" accept={formatos} />
                     </div>
-                    <h5 class="text-muted mt-4">{action}</h5>
                 </div>
-            </form>
-            
+            </div>
         </div>
 
     )

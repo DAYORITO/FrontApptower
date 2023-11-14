@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import FormContainer from '../../Components/Forms/FormContainer'
 import Inputs from '../../Components/Inputs/Inputs'
 import FormButton from '../../Components/Forms/FormButton'
-import {Uploader} from '../../Components/Uploader/Uploader'
+import { Uploader } from '../../Components/Uploader/Uploader'
+import InputsSelect from '../../Components/Inputs/InputsSelect'
 
 
 export const SpacesCreate = () => {
@@ -11,8 +12,8 @@ export const SpacesCreate = () => {
 
       <FormContainer name='Crear espacio' buttons={<FormButton name='Crear espacio' backButton='Regresar' />}>
         {/* <FormColumn> */}
-      
-        <Uploader/>
+
+        <Uploader />
         <Inputs name="Tipo de espacio" placeholder="Ejemplo: 101"></Inputs>
         <Inputs name="Nombre espacio" placeholder="Ejemplo: 101"></Inputs>
         <Inputs name="Area" type="number"></Inputs>
