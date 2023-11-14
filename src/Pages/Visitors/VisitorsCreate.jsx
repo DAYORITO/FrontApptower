@@ -11,6 +11,7 @@ import ModalButton from "../../Components/Modals/ModalButton";
 
 function VisitorsCreate() {
   const [showModal, setShowModal] = useState(false);
+  const opciones = ["Tipo Documento", "Numero Documento", "Nombre", "Apellido", "Genero", "Acceso"];
 
   return (
     <>
@@ -30,8 +31,9 @@ function VisitorsCreate() {
         <Inputs name="Apellido" type="Text"></Inputs>
         <Inputs name="Genero" type="Text"></Inputs>
         <Inputs name="Acceso" type="Text"></Inputs>
+        {/* <InputsSelect opciones1={opciones}></InputsSelect> */}
         {/* </FormColumn> */}
-        <button onClick={() => setShowModal(true)}>Abrir Modal</button>
+        {/* <button onClick={() => setShowModal(true)}>Abrir Modal</button> */}
         {/* {showModal
           && <ReactDom.createPortal>
               <ModalContainer/>
@@ -47,7 +49,16 @@ function VisitorsCreate() {
                 showModal={setShowModal}
                 title={"Crear residentes"}
               >
-                <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
+                {/* <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" /> */}
+                <form>
+                  <div>
+                    <label className="form-label">Nombre</label>
+                    <input name="nombre" className="form-control" placeholder="Ingresa tu aleja"/>
+                  </div>
+                  
+                </form>
+                
+                
               </Modal>
             </ModalContainer>
           </>,

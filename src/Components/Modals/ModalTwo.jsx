@@ -13,6 +13,7 @@ export const ModalContainer = ({ children, ShowModal }) => {
 export const Modal = ({ title, children, showModal }) => {
   return (
     <div onClick={(e) => e.stopPropagation()}>
+      
       <div class="">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -25,8 +26,11 @@ export const Modal = ({ title, children, showModal }) => {
               >
                 x
               </button>
+            </div> 
+            {/* Cuerpo del modal */}
+            <div class="modal-body">
+              {children}
             </div>
-            <div class="modal-body">{children}</div>
             <div class="modal-footer">
               <button
                 type="button"
@@ -87,19 +91,4 @@ export const Modal = ({ title, children, showModal }) => {
 //   );
 // };
 
-// {title && (
-// 	<div className="modal__header">
-// 	  <h2 className="modal__title">{title}</h2>
-// 	</div>
-//   )}
-//   <div className={`modal__content ${props?.className}`}>{children}</div>
- {/* <button className="modal__close" onClick={() => showModal(false)}>
-        
-      </button>
-      {title && (
-        <div className="modal__header">
-          <h2 className="modal__title">{title}</h2>
-        </div>
-      )}
-      <div className={`modal__content ${props?.className}`}>{children}</div>
-	   */}
+// 
