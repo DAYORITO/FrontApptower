@@ -20,10 +20,10 @@ function Inputs({name, value, onChange, placeholder, type, id}) {
         });
 
         return () => {
-            inputRef.current.removeEventListener('focus', () => {
+            inputRef.current?.removeEventListener('focus', () => {
                 labelRef.current.classList.add('active');
             });
-            inputRef.current.removeEventListener('blur', () => {
+            inputRef.current?.removeEventListener('blur', () => {
                 if(inputRef.current.value === ''){
                     labelRef.current.classList.remove('active');
                 }

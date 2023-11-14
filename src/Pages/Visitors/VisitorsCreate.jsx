@@ -49,14 +49,15 @@ function VisitorsCreate() {
                 showModal={setShowModal}
                 title={"Crear residentes"}
               >
-                {/* <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" /> */}
+                <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
+                {/* <FormButton name={"Prueba"}></FormButton>
                 <form>
                   <div>
                     <label className="form-label">Nombre</label>
                     <input name="nombre" className="form-control" placeholder="Ingresa tu aleja"/>
                   </div>
                   
-                </form>
+                </form> */}
                 
                 
               </Modal>
