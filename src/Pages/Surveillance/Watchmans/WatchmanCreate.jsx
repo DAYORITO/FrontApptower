@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useFetchpost } from '../../Hooks/useFetch'
+import { useFetchpost } from '../../../Hooks/useFetch'
 import FormContainer from '../../../Components/Forms/FormContainer'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import Inputs from '../../../Components/Inputs/Inputs'

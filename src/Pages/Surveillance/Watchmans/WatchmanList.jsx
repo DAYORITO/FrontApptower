@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFetchget } from '../../Hooks/useFetch'
+import { useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'

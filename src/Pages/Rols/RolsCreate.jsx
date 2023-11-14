@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import FormContainer from '../../../Components/Forms/FormContainer';
-import FormColumn from '../../../Components/Forms/FormColumn';
-import Inputs from '../../../Components/Inputs/Inputs';
-import FormButton from '../../../Components/Forms/FormButton';
-import { Checkbox } from '../../../Components/Checkbox/Checkbox';
+import FormContainer from '../../Components/Forms/FormContainer';
+import FormColumn from '../../Components/Forms/FormColumn';
+import Inputs from '../../Components/Inputs/Inputs';
+import FormButton from '../../Components/Forms/FormButton';
+import { Checkbox } from '../../Components/Checkbox/Checkbox';
 import './Rols.css';
 import { useFetchpost } from '../../Hooks/useFetch';
 
