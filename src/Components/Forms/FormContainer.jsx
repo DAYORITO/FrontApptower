@@ -1,7 +1,7 @@
 import React from 'react';
-import './FormContainer.css'; 
+import './FormContainer.css';
 
-function FormContainer({name, children, buttons, modalButton}) {
+function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
   return (
     <>
         {/* <div id='formContainer' className="card shadow mb-4 pl-5 pr-5">
@@ -33,6 +33,15 @@ function FormContainer({name, children, buttons, modalButton}) {
                 </form>
             </div>
         </div>
+        <div className="card-body">
+          <form onSubmit={onSubmit}>
+            <div className="row">
+              {children}
+              {buttons}
+            </div>
+          </form>
+        </div>
+      </div>
     </>
   )
 }

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-export const ColHeader = ({ children, title = 'titulo', docType, docNumber }) => {
+export const ColHeader = ({ title, subtitle,}) => {
     return (
         <div className="col">
             <div className="row align-items-center">
@@ -11,7 +11,7 @@ export const ColHeader = ({ children, title = 'titulo', docType, docNumber }) =>
                     <div scope="row">
 
                         <h5>{title}</h5>
-                        <p>{title}</p>
+                        <p>{subtitle}</p>
 
                     </div>
                 </div>
