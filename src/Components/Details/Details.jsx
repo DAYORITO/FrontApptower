@@ -3,10 +3,8 @@
 
 export const Details = ({ children }) => {
   return (
-    <div className='container-fluid'>
-        <div className='card-body'>
+        <div className='card-body justify-content-center'>
             {children}
         </div>
-    </div>
   )
 }
