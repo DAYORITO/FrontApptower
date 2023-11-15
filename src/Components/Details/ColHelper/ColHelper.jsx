@@ -2,6 +2,6 @@
 
 export const ColHelper = ({children}) => {
   return (
-    <div className="col">{children}</div>
+    <div className="col ">{children}</div>
   )
 }

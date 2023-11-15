@@ -5,6 +5,8 @@ import { Th } from '../../../Components/Th/Th'
 import { Header } from "../../../Components/Details/Header/Header"
 import { IconHeader } from "../../../Components/Details/IconHeader/IconHeader"
 import { ColHeader } from "../../../Components/Details/ColHeader/ColHeader"
+import { ColHelper } from "../../../Components/Details/ColHelper/ColHelper"
+import { Text } from "../../../Components/Details/Text/Text"
 import { Tbody } from "../../../Components/Tbody/Tbody"
 import { TablePerson } from "../../../Components/Tables/Tables"
 import { NavItem } from "../../../Components/Details/NavTab/NavItem"
@@ -19,31 +21,33 @@ export const ResidentDetail = () => {
     <>
       <Details>
         <Header>
-          <IconHeader name="fe fe-24 fe-user" />
+          <IconHeader name="fe fe-32 fe-user">
+            <ActionHeader>
+
+            </ActionHeader>
+          </IconHeader>
           <ColHeader title={'Maria Lopez'}>
             <ColHelper>
-              <Text>pdf: ##########</Text>
-              <Text>docType:###########</Text>
-              <Text>docNumber:$$$$$$$$$</Text>
+              <Text title={'pdf:'}>##########</Text>
+              <Text title={'docType:'}>###########</Text>
+              <Text title={'docNumber:'}>$$$$$$$$$</Text>
             </ColHelper>
-            <ColHelper>              
-              <Text>Name:##############</Text>
-              <Text>LastName:##########</Text>
-              <Text>Sex:#########</Text>
+            <ColHelper>
+              <Text title={'Name:'}>##############</Text>
+              <Text title={'LastName:'}>##########</Text>
+              <Text title={'Sex:'}>#########</Text>
             </ColHelper>
-            <ColHelper>              
-              <Text>Birthday:##/##/####</Text>
-              <Text>Email:##############</Text>
-              <Text>Phone number:############</Text>
+            <ColHelper>
+              <Text title={'Birthday:'}>##/##/####</Text>
+              <Text title={'Email:'}>##############</Text>
+              <Text title={'Phone number:'}>############</Text>
             </ColHelper>
-            <ColHelper>              
-              <Text>ResidentType:###########</Text>
-              <Text>Status:###########</Text>
+            <ColHelper>
+              <Text title={'ResidentType:'}>###########</Text>
+              <Text title={'Status:'}>###########</Text>
             </ColHelper>
           </ColHeader>
-          <ActionHeader>
 
-          </ActionHeader>
         </Header>
         <NavTab>
 
