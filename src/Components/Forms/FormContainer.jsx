@@ -4,45 +4,33 @@ import './FormContainer.css';
 function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
   return (
     <>
-        {/* <div id='formContainer' className="card shadow mb-4 pl-5 pr-5">
-            <div className="card-header mt- d-flex justify-content-between">
-                <strong ><h4>{name}</h4></strong>
-                <div>{modalButton}</div>
-            </div>
-            <div className="card-body">
-                <form>
-                  <div className="row">
-                      {children}
-                      {buttons}
-                  </div>
-                </form>
-            </div>
-        </div> */}
-
-        <div id='formContainer' className="card shadow mb-4 pl-5 pr-5">
-            <div className=" mt-5 ml-1 d-flex justify-content-between">
-                <strong ><h4>{name}</h4></strong>
-                <div>{modalButton}</div>
-            </div>
-            <div className="card-body">
-                <form>
-                  <div className="row">
-                      {children}
-                      {buttons}
-                  </div>
-                </form>
-            </div>
+      <div div id='formContainer' className="card shadow mb-4 pl-5 pr-5" >
+        <div className=" mt-5 ml-1 d-flex justify-content-between">
+          <strong ><h4>{name}</h4></strong>
+          <div>{modalButton}</div>
         </div>
         <div className="card-body">
-          <form onSubmit={onSubmit}>
+          <form>
             <div className="row">
               {children}
               {buttons}
             </div>
           </form>
         </div>
+      </div >
+      <div className="card-body">
+        <form onSubmit={onSubmit}>
+          <div className="row">
+            {children}
+            {buttons}
+          </div>
+        </form>
       </div>
     </>
+    
+
+    
+      
   )
 }
 

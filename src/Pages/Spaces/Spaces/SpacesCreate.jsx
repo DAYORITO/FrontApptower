@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import FormContainer from '../../Components/Forms/FormContainer'
-import Inputs from '../../Components/Inputs/Inputs'
-import FormButton from '../../Components/Forms/FormButton'
-import { Uploader } from '../../Components/Uploader/Uploader'
-import InputsSelect from '../../Components/Inputs/InputsSelect'
-
+import FormContainer from '../../../Components/Forms/FormContainer'
+import Inputs from '../../../Components/Inputs/Inputs'
+import FormButton from '../../../Components/Forms/FormButton'
+import { Uploader } from '../../../Components/Uploader/Uploader'
+// import InputsSelect from '../../../Components/Inputs/InputsSelect'
 
 export const SpacesCreate = () => {
   return (
@@ -19,8 +18,6 @@ export const SpacesCreate = () => {
         <Inputs name="Area" type="number"></Inputs>
         <Inputs name="Capacidad" type="number"></Inputs>
         <Inputs name="Estado"></Inputs>
-
-        {/* </FormColumn> */}
         
 
       </FormContainer>
