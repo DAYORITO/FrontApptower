@@ -11,7 +11,20 @@ import ModalButton from "../../Components/Modals/ModalButton";
 
 function VisitorsCreate() {
   const [showModal, setShowModal] = useState(false);
-  const opciones = ["Tipo Documento", "Numero Documento", "Nombre", "Apellido", "Genero", "Acceso"];
+  const opciones = [
+    {
+      value: "CC",
+      label: "CC"
+    },
+    {
+      value: "TI",
+      label: "TI"
+    },
+    {
+      value: "CE",
+      label: "CE"
+    }
+  ];
 
   return (
     <>
@@ -31,15 +44,8 @@ function VisitorsCreate() {
         <Inputs name="Apellido" type="Text"></Inputs>
         <Inputs name="Genero" type="Text"></Inputs>
         <Inputs name="Acceso" type="Text"></Inputs>
-        {/* <InputsSelect opciones1={opciones}></InputsSelect> */}
-        {/* </FormColumn> */}
-        {/* <button onClick={() => setShowModal(true)}>Abrir Modal</button> */}
-        {/* {showModal
-          && <ReactDom.createPortal>
-              <ModalContainer/>
-            </ReactDom.createPortal>
-          
-        } */}
+        <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"}></InputsSelect>
+        
       </FormContainer>
       {showModal &&
         createPortal(
@@ -50,14 +56,8 @@ function VisitorsCreate() {
                 title={"Crear residentes"}
               >
                 <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
-                {/* <FormButton name={"Prueba"}></FormButton>
-                <form>
-                  <div>
-                    <label className="form-label">Nombre</label>
-                    <input name="nombre" className="form-control" placeholder="Ingresa tu aleja"/>
-                  </div>
-                  
-                </form> */}
+                <Inputs name="Numero Documento" />
+
                 
                 
               </Modal>
