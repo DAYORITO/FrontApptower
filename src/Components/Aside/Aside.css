@@ -1,13 +1,16 @@
 .myNav {
+
+    background-color: rgba(255, 255, 255, 1) !important;
     position: absolute;
     top: 0;
     bottom: 0;
     height: 100vh;
     left: 0;
-    background-color: #fff;
-    width: 12vh;
+    min-width: 6%;
+    width: 6%;
     transition: width 0.2s linear;
     box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
     overflow: hidden;
     list-style: none;
 
@@ -17,56 +20,77 @@
     justify-content: flex-start;
 }
 
-.collapseSidebar {
+.myNav.expanded .myNav-header {
+    
+    display: flex;
+    justify-content: space-between;
+    height: 10%;
+    width: 100%;
+
+
+
+}
+.myNav .myNav-header {
+    
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 10%;
+    width: 100%;
 
 
 }
 
-.collapseSidebar i {
-
-    margin: 3vh 3vh 0vh 6vh;
+.myNav .myNav-header button {
+    
 }
+
+.myNav.expanded .myNav-header button {
+    
+    order: 2;
+    margin-left: auto; /* Esto hará que el botón se mueva al extremo derecho */
+
+}
+
+.myNav .myNav-header img {
+    
+    display: none;
+
+}
+.myNav.expanded {
+
+    min-width: 24vh;
+    width: 18%;
+    transition: all 0.5s ease;
+    
+}
+
+
+.myNav.expanded .myNav-header img {
+    
+    order: 1;
+    display: none;
+    left: 0;
+
+}
+
+
+.myNav.expanded~.appContent {
+
+    margin-left: 10% !important;
+    
+    
+}
+
+
 
 
 .logo {
-    text-align: center;
     display: flex;
     transition: all 0.5s ease;
-    margin: 0 auto;
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    text-align: center;
-    padding-bottom: 1px;
+    width: 6.5vh;
+    height: 6.5vh;
 }
-
-.logoApptower {
-    padding-top: 10px;
-    text-align: center;
-}
-
-
-img {
-    text-align: center;
-}
-
-/* 
-.myNav:hover {
-    width: 240px;
-    transition: all 0.5s ease;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-.myNav:hover .logo {
-    text-align: center;
-    width: 85px;
-    height: 85px;
-    transition: all 0.5s ease;
-} */
 
 #main {
 
@@ -79,6 +103,38 @@ img {
     transition: .3s;
 }
 
-/* .myNav:hover~.appContent {
-    margin-left: 7.5rem !important;
-} */
+
+.myNav-links {
+    height: 100%;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.myNav-links-content {
+
+    width: 100%;
+    margin-top: 10%;
+    padding: auto;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+    background-color: rgba(255, 255, 255, 1);
+
+    z-index: 1; 
+}
+
+.myNav-links-end {
+    width: 100%;
+    margin-bottom: 10%;
+    padding: 0 10vh 0 0;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+    background-color: rgba(255, 255, 255, 0) ;
+
+
+    z-index: 1; 
+}

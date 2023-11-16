@@ -5,10 +5,10 @@
   scrollbar-color: #e6e6e6 #ffffff;
 }
 #formContainer {
-  border-radius: 15px;
+  border-radius: 8px;
   height: 90vh;
-  margin: 5vh 25vh 5vh 25vh;
-  min-width: 800px;
+  margin: 5vh;
+  min-width: 95%;
   max-width: 75vh;
 
   overflow-x: hidden;

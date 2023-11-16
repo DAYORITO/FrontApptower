@@ -1,33 +1,48 @@
 .span {
     position: relative;
-    top: 1px;
-    margin-left: 30px;
 }
 
 .nav-item {
-    list-style-type: none;
+
+    border-radius: 8px;
+
+    width: 100%;
+    height: auto;
+
+    padding: 1vh;
+    margin: 1vh;
+    box-sizing: border-box; 
+
+    display: flex;
+    align-items: center; 
+
+
 }
 
 #fas {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 100%;
     top: 3px;
-    margin-left: 17px;
     font-size: 22px;
-    text-align: center;
 }
 
 .nav-link {
-    position: relative;
-    color: #555;
-    font-size: 16px;
-    display: table;
-    width: 300px;
-    text-decoration: none;
+
+    color: grey;
+
 
 }
 
-.navlink:hover {
+.nav-link span {
+
+    padding-left: 2.5vh;
+}
+
+.nav-link:hover {
+    width: 100%;
+    border-radius: 8px;
+
     color: #090057;
+
+    transition: all 0.5s;
 }

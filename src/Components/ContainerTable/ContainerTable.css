@@ -1,12 +1,9 @@
 .container-fluid {
-    border-radius: 15px;
-
+    border-radius: 8px;
     background-color: white !important;
-    height: 94vh;
-    margin: 5vh 25vh 5vh 25vh;
-    width: auto;
-    min-width: 800px;
-    max-width: 75vh;
+    height: 100vh;
+    margin: 5vh;
+    width: 95%;
 
 }
 

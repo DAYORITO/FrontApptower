@@ -16,10 +16,10 @@ export const DropDownNav = ({ module, dropdownName = "#", id = 'id', icon = "fe 
 
 export const ListNav = ({ href = '/#/admin/', module, icon = "fe fe-home fe-24", id = 'process' }) => {
     return (
-        <li className="nav-item w-100">
-            <a className="nav-link" href={href} id={id}>
+        <li className="nav-item">
+            <a className="nav-link" href={href}>
                 <i className={icon} id='fas'></i>
-                <span className='ml-3 item-text span'>{module}</span>
+                <span className='item-text span'>{module}</span>
             </a>
         </li>
     )

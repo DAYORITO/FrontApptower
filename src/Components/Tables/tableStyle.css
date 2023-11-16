@@ -1,10 +1,6 @@
 .table-responsive {
-    height: 70vh;
-    /* min-height: 2.0rem; */
-    /* max-height: 350px; */
-
+    height: 68vh;
     overflow-x: hidden;
-    padding: 0 15px 0px 15px;
     /* background-color: white; */
 }
 
