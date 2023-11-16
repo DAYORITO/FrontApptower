@@ -16,6 +16,7 @@ import { Actions } from "../../../Components/Actions/Actions"
 import { Details } from "../../../Components/Details/details"
 import { ActionHeader } from "../../../Components/Details/ActionHeader/ActionHeader"
 
+
 export const ResidentDetail = () => {
   return (
     <>
@@ -55,7 +56,8 @@ export const ResidentDetail = () => {
           <NavItem name={'Apartamentos'} />
 
         </NavTab>
-        <TablePerson id={'detail'}>
+
+        <TablePerson id={''}>
           <Thead>
             <Th></Th>
             <Th name={'Resident information'}></Th>
@@ -109,6 +111,8 @@ export const ResidentDetail = () => {
 
           </Tbody>
         </TablePerson>
+
+
       </Details>
     </>
   )

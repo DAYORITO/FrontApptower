@@ -10,7 +10,7 @@ const stylep = {
 export const Text = ({ title, children }) => {
   return (
     <div className="row my-1" style={Style}>
-      <span className="badge badge-white bg-secondary-lighter">{title}</span>
+      <span className="badge badge-white bg-secondary-lighter mr-1">{title}</span>
       <p className="small mb-0 text-muted" style={stylep}>{children}</p>
     </div>
 
