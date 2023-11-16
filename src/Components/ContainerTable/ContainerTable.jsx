@@ -17,16 +17,17 @@ export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
                         {children}
 
                     </div>
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4" >
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item"><a className="page-link" href="#">Previous</a></li>
+                            <li className="page-item  active"><a className="page-link" href="#">1</a></li>
+                            <li className="page-item"><a className="page-link" href="#">2</a></li>
+                            <li className="page-item"><a className="page-link" href="#">3</a></li>
+                            <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
                 </div>
-                <nav aria-label="Table Paging" className="mb- text-muted my-4">
-                    <ul className="pagination justify-content-center mb-0">
-                        <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                        <li className="page-item  active"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item"><a className="page-link" href="#">2</a></li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        <li className="page-item"><a className="page-link" href="#">Next</a></li>
-                    </ul>
-                </nav>
+
             </div>
         </div>
     );

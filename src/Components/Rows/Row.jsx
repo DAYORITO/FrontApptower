@@ -10,11 +10,11 @@ export const Row = ({
     docNumber,
     phone,
     email,
-    status = 'Active',
+    status,
     rol,
     children,
     descripcion,
-    icon
+    icon,
 
 }) => {
 
@@ -28,8 +28,9 @@ export const Row = ({
                     <span class={icon ? icon : 'fe fe-user fe-16 text-muted'}></span>
                 </div>
 
-                {(status == 'Active') ? <span class="dot dot-md bg-success mr-1"></span> : <span class="dot dot-md bg-danger mr-1"></span>}
-
+                {['Active', 'Activo'].includes(status)
+                    ? <span className="dot dot-md bg-success mr-1"></span>
+                    : <span className="dot dot-md bg-danger mr-1"></span>}
 
             </td>
             <th scope="row">
@@ -40,7 +41,6 @@ export const Row = ({
 
 
             </th>
-
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
             {email != null ? <td class="text-secondary">{email}</td> : null}
             {phone != null ? <td class="text-secondary">{phone}</td> : null}

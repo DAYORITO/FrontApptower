@@ -1,0 +1,7 @@
+.moduls {
+    padding: 10px;
+    max-width: 500px;
+    max-height: 225px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
