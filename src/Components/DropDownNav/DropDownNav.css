@@ -1,33 +1,56 @@
+/* Estilos generales para el span */
 .span {
     position: relative;
-    top: 1px;
-    margin-left: 30px;
-}
-
-.nav-item {
-    list-style-type: none;
-}
-
-#fas {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    top: 3px;
-    margin-left: 17px;
-    font-size: 22px;
-    text-align: center;
 }
 
 .nav-link {
+
+    transition: all 0.5s;
+    border-radius: 8px;
+    color: rgba(0, 26, 78, 1);
+
+
+}
+
+/* Estilos para los ítems de navegación colapsados */
+.nav-link:hover {
+
+    transition: all 0.5s;
+    border-radius: 8px;
+    color: rgba(0, 26, 78, 1);
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: rgba(248, 249, 250, 0.8);
+
+}
+
+
+/* Estilos para el ícono dentro del span */
+#fas {
     position: relative;
-    color: #555;
-    font-size: 16px;
-    display: table;
-    /* width: 300px;    */
-    text-decoration: none;
-
+    width: 100%;
+    top: 3px;
+    font-size: 22px;
 }
 
-.navlink:hover {
-    color: #090057;
+/* Estilos para los enlaces de navegación */
+
+
+/* Estilos específicos para los ítems de navegación colapsados */
+.myNav.collapsed .nav-item {
+    display: flex;
+    justify-content: center;
+    transition: all 0.5s;
 }
+
+
+
+.myNav.expanded .nav-link span {
+    padding-left: 2.5vh;
+}
+
+.myNav.collapsed .nav-link span {
+    display: none;
+}
+
+

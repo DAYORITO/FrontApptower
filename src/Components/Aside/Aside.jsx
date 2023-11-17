@@ -1,25 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Aside.css';
-import LogoApptower from '../../assets/Logo-Apptower.png';
-import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
+import {  ListNav } from '../DropDownNav/DropDownNav';
+import { CardUserNav } from '../CardUserNav/CardUserNav';
 
 export const Aside = () => {
+    const [isCloset, isOpem] = useState(true);
 
+    const toggleSidebar = () => {
+        console.log('Hola samuel intensox')
+        isOpem(!isCloset);
+    };
 
     return (
         <>
-            <nav className="myNav">
+            <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}>
 
-                <div>
-                    <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
-                        <i class="fe fe-menu fe-24 navbar-toggler-icon"></i>
+                <div className='myNav-header'>
+                    <button
+                        type="button"
+                        className="navbar-toggler text-muted collapseSidebar"
+                        onClick={toggleSidebar}
+                    >
+                        <i class="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
 
-                    <li className="logoApptower">
 
-                        <img src={LogoApptower} alt="logoApptower" className="logo" />
-                    </li>
                 </div>
+                <CardUserNav></CardUserNav>
+                <div className='myNav-links'>
+                    <div className='myNav-links-content'>
+
+                        <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart' />
+                        <ListNav module={'Notificaciones'} href='/#/admin/' icon='fe fe-message-circle' />
+
+                        <ListNav module={'Ingresos'} href='/#/admin/guest_income/' icon='fe fe-phone-outgoing' />
+                        <ListNav module={'Reservas'} href='/#/admin/' icon='fe fe-calendar' />
+
+                        <ListNav module={'Visitantes'} href='/#/admin/visitors' icon='fe fe-user-plus' />
+                        <ListNav module={'Apartamentos'} href='/#/admin/apartments' />
+                        <ListNav module={'Espacios'} href='/#/admin/spaces' icon='fe fe-sun fe-16' />
+                        <ListNav module={'Parkeaderos'} href='/#/admin/parkingSpaces/' icon='fe fe-octagon' />
+                        <ListNav module={'Vehiculos'} href='/#/admin/' icon='fe fe-truck'/>
+                        <ListNav module={'Propietarios'} href='/#/admin/owners' icon='fe fe-user-check' />
+                        <ListNav module={'Residentes'} href='/#/admin/residents' icon='fe fe-users' />
+                        <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-user'/>
+                        <ListNav module={'Usuarios'} href='/#/admin/users/' icon='fe fe-user' />
+                        <ListNav module={'Vigilantes'} href='/#/admin/watchman/' icon='fe fe-shield' />
+
+
+                    </div>
+                    <div className='myNav-links-end'>
+                        <ListNav module={'Configuracion'} href='/#/admin/rols/' icon='fe fe-settings' />
+                        <ListNav module={'Salir'} href='' icon='fe fe-log-out' />
+
+                    </div>
+
+                </div>
+
+
 
 
 

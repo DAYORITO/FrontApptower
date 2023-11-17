@@ -1,84 +1,112 @@
+/* Estilos generales para la barra de navegación */
 .myNav {
     position: absolute;
     top: 0;
     bottom: 0;
-    height: 100vh;
     left: 0;
-    background-color: #fff;
-    width: 12vh;
-    transition: width 0.2s linear;
+    min-width: 6%;
+    width: 6%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 1) !important;
     box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     list-style: none;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    transition: all 0.2s linear;
 }
 
-.collapseSidebar {
+/* Estilos para la versión expandida de la barra de navegación */
+.myNav.expanded {
+    min-width: 18%;
+    width: 18%;
+    transition: all 0.5s ease;
+}
+
+
+/* Estilos para la versión colapsada de la barra de navegación */
+.myNav.collapsed .myNav-profile,
+.myNav.expanded .myNav-profile {
+    width: 75%;
+    margin: 10px 10px 0px 10px;
+    border-radius: 8px;
+    height: auto;
+    padding: 1vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para la cabecera de la barra de navegación */
+.myNav .myNav-header,
+.myNav.expanded .myNav-header {
     display: flex;
     align-items: center;
     justify-content: center;
-
-
+    height: 10%;
+    width: 100%;
 }
 
-.collapseSidebar i {
-
-    margin: 3vh 3vh 0vh 6vh;
+/* Estilos específicos para el botón en la versión expandida */
+.myNav.expanded .myNav-header button {
+    order: 2;
+    margin-left: auto;
 }
 
 
-.logo {
-    text-align: center;
+/* Estilos para la versión expandida de la imagen en la cabecera */
+.myNav.expanded .myNav-header img {
+    order: 1;
+    display: none;
+    left: 0;
+}
+
+
+/* Estilos para los enlaces de la barra de navegación */
+.myNav-links {
+    height: 100%;
     display: flex;
-    transition: all 0.5s ease;
-    margin: 0 auto;
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    text-align: center;
-    padding-bottom: 1px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.logoApptower {
-    padding-top: 10px;
-    text-align: center;
+.myNav-profile-user {
+
+    display: flex;
 }
 
+.myNav-profile-user .row {
 
-img {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 
-.myNav:hover {
-    width: 240px;
-    transition: all 0.5s ease;
-    overflow-x: hidden;
+/* Estilos para el contenido de los enlaces */
+.myNav-links-content {
+    width: 100%;
+    height: 55vh;
+    padding: auto;
+    flex-direction: column;
     overflow-y: auto;
+    z-index: 1;
 }
 
-.myNav:hover .logo {
-    text-align: center;
-    width: 85px;
-    height: 85px;
-    transition: all 0.5s ease;
-} */
+/* Estilos para la sección final de los enlaces */
+.myNav.expanded .myNav-links-end {
+    width: 100%;
+    margin-bottom: 6%;
+    padding: 0 10vh 0 0;
+    flex-direction: column;
+    z-index: 1;
 
-#main {
-
-    padding: 0 1rem 0 7.5rem;
-    margin: 0;
 }
-
-.appContent {
-    /* margin-left: 0px !important; */
-    transition: .3s;
+.myNav.collapsed .myNav-links-end {
+    width: 100%;
+    margin-bottom: 6%;
+    padding: auto;
+    flex-direction: column;
+    z-index: 1;
 }
-
-/* .myNav:hover~.appContent {
-    margin-left: 7.5rem !important;
-} */

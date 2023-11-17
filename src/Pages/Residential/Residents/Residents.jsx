@@ -6,15 +6,20 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
+import { DivRow } from '../../../Components/DivRow/DivRow'
 
 export const Residents = () => {
     return (
         <>
 
             <ContainerTable title='Residents'>
-                <DropdownExcel />
-                <SearchButton />
-                <ButtonGoTo value='Crear Residente' href='/#/admin/residents/create' />
+
+                <DivRow>
+                    <DropdownExcel />
+                    <SearchButton />
+                    <ButtonGoTo value='Crear Residente' href='/#/admin/residents/create' />
+                </DivRow>
+
                 <TablePerson>
                     <Thead>
                         <Th></Th>

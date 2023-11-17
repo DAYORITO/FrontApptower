@@ -11,7 +11,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
           </strong>
           <div>{modalButton}</div>
         </div>
-        <div className="card-body">
+        <div className="card-body" id='form'>
           <form>
             <div className="row">
               {children}

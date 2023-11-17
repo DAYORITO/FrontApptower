@@ -1,13 +1,14 @@
+import { Link } from 'react-router-dom';
+
 const ButtonGoTo = ({ value = 'New module', href }) => {
     return (
         <div className="col-auto">
-            <a href={href} type="button" className="btn btn-primary">
+            <Link to={href} className="btn btn-primary">
                 <span>{value}</span>
-            </a>
+            </Link>
         </div>
-    )
-}
-
+    );
+};
 
 const DropdownExcel = () => {
     return (

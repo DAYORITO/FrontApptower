@@ -1,40 +1,177 @@
-/* body {
-    overflow: hidden;
-    background-image: url("");
-    background-size: cover; 
-    background-position: center; 
+/* Inicio tarjeta de tabla y formulario */
+
+#formContainer {
+
+  position: absolute;
+  border-radius: 8px;
+  height: 88vh;
+  margin: 3vh 30vw 5vh 7vw;
+  width: 90vw;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #e6e6e6 #ffffff;
+}
+
+#align-items-center {
+
+  /* padding: 0; */
+
+}
+
+.vertical .main-content {
+
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* End tarjeta de tabla y formulario */
+
+
+@media screen and (max-width: 1024px) {
+
+  .myNav.collapsed {
+    width: 5vw;
+    background-color: transparent !important;
+    /* position: relative;  */
+
   }
-  
-  body::before {
-    content: "";
-    position: fixed;
+
+  .myNav.collapsed .myNav-header {
+
+    position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
-    background-color: rgba(255, 255, 255, 0); 
-    z-index: -1; 
-  } */
+    z-index: 2;
+  }
 
-  body {
-    overflow: hidden;
-    /* background: linear-gradient(135deg, #FFEEA5, #277BC0); */
-    background: linear-gradient(135deg, #FFF4CF, #277BC0);
+  .myNav.collapsed .myNav-profile {
 
-        /* background: linear-gradient(135deg, white, rgba(64,198,186), rgba(1,81,133)); */
+    display: none;
+  }
 
-    background-size: cover;
-    background-position: center;
+  .myNav.collapsed .myNav-profile img {
+
+    display: none;
+  }
+
+  .myNav.collapsed .myNav-profile {
+
+    display: none;
+  }
+
+  .myNav.collapsed .myNav-links {
+
+    display: none;
+
+  }
+
+
+  .myNav.expanded {
+    width: 100vw !important;
+    background-color: rgba(255, 255, 255, 1) !important;
+    position: absolute;
+    z-index: 1;
+  }
+
+
+
+  .myNav.collapsed .myNav-header {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+  .myNav.collapsed .myNav-profile {
+
+    display: none;
+  }
+
+  .myNav.collapsed .myNav-profile img {
+
+    display: none;
+  }
+
+  .myNav.collapsed .myNav-profile {
+
+    display: none;
+  }
+
+  .myNav.collapsed .myNav-links {
+
+    display: none;
+
+  }
+
+
+  /* .appContent {
+      width: 100% !important;
+    } */
+}
+
+
+.myNav.expanded~.appContent #formContainer {
+
+  margin-left: 20vw;
+
+  width: 75vw;
+
+  transition: all 0.5s
+}
+
+.myNav.collapsed~.appContent #formContainer {
+
+  transition: all 0.5s
+}
+
+body {
+  overflow: hidden;
+  /* background: linear-gradient(135deg, #FFEEA5, #277BC0); */
+  background: linear-gradient(135deg, #FFF4CF, #277BC0);
+
+  /* background: linear-gradient(135deg, white, rgba(64,198,186), rgba(1,81,133)); */
+
+  background-size: cover;
+  background-position: center;
 }
 
 
 body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, 0);
-    z-index: -1;
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0);
+  z-index: -1;
+}
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #e6e6e6; 
+  border: 1px solid #e5edff;
 }

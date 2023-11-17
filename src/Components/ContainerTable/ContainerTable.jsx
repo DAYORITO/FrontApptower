@@ -1,15 +1,14 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import './ContainerTable.css'
 
 export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
     return (
-        <div className="container-fluid" >
+        <div id='formContainer' className="card shadow" >
             <div className="card-body">
                 <div className="toolbar">
-                    <div id="align-items-center" className="row align-items-center my-4">
+                    <div id="tableContainer" className="row align-items-center">
                         <div className="col">
-                            <h2 className="h3 mb-0 page-title ml-2">{title}</h2>
+                            <h4 className="ml-4 page-title">{title}</h4>
 
                         </div>
 
@@ -17,7 +16,7 @@ export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
                         {children}
 
                     </div>
-                    <nav aria-label="Table Paging" className="mb- text-muted my-4" >
+                    {/* <nav aria-label="Table Paging" className="mb- text-muted my-4" >
                         <ul className="pagination justify-content-center mb-0">
                             <li className="page-item"><a className="page-link" href="#">Previous</a></li>
                             <li className="page-item  active"><a className="page-link" href="#">1</a></li>
@@ -25,7 +24,7 @@ export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
                             <li className="page-item"><a className="page-link" href="#">3</a></li>
                             <li className="page-item"><a className="page-link" href="#">Next</a></li>
                         </ul>
-                    </nav>
+                    </nav> */}
                 </div>
 
             </div>

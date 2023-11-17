@@ -20,7 +20,7 @@ export const Users = () => {
             <ContainerTable title='Usuarios'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Usuario' href='/#/admin/users/create' />
+                <ButtonGoTo value='Crear Usuario' href='/admin/users/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -36,8 +36,7 @@ export const Users = () => {
                         <Row docType='CC' docNumber='102340121' name='Alejandra' lastName='Aguirre' rol={'Administador'} email='aleja@gmail.com' phone='3145678904'  >
                             <Actions accion='Editar'></Actions>
                         </Row>
-                        {load && <p>Cargando...</p>}
-                        {!load && data.user?.map(user => (
+                        {data.user?.map(user => (
                             <Row
                                 docType={user.documentType}
                                 docNumber={user.document}

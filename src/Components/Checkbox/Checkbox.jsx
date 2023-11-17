@@ -3,11 +3,25 @@ import './Checkbox.css';
 
 export const Checkbox = ({ label, options, onCheckboxChange, type }) => {
     const [isChecked, setIsChecked] = useState(false);
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
-        onCheckboxChange(label, !isChecked);
+        const newCheckedState = !isChecked;
+        setIsChecked(newCheckedState);
+        onCheckboxChange(label, newCheckedState ? options : []);
 
+        if (!newCheckedState) {
+            setSelectedOptions([]);
+        }
+    };
+
+    const handleOptionChange = (option) => {
+        const updatedOptions = selectedOptions.includes(option)
+            ? selectedOptions.filter((selectedOption) => selectedOption !== option)
+            : [...selectedOptions, option];
+
+        setSelectedOptions(updatedOptions);
+        onCheckboxChange(label, updatedOptions);
     };
 
     return (
@@ -27,7 +41,12 @@ export const Checkbox = ({ label, options, onCheckboxChange, type }) => {
                     {options.map((option) => (
                         <li key={option}>
                             <label>
-                                <input className="check-input" type="checkbox" />
+                                <input
+                                    className="check-input"
+                                    type="checkbox"
+                                    checked={selectedOptions.includes(option)}
+                                    onChange={() => handleOptionChange(option)}
+                                />
                                 {option}
                             </label>
                         </li>

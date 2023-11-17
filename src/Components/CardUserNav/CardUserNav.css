@@ -1,0 +1,11 @@
+.myNav-profile {
+
+}
+
+/* Estilos para el logo */
+.logo {
+    display: flex;
+    transition: all 0.5s ease;
+    width: 6.5vh;
+    height: 6.5vh;
+}

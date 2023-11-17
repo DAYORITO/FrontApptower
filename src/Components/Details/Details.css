@@ -1,9 +1,6 @@
 /* ===== Scrollbar CSS ===== */
 /* Firefox */
-* {
-    scrollbar-width: auto;
-    scrollbar-color: #e6e6e6 #ffffff;
-  }
+
   #detailsContainer {
     border-radius: 15px;
     height: 90vh;
@@ -17,20 +14,7 @@
 
   }
   
-  /* Chrome, Edge, and Safari */
-  *::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  *::-webkit-scrollbar-track {
-    background: #ffffff;
-  }
-  
-  *::-webkit-scrollbar-thumb {
-    background-color: #e6e6e6;
-    border-radius: 10px;
-    border: 1px solid #e5edff;
-  }
+
   
   .botones {
     display: flex;
