@@ -33,7 +33,7 @@ function InputsSelect({id, options, name}) {
    
   return (
     <>
-    <div className='inputContainer'>
+    <div className='inputContainer mb-3'>
       <span className='inputSpan'>
       <select
         id={id}
@@ -52,7 +52,7 @@ function InputsSelect({id, options, name}) {
         ))}
       </select>
       </span>
-      <label htmlFor={name} className='form-label' ref={labelRef}>{name}</label>
+      <label htmlFor={name} className='form-label ' ref={labelRef}>{name}</label>
     </div>
     </>
   )

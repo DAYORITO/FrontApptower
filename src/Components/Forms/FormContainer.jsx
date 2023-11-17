@@ -20,14 +20,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
           </form>
         </div>
       </div>
-      <div className="card-body">
-        <form onSubmit={onSubmit}>
-          <div className="row">
-            {children}
-            {buttons}
-          </div>
-        </form>
-      </div>
+      
     </>
   );
 }
