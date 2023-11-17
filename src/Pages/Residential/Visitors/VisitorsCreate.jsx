@@ -23,24 +23,24 @@ function VisitorsCreate() {
       value: "CE",
       label: "CE"
     }
-  ]; 
+  ];
 
   return (
     <>
       <FormContainer
         name="Crear visitante"
         buttons={<FormButton name="Crear" backButton="Cancelar" />}
-        modalButton={<ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)}/>}
+        modalButton={<ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />}
       >
         {/* <FormColumn> */}
-        <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre"/>
-        <Inputs name="Numero Documento"/>
-        <Inputs name="Nombre"/>
+        <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
+        <Inputs name="Numero Documento" />
+        <Inputs name="Nombre" />
         <Inputs name="Apellido" type="Text"></Inputs>
         <Inputs name="Genero" type="Text"></Inputs>
         <Inputs name="Acceso" type="Text"></Inputs>
         <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"}></InputsSelect>
-        
+
       </FormContainer>
       {showModal &&
         createPortal(
@@ -50,11 +50,16 @@ function VisitorsCreate() {
                 showModal={setShowModal}
                 title={"Crear residentes"}
               >
+                <Inputs name="Nombre" placeholder="Ingresa tu nombre" />
+                <Inputs name="Apellido" />
+                <Inputs name="Genero" />
+                <Inputs name="Acceso" />
+
                 <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
                 <Inputs name="Numero Documento" />
 
-                
-                
+
+
               </Modal>
             </ModalContainer>
           </>,
