@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import FormContainer from "../../Components/Forms/FormContainer";
-import FormColumn from "../../Components/Forms/FormColumn";
-import Inputs from "../../Components/Inputs/Inputs";
-import FormButton from "../../Components/Forms/FormButton";
-import InputsSelect from "../../Components/Inputs/InputsSelect";
-// import ModalContainer from '../../Components/Modals/Modal';
+
+import Inputs from "../../../Components/Inputs/Inputs";
+import FormButton from "../../../Components/Forms/FormButton";
+import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { createPortal } from "react-dom";
-import { ModalContainer, Modal } from "../../Components/Modals/ModalTwo";
-import ModalButton from "../../Components/Modals/ModalButton";
+import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
+import ModalButton from "../../../Components/Modals/ModalButton";
+import FormContainer from "../../../Components/Forms/FormContainer";
 
 function VisitorsCreate() {
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +23,7 @@ function VisitorsCreate() {
       value: "CE",
       label: "CE"
     }
-  ];
+  ]; 
 
   return (
     <>
@@ -34,13 +33,9 @@ function VisitorsCreate() {
         modalButton={<ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)}/>}
       >
         {/* <FormColumn> */}
-        <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre"></Inputs>
-        <Inputs name="Numero Documento"></Inputs>
-        <Inputs name="Nombre"></Inputs>
-        {/* <Inputs name="" type="Date"></Inputs> */}
-        {/* <InputsSelect opciones1={opciones} /> */}
-        {/* </FormColumn> */}
-        {/* <FormColumn> */}
+        <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre"/>
+        <Inputs name="Numero Documento"/>
+        <Inputs name="Nombre"/>
         <Inputs name="Apellido" type="Text"></Inputs>
         <Inputs name="Genero" type="Text"></Inputs>
         <Inputs name="Acceso" type="Text"></Inputs>

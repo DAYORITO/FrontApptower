@@ -38,7 +38,7 @@ function InputsSelect({id, options, name}) {
       <select
         id={id}
         value={valorSeleccionado}
-        className=''
+        className='selectComponent'
         ref={inputRef}
         onChange={(event) => setValorSeleccionado(event.target.value)}
       >
