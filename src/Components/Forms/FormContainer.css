@@ -8,6 +8,9 @@
   border-radius: 15px;
   height: 90vh;
   margin: 5vh 25vh 5vh 25vh;
+  min-width: 800px;
+  max-width: 75vh;
+
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin; 
