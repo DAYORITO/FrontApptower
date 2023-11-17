@@ -4,6 +4,8 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 
 export const WatchmanCreate = () => {
     const [documentType, setDocumentType] = useState("");
@@ -14,9 +16,12 @@ export const WatchmanCreate = () => {
     const [phone, setPhone] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const url = 'https://apptowerbackend.onrender.com/api/watchman';
+        // const url = 'http://localhost:3000/api/watchman';
         const data = {
             documentType,
             namewatchman,
@@ -24,7 +29,6 @@ export const WatchmanCreate = () => {
             document,
             lastnamewatchman,
             phone,
-            state: 'Activo',
             dateOfBirth
         };
 
@@ -32,24 +36,39 @@ export const WatchmanCreate = () => {
 
         const { response, error } = await useFetchpost(url, data);
 
+
+
         if (response) {
             console.log('Response:', response);
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Vigilante creado exitosamente',
+                icon: 'success',
+            }).then(() => {
+
+                navigate('/admin/watchman');
+            });
         }
 
         if (error) {
             console.log('Hubo un error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al crear vigilante',
+                icon: 'error',
+            });
         }
     };
 
     return (
         <>
 
-            <FormContainer name='Crear Vigilante' buttons={<FormButton name='Crear' backButton='Cancelar' onClick={handleSubmit} />}>
+            <FormContainer name='Crear Vigilante' buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/watchman/' onClick={handleSubmit} />}>
                 <FormColumn>
                     <Inputs name="Tipo Documento" type='text' value={documentType} onChange={e => setDocumentType(e.target.value)}></Inputs>
                     <Inputs name="Nombre" type='text' value={namewatchman} onChange={e => setNamewatchman(e.target.value)}></Inputs>
                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} ></Inputs>
-                    <Inputs name="Fecha Nacimiento" type="text" value={dateOfBirth} onChange={e => setDateOfBirth(e.target.value)}></Inputs>
+                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfBirth} onChange={e => setDateOfBirth(e.target.value)}></Inputs>
 
                 </FormColumn>
 

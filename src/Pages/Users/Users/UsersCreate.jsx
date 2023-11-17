@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { useFetchpost } from '../../../Hooks/useFetch'
-import FormContainer from '../../../Components/Forms/FormContainer'
-import FormColumn from '../../../Components/Forms/FormColumn'
-import Inputs from '../../../Components/Inputs/Inputs'
-import FormButton from '../../../Components/Forms/FormButton'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFetchpost } from '../../../Hooks/useFetch';
+import FormContainer from '../../../Components/Forms/FormContainer';
+import FormColumn from '../../../Components/Forms/FormColumn';
+import Inputs from '../../../Components/Inputs/Inputs';
+import FormButton from '../../../Components/Forms/FormButton';
+import Swal from 'sweetalert2';
 
 export const UsersCreate = () => {
     const [documentType, setDocumentType] = useState("");
@@ -14,6 +16,8 @@ export const UsersCreate = () => {
     const [document, setDocument] = useState("");
     const [lastname, setLastName] = useState("");
     const [phone, setPhone] = useState("");
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,8 +30,7 @@ export const UsersCreate = () => {
             idrole,
             document,
             lastname,
-            phone,
-            state: 'Activo'
+            phone
         };
 
         console.log('Data:', data);
@@ -36,11 +39,25 @@ export const UsersCreate = () => {
 
         if (response) {
             console.log('Response:', response);
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Usuario creado exitosamente',
+                icon: 'success',
+            }).then(() => {
+
+                navigate('/admin/users');
+            });
         }
 
         if (error) {
             console.log('Hubo un error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al crear usuario',
+                icon: 'error',
+            });
         }
+
     };
 
     return (
@@ -61,5 +78,5 @@ export const UsersCreate = () => {
                 </FormColumn>
             </FormContainer>
         </>
-    )
-}
+    );
+};

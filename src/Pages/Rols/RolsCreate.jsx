@@ -1,155 +1,126 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import FormContainer from '../../Components/Forms/FormContainer';
 import FormColumn from '../../Components/Forms/FormColumn';
 import Inputs from '../../Components/Inputs/Inputs';
 import FormButton from '../../Components/Forms/FormButton';
 import { Checkbox } from '../../Components/Checkbox/Checkbox';
-import './Rols.css';
 import { useFetchpost } from '../../Hooks/useFetch';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export const RolsCreate = () => {
+    const [testRoles, setTestRoles] = useState([]);
+
+    const permisos = [
+        {
+            label: 'Vigilantes',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Espacios',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Residentes',
+            options: ['Listar', 'Registrar', 'Editar'],
+        }
+    ]
+
+
+    const navigate = useNavigate();
+
+    const handlesomething = (option, permissions, hola) => {
+        console.log(option, 'option')
+        console.log(permissions, 'permissions')
+        console.log(hola, 'hola')
+        const permissionArrive = option == 'Vigilantes' ? 'watchman' : option == 'Espacios' ? 'spaces' : 'Residentes';
+        const newPermissionToAdd = permissions.map((permiso) => ({
+            permiso: option == 'Vigilantes' ? 'watchman' : option == 'Espacios' ? 'spaces' : 'Residentes',
+            privilege: permiso == 'Listar' ? 'get' : permiso == 'Registrar' ? 'post' : 'put',
+        }));
+        console.log(newPermissionToAdd, 'newPermissionToAdd')
+        const newPermisosFilter = testRoles.filter((permiso) => permiso.permiso !== permissionArrive);
+        const newPermissions = [...newPermisosFilter, ...newPermissionToAdd];
+        console.log(newPermissions, 'newPermissions')
+        setTestRoles(newPermissions);
+        console.log(testRoles, 'testRoles')
+    }
     const [namerole, setNamerole] = useState('');
     const [description, setDescrption] = useState('');
-    const [selectedOptionsPermission, setSelectedOptionsPermission] = useState({});
-    const [selectedOptionsPrivilege, setSelectedOptionsPrivilege] = useState({});
-    const [permissions, setPermission] = useState([]);
-    const [privileges, setPrivileges] = useState([]);
 
-    const frontendPermissionMap = {
-        'Usuarios': 1,
-        'Espacios': 2,
-        'Residentes': 3,
-    };
-
-    const frontendPrivilegesMap = {
-        'Listar': 1,
-        'Registrar': 2,
-        'Editar': 3,
-    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        // const url = 'http://localhost:3000/api/rols';
         const url = 'https://apptowerbackend.onrender.com/api/rols';
-
-        const permissions = [];
-        const privileges = [];
-
-        for (const [label, isChecked] of Object.entries(selectedOptionsPermission)) {
-            const backendValue = frontendPermissionMap[label];
-            const privilegeValue = frontendPrivilegesMap[label];
-
-            if (isChecked) {
-                if (backendValue) {
-                    permissions.push(backendValue);
-                }
-                if (privilegeValue !== undefined) {
-                    privileges.push(privilegeValue);
-                }
-            }
-        }
 
         const data = {
             namerole,
             description,
-            permissions,
-            privileges,
-            state: 'Activo',
+            detailsRols: testRoles,
+
         };
 
         console.log('Data:', data);
+        console.log('This is a test: ', testRoles)
 
         const { response, error } = await useFetchpost(url, data);
 
         if (response) {
             console.log('Response:', response);
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Rol creado exitosamente',
+                icon: 'success',
+            }).then(() => {
+                navigate('/admin/rols');
+            });
         }
+
         if (error) {
             console.log('Hubo un error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al crear rol',
+                icon: 'error',
+            });
         }
     };
 
-    const handleCheckboxChange = (label, isChecked) => {
-        console.log('Before setSelectedOptions:', selectedOptionsPermission);
-        setSelectedOptionsPermission((prevOptions) => ({
-            ...prevOptions,
-            [label]: isChecked,
-        }));
-    };
-
-    useEffect(() => {
-        const newPermissions = [];
-        for (const [label, isChecked] of Object.entries(selectedOptionsPermission)) {
-            if (isChecked) {
-                const backendValue = frontendPermissionMap[label];
-                if (backendValue) {
-                    newPermissions.push(backendValue);
-                }
-            }
-        }
-        console.log('New Permissions:', newPermissions);
-        setPermission(newPermissions);
-    }, [selectedOptionsPermission]);
-
-
-    const handleCheckboxChangeP = (label, isChecked) => {
-        console.log('Before setSelectedOptions:', selectedOptionsPrivilege);
-        setSelectedOptionsPrivilege((prevOptions) => ({
-            ...prevOptions,
-            [label]: isChecked,
-        }));
-    };
-
-    useEffect(() => {
-        const newPrivileges = [];
-        for (const [label, isChecked] of Object.entries(selectedOptionsPermission)) {
-            if (isChecked) {
-                const backendValue = frontendPermissionMap[label];
-                if (backendValue) {
-                    newPermissions.push(backendValue);
-                } else {
-                    const privilegeValue = frontendPrivilegesMap[label];
-                    if (privilegeValue !== undefined) {
-                        newPrivileges.push(privilegeValue);
-                    }
-                }
-            }
-        }
-        console.log('New Permissions:', newPermissions);
-        console.log('New Privileges:', newPrivileges);
-        setPermission(newPermissions);
-        setPrivileges(newPrivileges);
-    }, [selectedOptionsPermission]);
     return (
         <>
             <FormContainer
                 name='Crear Rol'
                 onSubmit={handleSubmit}
-                buttons={<FormButton name='Crear' backButton='Cancelar' />}
+                buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/rols' />}
             >
                 <FormColumn>
                     <Inputs name='Nombre Rol' type='text' value={namerole} onChange={(e) => setNamerole(e.target.value)} />
-                    <Inputs name='Descripción' value={description} onChange={(e) => setDescrption(e.target.value)} type='text' />
+                    <Inputs
+                        name='Descripción'
+                        value={description}
+                        onChange={(e) => setDescrption(e.target.value)}
+                        type='text'
+                    />
                 </FormColumn>
 
                 <FormColumn>
                     <div className='moduls'>
-                        <Checkbox
-                            label='Usuarios'
-                            options={['Listar', 'Registrar', 'Editar']}
-                            onCheckboxChange={(isChecked) => handleCheckboxChange('Usuarios', isChecked)}
-                        />
 
-                        <Checkbox
-                            label='Espacios'
-                            options={['Listar', 'Registrar', 'Editar']}
-                            onCheckboxChange={(isChecked) => handleCheckboxChange('Espacios', isChecked)}
-                        />
-
-                        <Checkbox
-                            label='Residentes'
-                            options={['Listar', 'Registrar', 'Editar']}
-                            onCheckboxChange={(isChecked) => handleCheckboxChange('Residentes', isChecked)}
-                        />
+                        {
+                            permisos.map((permiso, index) => {
+                                return (
+                                    <Checkbox
+                                        key={index}
+                                        label={permiso.label}
+                                        options={permiso.options}
+                                        onCheckboxChange={(hola, optionsSelected) => {
+                                            handlesomething(permiso.label, optionsSelected, hola)
+                                        }}
+                                    />
+                                )
+                            })
+                        }
                     </div>
                 </FormColumn>
             </FormContainer>

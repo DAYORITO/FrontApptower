@@ -19,7 +19,7 @@ export const Rols = () => {
             <ContainerTable title='Roles'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Rol' href='/#/admin/rols/create' />
+                <ButtonGoTo value='Crear Rol' href='/admin/rols/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -31,8 +31,8 @@ export const Rols = () => {
                         <Row icon='fe fe-settings fe-16 text-muted' namerole={'Administrador'} descripcion={'Todas las funcionalidades'}  >
                             <Actions accion='Editar'></Actions>
                         </Row>
-                        {load && <p>Cargando...</p>}
-                        {!load && data.rols?.map(rols => (
+
+                        {data.rols?.map(rols => (
                             <Row
                                 namerole={rols.namerole}
                                 descripcion={rols.description}
