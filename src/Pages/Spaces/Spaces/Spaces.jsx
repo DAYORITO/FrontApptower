@@ -1,4 +1,5 @@
 import { Actions } from "../../../Components/Actions/Actions"
+import { BigCard } from "../../../Components/BigCard/BigCard"
 import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons"
 import { Card } from "../../../Components/Card/Card"
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard"
@@ -17,7 +18,13 @@ export const Spaces = () => {
         <TablePerson>
           <ContainerCard>
 
-            <Card name="Salon social" notions={2} type="Salon social" residents={3} status="Inactive">
+            <BigCard></BigCard>
+            <BigCard></BigCard>
+            <BigCard></BigCard>
+            <BigCard></BigCard>
+            <BigCard></BigCard>
+
+            {/* <Card name="Salon social" notions={2} type="Salon social" residents={3} status="Inactive">
               <Actions icon="fe fe-users fe-12 mr-4" accion="Hacer ingreso" />
               <Actions icon="fe fe-message-square fe-12 mr-4" accion="Ver notificaciones" />
             </Card>
@@ -76,7 +83,7 @@ export const Spaces = () => {
             <Card name="109" type="Apartamento" residents={2}>
               <Actions icon="fe fe-users fe-12 mr-4" accion="Hacer ingreso" />
               <Actions icon="fe fe-message-square fe-12 mr-4" accion="Ver notificaciones" />
-            </Card>
+            </Card> */}
 
 
 

@@ -1,0 +1,28 @@
+.space-img {
+
+
+    position: relative;
+    top: 0;
+    width: 100% !important ;
+    height: 100% !important;
+
+    border-radius: 3px;
+}
+
+#card-space {
+
+    margin: 0;
+    padding: 0vh 3vh;
+}
+
+#card-space .card-text {
+
+    padding-top: 5%;
+}
+
+#card-footer-down {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

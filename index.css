@@ -1,12 +1,15 @@
 /* Inicio tarjeta de tabla y formulario */
+* {
+
+}
 
 #formContainer {
 
   position: absolute;
   border-radius: 8px;
   height: 88vh;
-  margin: 3vh 30vw 5vh 7vw;
-  width: 90vw;
+  margin: 3vh 30vw 5vh 10vw;
+  width: 84vw;
 
   overflow-x: hidden;
   overflow-y: auto;

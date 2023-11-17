@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import "./RowsStyle.css"
 
 export const Row = ({
@@ -20,31 +21,39 @@ export const Row = ({
 
     return (
 
+
         <tr class="file-list">
 
+            {/* <Link to={"#"} style={{ textDecoration: 'none'}} > */}
+            {/* <a href=""> */}
+                <td class="text-center ">
+                    <div class="circle circle-sm bg-light">
+                        <span class={icon ? icon : 'fe fe-user fe-16 text-muted'}></span>
+                    </div>
 
-            <td class="text-center ">
-                <div class="circle circle-sm bg-light">
-                    <span class={icon ? icon : 'fe fe-user fe-16 text-muted'}></span>
-                </div>
+                    {['Active', 'Activo'].includes(status)
+                        ? <span className="dot dot-md bg-success mr-1"></span>
+                        : <span className="dot dot-md bg-danger mr-1"></span>}
 
-                {['Active', 'Activo'].includes(status)
-                    ? <span className="dot dot-md bg-success mr-1"></span>
-                    : <span className="dot dot-md bg-danger mr-1"></span>}
+                </td>
 
-            </td>
-            <th scope="row">
-                {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
-                {name != null & name != null ? name + ' ' + lastName : null} <br />
-                {docType != null ? <span className="badge badge-light text-secondary ">{docType}</span> : null}
-                {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
+                <th scope="row">
+                    {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
+                    {name != null & name != null ? name + ' ' + lastName : null} <br />
+                    {docType != null ? <span className="badge badge-light text-secondary ">{docType}</span> : null}
+                    {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
 
 
-            </th>
-            {rol != null ? <td class="text-secondary">{rol}</td> : null}
-            {email != null ? <td class="text-secondary">{email}</td> : null}
-            {phone != null ? <td class="text-secondary">{phone}</td> : null}
-            {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
+                </th>
+                {rol != null ? <td class="text-secondary">{rol}</td> : null}
+                {email != null ? <td class="text-secondary">{email}</td> : null}
+                {phone != null ? <td class="text-secondary">{phone}</td> : null}
+                {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
+
+                {/* </Link> */}
+
+
+            {/* </a> */}
 
             <td>
 

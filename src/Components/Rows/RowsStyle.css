@@ -1,12 +1,14 @@
 .file-list:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.08); 
     transform: scale(1.01); 
-    transition: transform 0.3s;
+    transition: all 0.5s;
+    z-index: 10;
 }
 
 .file-list:nth-child(even){
     background-color: rgba(248, 249, 250, 1) !important;
+    transition: all 0.5s;
+
+    
 }
-/* .file-list:nth-child(re){
-    background-color: #6c757d !important;
-} */
+

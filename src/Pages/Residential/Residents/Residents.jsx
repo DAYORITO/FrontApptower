@@ -17,7 +17,7 @@ export const Residents = () => {
                 <DivRow>
                     <DropdownExcel />
                     <SearchButton />
-                    <ButtonGoTo value='Crear Residente' href='/#/admin/residents/create' />
+                    <ButtonGoTo value='Crear Residente' href='create' />
                 </DivRow>
 
                 <TablePerson>
