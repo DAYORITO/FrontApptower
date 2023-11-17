@@ -1,34 +1,36 @@
+import { Link } from 'react-router-dom';
 import './BigCard.css';
 
 export const BigCard = () => {
     return (
 
+
         <div class="col-md-3">
+
+
+
+
             <div class="card shadow mb-4">
 
-                <a href=''>
+                <Link to={'details'}style={{ textDecoration: 'none' }}>
 
-                    <div class="card-body text-center">
+                    <div class="card-body text-center" id='card-space'>
                         <div class="avatar avatar-lg mt-4">
-                            <i class="fe item.TipoEspacio fe-home fe-24"></i>
+                        <img class="space-img" src="https://res-console.cloudinary.com/ddptpzasb/media_explorer_thumbnails/b10add6ce61f165c67f4d31dc491f89c/card" alt="Descripción de la imagen"></img>
                         </div>
-                        <div class="card-text my-2">
-                            <strong class="card-title my-0">Nombre espacio</strong>
-                            <p class="text-muted">Descripcion</p>
-                            <p class="text-muted">Descripcion</p>
-                            <p class="text-muted">Descripcion</p>
-                            <p class="text-muted">Descripcion</p>
-
+                        <div class="card-text">
+                            <strong class="card-title">Pscina</strong>
+                            <p>Capacidad</p>
                         </div>
                     </div>
-                </a>
-
+                </Link>
                 <div class="card-footer">
-                    <div class="row align-items-center justify-content-between">
+                    <div class="row" id='card-footer-down'>
                         <div class="col-auto">
                             <small>
                                 <span class="dot dot-lg bg-success bg-danger mr-1"></span>
                             </small>
+                            <span>Activo</span>
                         </div>
                         <div class="col-auto">
                             <div class="file-action">
