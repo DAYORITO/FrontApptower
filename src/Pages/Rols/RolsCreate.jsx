@@ -7,25 +7,67 @@ import { Checkbox } from '../../Components/Checkbox/Checkbox';
 import { useFetchpost } from '../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import './Rols.css';
 
 export const RolsCreate = () => {
     const [testRoles, setTestRoles] = useState([]);
 
     const permisos = [
         {
-            label: 'Vigilantes',
+            label: 'Usuarios',
             options: ['Listar', 'Registrar', 'Editar'],
         },
         {
             label: 'Espacios',
             options: ['Listar', 'Registrar', 'Editar'],
         },
+
+        {
+            label: 'Vigilantes',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+
         {
             label: 'Residentes',
             options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Propietarios',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Apartamentos',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Ingresos',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Visitantes',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Vehiculos',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Parqueaderos',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Reservas',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Multas',
+            options: ['Listar', 'Registrar', 'Editar'],
+        },
+        {
+            label: 'Notificaciones',
+            options: ['Listar', 'Registrar', 'Editar'],
         }
     ]
-
 
     const navigate = useNavigate();
 
@@ -98,6 +140,7 @@ export const RolsCreate = () => {
                     <Inputs name='Nombre Rol' type='text' value={namerole} onChange={(e) => setNamerole(e.target.value)} />
                     <Inputs
                         name='Descripción'
+                        id='description'
                         value={description}
                         onChange={(e) => setDescrption(e.target.value)}
                         type='text'

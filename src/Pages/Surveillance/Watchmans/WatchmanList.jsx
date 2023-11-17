@@ -26,7 +26,7 @@ export const Watchman = () => {
                         <Th name={'Información Vigilante'}></Th>
                         <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>
-                        <Th name={'Estado'}></Th>
+
 
                     </Thead>
                     <Tbody>

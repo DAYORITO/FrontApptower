@@ -8,8 +8,8 @@ export const Layout = () => {
     return (
         <>
             <ContainerHeader>
-                <Aside/>
-                <div className='appContent' onClick={() => setUserOptionsOpen(false)}>
+                <Aside />
+                <div className='appContent'>
                     <Outlet />
                 </div>
             </ContainerHeader>

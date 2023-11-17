@@ -28,7 +28,7 @@ export const Users = () => {
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
-                        <Th name={'Estado'}></Th>
+
 
 
                     </Thead>
