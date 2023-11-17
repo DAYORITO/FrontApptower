@@ -1,4 +1,5 @@
- 
+import "./Thead.css"
+
 export const Thead = ({ children }) => {
     return (
         <thead>

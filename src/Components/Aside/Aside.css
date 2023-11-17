@@ -1,140 +1,112 @@
+/* Estilos generales para la barra de navegación */
 .myNav {
-
-    background-color: rgba(255, 255, 255, 1) !important;
     position: absolute;
     top: 0;
     bottom: 0;
-    height: 100vh;
     left: 0;
     min-width: 6%;
     width: 6%;
-    transition: width 0.2s linear;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 1) !important;
     box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
     overflow: hidden;
     list-style: none;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    transition: all 0.2s linear;
 }
 
-.myNav.expanded .myNav-header {
-    
+/* Estilos para la versión expandida de la barra de navegación */
+.myNav.expanded {
+    min-width: 18%;
+    width: 18%;
+    transition: all 0.5s ease;
+}
+
+
+/* Estilos para la versión colapsada de la barra de navegación */
+.myNav.collapsed .myNav-profile,
+.myNav.expanded .myNav-profile {
+    width: 75%;
+    margin: 10px 10px 0px 10px;
+    border-radius: 8px;
+    height: auto;
+    padding: 1vh;
+    box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
-    height: 10%;
-    width: 100%;
-
-
-
+    align-items: center;
 }
-.myNav .myNav-header {
-    
+
+/* Estilos para la cabecera de la barra de navegación */
+.myNav .myNav-header,
+.myNav.expanded .myNav-header {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 10%;
     width: 100%;
-
-
 }
 
-.myNav .myNav-header button {
-    
-}
-
+/* Estilos específicos para el botón en la versión expandida */
 .myNav.expanded .myNav-header button {
-    
     order: 2;
-    margin-left: auto; /* Esto hará que el botón se mueva al extremo derecho */
-
-}
-
-.myNav .myNav-header img {
-    
-    display: none;
-
-}
-.myNav.expanded {
-
-    min-width: 24vh;
-    width: 18%;
-    transition: all 0.5s ease;
-    
+    margin-left: auto;
 }
 
 
+/* Estilos para la versión expandida de la imagen en la cabecera */
 .myNav.expanded .myNav-header img {
-    
     order: 1;
     display: none;
     left: 0;
-
 }
 
 
-.myNav.expanded~.appContent {
-
-    margin-left: 10% !important;
-    
-    
-}
-
-
-
-
-.logo {
-    display: flex;
-    transition: all 0.5s ease;
-    width: 6.5vh;
-    height: 6.5vh;
-}
-
-#main {
-
-    padding: 0 1rem 0 7.5rem;
-    margin: 0;
-}
-
-.appContent {
-    /* margin-left: 0px !important; */
-    transition: .3s;
-}
-
-
+/* Estilos para los enlaces de la barra de navegación */
 .myNav-links {
     height: 100%;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
-
     justify-content: space-between;
 }
 
-.myNav-links-content {
+.myNav-profile-user {
 
-    width: 100%;
-    margin-top: 10%;
-    padding: auto;
-    flex-direction: column;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
-    background-color: rgba(255, 255, 255, 1);
-
-    z-index: 1; 
+    display: flex;
 }
 
-.myNav-links-end {
+.myNav-profile-user .row {
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para el contenido de los enlaces */
+.myNav-links-content {
     width: 100%;
-    margin-bottom: 10%;
+    height: 55vh;
+    padding: auto;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 1;
+}
+
+/* Estilos para la sección final de los enlaces */
+.myNav.expanded .myNav-links-end {
+    width: 100%;
+    margin-bottom: 6%;
     padding: 0 10vh 0 0;
     flex-direction: column;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
-    background-color: rgba(255, 255, 255, 0) ;
+    z-index: 1;
 
-
-    z-index: 1; 
+}
+.myNav.collapsed .myNav-links-end {
+    width: 100%;
+    margin-bottom: 6%;
+    padding: auto;
+    flex-direction: column;
+    z-index: 1;
 }

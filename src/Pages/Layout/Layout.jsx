@@ -9,7 +9,6 @@ export const Layout = () => {
         <>
             <ContainerHeader>
                 <Aside/>
-                {/* <AsideBarMenu /> */}
                 <div className='appContent' onClick={() => setUserOptionsOpen(false)}>
                     <Outlet />
                 </div>

@@ -14,7 +14,7 @@ export const DropDownNav = ({ module, dropdownName = "#", id = 'id', icon = "fe 
 }
 
 
-export const ListNav = ({ href = '/#/admin/', module, icon = "fe fe-home fe-24", id = 'process' }) => {
+export const ListNav = ({ href = '/#/admin/', module, icon = "fe fe-home", id = 'process' }) => {
     return (
         <li className="nav-item">
             <a className="nav-link" href={href}>

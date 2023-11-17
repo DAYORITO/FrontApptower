@@ -1,16 +1,13 @@
-.container-fluid {
-    border-radius: 8px;
-    background-color: white !important;
-    height: 100vh;
-    margin: 5vh;
-    width: 95%;
 
+
+#tableContainer {
+
+    padding: 1.5vw 2vw 10vw 2vw ;
 }
 
+.table {
 
-#align-items-center {
-
-    padding: 0;
-    margin: 0px 5px 5px 5px;
-
+    /* display: block !important; */
+    overflow-x: auto;
+    margin: 2vw 2vw 0vw 2vw;
 }

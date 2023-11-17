@@ -1,5 +1,5 @@
 .table-responsive {
-    height: 68vh;
+    height: auto;
     overflow-x: hidden;
     /* background-color: white; */
 }

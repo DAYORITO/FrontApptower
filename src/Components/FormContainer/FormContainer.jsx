@@ -9,11 +9,7 @@ function FormContainer({name, children}) {
             <div className="card-header">
                 <strong className="card-title">{name}</strong>
             </div>
-            <div className="card-body" style={{
-                maxHeight: '65vh',
-                overflow: 'hidden',
-                overflowY: 'scroll',
-            }}>
+            <div className="card-body" >
                 <div className="row">
                     {children}
                 </div>

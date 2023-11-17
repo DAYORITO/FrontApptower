@@ -1,24 +1,25 @@
+
+
 /* ===== Scrollbar CSS ===== */
 /* Firefox */
-* {
+/* * {
   scrollbar-width: auto;
   scrollbar-color: #e6e6e6 #ffffff;
-}
-#formContainer {
-  border-radius: 8px;
-  height: 90vh;
-  margin: 5vh;
-  min-width: 95%;
-  max-width: 75vh;
+} */
 
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: thin; 
-  scrollbar-color: #e6e6e6 #ffffff; 
+.justify-content-between {
+
+  padding: 4vw 0vw 1vw 4vw ;
+}
+
+#form {
+
+  padding: 0vw 5vw 10vw 5vw ;
+
 }
 
 /* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
   width: 10px;
 }
 
@@ -30,7 +31,7 @@
   background-color: #e6e6e6;
   border-radius: 10px;
   border: 1px solid #e5edff;
-}
+} */
 
 .botones {
   display: flex;
