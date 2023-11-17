@@ -4,8 +4,8 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
-import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 export const WatchmanCreate = () => {
     const [documentType, setDocumentType] = useState("");
@@ -40,7 +40,7 @@ export const WatchmanCreate = () => {
 
         if (response) {
             console.log('Response:', response);
-            Swal.fire({
+            Swalgit .fire({
                 title: 'Éxito',
                 text: 'Vigilante creado exitosamente',
                 icon: 'success',

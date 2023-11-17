@@ -17,11 +17,12 @@ export const Residents = () => {
                 <DivRow>
                     <DropdownExcel />
                     <SearchButton />
-                    <ButtonGoTo value='Crear Residente' href='/#/admin/residents/create' />
+                    <ButtonGoTo value='Crear Residente' href='create' />
                 </DivRow>
 
                 <TablePerson>
                     <Thead>
+
                         <Th></Th>
                         <Th name={'Resident information'}></Th>
                         <Th name={'Phone'}></Th>
@@ -36,8 +37,11 @@ export const Residents = () => {
                             phone='3218298707'
                             email='emanueltabares@gmail.com'
                         >
-                            <Actions accion='Edit resident'></Actions>
-                            <Actions accion='Assigned space to resident'></Actions>                        </Row>
+
+                            <Actions accion='Ver residente' href='/#/admin/residents/details' icon='fe fe-eye fe-12 mr-4'></Actions>
+                            <Actions accion='Editar r'></Actions>
+                            <Actions accion='Asignar espacio'></Actions>
+                        </Row>
                         <Row
                             docType='TI'
                             docNumber='2001234567'
@@ -45,8 +49,9 @@ export const Residents = () => {
                             lastName='Lopez'
                             phone='3216666666'
                             email='maria@example.com'>
-                            <Actions accion='Edit resident'></Actions>
-                            <Actions accion='Assigned space to resident'></Actions>
+                            <Actions accion='Ver residente' href='/details' icon='fe fe-eye fe-12 mr-4'></Actions>
+                            <Actions accion='Editar r'></Actions>
+                            <Actions accion='Asignar espacio'></Actions>
                         </Row>
 
                         <Row
