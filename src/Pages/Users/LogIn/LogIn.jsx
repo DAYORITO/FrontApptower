@@ -28,8 +28,8 @@ const LogIn = () => {
 
     return (
 
-        <div className='container-login'>
-            <div className="container-form login">
+        <div className='container-login ' >
+            <div className="container-form login ">
                 <div className="informations">
                     <div className="info-childs">
                         <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" />
@@ -39,7 +39,7 @@ const LogIn = () => {
                 </div>
                 <div className="form-informations">
                     <div className="form-information-childs">
-                        <img src={ImagenPerson} width="75" height="75" alt="" />
+                        <img src={ImagenPerson} width="75" height="75" alt="" className='iconperson' />
 
                         <form className="form">
 
@@ -59,22 +59,24 @@ const LogIn = () => {
                 </div>
             </div>
 
+
+
             <div className="container-form register hide">
                 <div className="information">
                     <div className="info-childs">
                         <img src={ImageIcono} width="140" height="140" alt="Apptower" />
                         <h2>Bienvenido</h2>
                         <p className='registerp'>Para unirte a nuestra comunidad por favor regístrate con tus datos</p>
-
-
                     </div>
                 </div>
                 <div className="form-information">
                     <div className="form-information-childs">
-                        <img src={ImagenPerson} width="75" height="75" alt="" />
+                        <img src={ImagenPerson} width="75" height="75" alt="" className='iconperson' />
                         <form className="form-register">
                             <SelectInput
                                 options={[
+                                    
+                                    
                                     { value: 'CC', label: 'Cédula' },
                                     { value: 'CE', label: 'Cédula de extranjería' }
                                 ]}

@@ -19,7 +19,7 @@ export const Watchman = () => {
                 <DropdownExcel />
                 <SearchButton />
 
-                <ButtonGoTo value='Crear Vigilante' href='/#/admin/watchman/create' />
+                <ButtonGoTo value='Crear Vigilante' href='/admin/watchman/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -33,8 +33,7 @@ export const Watchman = () => {
                         <Row icon='fe fe-shield fe-16 text-muted' module='Vigilantes' docType='CC' docNumber='102340121' name='Andres' lastName='Amaya' email='andres@gmail.com' phone='315678943'  >
                             <Actions accion='Editar'></Actions>
                         </Row>
-                        {load && <p>Cargando...</p>}
-                        {!load && data.watchman?.map(watchman => (
+                        {data.watchman?.map(watchman => (
                             <Row
                                 docType={watchman.documentType}
                                 docNumber={watchman.document}

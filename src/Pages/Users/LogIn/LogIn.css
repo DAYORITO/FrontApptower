@@ -11,6 +11,8 @@
     font-size: 13px;
 }
 
+
+
 .buttonStyle:hover {
     text-decoration: underline;
     color: #333;
@@ -226,7 +228,7 @@
 
 @media screen and (max-width:750px) {
     html {
-        font-size: 12px;
+        font-size: 10px;
     }
 }
 
@@ -237,7 +239,7 @@
 
     .container-form {
         height: auto;
-        flex-direction: column;
+        display: inline-block;
     }
 
     .information {
@@ -250,9 +252,54 @@
     }
 
     .form-information {
-        width: 100%;
-        padding: 20px;
-        border-bottom-left-radius: 20px;
-        border-top-right-radius: 0;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+        margin-bottom: 100px;
+        width: 55%;
+        height: 90%;
+        border-radius: 20px;
+
+    }
+
+    .form-register {
+        justify-content: center;
+
+    }
+
+    .boton-register {
+        width: 150px;
+    }
+
+}
+
+
+
+@media (max-width: 750px) {
+    .info-childs {
+        display: none;
+
+    }
+
+    .form-information-childs {
+        width: 500px;
+        margin: 25px;
+        border-radius: 20px;
+    }
+
+    .form-informations {
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 300px;
+        width: auto;
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: inherit;
+    }
+
+    .information {
+        background-color: transparent;
     }
 }
