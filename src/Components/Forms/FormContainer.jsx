@@ -10,7 +10,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
           <div>{modalButton}</div>
         </div>
         <div className="card-body" id='form'>
-          <form>
+          <form onSubmit={onSubmit}>
             <div className="row">
               {children}
               {buttons}
@@ -18,7 +18,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
           </form>
         </div>
       </div >
-      
+
     </>
 
 
