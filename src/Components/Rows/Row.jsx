@@ -11,7 +11,7 @@ export const Row = ({
     docNumber,
     phone,
     email,
-    status,
+    status = 'Activo',
     rol,
     children,
     descripcion,
@@ -31,7 +31,7 @@ export const Row = ({
                         <span class={icon ? icon : 'fe fe-user fe-16 text-muted'}></span>
                     </div>
 
-                    {['Active', 'Activo'].includes(status)
+                    {['Active', 'Activo']. includes(status)
                         ? <span className="dot dot-md bg-success mr-1"></span>
                         : <span className="dot dot-md bg-danger mr-1"></span>}
 
@@ -40,9 +40,8 @@ export const Row = ({
                 <th scope="row">
                     {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
                     {name != null & name != null ? name + ' ' + lastName : null} <br />
-                    {docType != null ? <span className="badge badge-light text-secondary ">{docType}</span> : null}
+                    {docType != null ? <span className="badge badge-light text-secondary">{docType}</span> : null}
                     {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
-
 
                 </th>
                 {rol != null ? <td class="text-secondary">{rol}</td> : null}

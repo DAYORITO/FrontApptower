@@ -1,26 +1,25 @@
 import { Link } from 'react-router-dom';
 import './BigCard.css';
+import imagen from "../../assets/2.jpeg"
 
-export const BigCard = () => {
+export const BigCard = ({cosa = 'cosa'}) => {
     return (
 
 
         <div class="col-md-3">
 
 
-
-
             <div class="card shadow mb-4">
 
-                <Link to={'details'}style={{ textDecoration: 'none' }}>
+                <Link to={'details'} style={{ textDecoration: 'none' }}>
 
                     <div class="card-body text-center" id='card-space'>
-                        <div class="avatar avatar-lg mt-4">
-                        <img class="space-img" src="https://res-console.cloudinary.com/ddptpzasb/media_explorer_thumbnails/b10add6ce61f165c67f4d31dc491f89c/card" alt="Descripción de la imagen"></img>
+                        <div class="avatar avatar-lg mt-2">
+                            <img class="space-img" id='img' src={imagen} alt="Descripción de la imagen"></img>
                         </div>
                         <div class="card-text">
-                            <strong class="card-title">Pscina</strong>
-                            <p>Capacidad</p>
+                            <strong class="card-title">{cosa}</strong>
+                            <p>{cosa}</p>
                         </div>
                     </div>
                 </Link>
@@ -30,7 +29,7 @@ export const BigCard = () => {
                             <small>
                                 <span class="dot dot-lg bg-success bg-danger mr-1"></span>
                             </small>
-                            <span>Activo</span>
+                            <span>{cosa}</span>
                         </div>
                         <div class="col-auto">
                             <div class="file-action">

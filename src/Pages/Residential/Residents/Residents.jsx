@@ -12,7 +12,7 @@ export const Residents = () => {
     return (
         <>
 
-            <ContainerTable title='Residents'>
+            <ContainerTable title='Residentes'>
 
                 <DivRow>
                     <DropdownExcel />
@@ -23,9 +23,9 @@ export const Residents = () => {
                 <TablePerson>
                     <Thead>
                         <Th></Th>
-                        <Th name={'Resident information'}></Th>
-                        <Th name={'Phone'}></Th>
-                        <Th name={'Email'}></Th>
+                        <Th name={'Informacion residente'}></Th>
+                        <Th name={'Telefono'}></Th>
+                        <Th name={'Correo'}></Th>
                     </Thead>
                     <Tbody>
                         <Row

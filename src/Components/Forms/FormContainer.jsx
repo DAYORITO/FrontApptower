@@ -4,8 +4,8 @@ import "./FormContainer.css";
 function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
   return (
     <>
-      <div div id="formContainer" className="card shadow mb-4 pl-5 pr-5">
-        <div className=" mt-5 ml-1 d-flex justify-content-between">
+      <div div id="formContainer" className="card shadow ">
+        <div className="d-flex justify-content-between">
           <strong>
             <h4>{name}</h4>
           </strong>
@@ -20,14 +20,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
           </form>
         </div>
       </div>
-      <div className="card-body">
-        <form onSubmit={onSubmit}>
-          <div className="row">
-            {children}
-            {buttons}
-          </div>
-        </form>
-      </div>
+      
     </>
   );
 }
