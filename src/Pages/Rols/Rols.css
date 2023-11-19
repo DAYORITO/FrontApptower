@@ -5,3 +5,7 @@
     overflow-x: auto;
     overflow-y: auto;
 }
+
+#description {
+    height: 165px;
+}

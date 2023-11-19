@@ -12,7 +12,7 @@ export const ModalContainer = ({ children, ShowModal }) => {
 
 export const Modal = ({ title, children, showModal }) => {
   return (
-    <div onClick={(e) => e.stopPropagation()}>
+    <div onClick={(e) => e.stopPropagation()} className="divModal__Container">
       <div
         id="verticalModal"
         tabindex="-1"

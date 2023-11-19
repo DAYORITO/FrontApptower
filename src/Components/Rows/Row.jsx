@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
 import "./RowsStyle.css"
 
@@ -16,6 +17,11 @@ export const Row = ({
     children,
     descripcion,
     icon,
+    op1,
+    op2,
+    op3,
+    op4,
+    op5,
 
 }) => {
 
@@ -36,7 +42,7 @@ export const Row = ({
                         : <span className="dot dot-md bg-danger mr-1"></span>}
 
                 </td>
-
+                
                 <th scope="row">
                     {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
                     {name != null & name != null ? name + ' ' + lastName : null} <br />
@@ -48,7 +54,11 @@ export const Row = ({
                 {email != null ? <td class="text-secondary">{email}</td> : null}
                 {phone != null ? <td class="text-secondary">{phone}</td> : null}
                 {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
-
+                {op1 != null ? <td class="text-secondary">{op1}</td> : null}
+                {op2 != null ? <td class="text-secondary">{op2}</td> : null}
+                {op3 != null ? <td class="text-secondary">{op3}</td> : null}
+                {op4 != null ? <td class="text-secondary">{op4}</td> : null}
+                {op5 != null ? <td class="text-secondary">{op5}</td> : null}
                 {/* </Link> */}
 
 

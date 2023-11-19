@@ -24,6 +24,7 @@ import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
+import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 
 const App = () => {
     return (
@@ -52,6 +53,7 @@ const App = () => {
                         {/* Bookings */}
                         {/* Booking */}
                         <Route path='booking/' element={<Booking />} />
+                        <Route path='booking/create' element={<BookingCreate />} />
 
                         {/* GuestIncome */}
                         <Route path='guest_income/create' element={<GuestIncomeCreate />} />

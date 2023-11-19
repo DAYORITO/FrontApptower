@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 
-const ButtonGoTo = ({ value = 'New module', href }) => {
+const ButtonGoTo = ({ value = 'New module', href, modalButton }) => {
     return (
         <div className="col-auto">
             <Link to={href} className="btn btn-primary">
                 <span>{value}</span>
             </Link>
+            <div>{modalButton}</div>
         </div>
     );
 };
