@@ -13,7 +13,7 @@ export const Spaces = () => {
       <ContainerTable title='Espacios'>
         <DropdownExcel />
         <SearchButton />
-        <ButtonGoTo value='Crear espacio' href='/#/admin/spaces/create' />
+        <ButtonGoTo value='Crear espacio' href='create' />
 
         <TablePerson>
           <ContainerCard>

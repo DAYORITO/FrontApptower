@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import "./Card.css"
 
-export const Card = ({ icon = 'fe fe-home fe-16 ', children, name = 'Name', type = 'type', residents, notions, status='Active' }) => {
+export const Card = ({ icon = 'fe fe-home fe-16 ', children, name = 'Name', type = 'type', residents, notions, status = 'Active' }) => {
 
 
     if (type === 'Salon social') {
@@ -17,28 +18,32 @@ export const Card = ({ icon = 'fe fe-home fe-16 ', children, name = 'Name', type
             <div id="Card" class="card shadow mb-4">
                 <div class="card-body file-list">
                     <div class="d-flex align-items-center">
-                        <div class="circle circle-md bg-light">
-                            <span class={icon}></span>
-                            
-                        </div>
-                        {status === 'Active' ? (
+
+                            <div class="circle circle-md bg-light">
+                                <span class={icon}></span>
+
+                            </div>
+                            {status === 'Active' ? (
                                 <span className="dot dot-lg bg-success mt-4"></span>
                             ) : (
                                 <span className="dot dot-lg bg-danger mt-4"></span>
                             )}
+                        <Link to={'details'}>
 
-                        <div class="flex-fill ml-4 fname">
-                            
-                            <strong>{name}</strong><br />
-                            <span class="badge badge-light text-muted">{type}</span>
+                            <div class="flex-fill ml-4 fname">
 
-                            {residents && <i className="fe fe-users fe-12 ml-2 text-success"></i>}
-                            {residents && <span className="badge text-success">{residents}</span>}
+                                <strong className="h6">{name}</strong><br />
+                                <span class="badge badge-light text-muted">Info</span>
 
-                            {notions && <i className="fe fe-message-square fe-12 ml-2 text-warning"></i>}
-                            {notions && <span className="badge badge-light text-warning">{notions}</span>}
+                                {residents && <i className="fe fe-users fe-12 ml-2 text-success"></i>}
+                                {residents && <span className="badge text-success">{residents}</span>}
 
-                        </div>
+                                {notions && <i className="fe fe-message-square fe-12 ml-2 text-warning"></i>}
+                                {notions && <span className="badge badge-light text-warning">{notions}</span>}
+
+                            </div>
+                        </Link>
+
                         <div class="file-action">
                             <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="text-muted sr-only">Action</span>

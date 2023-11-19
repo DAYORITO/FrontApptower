@@ -22,10 +22,12 @@ export const Residents = () => {
 
                 <TablePerson>
                     <Thead>
-                        <Th></Th>
-                        <Th name={'Informacion residente'}></Th>
-                        <Th name={'Telefono'}></Th>
+                        <Th name={"Informacion del residente"}/>
+
                         <Th name={'Correo'}></Th>
+                        <Th name={'Telefono'}></Th>
+                        <Th/>
+
                     </Thead>
                     <Tbody>
                         <Row

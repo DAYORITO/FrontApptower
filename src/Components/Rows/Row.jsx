@@ -30,19 +30,19 @@ export const Row = ({
 
         <tr class="file-list">
 
-            {/* <Link to={"#"} style={{ textDecoration: 'none'}} > */}
-            {/* <a href=""> */}
+            <Link to={"details"} style={{ textDecoration: 'none' }} >
+                {/* <a href=""> */}
                 <td class="text-center ">
                     <div class="circle circle-sm bg-light">
                         <span class={icon ? icon : 'fe fe-user fe-16 text-muted'}></span>
                     </div>
 
-                    {['Active', 'Activo']. includes(status)
+                    {['Active', 'Activo'].includes(status)
                         ? <span className="dot dot-md bg-success mr-1"></span>
                         : <span className="dot dot-md bg-danger mr-1"></span>}
 
                 </td>
-                
+
                 <th scope="row">
                     {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
                     {name != null & name != null ? name + ' ' + lastName : null} <br />
@@ -50,16 +50,18 @@ export const Row = ({
                     {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
 
                 </th>
-                {rol != null ? <td class="text-secondary">{rol}</td> : null}
-                {email != null ? <td class="text-secondary">{email}</td> : null}
-                {phone != null ? <td class="text-secondary">{phone}</td> : null}
-                {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
-                {op1 != null ? <td class="text-secondary">{op1}</td> : null}
-                {op2 != null ? <td class="text-secondary">{op2}</td> : null}
-                {op3 != null ? <td class="text-secondary">{op3}</td> : null}
-                {op4 != null ? <td class="text-secondary">{op4}</td> : null}
-                {op5 != null ? <td class="text-secondary">{op5}</td> : null}
-                {/* </Link> */}
+
+            </Link>
+
+            {rol != null ? <td class="text-secondary">{rol}</td> : null}
+            {email != null ? <td class="text-secondary">{email}</td> : null}
+            {phone != null ? <td class="text-secondary">{phone}</td> : null}
+            {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
+            {op1 != null ? <td class="text-secondary">{op1}</td> : null}
+            {op2 != null ? <td class="text-secondary">{op2}</td> : null}
+            {op3 != null ? <td class="text-secondary">{op3}</td> : null}
+            {op4 != null ? <td class="text-secondary">{op4}</td> : null}
+            {op5 != null ? <td class="text-secondary">{op5}</td> : null}
 
 
             {/* </a> */}
