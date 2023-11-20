@@ -31,6 +31,9 @@ export const RolsCreate = () => {
         fetchPermissions();
     }, []);
 
+
+
+
     useEffect(() => {
         const permisos = permissionsList.map(permission => ({
             label: permission.permission,
@@ -49,10 +52,10 @@ export const RolsCreate = () => {
         console.log(option, 'option')
         console.log(permissions, 'permissions')
         console.log(hola, 'hola')
-        const permissionArrive = option == 'Vigilantes' ? 'watchman' : option == 'Espacios' ? 'spaces' : 'Residentes';
+        const permissionArrive = option == 'Usuarios' ? 'Usuarios' : option == 'Espacios' ? 'Espacios' : 'Residentes';
         const newPermissionToAdd = permissions.map((permiso) => ({
-            permiso: option == 'Vigilantes' ? 'Vigilantes' : option == 'Espacios' ? 'spaces' : 'Residentes',
-            privilege: permiso == 'Listar' ? 'Listar' : permiso == 'Registrar' ? 'post' : 'put',
+            permiso: option == 'Usuarios' ? 'Usuarios' : option == 'Espacios' ? 'Espacios' : 'Residentes',
+            privilege: permiso == 'Listar' ? 'Listar' : permiso == 'Crear' ? 'Crear' : 'Editar',
         }));
         console.log(newPermissionToAdd, 'newPermissionToAdd')
         const newPermisosFilter = testRoles.filter((permiso) => permiso.permiso !== permissionArrive);

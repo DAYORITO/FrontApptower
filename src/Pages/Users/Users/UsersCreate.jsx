@@ -6,6 +6,7 @@ import FormColumn from '../../../Components/Forms/FormColumn';
 import Inputs from '../../../Components/Inputs/Inputs';
 import FormButton from '../../../Components/Forms/FormButton';
 import Swal from 'sweetalert2';
+import InputsSelect from "../../../Components/Inputs/InputsSelect";
 
 export const UsersCreate = () => {
     const [documentType, setDocumentType] = useState("");
@@ -18,6 +19,36 @@ export const UsersCreate = () => {
     const [phone, setPhone] = useState("");
 
     const navigate = useNavigate();
+
+    const opciones = [
+        {
+            value: "CC",
+            label: "CC"
+        },
+        {
+            value: "TI",
+            label: "TI"
+        },
+        {
+            value: "CE",
+            label: "CE"
+        }
+    ];
+
+    const opcionesRols = [
+        {
+            value: "1",
+            label: "Administador"
+        },
+        {
+            value: "2",
+            label: "Residente"
+        },
+        {
+            value: "3",
+            label: "Vigilante"
+        }
+    ];
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -57,24 +88,25 @@ export const UsersCreate = () => {
                 icon: 'error',
             });
         }
-
     };
-
     return (
         <>
-            <FormContainer name='Crear Usuario' buttons={<FormButton name='Crear' backButton='Cancelar' onClick={handleSubmit} />}>
+            <FormContainer name='Crear Usuario' buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/users/' onClick={handleSubmit} />}>
                 <FormColumn>
-                    <Inputs name="Tipo Documento" value={documentType} onChange={e => setDocumentType(e.target.value)} />
+                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}></InputsSelect>
                     <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} />
                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-                    <Inputs name="Rol" type='number' value={idrole} onChange={e => setRole(e.target.value)} />
+                    <InputsSelect id={"select"} options={opcionesRols} value={idrole} name={"Rol"} onChange={e => setRole(e.target.value)}></InputsSelect>
                 </FormColumn>
 
                 <FormColumn>
                     <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} />
                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} />
                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} />
+                    <Inputs name="Contraseña" type='password' onChange={e => setPassword(e.target.value)} />
+
+
                 </FormColumn>
             </FormContainer>
         </>
