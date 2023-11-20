@@ -63,8 +63,39 @@ export const ResidentDetail = () => {
             <Th name={'Resident information'}></Th>
             <Th name={'Email'}></Th>
             <Th name={'Phone'}></Th>
+            <Th></Th>
           </Thead>
           <Tbody>
+            <Row
+              docType='TI'
+              docNumber='2001234567'
+              name='Maria'
+              lastName='Lopez'
+              phone='3216666666'
+              email='maria@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
+            </Row>
+            <Row
+              docType='TI'
+              docNumber='2001234567'
+              name='Maria'
+              lastName='Lopez'
+              phone='3216666666'
+              email='maria@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
+            </Row>
+            <Row
+              docType='TI'
+              docNumber='2001234567'
+              name='Maria'
+              lastName='Lopez'
+              phone='3216666666'
+              email='maria@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
+            </Row>
             <Row
               docType='TI'
               docNumber='2001234567'
@@ -85,7 +116,16 @@ export const ResidentDetail = () => {
               <Actions accion='Edit resident'></Actions>
               <Actions accion='Assigned space to resident'></Actions>
             </Row>
-
+            <Row
+              docType='CC'
+              docNumber='3003456789'
+              name='Carlos'
+              lastName='Rodriguez'
+              phone='3217777777'
+              email='carlos@example.com'>
+              <Actions accion='Edit resident'></Actions>
+              <Actions accion='Assigned space to resident'></Actions>
+            </Row>
             <Row
               docType='CC'
               docNumber='4004567890'

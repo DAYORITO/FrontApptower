@@ -26,6 +26,9 @@ export const Residents = () => {
                         <Th name={'Resident information'}></Th>
                         <Th name={'Phone'}></Th>
                         <Th name={'Email'}></Th>
+                        <Th></Th>
+                        <Th></Th>
+
                     </Thead>
                     <Tbody>
                         <Row

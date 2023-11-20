@@ -2,7 +2,7 @@ import "./Thead.css"
 
 export const Thead = ({ children }) => {
     return (
-        <thead>
+        <thead className="bg-light">
             <tr>
                 { children }
             </tr>
