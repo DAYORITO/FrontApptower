@@ -17,6 +17,11 @@
     object-fit: cover;
 }
 
+/* .card a {
+
+    text-decoration: none;
+} */
+
 #card-space {
     position: relative;
     margin: 0;

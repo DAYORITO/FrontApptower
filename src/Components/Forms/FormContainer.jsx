@@ -12,7 +12,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
           <div>{modalButton}</div>
         </div>
         <div className="card-body" id='form'>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} encType="multipart/form-data">
             <div className="row">
               {children}
               {buttons}

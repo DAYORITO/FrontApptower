@@ -42,6 +42,8 @@ function VisitorsCreate() {
         <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"}></InputsSelect>
 
       </FormContainer>
+
+      
       {showModal &&
         createPortal(
           <>

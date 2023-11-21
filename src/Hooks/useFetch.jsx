@@ -37,6 +37,50 @@ export const useFetchget = (url) => {
 }
 
 
+export const useFetchpostFile = async (url, data) => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    try {
+        console.log(data)
+
+        const formData = new FormData();
+
+        // Agregar datos al FormData
+        Object.keys(data).forEach((key) => {
+            formData.append(key, data[key]);
+        });
+
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+            signal
+        });
+
+        console.log(formData)
+
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log('Error data:', errorData);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        return { response: json, error: null };
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            console.log('Fetch aborted');
+        } else {
+            console.log('Error:', error);
+        }
+        return { response: null, error };
+    } finally {
+        abortController.abort();
+    }
+}
+
+
 //Fetch Post Request
 export const useFetchpost = async (url, data) => {
     const abortController = new AbortController();
@@ -72,8 +116,10 @@ export const useFetchpost = async (url, data) => {
     }
 
 
-    //Fetch Put Request
 }
+
+//Fetch Put Request
+
 export const useFetchput = (url, data) => {
 
     const [load, setLoad] = useState(true);
