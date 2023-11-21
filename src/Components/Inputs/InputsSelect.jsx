@@ -1,19 +1,14 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-
-function InputsSelect({ id, options, name }) {
-
+function InputsSelect({ id, options, name, onChange, value }) {
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
   const inputRef = useRef(null);
   const labelRef = useRef(null);
-  console.log(inputRef.current);
-
   useEffect(() => {
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
     });
-
     inputRef.current.addEventListener('blur', () => {
       if (inputRef.current.value !== '') {
         labelRef.current.classList.add('lleno');
@@ -41,10 +36,12 @@ function InputsSelect({ id, options, name }) {
         <span className='inputSpan'>
           <select
             id={id}
-            value={valorSeleccionado}
+            // value={valorSeleccionado}
+            value={value}
             className='selectComponent'
             ref={inputRef}
-            onChange={(event) => setValorSeleccionado(event.target.value)}
+            onChange={onChange}
+          // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
             <option value='' selected disabled></option>
             {options.map((opcion) => (
