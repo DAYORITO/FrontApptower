@@ -28,7 +28,6 @@ export const Users = () => {
                 <ButtonGoTo value='Crear Usuario' href='/admin/users/create' />
                 <TablePerson>
                     <Thead>
-                        <Th></Th>
                         <Th name={'Información Usuario'}></Th>
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
