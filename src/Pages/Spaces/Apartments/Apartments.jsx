@@ -7,7 +7,12 @@ import { ContainerTable } from "../../../Components/ContainerTable/ContainerTabl
 import { TablePerson } from "../../../Components/Tables/Tables"
 
 
+
 export const Apartments = () => {
+
+  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/apartments')
+  console.log(data.apartments)
+
   return (
     <>
 
@@ -24,29 +29,17 @@ export const Apartments = () => {
               <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
 
             </Card>
-            <Card name="102" type="Publico" status='Active' residents={2} notions={2} >
-              <Actions icon="fe fe-arrow-up-right fe-12 mr-4" accion="Hacer ingreso" />
-              <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
+            {data.apartments?.map(aparment => (
+              <Card
+                name={aparment.apartmentName}
+                // area={aparment.area}
+                status={aparment.status}
+                esidents={2} notions={2}
+              >
+                <Actions accion='Editar' />
+              </Card>
+            ))}
 
-            </Card><Card name="103" type="Publico" status='Active' residents={2} notions={2} >
-              <Actions icon="fe fe-arrow-up-right fe-12 mr-4" accion="Hacer ingreso" />
-              <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
-
-            </Card><Card name="104" type="Publico" status='Active' residents={2} notions={2} >
-              <Actions icon="fe fe-arrow-up-right fe-12 mr-4" accion="Hacer ingreso" />
-              <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
-
-            </Card><Card name="105" type="Publico" status='Active' residents={2} notions={2} >
-              <Actions icon="fe fe-arrow-up-right fe-12 mr-4" accion="Hacer ingreso" />
-              <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
-
-            </Card><Card name="106" type="Publico" status='Active' residents={2} notions={2} >
-              <Actions icon="fe fe-arrow-up-right fe-12 mr-4" accion="Hacer ingreso" />
-              <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
-
-            </Card>
-
-            
 
 
 
