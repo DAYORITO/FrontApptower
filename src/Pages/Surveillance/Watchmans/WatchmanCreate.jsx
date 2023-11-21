@@ -25,10 +25,6 @@ export const WatchmanCreate = () => {
             label: "CC"
         },
         {
-            value: "TI",
-            label: "TI"
-        },
-        {
             value: "CE",
             label: "CE"
         }
