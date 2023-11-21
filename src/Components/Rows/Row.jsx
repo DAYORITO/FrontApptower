@@ -22,6 +22,7 @@ export const Row = ({
     op3,
     op4,
     op5,
+    file
 
 }) => {
 
@@ -56,7 +57,13 @@ export const Row = ({
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
             {email != null ? <td class="text-secondary">{email}</td> : null}
             {phone != null ? <td class="text-secondary">{phone}</td> : null}
-            {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
+
+
+            {file && <td className="text-secondary"><a href={file}>
+                <span className='fe fe-download-cloud fe-16 text-muted'></span>
+            </a></td>}
+
+
             {op1 != null ? <td class="text-secondary">{op1}</td> : null}
             {op2 != null ? <td class="text-secondary">{op2}</td> : null}
             {op3 != null ? <td class="text-secondary">{op3}</td> : null}

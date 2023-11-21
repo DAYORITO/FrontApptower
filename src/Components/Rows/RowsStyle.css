@@ -7,8 +7,15 @@
 
 .file-list:nth-child(even){
     background-color: rgba(248, 249, 250, 1) !important;
-    transition: all 0.5s;
-
+    transition: all 0.5s
     
 }
+
+.text-secondary a {
+
+    text-decoration: none;
+
+}
+
+
 
