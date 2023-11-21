@@ -1,11 +1,82 @@
-.myNav-profile {
-
+#userImg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover; 
 }
 
-/* Estilos para el logo */
-.logo {
+/* Styles for the user section in the navigation bar */
+.myNav-user {
     display: flex;
-    transition: all 0.5s ease;
-    width: 6.5vh;
-    height: 6.5vh;
+    justify-content: center;
+    width: 100%;
+    align-items: center; 
+    padding: 10px 0;
+
 }
+.myNav-user a {
+    text-decoration: none;
+}
+
+/* Styles for the collapsed version of the user card */
+.myNav.collapsed .myNav-user-card {
+    display: none;
+
+}
+
+/* Styles for the expanded version of the user card */
+.myNav.expanded .myNav-user-card {
+    display: flex;
+    flex-direction: row; /* Puedes probar también con row-reverse */
+    align-items: center;
+
+}
+
+/* Styles for the image in the expanded user card */
+.myNav.expanded .myNav-user-card-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    margin-left: auto; /* Añade esto */
+    padding: 5px;
+}
+
+/* Styles for the text in the expanded user card */
+.myNav.expanded .myNav-user-card-text {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.myNav.expanded .myNav-user-card-text h4 {
+    margin: 0 0 -2px; /* Ajusta el margen inferior según sea necesario */
+}
+
+/* Styles for paragraphs (p) in the expanded user card text */
+.myNav.expanded .myNav-user-card-text p {
+    margin: 0;
+}
+
+
+/* Specific styles for the logo in the expanded version of the user section */
+.myNav.expanded .myNav-user-logo {
+    display: none;
+}
+
+.myNav.collapsed .myNav-user-logo {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center; /* Align items to the center if needed */}
+
+
+
+/* Styles for the logo in the collapsed version of the user section */
+.myNav.collapsed .myNav-user .logo {
+    width: 6vh;
+    height: 6vh;
+    
+}
+

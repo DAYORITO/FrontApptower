@@ -22,7 +22,6 @@ export const Watchman = () => {
                 <ButtonGoTo value='Crear Vigilante' href='/admin/watchman/create' />
                 <TablePerson>
                     <Thead>
-                        <Th></Th>
                         <Th name={'Información Vigilante'}></Th>
                         <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>

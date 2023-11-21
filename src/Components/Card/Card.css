@@ -1,9 +1,14 @@
 #Card {
-  border-radius: 15px;
+  border-radius: 8px;
   /* min-height: 32rem; */
 
   max-height: 32rem;
   /* margin: 0 50px 0 50px; */
 
 
+}
+
+#Card a {
+
+  text-decoration: none;
 }

@@ -25,6 +25,11 @@ import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
+import { OwnerDetails } from "./Pages/Residential/Owners/OwnersDetails";
+import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceDetails";
+import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
+import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
+import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 
 const App = () => {
     return (
@@ -60,13 +65,24 @@ const App = () => {
                         <Route path='guest_income/' element={<GuestIncome />} />
 
                         {/* Spaces */}
+
+                        {/* Space */}
+                        <Route path='apartments/' element={<Apartments />} />
+                        <Route path='apartments/create' element={<ApartmentCreate />} />
+                        <Route path='apartments/details' element={<SpaceDetails />} />
+
+
                         {/* Space */}
                         <Route path='spaces/' element={<Spaces />} />
                         <Route path='spaces/create' element={<SpacesCreate />} />
+                        <Route path='spaces/details' element={<SpaceDetails />} />
+
 
                         {/* Parking Spaces */}
                         <Route path='parkingSpaces/' element={<ParkingSpaces />} />
                         <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
+                        <Route path='parkingSpaces/details' element={<ParkingSpacesDetails />} />
+
 
                         {/* Residential */}
                         {/* Vehicles */}
@@ -77,9 +93,12 @@ const App = () => {
                         <Route path='watchman/create' element={<WatchmanCreate />} />
                         <Route path='rols/' element={<Rols />} />
                         <Route path='rols/create' element={<RolsCreate />} />
+
                         {/* Owners */}
                         <Route path='owners/' element={<Owners />} />
                         <Route path='owners/create' element={<OwnersCreate />} />
+                        <Route path='owners/details' element={<OwnerDetails />} />
+
 
                         {/* Visitors */}
                         <Route path='visitors/create' element={<VisitorsCreate />} />

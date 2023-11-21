@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './Aside.css';
-import {  ListNav } from '../DropDownNav/DropDownNav';
+import { ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
+import LogoApptower from '../../assets/Logo-Apptower.png';
+import { Link } from 'react-router-dom';
 
 export const Aside = () => {
     const [isCloset, isOpem] = useState(true);
@@ -16,6 +18,10 @@ export const Aside = () => {
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}>
 
                 <div className='myNav-header'>
+
+                    {/* <div className='myNav-header-img'>
+                        <img src={LogoApptower} alt="logoApptower" className="logo" />
+                    </div> */}
                     <button
                         type="button"
                         className="navbar-toggler text-muted collapseSidebar"
@@ -23,10 +29,10 @@ export const Aside = () => {
                     >
                         <i class="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
-
-
                 </div>
+
                 <CardUserNav></CardUserNav>
+
                 <div className='myNav-links'>
                     <div className='myNav-links-content'>
 
@@ -41,10 +47,10 @@ export const Aside = () => {
                         <ListNav module={'Visitantes'} href='/#/admin/visitors' icon='fe fe-user-plus' />
                         <ListNav module={'Espacios'} href='/#/admin/spaces' icon='fe fe-sun fe-16' />
                         <ListNav module={'Parkeaderos'} href='/#/admin/parkingSpaces/' icon='fe fe-octagon' />
-                        <ListNav module={'Vehiculos'} href='/#/admin/' icon='fe fe-truck'/>
+                        <ListNav module={'Vehiculos'} href='/#/admin/' icon='fe fe-truck' />
                         <ListNav module={'Propietarios'} href='/#/admin/owners' icon='fe fe-user-check' />
                         <ListNav module={'Residentes'} href='/#/admin/residents' icon='fe fe-users' />
-                        <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-user'/>
+                        <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-user' />
                         <ListNav module={'Usuarios'} href='/#/admin/users/' icon='fe fe-user' />
                         <ListNav module={'Vigilantes'} href='/#/admin/watchman/' icon='fe fe-shield' />
 

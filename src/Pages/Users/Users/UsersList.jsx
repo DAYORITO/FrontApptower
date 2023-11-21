@@ -10,11 +10,16 @@ import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 
 export const Users = () => {
-
+    const [showModal, setShowModal] = useState(false);
 
     const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/users')
     console.log(data.user)
 
+    const handleModal = (row) => {
+        console.log(row, 'row')
+
+        setShowModal(true)
+    }
     return (
         <>
             <ContainerTable title='Usuarios'>
@@ -23,7 +28,6 @@ export const Users = () => {
                 <ButtonGoTo value='Crear Usuario' href='/admin/users/create' />
                 <TablePerson>
                     <Thead>
-                        <Th></Th>
                         <Th name={'Información Usuario'}></Th>
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
@@ -51,7 +55,10 @@ export const Users = () => {
                                 phone={user.phone}
                                 status={user.state}
                             >
-                                <Actions accion='Editar' />
+                                <Actions accion='Editar' onClick={(e) => {
+                                    e.preventDefault();
+                                    handleModal(user);
+                                }} />
                             </Row>
                         ))}
 

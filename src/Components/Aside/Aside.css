@@ -1,4 +1,4 @@
-/* Estilos generales para la barra de navegación */
+/* General styles for the navigation bar */
 .myNav {
     position: absolute;
     top: 0;
@@ -15,22 +15,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    transition: all 0.2s linear;
+    transition: all 0.5s linear;
 }
 
-/* Estilos para la versión expandida de la barra de navegación */
+/* Styles for the expanded version of the navigation bar */
 .myNav.expanded {
     min-width: 18%;
     width: 18%;
     transition: all 0.5s ease;
 }
 
-
-/* Estilos para la versión colapsada de la barra de navegación */
-.myNav.collapsed .myNav-profile,
-.myNav.expanded .myNav-profile {
+/* Styles for the collapsed and expanded versions of the navigation header image */
+.myNav.collapsed .myNav-header-img,
+.myNav.expanded .myNav-header-img {
     width: 75%;
-    margin: 10px 10px 0px 10px;
+    margin: 10px 10px 10px 10px;
     border-radius: 8px;
     height: auto;
     padding: 1vh;
@@ -39,7 +38,7 @@
     align-items: center;
 }
 
-/* Estilos para la cabecera de la barra de navegación */
+/* Styles for the navigation header */
 .myNav .myNav-header,
 .myNav.expanded .myNav-header {
     display: flex;
@@ -49,22 +48,26 @@
     width: 100%;
 }
 
-/* Estilos específicos para el botón en la versión expandida */
+/* Specific styles for the button in the expanded version */
 .myNav.expanded .myNav-header button {
     order: 2;
     margin-left: auto;
+    transform: all 0.5s;
 }
 
-
-/* Estilos para la versión expandida de la imagen en la cabecera */
-.myNav.expanded .myNav-header img {
+/* Styles for the expanded version of the image in the header */
+.myNav.expanded .myNav-header-img {
     order: 1;
-    display: none;
     left: 0;
 }
 
+.myNav.expanded .myNav-header-img .logo {
+    width: 15%;
+    height: 15%;
+    transform: all 0.6s;
+}
 
-/* Estilos para los enlaces de la barra de navegación */
+/* Styles for the navigation links */
 .myNav-links {
     height: 100%;
     display: flex;
@@ -73,18 +76,15 @@
     justify-content: space-between;
 }
 
-.myNav-profile-user {
-
-    display: flex;
-}
-
-.myNav-profile-user .row {
-
+/* Styles for the user section in the collapsed and expanded versions */
+.myNav.collapsed .myNav-user,
+.myNav.expanded .myNav-user {
     display: flex;
     flex-direction: column;
 }
 
-/* Estilos para el contenido de los enlaces */
+
+/* Styles for the content of the navigation links */
 .myNav-links-content {
     width: 100%;
     height: 55vh;
@@ -94,19 +94,25 @@
     z-index: 1;
 }
 
-/* Estilos para la sección final de los enlaces */
+/* Styles for the final section of the navigation links in the expanded version */
 .myNav.expanded .myNav-links-end {
     width: 100%;
     margin-bottom: 6%;
     padding: 0 10vh 0 0;
     flex-direction: column;
     z-index: 1;
-
 }
+
+/* Styles for the final section of the navigation links in the collapsed version */
 .myNav.collapsed .myNav-links-end {
     width: 100%;
     margin-bottom: 6%;
     padding: auto;
     flex-direction: column;
     z-index: 1;
+}
+
+/* Hide the header image in the collapsed version */
+.myNav.collapsed .myNav-header-img {
+    display: none;
 }
