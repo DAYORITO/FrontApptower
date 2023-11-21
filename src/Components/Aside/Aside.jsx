@@ -31,12 +31,12 @@ export const Aside = () => {
                     <div className='myNav-links-content'>
 
                         <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart' />
-                        <ListNav module={'Notificaciones'} href='/#/admin/' icon='fe fe-message-circle' />
+                        <ListNav module={'Notificaciones'} href='/#/admin/notifications' icon='fe fe-message-circle' />
 
                         <ListNav module={'Apartamentos'} href='/#/admin/apartments' />
 
                         <ListNav module={'Ingresos'} href='/#/admin/guest_income/' icon='fe fe-phone-outgoing' />
-                        <ListNav module={'Reservas'} href='/#/admin/' icon='fe fe-calendar' />
+                        <ListNav module={'Reservas'} href='/#/admin/booking/' icon='fe fe-calendar' />
 
                         <ListNav module={'Visitantes'} href='/#/admin/visitors' icon='fe fe-user-plus' />
                         <ListNav module={'Espacios'} href='/#/admin/spaces' icon='fe fe-sun fe-16' />

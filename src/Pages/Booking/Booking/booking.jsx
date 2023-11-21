@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-key */
 
-
+import { useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -8,7 +10,14 @@ import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
+import { Actions } from '../../../Components/Actions/Actions'
+
 export const Booking = () => {
+  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/booking')
+  console.log(data.booking)
+  console.log(data.booking?.map(booking => booking.iduser.name))
+  console.log(load)
+  console.log(error)
   return (
     <>
       <ContainerTable title='Reservas'>
@@ -28,32 +37,19 @@ export const Booking = () => {
             <Th></Th>
           </Thead>
           <Tbody>
-            <Row
-            name={'Emmanuel'}
-            lastName={'Tabares'}
-            docType={'Pendiente'}
-            op1={'Zona Humeda'}
-            op2={'2'}
-            op3={'12/12/2021 12:00 pm'}
-            op4={'13/12/2021 12:00 pm'}
-            >
-            </Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-            <Row op1={''} op2={''}op3={''}op4={''}></Row>
-
+            {
+              data.booking?.map(booking =>( 
+                <Row
+                  txt={booking.idbooking}
+                  nombre={booking.iduser.name}
+                  op2={booking.amount}
+                  op3={booking.space}
+                  op4={booking.quantity}
+                >
+                  <Actions accion='Editar' />
+                </Row>
+              ))
+            }
           </Tbody>
         </TablePerson>
       </ContainerTable>
