@@ -1,7 +1,7 @@
 import './inputsLogIn.css';
 import React, { useState } from 'react';
 
-export const SelectInput = ({ options, placeholder }) => {
+export const SelectInput = ({ options, placeholder, onChange, value }) => {
     const [selected, setSelected] = useState('');
 
     const handleChange = (e) => {
@@ -14,8 +14,8 @@ export const SelectInput = ({ options, placeholder }) => {
     return (
         <label className={`input-label ${containerClass}`}>
             <select
-                value={selected}
-                onChange={handleChange}
+                value={value}
+                onChange={onChange}
                 className={filled ? 'input-filled' : ''}
             >
                 <option value="">{placeholder}</option>

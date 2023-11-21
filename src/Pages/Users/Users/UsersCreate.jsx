@@ -17,6 +17,7 @@ export const UsersCreate = () => {
     const [document, setDocument] = useState("");
     const [lastname, setLastName] = useState("");
     const [phone, setPhone] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const navigate = useNavigate();
 
@@ -53,6 +54,7 @@ export const UsersCreate = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const url = 'https://apptowerbackend.onrender.com/api/users';
+        // const url = 'http://localhost:3000/api/users';
         const data = {
             documentType,
             name,
@@ -88,6 +90,14 @@ export const UsersCreate = () => {
                 icon: 'error',
             });
         }
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error',
+            });
+            return;
+        }
     };
     return (
         <>
@@ -104,7 +114,7 @@ export const UsersCreate = () => {
                     <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} />
                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} />
                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} />
-                    <Inputs name="Contraseña" type='password' onChange={e => setPassword(e.target.value)} />
+                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
 
 
                 </FormColumn>

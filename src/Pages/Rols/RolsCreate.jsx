@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import './Rols.css';
 
 export const RolsCreate = () => {
+
     const [privileges, setPrivileges] = useState([]);
     const [permissionsList, setPermissionsList] = useState([]);
     const [permisos, setPermisos] = useState([]);
@@ -32,8 +33,6 @@ export const RolsCreate = () => {
     }, []);
 
 
-
-
     useEffect(() => {
         const permisos = permissionsList.map(permission => ({
             label: permission.permission,
@@ -44,42 +43,59 @@ export const RolsCreate = () => {
     }, [permissionsList, privileges]);
 
 
-
     const [testRoles, setTestRoles] = useState([]);
+
+
     const navigate = useNavigate();
 
     const handlesomething = (option, permissions, hola) => {
         console.log(option, 'option')
         console.log(permissions, 'permissions')
         console.log(hola, 'hola')
-        const permissionArrive = option == 'Usuarios' ? 'Usuarios' : option == 'Espacios' ? 'Espacios' : 'Residentes';
+
+        const permissionArrive = option;
+
         const newPermissionToAdd = permissions.map((permiso) => ({
-            permiso: option == 'Usuarios' ? 'Usuarios' : option == 'Espacios' ? 'Espacios' : 'Residentes',
-            privilege: permiso == 'Listar' ? 'Listar' : permiso == 'Crear' ? 'Crear' : 'Editar',
+            permiso: option,
+            privilege: permiso,
         }));
+
         console.log(newPermissionToAdd, 'newPermissionToAdd')
+
         const newPermisosFilter = testRoles.filter((permiso) => permiso.permiso !== permissionArrive);
+
         const newPermissions = [...newPermisosFilter, ...newPermissionToAdd];
+
         console.log(newPermissions, 'newPermissions')
+
         setTestRoles(newPermissions);
+
         console.log(testRoles, 'testRoles')
     }
 
     const [namerole, setNamerole] = useState('');
     const [description, setDescrption] = useState('');
 
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        // const url = 'http://localhost:3000/api/rols';
         const url = 'https://apptowerbackend.onrender.com/api/rols';
+
         const data = {
             namerole,
             description,
             detailsRols: testRoles,
+
         };
+
+        console.log('Data:', data);
+        console.log('This is a test: ', testRoles)
 
         const { response, error } = await useFetchpost(url, data);
 
         if (response) {
+            console.log('Response:', response);
             Swal.fire({
                 title: 'Éxito',
                 text: 'Rol creado exitosamente',
@@ -90,6 +106,7 @@ export const RolsCreate = () => {
         }
 
         if (error) {
+            console.log('Hubo un error');
             Swal.fire({
                 title: 'Error',
                 text: 'Error al crear rol',
@@ -118,6 +135,7 @@ export const RolsCreate = () => {
 
                 <FormColumn>
                     <div className='moduls'>
+
                         {
                             permisos.map((permiso, index) => {
                                 return (
