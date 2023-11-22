@@ -15,7 +15,7 @@ export const WatchmanCreate = () => {
     const [document, setDocument] = useState("");
     const [lastnamewatchman, setLastnamewatchman] = useState("");
     const [phone, setPhone] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [dateOfbirth, setDateOfBirth] = useState("");
 
     const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ export const WatchmanCreate = () => {
             document,
             lastnamewatchman,
             phone,
-            dateOfBirth
+            dateOfbirth
         };
 
         console.log('Data:', data);
@@ -80,7 +80,7 @@ export const WatchmanCreate = () => {
                     <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)}></InputsSelect>
                     <Inputs name="Nombre" type='text' value={namewatchman} onChange={e => setNamewatchman(e.target.value)}></Inputs>
                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} ></Inputs>
-                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfBirth} onChange={e => setDateOfBirth(e.target.value)}></Inputs>
+                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}></Inputs>
 
                 </FormColumn>
 
