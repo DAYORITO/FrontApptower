@@ -37,6 +37,13 @@ export const Booking = () => {
             <Th></Th>
           </Thead>
           <Tbody>
+            <Row></Row>
+            {
+              load && <h1 className='d-flex'>Cargando...</h1>
+            }
+            {
+              error && <h1 className='d-flex'>Error: {error}</h1>
+            }
             {
               data.booking?.map(booking =>( 
                 <Row
@@ -48,6 +55,7 @@ export const Booking = () => {
                 >
                   <Actions accion='Editar' />
                 </Row>
+                
               ))
             }
           </Tbody>

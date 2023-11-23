@@ -46,7 +46,7 @@ export const BookingCreate = () => {
                     <Inputs name="Hora de la reserva" type="Time"></Inputs>
                 </div>
                 <Inputs name={"Cantidad de personas"} type="number"></Inputs>
-
+                <Inputs name={"Horas de duracion"} type="number"></Inputs>
             </FormContainer>
         </>
     )
