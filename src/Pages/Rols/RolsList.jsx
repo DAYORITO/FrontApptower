@@ -22,8 +22,9 @@ export const Rols = () => {
                 <ButtonGoTo value='Crear Rol' href='/admin/rols/create' />
                 <TablePerson>
                     <Thead>
-                        <Th name={'Nombre Rol'}></Th>
+                        <Th name={'Nombre Rol'} ></Th>
                         <Th name={'Descripción'}></Th>
+                        <Th></Th>
 
                     </Thead>
                     <Tbody>

@@ -50,6 +50,7 @@ export const Row = ({
                     {docType != null ? <span className="badge badge-light text-secondary">{docType}</span> : null}
                     {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
 
+
                 </th>
 
             </Link>
@@ -57,6 +58,7 @@ export const Row = ({
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
             {email != null ? <td class="text-secondary">{email}</td> : null}
             {phone != null ? <td class="text-secondary">{phone}</td> : null}
+            {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
 
 
             {file && <td className="text-secondary"><a href={file}>
