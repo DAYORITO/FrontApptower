@@ -6,9 +6,18 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
+import { useFetchget, useFetchput } from '../../../Hooks/useFetch'
 
 
 function Visitors() {
+
+    const {data, load, error}= useFetchget('visitors')
+    console.log(data.visitors)
+    const handleAccessChange = (data) => {
+        useFetchput('visitors', data)
+    }
+
+    
 
     return (
 
@@ -16,7 +25,7 @@ function Visitors() {
             <ContainerTable title='Visitantes'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Visitante' href='/#/admin/visitors/create' />
+                <ButtonGoTo value='Crear Visitante' href='/admin/visitors/create' />
                 <TablePerson>
                     <Thead>
                         <Th></Th>
@@ -36,61 +45,31 @@ function Visitors() {
                             <Actions accion='Agregar Ingreso'></Actions>
                             <Actions accion='Cambiar Acceso'></Actions>
                         </Row>
-                        <Row
-                            docType='CC'
-                            docNumber='987654321'
-                            name='María Rodríguez'
-                            lastName='Caicedo'
-                            phone='F'
-                            email='Permitido'
-                        >
-                            <Actions accion='Agregar Ingreso'></Actions>
-                            <Actions accion='Cambiar Acceso'></Actions>
-                        </Row>
-                        <Row
-                            docType='TI'
-                            docNumber='543216789'
-                            name='Juan Pérez'
-                            lastName='García'
-                            phone='M'
-                            email='Permitido'
-                        >
-                            <Actions accion='Agregar Ingreso'></Actions>
-                            <Actions accion='Cambiar Acceso'></Actions>
-                        </Row>
-                        <Row
-                            docType='CC'
-                            docNumber='567890123'
-                            name='Ana Gómez'
-                            lastName='London'
-                            phone='F'
-                            email='Permitido'
-                        >
-                            <Actions accion='Agregar Ingreso'></Actions>
-                            <Actions accion='Cambiar Acceso'></Actions>
-                        </Row>
-                        <Row
-                            docType='RC'
-                            docNumber='987123456'
-                            name='Carlos Sánchez'
-                            lastName='Lopez'
-                            phone='M'
-                            email='Permitido'
-                        >
-                            <Actions accion='Agregar Ingreso'></Actions>
-                            <Actions accion='Cambiar Acceso'></Actions>
-                        </Row>
-                        <Row
-                            docType='CE'
-                            docNumber='456789012'
-                            name='Luisa Martínez'
-                            lastName='Pelaez'
-                            phone='F'
-                            email='Permitido'
-                        >
-                            <Actions accion='Agregar Ingreso'></Actions>
-                            <Actions accion='Cambiar Acceso'></Actions>
-                        </Row>
+                        {data.visitors?.map(visitor => (
+                            <Row
+                                docType={visitor.documentType}
+                                docNumber={visitor.documentNumber}
+                                name={visitor.name}
+                                lastName={visitor.lastname}
+                                op1={
+                                    visitor.access === true ? 'Permitido' :
+                                        visitor.access === false ? 'Denegado' :
+                                            'Desconocido'
+                                }
+                                op2={visitor.genre}
+                            >
+                                <Actions accion='Agregar Ingreso'></Actions>
+                                <Actions accion='Cambiar Acceso' onClick={(e) => {
+                                    e.preventDefault()
+                                    handleAccessChange({
+                                        idVisitor: visitor.idVisitor,
+                                        access: !visitor.access,
+                                    })
+                                }
+                                }></Actions>
+                            </Row>
+                        ))}
+                        
 
                     </Tbody>
                 </TablePerson>

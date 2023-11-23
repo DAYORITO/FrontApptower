@@ -1,7 +1,7 @@
 import React from "react";
 import "./FormContainer.css";
 
-function FormContainer({ name, children, buttons, modalButton, onSubmit }) {
+function FormContainer({ name, children, buttons, modalButton, onSubmit, onClickButtonOne }) {
   return (
     <>
       <div div id="formContainer" className="card shadow mb-4 pl-5 pr-5">

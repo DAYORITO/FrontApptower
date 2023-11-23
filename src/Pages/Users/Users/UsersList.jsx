@@ -12,8 +12,9 @@ import { Actions } from '../../../Components/Actions/Actions'
 export const Users = () => {
 
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/users')
+    const { data, load, error } = useFetchget('users')
     console.log(data.user)
+    
 
     return (
         <>

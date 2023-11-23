@@ -29,7 +29,7 @@ function VisitorsCreate() {
     <>
       <FormContainer
         name="Crear visitante"
-        buttons={<FormButton name="Crear" backButton="Cancelar" />}
+         
         modalButton={<ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />}
       >
         {/* <FormColumn> */}
