@@ -1,6 +1,6 @@
 export const Tbody = ({ children }) => {
     return (
-        <tbody >
+        <tbody>
             {children}
         </tbody>
     )

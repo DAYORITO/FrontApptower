@@ -2,6 +2,6 @@ import React from 'react'
 
 export const Th = ({ name }) => {
   return (
-    <th class="text-muted">{name}</th>
+    <th className="text-muted " style={{ paddingLeft: '20px' }}  >{name}</th>
   )
 }

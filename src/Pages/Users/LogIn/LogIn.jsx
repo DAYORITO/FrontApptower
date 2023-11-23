@@ -26,6 +26,8 @@ const LogIn = () => {
         });
     }, []);
 
+
+
     return (
 
         <div className='container-login ' >
@@ -75,8 +77,8 @@ const LogIn = () => {
                         <form className="form-register">
                             <SelectInput
                                 options={[
-                                    
-                                    
+
+
                                     { value: 'CC', label: 'Cédula' },
                                     { value: 'CE', label: 'Cédula de extranjería' }
                                 ]}

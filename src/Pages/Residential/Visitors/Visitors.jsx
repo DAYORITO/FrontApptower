@@ -13,9 +13,18 @@ function Visitors() {
 
     const {data, load, error}= useFetchget('visitors')
     console.log(data.visitors)
-    const handleAccessChange = (data) => {
+    const handleAccessChange = async (data) => {
+        console.log(data)
         useFetchput('visitors', data)
     }
+    const handleClick = () => {
+        const data = {
+          idVisitor: visitor.idVisitor,
+          access: !visitor.access,
+        };
+        console.log(data);
+        handleAccessChange(data);
+      };
 
     
 
@@ -28,10 +37,11 @@ function Visitors() {
                 <ButtonGoTo value='Crear Visitante' href='/admin/visitors/create' />
                 <TablePerson>
                     <Thead>
-                        <Th></Th>
+                    
                         <Th name={'Informacion del visitante'}></Th>
                         <Th name={'Acceso'}></Th>
                         <Th name={'Sexo'}></Th>
+                        <Th name={'Acciones'}></Th>
                     </Thead>
                     <Tbody>
                         <Row
@@ -58,15 +68,9 @@ function Visitors() {
                                 }
                                 op2={visitor.genre}
                             >
-                                <Actions accion='Agregar Ingreso'></Actions>
-                                <Actions accion='Cambiar Acceso' onClick={(e) => {
-                                    e.preventDefault()
-                                    handleAccessChange({
-                                        idVisitor: visitor.idVisitor,
-                                        access: !visitor.access,
-                                    })
-                                }
-                                }></Actions>
+                                <Actions accion='Agregar Ingreso'/>
+                                <Actions accion='Cambiar Acceso' onClick={handleClick
+                                }/>
                             </Row>
                         ))}
                         
