@@ -10,7 +10,7 @@ export const ModalContainer = ({ children, ShowModal }) => {
   );
 };
 
-export const Modal = ({ title, children, showModal }) => {
+export const Modal = ({ title, children, showModal, onClick }) => {
   return (
     <div onClick={(e) => e.stopPropagation()} className="divModal__Container">
       <div
@@ -42,10 +42,10 @@ export const Modal = ({ title, children, showModal }) => {
                 className="btn mb-2 btn-secondary"
                 onClick={() => showModal(false)}
               >
-                Close
+                Cerrar
               </button>
-              <button type="button" className="btn mb-2 btn-primary">
-                Save changes
+              <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
+                Guardar Cambios
               </button>
             </div>
           </div>
