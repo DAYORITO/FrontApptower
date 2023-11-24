@@ -20,9 +20,11 @@ export const Users = () => {
     const [editedUser, setEditedUser] = useState(null);
     const [usersData, setUsersData] = useState([]);
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/users')
+
+    const { data, load, error } = useFetchget('users')
     console.log(data.user)
-    const { error: putError, load: putLoad, } = useFetchput('https://apptowerbackend.onrender.com/api/users', editedUser);
+    
+    const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
 
     const handleModal = (user) => {
         setEditedUser(user);
@@ -139,7 +141,7 @@ export const Users = () => {
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
-                        <Th></Th>
+                        <Th></Th> 
 
 
 

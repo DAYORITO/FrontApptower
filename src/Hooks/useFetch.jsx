@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 
-
 //Fetch Get Request
-export const useFetchget = (url) => {
-
+export const useFetchget = (endpoint) => {
+    const url='https://apptowerbackend.onrender.com/api/'
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
@@ -14,7 +13,7 @@ export const useFetchget = (url) => {
         setControllers(abortController);
         setLoad(true);
 
-        fetch(url, { signal: abortController.signal })
+        fetch(url+endpoint, { signal: abortController.signal })
             .then(res => res.json())
             .then(data => setData(data))
             .catch(error => {
@@ -81,12 +80,13 @@ export const useFetchpostFile = async (url, data) => {
 
 
 //Fetch Post Request
-export const useFetchpost = async (url, data) => {
+export const useFetchpost = async (endpoint, data) => {
+    const url='https://apptowerbackend.onrender.com/api/'
     const abortController = new AbortController();
     const signal = abortController.signal;
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch(url+endpoint, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -114,13 +114,10 @@ export const useFetchpost = async (url, data) => {
         abortController.abort();
     }
 
-
+    //Fetch Put Request
 }
-
-//Fetch Put Request
-
-export const useFetchput = (url, data) => {
-
+export const useFetchput = (endpoint, data) => {
+    const url='https://apptowerbackend.onrender.com/api/'
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
     const [controllers, setControllers] = useState(null);
@@ -130,7 +127,7 @@ export const useFetchput = (url, data) => {
         setControllers(abortController);
         setLoad(true);
 
-        fetch(url, {
+        fetch(url+endpoint, {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {

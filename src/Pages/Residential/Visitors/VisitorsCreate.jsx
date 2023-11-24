@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {docTypes, sexs} from "../../../Hooks/consts.hooks"
 import Inputs from "../../../Components/Inputs/Inputs";
 import FormButton from "../../../Components/Forms/FormButton";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
@@ -7,39 +7,32 @@ import { createPortal } from "react-dom";
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import ModalButton from "../../../Components/Modals/ModalButton";
 import FormContainer from "../../../Components/Forms/FormContainer";
+import FormColumn from "../../../Components/Forms/FormColumn";
 
 function VisitorsCreate() {
   const [showModal, setShowModal] = useState(false);
-  const opciones = [
-    {
-      value: "CC",
-      label: "CC"
-    },
-    {
-      value: "TI",
-      label: "TI"
-    },
-    {
-      value: "CE",
-      label: "CE"
-    }
-  ];
-
   return (
     <>
       <FormContainer
         name="Crear visitante"
-        buttons={<FormButton name="Crear" backButton="Cancelar" />}
-        modalButton={<ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />}
+         
+      //   modalButton={
+      //   <ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />
+      // }
       >
-        {/* <FormColumn> */}
-        <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
+        
+        <FormColumn>
+        <InputsSelect name="Tipo de documento" options={docTypes}/>
         <Inputs name="Numero Documento" />
         <Inputs name="Nombre" />
-        <Inputs name="Apellido" type="Text"></Inputs>
-        <Inputs name="Genero" type="Text"></Inputs>
-        <Inputs name="Acceso" type="Text"></Inputs>
-        <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"}></InputsSelect>
+        <Inputs name="Apellido" type="Text"/>
+        <InputsSelect name="Sexo" options={sexs}/>
+        <FormButton name={"Crear"} backButton={"regresar"}/>
+        </FormColumn>
+        <FormColumn>
+        <Inputs name="Fecha de nacimiento" type="date"/>
+        </FormColumn>
+        
 
       </FormContainer>
 

@@ -7,6 +7,9 @@ function Inputs({ name, value, onChange, placeholder, type, id }) {
   const labelRef = useRef(null);
   // console.log(inputRef.current);
   useEffect(() => {
+    if (inputRef.current.value !== '') {
+      labelRef.current.classList.add('lleno');
+    }
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
     });
@@ -18,6 +21,7 @@ function Inputs({ name, value, onChange, placeholder, type, id }) {
       }
       labelRef.current.classList.remove('active');
     });
+    
 
         return () => {
             inputRef.current?.removeEventListener('focus', () => {
@@ -28,6 +32,7 @@ function Inputs({ name, value, onChange, placeholder, type, id }) {
                     labelRef.current.classList.remove('active');
                 }
             });
+            
         }
     }, [])
 
