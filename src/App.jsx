@@ -16,12 +16,15 @@ import { Users } from "./Pages/Users/Users/UsersList";
 import { Watchman } from "./Pages/Surveillance/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
 import { RolsCreate } from "./Pages/Rols/RolsCreate";
+import { RolsEdit } from "./Pages/Rols/RolsEdit";
 import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
+import { ModifyProfile } from "./Pages/Users/Users/modifyProfile";
 import Visitors from "./Pages/Residential/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
+import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
@@ -30,6 +33,7 @@ import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceD
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
+
 
 const App = () => {
     return (
@@ -49,6 +53,7 @@ const App = () => {
                         {/* User */}
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />
+
 
                         {/* Surveillance */}
                         {/* Watchman */}
@@ -89,10 +94,13 @@ const App = () => {
 
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />
+                        <Route path='users/profile' element={<ModifyProfile />} />
                         <Route path='watchman/' element={<Watchman />} />
                         <Route path='watchman/create' element={<WatchmanCreate />} />
+                        <Route path='watchman/shifts' element={<WatchmanShifts />} />
                         <Route path='rols/' element={<Rols />} />
                         <Route path='rols/create' element={<RolsCreate />} />
+                        <Route path='rols/edit/:idrole' element={<RolsEdit />} />
 
                         {/* Owners */}
                         <Route path='owners/' element={<Owners />} />

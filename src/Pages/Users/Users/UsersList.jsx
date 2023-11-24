@@ -47,7 +47,7 @@ export const Users = () => {
         console.log('Guardando cambios:', editedUser);
         if (editedUser) {
             try {
-                const response = await fetch('http://localhost:3000/api/users', {
+                const response = await fetch('https://apptowerbackend.onrender.com/api/users', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

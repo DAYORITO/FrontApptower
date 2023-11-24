@@ -46,7 +46,6 @@ export const useFetchpostFile = async (url, data) => {
 
         const formData = new FormData();
 
-        // Agregar datos al FormData
         Object.keys(data).forEach((key) => {
             formData.append(key, data[key]);
         });

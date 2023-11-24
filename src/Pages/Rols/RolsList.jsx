@@ -28,17 +28,16 @@ export const Rols = () => {
 
                     </Thead>
                     <Tbody>
-                        <Row icon='fe fe-settings fe-16 text-muted' namerole={'Administrador'} descripcion={'Todas las funcionalidades'}  >
-                            <Actions accion='Editar'></Actions>
-                        </Row>
+
 
                         {data.rols?.map(rols => (
                             <Row
+                                key={rols.idrole}
                                 namerole={rols.namerole}
                                 descripcion={rols.description}
                                 status={rols.state}
                             >
-                                <Actions accion='Editar' />
+                                <Actions accion='Editar' href={`/admin/rols/edit/${rols.idrole}`} />
                             </Row>
                         ))}
                     </Tbody>
