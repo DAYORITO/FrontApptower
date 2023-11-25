@@ -11,7 +11,7 @@ import { useFetchget } from '../../../Hooks/useFetch'
 
 export const Spaces = () => {
 
-  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/spaces')
+  const { data, load, error } = useFetchget('spaces')
   console.log(data.spaces)
   return (
     <>

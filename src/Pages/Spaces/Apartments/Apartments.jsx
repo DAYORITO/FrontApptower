@@ -5,45 +5,61 @@ import { Card } from "../../../Components/Card/Card"
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard"
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
 import { TablePerson } from "../../../Components/Tables/Tables"
+import { DivRow } from '../../../Components/DivRow/DivRow'
+import { Thead } from '../../../Components/Thead/Thead'
+import { Th } from '../../../Components/Th/Th'
+import { Tbody } from '../../../Components/Tbody/Tbody'
+import { Row } from '../../../Components/Rows/Row'
 
 
 
 export const Apartments = () => {
 
-  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/apartments')
+  const { data, load, error } = useFetchget('apartments')
   console.log(data.apartments)
 
   return (
     <>
 
       <ContainerTable title='Apartamentos'>
-        <DropdownExcel />
-        <SearchButton />
-        <ButtonGoTo value='Crear apartamento' href='create' />
+        <DivRow>
+          <DropdownExcel />
+          <SearchButton />
+          <ButtonGoTo value='Crear Residente' href='create' />
+        </DivRow>
 
         <TablePerson>
-          <ContainerCard>
+          <Thead>
+            <Th name={"Apartamento"} />
 
-            <Card name="101" type="Publico" status='Active' residents={2} notions={2} >
-              <Actions icon="fe fe-arrow-up-right fe-12 mr-4" accion="Hacer ingreso" />
-              <Actions icon="fe fe-home fe-12 mr-4" accion="Asignar espacio" />
+            <Th name={'Respoonsables'}></Th>
+            <Th name={'Notificaciones'}></Th>
+            <Th />
+            <Th />
 
-            </Card>
-            {data.apartments?.map(aparment => (
-              <Card
-                name={aparment.apartmentName}
-                // area={aparment.area}
-                status={aparment.status}
-                esidents={2} notions={2}
+          </Thead>
+          <Tbody>
+            
+            {data.apartments?.map(apartment => (
+              <Row
+                icon={"fe fe-home fe-16 text-muted"}
+                status={apartment.status}
+                docNumber={apartment.area + " m²" }
+                name={"Apartamento"}
+                lastName={apartment.apartmentName}
+                op1={"Jhon mario"}
+                op2={"6"}
+                op3={""}
+
               >
                 <Actions accion='Editar' />
-              </Card>
+                <Actions accion='Reservar' />
+              </Row>
             ))}
 
 
 
-
-          </ContainerCard>
+          </Tbody>
         </TablePerson>
       </ContainerTable>
     </>)

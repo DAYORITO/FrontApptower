@@ -1,25 +1,29 @@
 /* ===== Scrollbar CSS ===== */
 /* Firefox */
 
-  #detailsContainer {
-    border-radius: 15px;
-    height: 90vh;
-    margin: 5vh 25vh 5vh 25vh;
-    background-color:white;
-    
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: thin; 
-    scrollbar-color: #e6e6e6 #ffffff;
+#detailsContainer {
+  border-radius: 15px;
+  height: 90vh;
+  margin: 5vh 25vh 5vh 25vh;
+  background-color: white;
 
-  }
-  
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #e6e6e6 #ffffff;
 
-  
-  .botones {
-    display: flex;
-    width: 100%;
-    /* justify-content: space-around; */
-    flex-direction: column;
-    margin-top: 1rem;
-  }
+}
+
+.details {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+}
+
+.botones {
+  display: flex;
+  width: 100%;
+  /* justify-content: space-around; */
+  flex-direction: column;
+  margin-top: 1rem;
+}

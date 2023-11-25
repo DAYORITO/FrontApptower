@@ -29,7 +29,7 @@ export const Row = ({
     return (
 
 
-        <tr class="file-list">
+        <tr class="file-list myRow">
 
             <Link to={"details"} style={{ textDecoration: 'none' }} >
                 {/* <a href=""> */}

@@ -1,0 +1,21 @@
+
+.details .details-info { 
+    width: 100vw !important;
+    height: 85vh;
+    display: flex;
+    justify-items: center !important;
+    align-items: center !important;
+
+
+ } 
+
+.details .details-info #formContainer { 
+
+    height: 85vh !important;
+    width: 100% !important;
+    margin: 0% 4% !important;
+    border: 0;
+    box-shadow: none !important;
+
+
+ } 
