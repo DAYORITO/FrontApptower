@@ -38,7 +38,7 @@ export const BookingCreate = () => {
     return (
         <>
             <FormContainer name='Crear reserva' buttons={<FormButton name='Crear reserva' backButton='Regresar' ></FormButton>}>
-                <InputsSelect id={"select"} options={opciones} name={"Tipo de identificación"}></InputsSelect>
+                <InputsSelect id={"select"} options={tipo} name={"Tipo de identificación"}></InputsSelect>
                 <Inputs name="Numero de documento"></Inputs>
                 <InputsSelect id={"select"} options={opciones} name={"Tipo de reserva"}></InputsSelect>
                 <div className="d-flex" style={style}>

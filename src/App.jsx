@@ -30,6 +30,8 @@ import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceD
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
+import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
+import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 
 const App = () => {
     return (
@@ -86,6 +88,10 @@ const App = () => {
 
                         {/* Residential */}
                         {/* Vehicles */}
+                        <Route path='vehicle/' element={<Vehicle />} />
+                        <Route path='vehicle/create' element={<VehicleCreate />} />
+
+
 
                         <Route path='users/' element={<Users />} />
                         <Route path='users/create' element={<UsersCreate />} />

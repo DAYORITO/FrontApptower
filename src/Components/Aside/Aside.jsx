@@ -47,7 +47,7 @@ export const Aside = () => {
                         <ListNav module={'Visitantes'} href='/#/admin/visitors' icon='fe fe-user-plus' />
                         <ListNav module={'Espacios'} href='/#/admin/spaces' icon='fe fe-sun fe-16' />
                         <ListNav module={'Parkeaderos'} href='/#/admin/parkingSpaces/' icon='fe fe-octagon' />
-                        <ListNav module={'Vehiculos'} href='/#/admin/' icon='fe fe-truck' />
+                        <ListNav module={'Vehiculos'} href='/#/admin/vehicle' icon='fe fe-truck' />
                         <ListNav module={'Propietarios'} href='/#/admin/owners' icon='fe fe-user-check' />
                         <ListNav module={'Residentes'} href='/#/admin/residents' icon='fe fe-users' />
                         <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-user' />
