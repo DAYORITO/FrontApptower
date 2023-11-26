@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './CardUserNav.css';
 import LogoApptower from '../../assets/Logo-Apptower.png';
 
-export const CardUserNav = ({user = "Usuario"}) => {
+export const CardUserNav = ({ user = "Usuario" }) => {
     return (
 
         <div className='myNav-user'>
@@ -18,11 +18,11 @@ export const CardUserNav = ({user = "Usuario"}) => {
 
                 </div>
 
-                <div className='myNav-user-logo'>
+                {/* <div className='myNav-user-logo'>
                 <img src={LogoApptower} alt="logoApptower" className="logo" />
-                </div>
+                </div> */}
 
-                
+
             </Link>
         </div>
 
