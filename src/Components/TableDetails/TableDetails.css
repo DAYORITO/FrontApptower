@@ -1,10 +1,14 @@
 .details-lists .tableDetails-active {
-    padding: 10px;
     width: 140% !important;
     height: 70% !important;
     
     /* background-color: aliceblue !important; */
 
+}
+
+.tableDetails-active .table {
+
+    margin: 0;
 }
 
 .details-lists .tableDetails {

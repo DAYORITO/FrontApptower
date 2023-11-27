@@ -42,6 +42,7 @@ export const Apartments = () => {
             
             {data.apartments?.map(apartment => (
               <Row
+
                 icon={"fe fe-home fe-16 text-muted"}
                 status={apartment.status}
                 docNumber={apartment.area + " m²" }
@@ -50,6 +51,8 @@ export const Apartments = () => {
                 op1={"Jhon mario"}
                 op2={"6"}
                 op3={""}
+
+                to={`details/${apartment.idApartment}`}
 
               >
                 <Actions accion='Editar' />

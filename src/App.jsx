@@ -75,7 +75,7 @@ const App = () => {
                         {/* Space */}
                         <Route path='apartments/' element={<Apartments />} />
                         <Route path='apartments/create' element={<ApartmentCreate />} />
-                        <Route path='apartments/details' element={<ApartmentDetails />} />
+                        <Route path='apartments/details/:id' element={<ApartmentDetails />} />
 
 
                         {/* Space */}
@@ -106,7 +106,7 @@ const App = () => {
                         {/* Owners */}
                         <Route path='owners/' element={<Owners />} />
                         <Route path='owners/create' element={<OwnersCreate />} />
-                        <Route path='owners/details' element={<OwnerDetail />} />
+                        <Route path='owners/details/:id' element={<OwnerDetail />} />
 
 
                         {/* Visitors */}

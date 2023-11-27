@@ -22,7 +22,8 @@ export const Row = ({
     op3,
     op4,
     op5,
-    file
+    file,
+    to = "details"
 
 }) => {
 
@@ -31,7 +32,7 @@ export const Row = ({
 
         <tr class="file-list myRow">
 
-            <Link to={"details"} style={{ textDecoration: 'none' }} >
+            <Link to={to} style={{ textDecoration: 'none' }} >
                 {/* <a href=""> */}
                 <td class="text-center ">
                     <div class="circle circle-sm bg-light">

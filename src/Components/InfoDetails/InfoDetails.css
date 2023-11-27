@@ -1,11 +1,12 @@
 
 .details .details-info { 
+    
     width: 100vw !important;
-    height: 85vh;
+    height: 90vh;
     display: flex;
     justify-items: center !important;
     align-items: center !important;
-
+    align-content: center;
 
  } 
 

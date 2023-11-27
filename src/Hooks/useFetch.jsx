@@ -1,5 +1,44 @@
 import { useEffect, useState } from "react"
 
+export const useFetchgetById =  (endpoint, id) => {
+    const url = 'http://localhost:3000/api/';
+    const [data, setData] = useState([]);
+    const [load, setLoad] = useState(true);
+    const [error, setError] = useState(null);
+    const [controllers, setControllers] = useState(null);
+
+    useEffect(() => {
+        const abortController = new AbortController();
+        setControllers(abortController);
+        setLoad(true);
+
+        fetch(`${url}${endpoint}/${id}`, { signal: abortController.signal })
+            .then(res => res.json())
+            .then(data => setData(data))
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    console.log('Hola error: ' + error.message);
+                } else {
+                    setError(error.message);
+                }
+            })
+            .finally(() => setLoad(false));
+
+        return () => abortController.abort();
+
+    }, [endpoint, id]);
+
+    const handleCancelRequest = () => {
+        if (controllers) {
+            controllers.abort();
+            setError('Request canceled');
+        }
+    };
+
+    return { data, error, load, handleCancelRequest };
+};
+
+
 //Fetch Get Request
 export const useFetchget = (endpoint) => {
     const url='https://apptowerbackend.onrender.com/api/'

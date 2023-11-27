@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+
 const ButtonGoTo = ({ value = 'New module', href, modalButton }) => {
     return (
         <div className="col-auto">
@@ -13,7 +14,7 @@ const ButtonGoTo = ({ value = 'New module', href, modalButton }) => {
 
 const DropdownExcel = () => {
     return (
-        <div className="file-action ml-2">
+        <div className="file-action mr-4">
             <button type="button" className="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span className="text-muted sr-only">Action</span>
             </button>
@@ -31,9 +32,9 @@ const SearchButton = () => {
         <form className="form-inline" action="/Usuarios/Index" method="get">
             <div className="form-row">
                 <div className="form-group col-auto">
-                    <button type="submit" className="btn btn-secondary" style={{ border: 'none', backgroundColor: 'transparent', outline: 'none', borderBottom: '0' }}>
+                    {/* <button type="submit" className="btn btn-secondary" style={{ border: 'none', backgroundColor: 'transparent', outline: 'none', borderBottom: '0' }}>
                         <span className="fe fe-24 fe-search" style={{ color: 'gray' }}></span>
-                    </button>
+                    </button> */}
                     <label htmlFor="search" className="sr-only">Buscar</label>
                     <input type="text" className="form-control" name="buscar" value="" placeholder="Buscar" />
 
