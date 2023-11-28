@@ -8,6 +8,7 @@
     transition: all 0.5s;
     border-radius: 8px;
     color: rgba(0, 26, 78, 1);
+    /* color: rgba(173, 181, 189, 1); */
 
 
 }
@@ -17,10 +18,10 @@
 
     transition: all 0.5s;
     border-radius: 8px;
-    color: rgba(0, 26, 78, 1);
+    color: rgba(173, 181, 189, 1);
 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background-color: rgba(248, 249, 250, 0.8);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: rgba(248, 249, 250, 0.8); */
 
 }
 

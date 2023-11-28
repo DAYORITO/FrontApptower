@@ -63,7 +63,7 @@ export const ApartmentCreate = () => {
           value={apartmentName} onChange={e => setApartmentName(e.target.value)}></Inputs>
         <Inputs name="Area" type="number"
           value={area} onChange={e => setArea(e.target.value)}></Inputs>
-
+        
 
       </FormContainer>
     </>)

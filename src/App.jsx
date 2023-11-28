@@ -28,7 +28,7 @@ import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
-import { OwnerDetails } from "./Pages/Residential/Owners/OwnersDetails";
+import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
 import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceDetails";
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
@@ -37,6 +37,7 @@ import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
 import { AuthProvider } from "./Context/AuthContext";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 
+import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 
 
 const App = () => {
@@ -54,8 +55,30 @@ const App = () => {
 
                         <Route element={<ProtectedRoutes />}>
 
+                        <Route path='/admin/*' element={<Layout />}>
+                            {/* Surveillance */}
+                            {/* Watchman */}
+                            <Route path='watchman/' element={<Watchman />} />
+                            <Route path='watchman/create' element={<WatchmanCreate />} />
 
-                            <Route path='/admin/*' element={<Layout />}>
+                            {/* Bookings */}
+                            {/* Booking */}
+                            <Route path='booking/' element={<Booking />} />
+                            <Route path='booking/create' element={<BookingCreate />} />
+
+                            {/* GuestIncome */}
+                            <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                            <Route path='guest_income/' element={<GuestIncome />} />
+
+                            {/* Spaces */}
+
+                            {/* Space */}
+                            <Route path='apartments/' element={<Apartments />} />
+                            <Route path='apartments/create' element={<ApartmentCreate />} />
+                            <Route path='apartments/details/:id' element={<ApartmentDetails />} />
+
+
+                          
 
 
                                 {/* Configuration */}
@@ -88,6 +111,10 @@ const App = () => {
                                 <Route path='apartments/' element={<Apartments />} />
                                 <Route path='apartments/create' element={<ApartmentCreate />} />
                                 <Route path='apartments/details' element={<SpaceDetails />} />
+                                {/* Owners */}
+                                <Route path='owners/' element={<Owners />} />
+                                <Route path='owners/create' element={<OwnersCreate />} />
+                                <Route path='owners/details/:id' element={<OwnerDetail />} />
 
 
                                 {/* Space */}

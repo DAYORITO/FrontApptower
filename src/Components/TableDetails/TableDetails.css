@@ -1,0 +1,35 @@
+.details-lists .tableDetails-active {
+    width: 140% !important;
+    height: 70% !important;
+    
+    /* background-color: aliceblue !important; */
+
+}
+
+.tableDetails-active .table {
+
+    margin: 0;
+}
+
+.details-lists .tableDetails {
+    display: none;
+
+}
+
+.tableDetails-active {
+
+    width: 100vh;
+
+}
+
+.tableDetails-active #formContainer {
+
+    width: 100vw !important;
+    height: 100% !important;
+
+}
+
+.tableDetails {
+
+    display: none;
+}

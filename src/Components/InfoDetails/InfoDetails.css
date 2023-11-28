@@ -1,0 +1,34 @@
+.details .container {
+    width: auto;
+    height: auto  !important   ;
+    display: flex;
+    justify-content: center;
+    margin: 6% 10px 6px 10px;
+    /* background-color: aqua; */
+}
+.details-info {
+    height: auto !important;
+}
+
+.details .container .card-header  {
+    display: flex;
+    justify-content: space-between;
+    /* background-color: aqua; */
+    border: 0;
+}
+
+.details .container .row {
+
+    margin: 0;
+}
+
+.container-module {
+
+    box-shadow: none !important;
+    border: 0;
+    /* margin-bottom: 6%; */
+}
+
+.dropdown-menur {
+    z-index: 2;
+}

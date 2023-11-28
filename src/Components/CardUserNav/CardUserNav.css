@@ -2,81 +2,97 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    object-fit: cover; 
+    object-fit: cover;
 }
 
 /* Styles for the user section in the navigation bar */
 .myNav-user {
-    display: flex;
-    justify-content: center;
+    justify-content: flex-start !important;
     width: 100%;
-    align-items: center; 
+    align-items: flex-start;
     padding: 10px 0;
 
+    margin-left: 4vw;
+
 }
+
 .myNav-user a {
     text-decoration: none;
 }
 
-/* Styles for the collapsed version of the user card */
-.myNav.collapsed .myNav-user-card {
-    display: none;
 
-}
 
 /* Styles for the expanded version of the user card */
-.myNav.expanded .myNav-user-card {
+.myNav-user-card {
     display: flex;
-    flex-direction: row; /* Puedes probar también con row-reverse */
+    justify-content: flex-start !important;
+    flex-direction: row;
+    /* Puedes probar también con row-reverse */
     align-items: center;
 
 }
 
 /* Styles for the image in the expanded user card */
-.myNav.expanded .myNav-user-card-img {
+.myNav-user-card-img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 10px;
-    margin-left: auto; /* Añade esto */
+    margin-left: auto;
+    /* Añade esto */
     padding: 5px;
 }
 
 /* Styles for the text in the expanded user card */
-.myNav.expanded .myNav-user-card-text {
+.myNav-user-card-text {
     display: flex;
     flex-direction: column;
+    transition: opacity 0.5s; /* Añade una transición de 0.5 segundos en la propiedad opacity */
+    opacity: 1; /* Establece la opacidad inicial */
 }
 
 
-.myNav.expanded .myNav-user-card-text h4 {
-    margin: 0 0 -2px; /* Ajusta el margen inferior según sea necesario */
+.myNav-user-card-text h4 {
+    margin: 0 0 -2px;
+    /* Ajusta el margen inferior según sea necesario */
 }
 
 /* Styles for paragraphs (p) in the expanded user card text */
-.myNav.expanded .myNav-user-card-text p {
+.myNav-user-card-text p {
     margin: 0;
 }
 
 
 /* Specific styles for the logo in the expanded version of the user section */
-.myNav.expanded .myNav-user-logo {
+
+.myNav.collapsed .myNav-user-card-text {
+
     display: none;
+    opacity: 0; 
+
+}
+
+.myNav.collapsed .myNav-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 1vw;
 }
 
 .myNav.collapsed .myNav-user-logo {
     display: flex;
     justify-content: center;
     width: 100%;
-    align-items: center; /* Align items to the center if needed */}
+    align-items: center;
+    /* Align items to the center if needed */
+}
 
 
 
 /* Styles for the logo in the collapsed version of the user section */
-.myNav.collapsed .myNav-user .logo {
+.myNav-user .logo {
     width: 6vh;
     height: 6vh;
-    
-}
 
+}

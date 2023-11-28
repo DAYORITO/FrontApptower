@@ -87,7 +87,7 @@
 /* Styles for the content of the navigation links */
 .myNav-links-content {
     width: 100%;
-    height: 55vh;
+    height: 65vh;
     padding: auto;
     flex-direction: column;
     overflow-y: auto;
