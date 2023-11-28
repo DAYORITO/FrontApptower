@@ -1,22 +1,34 @@
-
-.details .details-info { 
-    
-    width: 100vw !important;
-    height: 90vh;
+.details .container {
+    width: auto;
+    height: auto  !important   ;
     display: flex;
-    justify-items: center !important;
-    align-items: center !important;
-    align-content: center;
+    justify-content: center;
+    margin: 6% 10px 6px 10px;
+    /* background-color: aqua; */
+}
+.details-info {
+    height: auto !important;
+}
 
- } 
-
-.details .details-info #formContainer { 
-
-    height: 85vh !important;
-    width: 100% !important;
-    margin: 0% 4% !important;
+.details .container .card-header  {
+    display: flex;
+    justify-content: space-between;
+    /* background-color: aqua; */
     border: 0;
+}
+
+.details .container .row {
+
+    margin: 0;
+}
+
+.container-module {
+
     box-shadow: none !important;
+    border: 0;
+    /* margin-bottom: 6%; */
+}
 
-
- } 
+.dropdown-menur {
+    z-index: 2;
+}

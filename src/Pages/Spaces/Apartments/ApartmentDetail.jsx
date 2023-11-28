@@ -23,6 +23,13 @@ import { DetailsActions } from "../../../Components/DetailsActions/DetailsAction
 import { useParams } from "react-router"
 import { useFetchgetById } from "../../../Hooks/useFetch"
 import { Actions } from "../../../Components/Actions/Actions"
+import { Link } from "react-router-dom"
+import { Dropdown } from "../../../Components/Dropdown/Dropdown"
+import { Dropdownanchor } from "../../../Components/DropDownAnchor/Dropdownanchor"
+import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
+import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
+import { Acordions } from "../../../Components/Acordions/Acordions"
+import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
 
 
 export const ApartmentDetails = (props) => {
@@ -31,13 +38,17 @@ export const ApartmentDetails = (props) => {
     const { id } = useParams();
     const { data: apartment, error, load } = useFetchgetById('apartments', id);
 
-    const { data } = useFetchgetById('spacesOwners', id)
+    const { data: owners } = useFetchgetById('apartmentOwners', id)
+
+    const { data: residents } = useFetchgetById('aparmentResidents', id)
 
 
     const [apartmentName, setapartmentName] = useState('');
     const [area, setArea] = useState('');
     const [status, setStatus] = useState('');
     const [apartmentOwnersList, setApartmentOwnersList] = useState([])
+    const [apartmentResidentsList, setApartmentResidentsList] = useState([])
+
 
     useEffect(() => {
         if (apartment && apartment.spartment) {
@@ -46,21 +57,23 @@ export const ApartmentDetails = (props) => {
             setStatus(apartment.spartment.status);
         }
 
-        if (data && data.apartmentOwners) {
+        if (owners && owners.apartmentOwners) {
 
-            setApartmentOwnersList(data.apartmentOwners);
+            setApartmentOwnersList(owners.apartmentOwners);
 
         }
-    }, [apartment, data]);
+        if (residents && residents.apartmentResidents) {
 
-    console.log(apartmentOwnersList)
+            setApartmentResidentsList(residents.apartmentResidents);
 
+        }
+    }, [apartment, 
+        residents,
+        owners]);
 
-    //Funtions por update
+    console.log(owners)
+    console.log(residents)
 
-    // const handleStatusChange = (event) => {
-    //     setStatus(event.target.value);
-    // };
 
     const [toggleState, setToggleState] = useState(1)
 
@@ -69,87 +82,80 @@ export const ApartmentDetails = (props) => {
         setToggleState(index)
     };
 
+
+
     return (
         <>
             <Details>
 
                 <InfoDetails>
-                    <FormContainer name={`Apartamento ${apartmentName}`}>
 
-                        <Inputs name="Nombre apartamento" placeholder="Ejemplo: 101"
-                            value={apartmentName}
-                        ></Inputs>
-                        <Inputs name="Area" type="number"
-                            value={area}
-                        ></Inputs>
-                        <InputsSelect name={"Estado"} options={statusList}
-                            value={status}
 
-                        ></InputsSelect>
+                    <ContainerModule module={"Apartamento"} name={apartmentName} status={status} >
 
-                        <FormButton name={`Editar apartamento ${apartmentName}`} backButton='Regresar' to='/admin/apartments/' />
+                        <Dropdownanchor name={"Editar apartamento"} icon={"edit"} />
 
-                    </FormContainer>
+                    </ContainerModule>
+
+                    <Acordions>
+
+                        <DropdownInfo name={"Propietarios"}>
+
+                            {apartmentOwnersList.map((owner, index) => (
+                                <Dropdownanchor name={owner.owner.name} icon={"user-check"} to={`/admin/owners/details/${owner.idOwner}`} />
+
+                            ))}
+                        </DropdownInfo>
+                        <DropdownInfo name={"Residentes"}>
+
+                            {/* {apartmentResidentsList.map((resident, index) => (
+                                <Dropdownanchor name={resident.resident.name} icon={"user-check"} to={`/admin/owners/details/${resident.idResident}`} />
+
+                            ))} */}
+
+                        </DropdownInfo>
+                        <DropdownInfo name={"Parqueaderos"}>
+
+                            <Dropdownanchor name={"S101"} icon={"layers"} to="/admin/residents/details" />
+                            <Dropdownanchor name={"S102"} icon={"layers"} to="/admin/residents/details" />
+
+                        </DropdownInfo>
+                        <DropdownInfo name={"Vehiculos"}>
+                            <Dropdownanchor name={"ABL33F"} to="/admin/vehicles/details" />
+                            <Dropdownanchor name={"AME31G"} to="/admin/vehicles/details" />
+
+                        </DropdownInfo>
+                    </Acordions>
+
+
+
+
+
                 </InfoDetails>
 
                 <ListsDetails>
                     <NavDetails>
 
-                        <NavListDetails index={1} name={"Notificaciones"} toggleState={toggleState} onClick={() => toggleTab(1)} />
+                        <NavListDetails index={1} name={"Mensajes"} toggleState={toggleState} onClick={() => toggleTab(1)} />
                         <NavListDetails index={2} name={"Ingresos"} toggleState={toggleState} onClick={() => toggleTab(2)} />
                         <NavListDetails index={3} name={"Visitantes"} toggleState={toggleState} onClick={() => toggleTab(3)} />
-                        <NavListDetails index={4} name={"Propietarios"} toggleState={toggleState} onClick={() => toggleTab(4)} />
-                        <NavListDetails index={5} name={"Reisidentes"} toggleState={toggleState} onClick={() => toggleTab(5)} />
 
                     </NavDetails>
 
                     <TableDetails index={1} toggleState={toggleState} >
 
                         <TablePerson>
-                            <DetailsActions>
+                            {/* <DetailsActions>
                                 <SearchButton />
                                 <ButtonGoTo value="Nuevo notificacion" href={"notificaciones/"} />
-                            </DetailsActions>
-                            <Tbody>
-                                <Row
-                                    docType='CC'
-                                    docNumber='1007238447'
-                                    name='Emmanuel'
-                                    lastName='Tabares'
-                                // phone='3218298707'
-                                // email='emanueltabares@gmail.com'
-                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                                >
-                                </Row><Row
-                                    docType='CC'
-                                    docNumber='1007238447'
-                                    name='Emmanuel'
-                                    lastName='Tabares'
-                                // phone='3218298707'
-                                // email='emanueltabares@gmail.com'
-                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                                >
-                                </Row><Row
-                                    docType='CC'
-                                    docNumber='1007238447'
-                                    name='Emmanuel'
-                                    lastName='Tabares'
-                                // phone='3218298707'
-                                // email='emanueltabares@gmail.com'
-                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                                >
-                                </Row><Row
-                                    docType='CC'
-                                    docNumber='1007238447'
-                                    name='Emmanuel'
-                                    lastName='Tabares'
-                                // phone='3218298707'
-                                // email='emanueltabares@gmail.com'
-                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                                >
-                                </Row>
+                            </DetailsActions> */}
 
-                            </Tbody>
+                            <RowNotificactions />
+                            <RowNotificactions />
+                            <RowNotificactions />
+                            <RowNotificactions />
+
+
                         </TablePerson>
                     </TableDetails>
 
@@ -196,59 +202,9 @@ export const ApartmentDetails = (props) => {
                         </TablePerson>
 
                     </TableDetails>
-                    <TableDetails index={4} toggleState={toggleState} >
-                        <TablePerson>
-                            <DetailsActions>
-                                <SearchButton />
-                                <ButtonGoTo value="Nuevo Propietario" href={"/admin/owners/create"} />
-                            </DetailsActions>
-                            <Tbody>
 
-                                {apartmentOwnersList?.map(ow => (
-                                    <Row
-
-                                        icon={"fe fe-user fe-16 text-muted"}
-                                        status={ow.owner.status}
-                                        docNumber={ow.owner.docNumber}
-                                        name={ow.owner.name}
-                                        lastName={ow.owner.lastName}
-                                        docType={ow.owner.docType}
-                                        op1={ow.owner.phoneNumber}
-
-                                        to={`/admin/owners/details/${ow.owner.idOwner}`}
-
-                                    >
-                                        <Actions accion='Editar' />
-                                        <Actions accion='Reservar' />
-                                    </Row>
-                                ))}
-                            </Tbody>
-                        </TablePerson>
-
-                    </TableDetails>
-                    <TableDetails index={5} toggleState={toggleState} >
-                        <TablePerson>
-                            <DetailsActions>
-                                <SearchButton />
-                                <ButtonGoTo value="Nuevo residentes" href={"/admin/residents/create"} />
-                            </DetailsActions>
-                            <Tbody>
-                                <Row
-                                    docType='CC'
-                                    docNumber='1007238447'
-                                    name='Emmanuel'
-                                    lastName='Tabares'
-                                // phone='3218298707'
-                                // email='emanueltabares@gmail.com'
-                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                                >
-                                </Row>
-                            </Tbody>
-                        </TablePerson>
-
-                    </TableDetails>
                 </ListsDetails>
-            </Details>
+            </Details >
         </>
     )
 }

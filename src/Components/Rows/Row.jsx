@@ -16,7 +16,7 @@ export const Row = ({
     rol,
     children,
     descripcion,
-    icon,
+    icon = "user",
     op1,
     op2,
     op3,
@@ -35,8 +35,8 @@ export const Row = ({
             <Link to={to} style={{ textDecoration: 'none' }} >
                 {/* <a href=""> */}
                 <td class="text-center ">
-                    <div class="circle circle-sm bg-light">
-                        <span class={icon ? icon : 'fe fe-user fe-16 text-muted'}></span>
+                    <div class="circle circle-sm">
+                        <span class={`fe fe-${icon} fe-24 text-muted`}></span>
                     </div>
 
                     {['Active', 'Activo'].includes(status)

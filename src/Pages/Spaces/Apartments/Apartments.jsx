@@ -43,8 +43,9 @@ export const Apartments = () => {
             {data.apartments?.map(apartment => (
               <Row
 
-                icon={"fe fe-home fe-16 text-muted"}
+                icon={"home"}
                 status={apartment.status}
+                docType={"Area"}
                 docNumber={apartment.area + " m²" }
                 name={"Apartamento"}
                 lastName={apartment.apartmentName}
