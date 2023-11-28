@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router'
 import './DropDownNav.css'
 
 export const DropDownNav = ({ module, dropdownName = "#", id = 'id', icon = "fe fe-home fe-24", children }) => {
@@ -14,10 +15,10 @@ export const DropDownNav = ({ module, dropdownName = "#", id = 'id', icon = "fe 
 }
 
 
-export const ListNav = ({ href = '/#/admin/', module, icon = "fe fe-home", id = 'process' }) => {
+export const ListNav = ({ href, module, icon = "fe fe-home", id = 'process', onClick }) => {
     return (
         <li className="nav-item">
-            <a className="nav-link" href={href}>
+            <a className="nav-link" href={href || ''} onClick={onClick}>
                 <i className={icon} id='fas'></i>
                 <span className='item-text span'>{module}</span>
             </a>

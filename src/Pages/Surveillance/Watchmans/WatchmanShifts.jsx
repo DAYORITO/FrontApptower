@@ -17,7 +17,7 @@ export const WatchmanShifts = () => {
 
 
     const starShift = async () => {
-        const url = 'https://apptowerbackend.onrender.com/api/guardshifts';
+        const url = 'guardshifts';
         const start = new Date().toISOString();
         const data = {
             "idwatchman": 1,
@@ -37,7 +37,7 @@ export const WatchmanShifts = () => {
 
     const endShift = async () => {
         if (shiftStart) {
-            const url = 'https://apptowerbackend.onrender.com/api/guardshifts';
+            const url = 'guardshifts';
             const end = new Date().toISOString();
             const data = {
                 "idwatchman": 1,

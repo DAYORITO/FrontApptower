@@ -20,8 +20,8 @@ export const Watchman = () => {
     const [editedWatchman, setEditedWatchman] = useState(null);
     const [watchmanData, setWatchmanData] = useState([]);
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/watchman')
-    const { error: putError, load: putLoad, } = useFetchput('https://apptowerbackend.onrender.com/api/watchman', editedWatchman);
+    const { data, load, error } = useFetchget('watchman')
+    const { error: putError, load: putLoad, } = useFetchput('watchman', editedWatchman);
     console.log(data.watchman)
 
 
@@ -47,14 +47,21 @@ export const Watchman = () => {
 
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedWatchman);
+
         if (editedWatchman) {
             try {
+
+                const formattedWatchman = {
+                    ...editedWatchman,
+                    dateOfbirth: editedWatchman.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString() : null
+                };
+
                 const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(editedWatchman),
+                    body: JSON.stringify(formattedWatchman),
                 });
 
                 if (response.ok) {

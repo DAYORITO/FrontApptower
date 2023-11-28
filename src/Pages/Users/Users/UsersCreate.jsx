@@ -27,10 +27,6 @@ export const UsersCreate = () => {
             label: "CC"
         },
         {
-            value: "TI",
-            label: "TI"
-        },
-        {
             value: "CE",
             label: "CE"
         }
@@ -53,7 +49,7 @@ export const UsersCreate = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const url = 'https://apptowerbackend.onrender.com/api/users';
+        const url = 'users';
         // const url = 'http://localhost:3000/api/users';
         const data = {
             documentType,

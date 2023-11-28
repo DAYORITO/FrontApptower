@@ -4,8 +4,10 @@ import { ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
 import LogoApptower from '../../assets/Logo-Apptower.png';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../Context/AuthContext';
 
 export const Aside = () => {
+    const { user, login, logout } = useAuth();
     const [isCloset, isOpem] = useState(true);
 
     const toggleSidebar = () => {
@@ -58,7 +60,10 @@ export const Aside = () => {
                     </div>
                     <div className='myNav-links-end'>
                         <ListNav module={'Configuracion'} href='/#/admin/rols/' icon='fe fe-settings' />
-                        <ListNav module={'Salir'} href='' icon='fe fe-log-out' />
+                        <ListNav module={'Salir'}  onClick={e => {
+                            e.preventDefault();
+                            logout();
+                        }} icon='fe fe-log-out' />
 
                     </div>
 

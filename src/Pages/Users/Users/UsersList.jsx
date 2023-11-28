@@ -23,7 +23,7 @@ export const Users = () => {
 
     const { data, load, error } = useFetchget('users')
     console.log(data.user)
-    
+
     const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
 
     const handleModal = (user) => {
@@ -141,7 +141,7 @@ export const Users = () => {
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
-                        <Th></Th> 
+                        <Th></Th>
 
 
 

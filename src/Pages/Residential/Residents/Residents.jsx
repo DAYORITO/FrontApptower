@@ -8,9 +8,12 @@ import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { useFetchget } from '../../../Hooks/useFetch'
+import { useAuth } from '../../../Context/AuthContext'
+
 
 
 export const Residents = () => {
+    const { user, isAuth } = useAuth();
 
     const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/residents')
     console.log(data.apartments)

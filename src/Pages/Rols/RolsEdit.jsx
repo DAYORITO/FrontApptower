@@ -92,7 +92,7 @@ export const RolsEdit = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const url = 'https://apptowerbackend.onrender.com/api/rols';
+        const url = 'rols';
 
         const data = {
             namerole,

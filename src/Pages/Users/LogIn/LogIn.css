@@ -11,7 +11,10 @@
     font-size: 13px;
 }
 
-
+#placeholder-select {
+    color: #525252;
+    text-decoration: none;
+}
 
 
 .buttonStyle:hover {
