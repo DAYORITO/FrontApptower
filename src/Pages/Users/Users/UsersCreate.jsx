@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFetchpost } from '../../../Hooks/useFetch';
 import FormContainer from '../../../Components/Forms/FormContainer';
@@ -13,11 +13,39 @@ export const UsersCreate = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [idrole, setRole] = useState("");
+    const [namerole, setRole] = useState("");
     const [document, setDocument] = useState("");
     const [lastname, setLastName] = useState("");
     const [phone, setPhone] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const fetchRoles = async () => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+            if (!response.ok) {
+                throw new Error('Error al obtener los roles');
+            }
+            const data = await response.json();
+            const rolesData = data.rols || [];
+            return rolesData;
+        } catch (error) {
+            console.error('Error al obtener los roles:', error);
+            return [];
+        }
+    };
+
+
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+        const fetchRolesData = async () => {
+            const rolesData = await fetchRoles();
+            setRoles(rolesData);
+        };
+        fetchRolesData();
+    }, []);
+
+
 
     const navigate = useNavigate();
 
@@ -32,31 +60,21 @@ export const UsersCreate = () => {
         }
     ];
 
-    const opcionesRols = [
-        {
-            value: "1",
-            label: "Administador"
-        },
-        {
-            value: "2",
-            label: "Residente"
-        },
-        {
-            value: "3",
-            label: "Vigilante"
-        }
-    ];
+    const opcionesRols = roles.map(rol => ({
+        value: rol.idrole.toString(),
+        label: rol.namerole
+    }));
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const url = 'users';
-        // const url = 'http://localhost:3000/api/users';
         const data = {
             documentType,
             name,
             email,
             password,
-            idrole,
+            idrole: namerole,
             document,
             lastname,
             phone
@@ -103,7 +121,14 @@ export const UsersCreate = () => {
                     <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} />
                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-                    <InputsSelect id={"select"} options={opcionesRols} value={idrole} name={"Rol"} onChange={e => setRole(e.target.value)}></InputsSelect>
+                    <InputsSelect
+                        id="select"
+                        options={opcionesRols}
+                        value={namerole}
+                        name="Rol"
+                        onChange={e => setRole(e.target.value)}
+                    ></InputsSelect>
+
                 </FormColumn>
 
                 <FormColumn>
