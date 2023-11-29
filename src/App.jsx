@@ -28,11 +28,12 @@ import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
-import { OwnerDetails } from "./Pages/Residential/Owners/OwnersDetails";
+import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
 import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceDetails";
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
+import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 
 
 const App = () => {
@@ -74,7 +75,7 @@ const App = () => {
                         {/* Space */}
                         <Route path='apartments/' element={<Apartments />} />
                         <Route path='apartments/create' element={<ApartmentCreate />} />
-                        <Route path='apartments/details' element={<SpaceDetails />} />
+                        <Route path='apartments/details/:id' element={<ApartmentDetails />} />
 
 
                         {/* Space */}
@@ -105,7 +106,7 @@ const App = () => {
                         {/* Owners */}
                         <Route path='owners/' element={<Owners />} />
                         <Route path='owners/create' element={<OwnersCreate />} />
-                        <Route path='owners/details' element={<OwnerDetails />} />
+                        <Route path='owners/details/:id' element={<OwnerDetail />} />
 
 
                         {/* Visitors */}

@@ -45,3 +45,27 @@ export const residentsTypes = [
         label: "Arrendatario"
     }
 ]
+
+export const statusList = [
+
+    {
+        value: "Active",
+        label: "Activo"
+    },
+
+    {
+        value: "Inactive",
+        label: "Desactivo"
+    }
+]
+
+export const spacesTypes = [
+    {
+        value: "Wet area",
+        label: "Zona humeda"
+    },
+    {
+        value: "Social area",
+        label: "Area social"
+    },
+]

@@ -1,158 +1,166 @@
-/* eslint-disable no-undef */
 
-import { Thead } from '../../../Components/Thead/Thead'
-import { Th } from '../../../Components/Th/Th'
-import { Header } from "../../../Components/Details/Header/Header"
-import { IconHeader } from "../../../Components/Details/IconHeader/IconHeader"
-import { ColHeader } from "../../../Components/Details/ColHeader/ColHeader"
-import { ColHelper } from "../../../Components/Details/ColHelper/ColHelper"
-import { Text } from "../../../Components/Details/Text/Text"
-import { Tbody } from "../../../Components/Tbody/Tbody"
-import { TablePerson } from "../../../Components/Tables/Tables"
-import { NavItem } from "../../../Components/Details/NavTab/NavItem"
-import { NavTab } from "../../../Components/Details/NavTab/NavTab"
-import { Row } from "../../../Components/Rows/Row"
-import { Actions } from "../../../Components/Actions/Actions"
 import { Details } from "../../../Components/Details/details"
-import { ActionHeader } from "../../../Components/Details/ActionHeader/ActionHeader"
+import React, { useState } from 'react'
+import FormContainer from '../../../Components/Forms/FormContainer'
+import Inputs from '../../../Components/Inputs/Inputs'
+import FormButton from '../../../Components/Forms/FormButton'
+import { Uploader } from '../../../Components/Uploader/Uploader'
+import InputsSelect from "../../../Components/Inputs/InputsSelect"
+import { docTypes, residentsTypes, sexs, statusList } from "../../../Hooks/consts.hooks"
+import { TablePerson } from '../../../Components/Tables/Tables'
+import { Tbody } from '../../../Components/Tbody/Tbody'
+import { Row } from '../../../Components/Rows/Row'
+import { TableDetails } from "../../../Components/TableDetails/TableDetails"
+import { NavDetails } from "../../../Components/NavDetails/NavDetails"
+import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails"
+import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
+import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 
 
 export const ResidentDetail = () => {
+  const [toggleState, setToggleState] = useState(1)
+
+  const toggleTab = (index) => {
+    console.log(index)
+    setToggleState(index)
+  };
+
   return (
     <>
       <Details>
-        <Header>
-          <IconHeader name="fe fe-32 fe-user">
-            <ActionHeader>
 
-            </ActionHeader>
-          </IconHeader>
-          <ColHeader title={'Maria Lopez'}>
-            <ColHelper>
-              <Text title={'pdf:'}>##########</Text>
-              <Text title={'docType:'}>###########</Text>
-              <Text title={'docNumber:'}>$$$$$$$$$</Text>
-            </ColHelper>
-            <ColHelper>
-              <Text title={'Name:'}>##############</Text>
-              <Text title={'LastName:'}>##########</Text>
-              <Text title={'Sex:'}>#########</Text>
-            </ColHelper>
-            <ColHelper>
-              <Text title={'Birthday:'}>##/##/####</Text>
-              <Text title={'Email:'}>##############</Text>
-              <Text title={'Phone number:'}>############</Text>
-            </ColHelper>
-            <ColHelper>
-              <Text title={'ResidentType:'}>###########</Text>
-              <Text title={'Status:'}>###########</Text>
-            </ColHelper>
-          </ColHeader>
+        <InfoDetails>
+          <FormContainer name='Editar residente'>
+            {/* <FormColumn> */}
 
-        </Header>
-        <NavTab>
+            <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+            // onChange={e => setPdf(e.target.files[0])} 
+            />
 
-          <NavItem name={'Reservas'} />
-          <NavItem name={'Apartamentos'} />
+            <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"}
+            // value={residentType} onChange={e => setResidentType(e.target.value)}
+            ></InputsSelect>
 
-        </NavTab>
+            <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
+            // value={docType} onChange={e => setDocType(e.target.value)}
+            ></InputsSelect>
 
-        <TablePerson id={''}>
-          <Thead>
-            <Th></Th>
-            <Th name={'Resident information'}></Th>
-            <Th name={'Email'}></Th>
-            <Th name={'Phone'}></Th>
-            <Th></Th>
-          </Thead>
-          <Tbody>
-            <Row
-              docType='TI'
-              docNumber='2001234567'
-              name='Maria'
-              lastName='Lopez'
-              phone='3216666666'
-              email='maria@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
-            <Row
-              docType='TI'
-              docNumber='2001234567'
-              name='Maria'
-              lastName='Lopez'
-              phone='3216666666'
-              email='maria@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
-            <Row
-              docType='TI'
-              docNumber='2001234567'
-              name='Maria'
-              lastName='Lopez'
-              phone='3216666666'
-              email='maria@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
-            <Row
-              docType='TI'
-              docNumber='2001234567'
-              name='Maria'
-              lastName='Lopez'
-              phone='3216666666'
-              email='maria@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
-            <Row
-              docType='CC'
-              docNumber='3003456789'
-              name='Carlos'
-              lastName='Rodriguez'
-              phone='3217777777'
-              email='carlos@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
-            <Row
-              docType='CC'
-              docNumber='3003456789'
-              name='Carlos'
-              lastName='Rodriguez'
-              phone='3217777777'
-              email='carlos@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
-            <Row
-              docType='CC'
-              docNumber='4004567890'
-              name='Laura'
-              lastName='Gonzalez'
-              phone='3218888888'
-              email='laura@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
+            <Inputs name="Numero de documento" placeholder="1000000007"
+            // value={docNumber} onChange={e => setDocNumber(e.target.value)}
+            ></Inputs>
 
-            <Row
-              docType='CC'
-              docNumber='5005678901'
-              name='Pedro'
-              lastName='Martinez'
-              phone='3219999999'
-              email='pedro@example.com'>
-              <Actions accion='Edit resident'></Actions>
-              <Actions accion='Assigned space to resident'></Actions>
-            </Row>
+            <Inputs name="Nombre"
+            // value={name} onChange={e => setName(e.target.value)}
+            ></Inputs>
+            <Inputs name="Apellido"
+            // value={lastName} onChange={e => setLastName(e.target.value)}
+            ></Inputs>
 
+            <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+            // value={sex} onChange={e => setSex(e.target.value)}
+            ></InputsSelect>
 
-          </Tbody>
-        </TablePerson>
+            <Inputs name="Fecha de nacimiento" type="Date"
+            // value={birthday} onChange={e => setBirthday(e.target.value)}
+            ></Inputs>
+
+            <Inputs name="Correo" type="email"
+            // value={email} onChange={e => setEmail(e.target.value)}
+            ></Inputs>
+
+            <Inputs name="Numero de telefono"
+            // value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
+            ></Inputs>
+
+            <InputsSelect id={"select"} options={statusList} name={"Estado"}
+            ></InputsSelect>
+
+            <FormButton name='Editar residente' backButton='Regresar' to='/admin/residents/'
+            />
+
+          </FormContainer>
+        </InfoDetails>
+
+        <ListsDetails>
+          <NavDetails>
+
+            <NavListDetails index={1} name={"Apartamento"} toggleState={toggleState} onClick={() => toggleTab(1)} />
+            <NavListDetails index={2} name={"Multas"} toggleState={toggleState} onClick={() => toggleTab(2)} />
+
+          </NavDetails>
+
+          <TableDetails index={1} toggleState={toggleState} >
+            <TablePerson>
+              <Tbody>
+                <Row
+                  docType='CC'
+                  docNumber='1007238447'
+                  name='Emmanuel'
+                  lastName='Tabares'
+                // phone='3218298707'
+                // email='emanueltabares@gmail.com'
+                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+                >
+                </Row>
+                <Row
+                  docType='CC'
+                  docNumber='1007238447'
+                  name='Emmanuel'
+                  lastName='Tabares'
+                // phone='3218298707'
+                // email='emanueltabares@gmail.com'
+                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+
+                >
+                </Row>
+                <Row
+                  docType='CC'
+                  docNumber='1007238447'
+                  name='Emmanuel'
+                  lastName='Tabares'
+                // phone='3218298707'
+                // email='emanueltabares@gmail.com'
+                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+
+                >
+                </Row>
+
+              </Tbody>
+            </TablePerson>
+
+          </TableDetails>
+
+          <TableDetails index={2} toggleState={toggleState}>
+            <TablePerson>
+              <Tbody>
+                <Row
+                  docType='CC'
+                  docNumber='1007238447'
+                  name='Emmanuel'
+                  lastName='Tabares'
+                // phone='3218298707'
+                // email='emanueltabares@gmail.com'
+                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+                >
+                </Row>
+                <Row
+                  docType='CC'
+                  docNumber='1007238447'
+                  name='Emmanuel'
+                  lastName='Tabares'
+                // phone='3218298707'
+                // email='emanueltabares@gmail.com'
+                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+
+                >
 
 
+                </Row>
+
+              </Tbody>
+            </TablePerson>
+          </TableDetails>
+        </ListsDetails>
       </Details>
     </>
   )
