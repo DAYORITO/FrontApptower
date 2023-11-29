@@ -114,8 +114,9 @@ export const useFetchpost = async (endpoint, data) => {
         abortController.abort();
     }
 
-    //Fetch Put Request
+    
 }
+//Fetch Put Request
 export const useFetchput = (endpoint, data) => {
     const url='https://apptowerbackend.onrender.com/api/'
     const [load, setLoad] = useState(true);
