@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import './Aside.css';
 import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
-import LogoApptower from '../../assets/Logo-Apptower.png';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 
 export const Aside = () => {
@@ -14,6 +12,7 @@ export const Aside = () => {
         console.log('Hola samuel intensox')
         isOpem(!isCloset);
     };
+
 
     return (
         <>
@@ -88,7 +87,7 @@ export const Aside = () => {
                     </div>
                     <div className='myNav-links-end'>
                         <ListNav module={'Configuracion'} href='/#/admin/rols/' icon='fe fe-settings fe-24' />
-                        <ListNav module={'Salir'}  onClick={e => {
+                        <ListNav module={'Salir'} onClick={e => {
                             e.preventDefault();
                             logout();
                         }} icon='fe fe-log-out fe-24' />

@@ -89,10 +89,12 @@ export const Users = () => {
                 if (response.ok) {
                     const updatedUsers = usersData.map(user => {
                         if (user.iduser === editedUser.iduser) {
-                            return editedUser;
+                            return { ...user, ...editedUser };
                         }
                         return user;
                     });
+                    setUsersData(updatedUsers);
+
                     Swal.fire({
                         title: 'Éxito',
                         text: 'Usuario modificado exitosamente',
@@ -149,6 +151,8 @@ export const Users = () => {
             label: "Inactivo"
         }
     ];
+
+
     return (
         <>
             <ContainerTable title='Usuarios'>
@@ -162,9 +166,6 @@ export const Users = () => {
                         <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
                         <Th></Th>
-
-
-
                     </Thead>
                     <Tbody>
 
@@ -175,7 +176,7 @@ export const Users = () => {
                                 name={user.name}
                                 lastName={user.lastname}
                                 rol={
-                                    user.idrole ? roles.find(rol => rol.idrole === user.idrole)?.namerole : 'Desconocido'
+                                    roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
                                 email={user.email}
                                 phone={user.phone}
@@ -185,7 +186,6 @@ export const Users = () => {
                                     e.preventDefault();
                                     handleModal(user);
                                 }} />
-
                             </Row>
                         ))}
 
@@ -211,18 +211,16 @@ export const Users = () => {
                                     options={opcionesRols}
                                     name={"Rol"}
                                     value={editedUser?.idrole.toString() || ''}
-                                    onChange={(e) => setEditedUser({ ...editedUser, idrole: e.target.value })}
+                                    onChange={(e) => setEditedUser({ ...editedUser, idrole: Number(e.target.value) })}
                                 ></InputsSelect>
-
                                 <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
                                 <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
                                 <InputsSelect
                                     id={"select"}
-                                    options={opcionesRols}
-                                    name={"Rol"}
-                                    value={editedUser?.idrole.toString() || ''}
-                                    onChange={(e) => setEditedUser({ ...editedUser, idrole: Number(e.target.value) })}
-                                ></InputsSelect>
+                                    options={estado}
+                                    name={"Estado"}
+                                    value={editedUser?.state || ''}
+                                    onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })} ></InputsSelect>
 
 
                             </Modal>

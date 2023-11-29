@@ -38,6 +38,8 @@ import { AuthProvider } from "./Context/AuthContext";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
+import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
+import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
 
 
 const App = () => {
@@ -51,34 +53,36 @@ const App = () => {
 
                         <Route path='/' element={<LogIn />} />
                         <Route path='/recoverpassword' element={<RecoverPassword />} />
+                        <Route path="/recoveycode" element={<EnterRecoveryCode />} />
+                        <Route path="/resetpassword" element={<ResetPassword />} />
 
 
                         <Route element={<ProtectedRoutes />}>
+                            <Route path='/admin/*' element={<Layout />}>
 
-                        <Route path='/admin/*' element={<Layout />}>
-                            {/* Surveillance */}
-                            {/* Watchman */}
-                            <Route path='watchman/' element={<Watchman />} />
-                            <Route path='watchman/create' element={<WatchmanCreate />} />
+                                {/* Surveillance */}
+                                {/* Watchman */}
+                                <Route path='watchman/' element={<Watchman />} />
+                                <Route path='watchman/create' element={<WatchmanCreate />} />
 
-                            {/* Bookings */}
-                            {/* Booking */}
-                            <Route path='booking/' element={<Booking />} />
-                            <Route path='booking/create' element={<BookingCreate />} />
+                                {/* Bookings */}
+                                {/* Booking */}
+                                <Route path='booking/' element={<Booking />} />
+                                <Route path='booking/create' element={<BookingCreate />} />
 
-                            {/* GuestIncome */}
-                            <Route path='guest_income/create' element={<GuestIncomeCreate />} />
-                            <Route path='guest_income/' element={<GuestIncome />} />
+                                {/* GuestIncome */}
+                                <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                                <Route path='guest_income/' element={<GuestIncome />} />
 
-                            {/* Spaces */}
+                                {/* Spaces */}
 
-                            {/* Space */}
-                            <Route path='apartments/' element={<Apartments />} />
-                            <Route path='apartments/create' element={<ApartmentCreate />} />
-                            <Route path='apartments/details/:id' element={<ApartmentDetails />} />
+                                {/* Space */}
+                                <Route path='apartments/' element={<Apartments />} />
+                                <Route path='apartments/create' element={<ApartmentCreate />} />
+                                <Route path='apartments/details/:id' element={<ApartmentDetails />} />
 
 
-                          
+
 
 
                                 {/* Configuration */}
@@ -150,7 +154,7 @@ const App = () => {
                                 {/* Owners */}
                                 <Route path='owners/' element={<Owners />} />
                                 <Route path='owners/create' element={<OwnersCreate />} />
-                                <Route path='owners/details' element={<OwnerDetails />} />
+                                <Route path='owners/details' element={<OwnerDetail />} />
 
 
                                 {/* Visitors */}
