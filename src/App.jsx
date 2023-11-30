@@ -41,6 +41,8 @@ import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
 
+import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
+import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 
 const App = () => {
     return (
@@ -134,8 +136,12 @@ const App = () => {
 
 
 
-                                {/* Residential */}
-                                {/* Vehicles */}
+                        {/* Residential */}
+                        {/* Vehicles */}
+                        <Route path='vehicle/' element={<Vehicle />} />
+                        <Route path='vehicle/create' element={<VehicleCreate />} />
+
+
 
                                 <Route path='users/' element={<Users />} />
                                 <Route path='users/create' element={<UsersCreate />} />
