@@ -27,7 +27,7 @@ export const Aside = () => {
                         className="navbar-toggler text-muted collapseSidebar"
                         onClick={toggleSidebar}
                     >
-                        <i class="fe fe-menu fe-16 navbar-toggler-icon"></i>
+                        <i className="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
                 </div>
 

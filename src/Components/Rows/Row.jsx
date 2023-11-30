@@ -72,7 +72,9 @@ export const Row = ({
             {op3 != null ? <td class="text-secondary">{op3}</td> : null}
             {op4 != null ? <td class="text-secondary">{op4}</td> : null}
             {op5 != null ? <td class="text-secondary">{op5}</td> : null}
+            {op6 != null ? <td class="text-secondary">{op6}</td> : null}
 
+            {/* <a href=""> */}
 
             {/* </a> */}
 
