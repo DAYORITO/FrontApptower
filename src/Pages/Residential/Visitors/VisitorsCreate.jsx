@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {docTypes, sexs} from "../../../Hooks/consts.hooks"
 import Inputs from "../../../Components/Inputs/Inputs";
 import FormButton from "../../../Components/Forms/FormButton";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
@@ -7,68 +7,98 @@ import { createPortal } from "react-dom";
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import ModalButton from "../../../Components/Modals/ModalButton";
 import FormContainer from "../../../Components/Forms/FormContainer";
+import FormColumn from "../../../Components/Forms/FormColumn";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useFetchpost } from "../../../Hooks/useFetch";
 
 function VisitorsCreate() {
   const [showModal, setShowModal] = useState(false);
-  const opciones = [
-    {
-      value: "CC",
-      label: "CC"
-    },
-    {
-      value: "TI",
-      label: "TI"
-    },
-    {
-      value: "CE",
-      label: "CE"
+  const [documentType, setDocumentType] = useState("");
+  const [document, setDocument] = useState("");
+  const [name, setName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [genre, setGenre] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { response, error } = await useFetchpost('visitors', {
+      "name": name,
+      "lastname": lastname,
+      "documentType": documentType,
+      "documentNumber": document,
+      "genre": genre,
+      "access": true
+    });
+
+    // Manejar la respuesta o el error según sea necesario
+    if (response) {
+      // Manejar la respuesta exitosa
+      console.log('Respuesta exitosa:', response);
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Usuario creado exitosamente',
+                icon: 'success',
+            }).then(() => {
+
+                navigate('/admin/visitors');
+            });
     }
-  ];
+
+    if (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al crear usuario',
+                icon: 'error',
+            });
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <>
       <FormContainer
         name="Crear visitante"
-        buttons={<FormButton name="Crear" backButton="Cancelar" />}
-        modalButton={<ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />}
+         
+      //   modalButton={
+      //   <ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />
+      // }
+      buttons={<FormButton name={"Crear"} backButton={"regresar"} onClick={handleSubmit} />}
       >
-        {/* <FormColumn> */}
-        <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
-        <Inputs name="Numero Documento" />
-        <Inputs name="Nombre" />
-        <Inputs name="Apellido" type="Text"></Inputs>
-        <Inputs name="Genero" type="Text"></Inputs>
-        <Inputs name="Acceso" type="Text"></Inputs>
-        <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"}></InputsSelect>
+        <InputsSelect name="Tipo de documento" options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+        <Inputs name="Numero Documento" onChange={(e) => setDocument(e.target.value)} />
+        <Inputs name="Nombre" onChange={(e) => setName(e.target.value)} />
+        <Inputs name="Apellido" type="text" onChange={(e) => setLastName(e.target.value)} />
+        <InputsSelect name="Sexo" options={sexs} onChange={(e) => setGenre(e.target.value)} />
+        
 
       </FormContainer>
-
-      
-      {showModal &&
-        createPortal(
-          <>
-            <ModalContainer ShowModal={setShowModal}>
-              <Modal
-                showModal={setShowModal}
-                title={"Crear residentes"}
-              >
-                <Inputs name="Nombre" placeholder="Ingresa tu nombre" />
-                <Inputs name="Apellido" />
-                <Inputs name="Genero" />
-                <Inputs name="Acceso" />
-
-                <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
-                <Inputs name="Numero Documento" />
-
-
-
-              </Modal>
-            </ModalContainer>
-          </>,
-          document.getElementById("modalRender")
-        )}
     </>
   );
 }
 
 export default VisitorsCreate;
+
+// {showModal &&
+//   createPortal(
+//     <>
+//       <ModalContainer ShowModal={setShowModal}>
+//         <Modal
+//           showModal={setShowModal}
+//           title={"Crear residentes"}
+//         >
+//           <Inputs name="Nombre" placeholder="Ingresa tu nombre" />
+//           <Inputs name="Apellido" />
+//           <Inputs name="Genero" />
+//           <Inputs name="Tipo Documento" placeholder="Ingresa tu nombre" />
+//           <Inputs name="Numero Documento" />
+
+
+
+//         </Modal>
+//       </ModalContainer>
+//     </>,
+//     document.getElementById("modalRender")
+//   )}

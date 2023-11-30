@@ -5,3 +5,30 @@
     overflow-x: auto;
     overflow-y: auto;
 }
+
+.parent-container {
+    margin-top: 20px;
+    position: relative;
+}
+
+.container-permissions {
+    border: 1px solid #e4e4e4;
+    border-radius: 9px;
+    padding: 20px;
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 170px;
+    max-width: 500px;
+}
+
+.span-permission {
+    color: #818181;
+    font-weight: bold;
+    position: absolute;
+    top: -10px;
+    left: 8px;
+    z-index: 5000;
+    background-color: white;
+    padding: 0 1.5px;
+}

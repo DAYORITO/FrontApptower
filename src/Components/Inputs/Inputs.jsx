@@ -2,11 +2,14 @@ import React from 'react'
 import { useEffect, useRef } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, type, id }) {
+function Inputs({ name, value, onChange, placeholder, type, id, readonly = false }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   // console.log(inputRef.current);
   useEffect(() => {
+    if (inputRef.current.value !== '') {
+      labelRef.current.classList.add('lleno');
+    }
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
     });
@@ -18,6 +21,7 @@ function Inputs({ name, value, onChange, placeholder, type, id }) {
       }
       labelRef.current.classList.remove('active');
     });
+    
 
         return () => {
             inputRef.current?.removeEventListener('focus', () => {
@@ -28,6 +32,7 @@ function Inputs({ name, value, onChange, placeholder, type, id }) {
                     labelRef.current.classList.remove('active');
                 }
             });
+            
         }
     }, [])
 
@@ -45,6 +50,7 @@ function Inputs({ name, value, onChange, placeholder, type, id }) {
             className=''
             ref={inputRef}
             id={id}
+            readOnly = {readonly}
           />
         </span>
         <label htmlFor={name} className='form-label' ref={labelRef}>{name}</label>

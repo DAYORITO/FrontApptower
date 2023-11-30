@@ -8,11 +8,9 @@ import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useFetchget } from '../../../Hooks/useFetch'
 
-
-
 export const Owners = () => {
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/owners')
+    const { data, load, error } = useFetchget('owners')
     console.log(data.owners)
 
     return (

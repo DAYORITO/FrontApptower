@@ -42,6 +42,47 @@ export const RolsCreate = () => {
         setPermisos(permisos);
     }, [permissionsList, privileges]);
 
+    const [idrole, setIdrole] = useState(null);
+
+    // Fetch permissions and privileges
+    useEffect(() => {
+        if (idrole) {
+            const fetchPermissionsAndPrivileges = async () => {
+                const permissionsResponse = await fetch(`https://apptowerbackend.onrender.com/api/permissions`);
+                const privilegesResponse = await fetch(`https://apptowerbackend.onrender.com/api/privileges`);
+
+                const permissionsData = await permissionsResponse.json();
+                const privilegesData = await privilegesResponse.json();
+
+                const permissions = permissionsData.permission;
+                const privileges = privilegesData.privileges;
+
+                // Fetch role-specific permissions and privileges
+                const rolePermissionsResponse = await fetch(`https://apptowerbackend.onrender.com/api/rols/${idrole}/permissions`);
+                const rolePermissionsData = await rolePermissionsResponse.json();
+
+                const rolePermissions = rolePermissionsData.permissionRols;
+
+                const permissionsList = rolePermissions.map((rolePermission) => {
+                    const permission = permissions.find((permission) => permission.idpermission === rolePermission.idpermission);
+                    const privilege = privileges.find((privilege) => privilege.idprivilege === rolePermission.idprivilege);
+
+                    return {
+                        permiso: permission.permission,
+                        privilege: privilege.privilege,
+                    };
+                });
+
+                setPermisos(permissionsList);
+            };
+
+            fetchPermissionsAndPrivileges();
+        }
+    }, [idrole]);
+
+    // ... rest of the component ...
+
+
 
     const [testRoles, setTestRoles] = useState([]);
 

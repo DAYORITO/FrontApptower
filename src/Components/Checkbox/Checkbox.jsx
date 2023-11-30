@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './Checkbox.css';
 
-export const Checkbox = ({ label, options, onCheckboxChange, type }) => {
-    const [isChecked, setIsChecked] = useState(false);
-    const [selectedOptions, setSelectedOptions] = useState([]);
+export const Checkbox = ({ label, options, onCheckboxChange, type, isCheckedAny, isOptionMarked }) => {
+    const isCheckedValidate = isCheckedAny ? isCheckedAny() : null
+    const isOptionMarkeds = isOptionMarked ? isOptionMarked(isCheckedValidate) : null
+    const [isChecked, setIsChecked] = useState(isCheckedValidate || false);
+    const [selectedOptions, setSelectedOptions] = useState(isOptionMarkeds || []);
 
     const handleCheckboxChange = () => {
         const newCheckedState = !isChecked;
@@ -22,6 +24,7 @@ export const Checkbox = ({ label, options, onCheckboxChange, type }) => {
 
         setSelectedOptions(updatedOptions);
         onCheckboxChange(label, updatedOptions);
+        console.log(selectedOptions, 'Selected Options')
     };
 
     return (

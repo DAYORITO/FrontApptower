@@ -59,3 +59,6 @@ input[type="file"] {
     cursor: pointer;
     /* Mostrar el cursor como si estuviera sobre un botón */
 }
+/* #tinydash-dropzone {
+    background-color: #5678EF !important;
+} */

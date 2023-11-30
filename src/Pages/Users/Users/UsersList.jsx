@@ -20,9 +20,11 @@ export const Users = () => {
     const [editedUser, setEditedUser] = useState(null);
     const [usersData, setUsersData] = useState([]);
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/users')
+
+    const { data, load, error } = useFetchget('users')
     console.log(data.user)
-    const { error: putError, load: putLoad, } = useFetchput('https://apptowerbackend.onrender.com/api/users', editedUser);
+    
+    // const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
 
     const handleModal = (user) => {
         setEditedUser(user);
@@ -37,17 +39,17 @@ export const Users = () => {
         }
     }, [data]);
 
-    useEffect(() => {
-        if (!putLoad && !putError) {
-            setShowModal(false);
-        }
-    }, [putLoad, putError]);
+    // useEffect(() => {
+    //     if (!putLoad && !putError) {
+    //         setShowModal(false);
+    //     }
+    // }, [putLoad, putError]);
 
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedUser);
         if (editedUser) {
             try {
-                const response = await fetch('http://localhost:3000/api/users', {
+                const response = await fetch('https://apptowerbackend.onrender.com/api/users', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -139,7 +141,7 @@ export const Users = () => {
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
-                        <Th></Th>
+                        <Th></Th> 
 
 
 

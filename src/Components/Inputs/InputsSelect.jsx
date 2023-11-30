@@ -6,6 +6,9 @@ function InputsSelect({ id, options, name, onChange, value }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   useEffect(() => {
+    if (inputRef.current.value !== '') {
+      labelRef.current.classList.add('lleno');
+    }
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
     });
