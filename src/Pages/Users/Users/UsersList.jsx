@@ -68,11 +68,11 @@ export const Users = () => {
         }
     }, [data]);
 
-    useEffect(() => {
-        if (!putLoad && !putError) {
-            setShowModal(false);
-        }
-    }, [putLoad, putError]);
+    // useEffect(() => {
+    //     if (!putLoad && !putError) {
+    //         setShowModal(false);
+    //     }
+    // }, [putLoad, putError]);
 
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedUser);
