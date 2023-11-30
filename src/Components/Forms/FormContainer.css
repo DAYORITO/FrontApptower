@@ -16,6 +16,8 @@
 
 }
 
+
+
 /* Chrome, Edge, and Safari */
 /* *::-webkit-scrollbar {
   width: 10px;
@@ -38,6 +40,7 @@
 .botoness {
   display: flex;
   justify-content: flex-end;
+  width: 100%;
   gap: 10px;
 }
 
@@ -50,8 +53,7 @@
 .custom-btn-primary {
   padding: 10px 35px;
   font-size: 16px;
-  font-weight: bold;
-  color: rgb(49, 49, 49);
+
 
 }
 

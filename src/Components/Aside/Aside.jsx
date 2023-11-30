@@ -17,9 +17,12 @@ export const Aside = () => {
         }
     }, [token]);
 
+
+
+
     const fetchUserPermissions = async (token) => {
         try {
-            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/permissionfromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -69,7 +72,7 @@ export const Aside = () => {
                     <div className='myNav-links-content'>
                         {allowedPermissions && (<>
 
-                            {allowedPermissions.includes('Dashborad') && (
+                            {allowedPermissions.includes('Dashboard') && (
                                 <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart fe-24' />
                             )}
                             {allowedPermissions.includes('Notificaciones') && (
@@ -131,7 +134,7 @@ export const Aside = () => {
                                         {allowedPermissions.includes('Parqueaderos') && (
                                             <DropDownList subprocess={"Parqueaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
                                         )}
-                                        {allowedPermissions.includes('Zonas comunes') && (
+                                        {allowedPermissions.includes('ZonaComunes') && (
                                             <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
                                         )}
 

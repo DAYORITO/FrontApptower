@@ -33,8 +33,8 @@ const LoginForm = ({ setShowLoginForm }) => {
             console.log('Token:', token);
 
             if (token) {
-                // const response = await fetch('https://apptowerbackend.onrender.com/api/login/access', {
-                const response = await fetch('http://localhost:3000/api/login/access', {
+                const response = await fetch('https://apptowerbackend.onrender.com/api/login/access', {
+                    // const response = await fetch('http://localhost:3000/api/login/access', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

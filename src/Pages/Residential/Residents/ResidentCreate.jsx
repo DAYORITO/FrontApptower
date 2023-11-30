@@ -89,7 +89,7 @@ export const ResidentCreate = () => {
 
   return (
 
-    <FormContainer name='Crear residente' buttons={<FormButton name='Crear residente' backButton='Regresar' to='/admin/residents/' onClick={handleSubmit} />}>
+    <FormContainer name='Crear residente' >
       {/* <FormColumn> */}
 
       <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
@@ -123,7 +123,7 @@ export const ResidentCreate = () => {
 
       <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}></InputsSelect>
 
-
+      <FormButton name='Crear residente' backButton='Regresar' to='/admin/residents/' onClick={handleSubmit} />
     </FormContainer>
   )
 }
