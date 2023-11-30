@@ -50,13 +50,14 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             document.cookie = `token=${data.token}; path=/`;
+            console.log('Token set in cookie:', data.token);
 
             fetchUserData(data.token);
 
             return data.token;
         } catch (error) {
             console.error('Error de inicio de sesión:', error.message);
-            return Promise.reject(error);
+
         }
     };
 
@@ -69,6 +70,8 @@ export const AuthProvider = ({ children }) => {
         } else {
             setIsLoggedIn(false);
             setUser(null);
+
+
         }
     }, []);
 

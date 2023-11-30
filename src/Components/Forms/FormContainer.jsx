@@ -15,12 +15,15 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
           <form onSubmit={onSubmit} encType="multipart/form-data">
             <div className="row">
               {children}
-              {buttons}
+
             </div>
+
           </form>
+
         </div>
+        {buttons}
       </div>
-      
+
     </>
   );
 }

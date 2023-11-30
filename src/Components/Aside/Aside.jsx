@@ -1,28 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Aside.css';
 import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
 import { useAuth } from '../../Context/AuthContext';
+import { idToPermissionName } from '../../Hooks/permissionRols';
+import Cookies from 'js-cookie';
 
 export const Aside = () => {
     const { user, login, logout } = useAuth();
+    const token = Cookies.get('token');
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+
+    useEffect(() => {
+        if (token) {
+            fetchUserPermissions(token);
+        }
+    }, [token]);
+
+    const fetchUserPermissions = async (token) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user permissions');
+            }
+
+            const data = await response.json();
+            if (data && data.permissions && Array.isArray(data.permissions)) {
+                const allowed = data.permissions.map(permission => idToPermissionName[permission]);
+                setAllowedPermissions(allowed);
+
+            }
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
+
+
+    console.log(allowedPermissions, 'allowedPermissions');
+
     const [isCloset, isOpem] = useState(true);
 
     const toggleSidebar = () => {
-        console.log('Hola samuel intensox')
         isOpem(!isCloset);
     };
-
 
     return (
         <>
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}>
 
                 <div className='myNav-header'>
-
-                    {/* <div className='myNav-header-img'>
-                        <img src={LogoApptower} alt="logoApptower" className="logo" />
-                    </div> */}
                     <button
                         type="button"
                         className="navbar-toggler text-muted collapseSidebar"
@@ -37,69 +67,106 @@ export const Aside = () => {
 
                 <div className='myNav-links'>
                     <div className='myNav-links-content'>
+                        {allowedPermissions && (<>
 
-                        <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart fe-24' />
-                        <ListNav module={'Notificaciones'} href='/#/admin/' icon='fe fe-message-circle fe-24' />
+                            {allowedPermissions.includes('Dashborad') && (
+                                <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart fe-24' />
+                            )}
+                            {allowedPermissions.includes('Notificaciones') && (
+                                <ListNav module={'Notificaciones'} href='/#/admin/' icon='fe fe-message-circle fe-24' />
+                            )}
+
+                            {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
+                                <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'>
+
+                                    <>
+                                        {allowedPermissions.includes('Ingresos') && (
+                                            <DropDownList subprocess={"Ingresos"} href='/#/admin/guest_income/'></DropDownList>
+                                        )}
+                                        {allowedPermissions.includes('Reservas') && (
+                                            <DropDownList subprocess={"Reservas"} href='/#/admin/'></DropDownList>
+                                        )}
+                                    </>
+
+                                </DropDownNav>
+                            ) : null}
 
 
-                        <DropDownNav module={"Ingresos"} icon='fe fe-phone-outgoing fe-24'>
+                            {allowedPermissions && (
+                                <>
+                                    {allowedPermissions.includes('Propietarios') ||
+                                        allowedPermissions.includes('Residentes') ||
+                                        allowedPermissions.includes('Visitantes') ||
+                                        allowedPermissions.includes('Vehiculos') ? (
+                                        <DropDownNav module={"Residencial"} icon='fe fe-users fe-24'>
 
-                            {/* <ListNav module={'Ingresos'} href='/#/admin/guest_income/' icon='fe fe-phone-outgoing' />
-                            <ListNav module={'Reservas'} href='/#/admin/' icon='fe fe-calendar' /> */}
+                                            <>
+                                                {allowedPermissions.includes('Propietarios') && (
+                                                    <DropDownList subprocess={"Propietarios"} href='/#/admin/owners'></DropDownList>
+                                                )}
+                                                {allowedPermissions.includes('Residentes') && (
+                                                    <DropDownList subprocess={"Residentes"} href='/#/admin/residents'></DropDownList>
+                                                )}
+                                                {allowedPermissions.includes('Visitantes') && (
+                                                    <DropDownList subprocess={"Visitantes"} href='/#/admin/visitors'></DropDownList>
+                                                )}
+                                                {allowedPermissions.includes('Vehiculos') && (
+                                                    <DropDownList subprocess={"Vehiculos"} href='/#/admin/'></DropDownList>
+                                                )}
+                                            </>
 
-                            <DropDownList subprocess={"Ingresos"} href='/#/admin/guest_income/'></DropDownList>
-                            <DropDownList subprocess={"Reservas"} href='/#/admin/'></DropDownList>
+                                        </DropDownNav>
+                                    ) : null}
+                                </>
+                            )}
 
-                        </DropDownNav>
 
-                        <DropDownNav module={"Residencial"} icon='fe fe-users fe-24'>
+                            {allowedPermissions && (allowedPermissions.includes('Apartamentos') || allowedPermissions.includes('Parqueaderos') || allowedPermissions.includes('Zonas comunes')) ? (
+                                <>
+                                    <DropDownNav module={"Espacios"}>
 
-                            {/* <ListNav module={'Propietarios'} href='/#/admin/owners' icon='fe fe-user-check' />
-                            <ListNav module={'Residentes'} href='/#/admin/residents' icon='fe fe-users' />
-                            <ListNav module={'Visitantes'} href='/#/admin/visitors' icon='fe fe-user-plus' />
-                            <ListNav module={'Vehiculos'} href='/#/admin/' icon='fe fe-truck' /> */}
+                                        {allowedPermissions.includes('Apartamentos') && (
+                                            <DropDownList subprocess={"Apartamentos"} href='/#/admin/apartments'></DropDownList>
+                                        )}
+                                        {allowedPermissions.includes('Parqueaderos') && (
+                                            <DropDownList subprocess={"Parqueaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
+                                        )}
+                                        {allowedPermissions.includes('Zonas comunes') && (
+                                            <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
+                                        )}
 
-                            <DropDownList subprocess={"Propietarios"} href='/#/admin/owners'></DropDownList>
-                            <DropDownList subprocess={"Residentes"} href='/#/admin/residents'></DropDownList>
-                            <DropDownList subprocess={"Visitantes"} href='/#/admin/visitors'></DropDownList>
-                            <DropDownList subprocess={"Vehiculos"} href='/#/admin/'></DropDownList>
+                                    </DropDownNav>
+                                </>
+                            ) : null}
 
-                        </DropDownNav>
 
-                        <DropDownNav module={"Espacios"}>
+                            {allowedPermissions.includes('Multas') && (
+                                <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-x-square fe-24' />
+                            )}
 
-                            {/* <ListNav module={'Apartamentos'} href='/#/admin/apartments' icon='fe fe-layers' />
-                            <ListNav module={'Parkeaderos'} href='/#/admin/parkingSpaces/' icon='fe fe-octagon' />
-                            <ListNav module={'Zonas comunes'} href='/#/admin/spaces' icon='fe fe-sun fe-24' /> */}
+                            {allowedPermissions.includes('Usuarios') && (
+                                <ListNav module={'Usuarios'} href='/#/admin/users/' icon='fe fe-user' />
+                            )}
 
-                            <DropDownList subprocess={"Apartamentos"} href='/#/admin/apartments'></DropDownList>
-                            <DropDownList subprocess={"Parkeaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
-                            <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
+                            {allowedPermissions.includes('Vigilantes') && (
+                                <ListNav module={'Vigilantes'} href='/#/admin/watchman/' icon='fe fe-shield' />
+                            )}
 
-                        </DropDownNav>
-
-                        <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-x-square fe-24' />
-
-                        <ListNav module={'Usuarios'} href='/#/admin/users/' icon='fe fe-user' />
-                        <ListNav module={'Vigilantes'} href='/#/admin/watchman/' icon='fe fe-shield' />
-
+                        </>
+                        )}
 
                     </div>
+
                     <div className='myNav-links-end'>
-                        <ListNav module={'Configuracion'} href='/#/admin/rols/' icon='fe fe-settings fe-24' />
+                        {allowedPermissions && allowedPermissions.includes('Roles') && (
+                            <ListNav module={'Configuración'} href='/#/admin/rols/' icon='fe fe-settings fe-24' />
+                        )}
                         <ListNav module={'Salir'} onClick={e => {
                             e.preventDefault();
                             logout();
                         }} icon='fe fe-log-out fe-24' />
-
                     </div>
-
                 </div>
-
-
-
-
-
             </nav >
         </>
     )

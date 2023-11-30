@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-export const useFetchgetById =  (endpoint, id) => {
+export const useFetchgetById = (endpoint, id) => {
     // const url = 'http://localhost:3000/api/';
     const url = 'https://apptowerbackend.onrender.com/api/';
     const [data, setData] = useState([]);
@@ -42,7 +42,8 @@ export const useFetchgetById =  (endpoint, id) => {
 
 //Fetch Get Request
 export const useFetchget = (endpoint) => {
-    const url='https://apptowerbackend.onrender.com/api/'
+    const url = 'https://apptowerbackend.onrender.com/api/'
+    // const url = 'http://localhost:3000/api/';
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
@@ -53,7 +54,7 @@ export const useFetchget = (endpoint) => {
         setControllers(abortController);
         setLoad(true);
 
-        fetch(url+endpoint, { signal: abortController.signal })
+        fetch(url + endpoint, { signal: abortController.signal })
             .then(res => res.json())
             .then(data => setData(data))
             .catch(error => {
@@ -121,12 +122,12 @@ export const useFetchpostFile = async (url, data) => {
 
 //Fetch Post Request
 export const useFetchpost = async (endpoint, data) => {
-    const url='https://apptowerbackend.onrender.com/api/'
+    const url = 'https://apptowerbackend.onrender.com/api/'
     const abortController = new AbortController();
     const signal = abortController.signal;
 
     try {
-        const response = await fetch(url+endpoint, {
+        const response = await fetch(url + endpoint, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -157,7 +158,7 @@ export const useFetchpost = async (endpoint, data) => {
     //Fetch Put Request
 }
 export const useFetchput = (endpoint, data) => {
-    const url='https://apptowerbackend.onrender.com/api/'
+    const url = 'https://apptowerbackend.onrender.com/api/'
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
     const [controllers, setControllers] = useState(null);
@@ -167,7 +168,7 @@ export const useFetchput = (endpoint, data) => {
         setControllers(abortController);
         setLoad(true);
 
-        fetch(url+endpoint, {
+        fetch(url + endpoint, {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {
