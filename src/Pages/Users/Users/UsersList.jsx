@@ -24,7 +24,7 @@ export const Users = () => {
     const { data, load, error } = useFetchget('users')
     console.log(data.user)
     
-    const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
+    // const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
 
     const handleModal = (user) => {
         setEditedUser(user);
@@ -39,11 +39,11 @@ export const Users = () => {
         }
     }, [data]);
 
-    useEffect(() => {
-        if (!putLoad && !putError) {
-            setShowModal(false);
-        }
-    }, [putLoad, putError]);
+    // useEffect(() => {
+    //     if (!putLoad && !putError) {
+    //         setShowModal(false);
+    //     }
+    // }, [putLoad, putError]);
 
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedUser);
