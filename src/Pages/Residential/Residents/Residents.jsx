@@ -12,7 +12,7 @@ import { useFetchget } from '../../../Hooks/useFetch'
 
 export const Residents = () => {
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/residents')
+    const { data, load, error } = useFetchget('residents')
     console.log(data.apartments)
     return (
         <>

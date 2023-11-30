@@ -45,10 +45,10 @@ export const Apartments = () => {
 
                 icon={"home"}
                 status={apartment.status}
-                docType={"Area"}
+                docType={apartment.tower}
                 docNumber={apartment.area + " m²" }
                 name={"Apartamento"}
-                lastName={apartment.apartmentName}
+                lastName={`${apartment.apartmentName}`}
                 op1={"Jhon mario"}
                 op2={"6"}
                 op3={""}
@@ -57,7 +57,6 @@ export const Apartments = () => {
 
               >
                 <Actions accion='Editar' />
-                <Actions accion='Reservar' />
               </Row>
             ))}
 

@@ -21,15 +21,16 @@ import { DivRow } from '../../../Components/DivRow/DivRow'
 import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
 import { useParams } from "react-router"
-import { useFetchgetById } from "../../../Hooks/useFetch"
+import { useFetch, useFetchgetById } from "../../../Hooks/useFetch"
 import { Actions } from "../../../Components/Actions/Actions"
 import { Link } from "react-router-dom"
 import { Dropdown } from "../../../Components/Dropdown/Dropdown"
-import { Dropdownanchor } from "../../../Components/DropDownAnchor/Dropdownanchor"
+import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
 import { Acordions } from "../../../Components/Acordions/Acordions"
 import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
+import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
 
 
 export const ApartmentDetails = (props) => {
@@ -37,10 +38,12 @@ export const ApartmentDetails = (props) => {
 
     const { id } = useParams();
     const { data: apartment, error, load } = useFetchgetById('apartments', id);
-
     const { data: owners } = useFetchgetById('apartmentOwners', id)
-
     const { data: residents } = useFetchgetById('aparmentResidents', id)
+    const { data: parkingSpace } = useFetchgetById('assignedParkingSpaces', id)
+
+
+    const { data: test, loading, error: error1, get, post, put, del } = useFetch("http://localhost:3000/api/");
 
 
     const [apartmentName, setapartmentName] = useState('');
@@ -48,9 +51,11 @@ export const ApartmentDetails = (props) => {
     const [status, setStatus] = useState('');
     const [apartmentOwnersList, setApartmentOwnersList] = useState([])
     const [apartmentResidentsList, setApartmentResidentsList] = useState([])
+    const [assignedParkingList, setAssignedParkingList] = useState([])
 
 
     useEffect(() => {
+
         if (apartment && apartment.spartment) {
             setapartmentName(apartment.spartment.apartmentName);
             setArea(apartment.spartment.area);
@@ -67,13 +72,25 @@ export const ApartmentDetails = (props) => {
             setApartmentResidentsList(residents.apartmentResidents);
 
         }
-    }, [apartment, 
+        if (parkingSpace && parkingSpace.assignedParking) {
+
+            setAssignedParkingList(parkingSpace.assignedParking);
+
+        }
+
+        // const id = { idResidentApartment: residents.apartmentResidents.idResidentApartment };
+        // del('/aparmentResidents', id);
+
+    }, [apartment,
         residents,
-        owners]);
+        owners, parkingSpace]);
 
-    console.log(owners)
-    console.log(residents)
+    useEffect(() => {
+        get(`apartments/${id}`)
+    }, [])
 
+    console.log(test, 'test')
+    console.log(error1, 'Error')
 
     const [toggleState, setToggleState] = useState(1)
 
@@ -91,33 +108,67 @@ export const ApartmentDetails = (props) => {
                 <InfoDetails>
 
 
-                    <ContainerModule module={"Apartamento"} name={apartmentName} status={status} >
+                    <ContainerModule name={`Apartamento ${apartmentName}` } status={status} >
 
-                        <Dropdownanchor name={"Editar apartamento"} icon={"edit"} />
+                        <Dropdownanchor2 name={"Editar apartamento"} icon={"edit"} />
 
                     </ContainerModule>
 
                     <Acordions>
 
-                        <DropdownInfo name={"Propietarios"}>
+                        <DropdownInfo name={"Propietarios"} to1="/admin/owners/create">
+                            {apartmentOwnersList.length > 0 ? (
+                                apartmentOwnersList.map((owner, index) => (
+                                    <Dropdownanchor
+                                        onClick={() => {
+                                            console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
+                                            // del('/aparmentResidents', id);
+                                        }}
+                                        key={index}
+                                        name={owner.owner.name + " " + owner.owner.lastName}
+                                        icon={"user-check"}
+                                        to={`/admin/owners/details/${owner.idOwner}`}
 
-                            {apartmentOwnersList.map((owner, index) => (
-                                <Dropdownanchor name={owner.owner.name} icon={"user-check"} to={`/admin/owners/details/${owner.idOwner}`} />
-
-                            ))}
+                                    />
+                                ))
+                            ) : (
+                                <NotificationsAlert msg="No hay propietarios asignados" />
+                            )}
                         </DropdownInfo>
-                        <DropdownInfo name={"Residentes"}>
 
-                            {/* {apartmentResidentsList.map((resident, index) => (
-                                <Dropdownanchor name={resident.resident.name} icon={"user-check"} to={`/admin/owners/details/${resident.idResident}`} />
-
-                            ))} */}
-
+                        <DropdownInfo name={"Residentes"} to1="/admin/residents/create">
+                            {apartmentResidentsList.length > 0 ? (
+                                apartmentResidentsList.map((resident, index) => (
+                                    <Dropdownanchor
+                                        onClick={() => {
+                                            console.log('Eliminar residente con ID:', { key: resident.idApartmentResident });
+                                            del('aparmentResidents', { idApartmentResident: resident.idApartmentResident });
+                                        }}
+                                        key={index}
+                                        name={resident.resident.name + " " + resident.resident.lastName}
+                                        icon={"user-check"}
+                                        to={`/admin/residents/details/${resident.idResident}`}
+                                    />
+                                ))
+                            ) : (
+                                <NotificationsAlert msg="No hay residentes asignados" />
+                            )}
                         </DropdownInfo>
-                        <DropdownInfo name={"Parqueaderos"}>
 
-                            <Dropdownanchor name={"S101"} icon={"layers"} to="/admin/residents/details" />
-                            <Dropdownanchor name={"S102"} icon={"layers"} to="/admin/residents/details" />
+                        <DropdownInfo name={"Parqueaderos"} to1="/admin/parkingSpaces/create">
+
+                            {assignedParkingList.length > 0 ? (
+                                assignedParkingList.map((parking, index) => (
+                                    <Dropdownanchor
+                                        key={index}
+                                        name={parking.parkingSpace.parkingName}
+                                        icon={"layers"}
+                                        to={`/admin/parkingSpaces/details/${parking.idParkingSpace}`}
+                                    />
+                                ))
+                            ) : (
+                                <NotificationsAlert msg="No hay parqueaderos asignados" />
+                            )}
 
                         </DropdownInfo>
                         <DropdownInfo name={"Vehiculos"}>
@@ -125,7 +176,11 @@ export const ApartmentDetails = (props) => {
                             <Dropdownanchor name={"AME31G"} to="/admin/vehicles/details" />
 
                         </DropdownInfo>
+
                     </Acordions>
+                    <div class="col-auto back" >
+                        <Link to={"/admin/apartments/"} type="button" class="btn btn-sm btn-secondary">Regresar</Link>
+                    </div>
 
 
 
@@ -165,18 +220,10 @@ export const ApartmentDetails = (props) => {
                                 <SearchButton />
                                 <ButtonGoTo value="Nuevo ingreso" />
                             </DetailsActions>
-                            <Tbody>
-                                <Row
-                                    docType='CC'
-                                    docNumber='1007238447'
-                                    name='Emmanuel'
-                                    lastName='Tabares'
-                                // phone='3218298707'
-                                // email='emanueltabares@gmail.com'
-                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                                >
-                                </Row>
-                            </Tbody>
+                            <RowNotificactions status="Active" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
+                            <RowNotificactions status="Inactive" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
+                            <RowNotificactions status="Inactive" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
+
                         </TablePerson>
 
                     </TableDetails>
@@ -188,6 +235,36 @@ export const ApartmentDetails = (props) => {
                                 <ButtonGoTo value="Nuevo visitante" />
                             </DetailsActions>
                             <Tbody>
+                                <Row
+                                    docType='CC'
+                                    docNumber='1007238447'
+                                    name='Emmanuel'
+                                    lastName='Tabares'
+                                // phone='3218298707'
+                                // email='emanueltabares@gmail.com'
+                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+                                >
+                                </Row>
+                                <Row
+                                    docType='CC'
+                                    docNumber='1007238447'
+                                    name='Emmanuel'
+                                    lastName='Tabares'
+                                // phone='3218298707'
+                                // email='emanueltabares@gmail.com'
+                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+                                >
+                                </Row>
+                                <Row
+                                    docType='CC'
+                                    docNumber='1007238447'
+                                    name='Emmanuel'
+                                    lastName='Tabares'
+                                // phone='3218298707'
+                                // email='emanueltabares@gmail.com'
+                                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+                                >
+                                </Row>
                                 <Row
                                     docType='CC'
                                     docNumber='1007238447'

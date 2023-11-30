@@ -12,7 +12,7 @@ export const Dropdown = ({ children, toggleDropdown, isDropdownOpen }) => {
                 >
                     <span className="text-muted sr-only">Action</span>
                 </button>
-                <div className={`collapse dropdown-menu dropdown-menu-right ${isDropdownOpen ? 'show' : ''}`}>
+                <div className={`dropdown-menu dropdown-menu-right ${isDropdownOpen ? 'show' : ''}`}>
                     <div className="card-body">
 
                         {children}

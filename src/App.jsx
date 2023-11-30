@@ -81,13 +81,13 @@ const App = () => {
                         {/* Space */}
                         <Route path='spaces/' element={<Spaces />} />
                         <Route path='spaces/create' element={<SpacesCreate />} />
-                        <Route path='spaces/details' element={<SpaceDetails />} />
+                        <Route path='spaces/details/:id' element={<SpaceDetails />} />
 
 
                         {/* Parking Spaces */}
                         <Route path='parkingSpaces/' element={<ParkingSpaces />} />
                         <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
-                        <Route path='parkingSpaces/details' element={<ParkingSpacesDetails />} />
+                        <Route path='parkingSpaces/details/:id' element={<ParkingSpacesDetails />} />
 
 
                         {/* Residential */}
@@ -116,7 +116,7 @@ const App = () => {
                         {/* Residents */}
                         <Route path='residents/' element={<Residents />} />
                         <Route path='residents/create' element={<ResidentCreate />} />
-                        <Route path='residents/details' element={<ResidentDetail />} />
+                        <Route path='residents/details/:id' element={<ResidentDetail />} />
                         {/* Notifications */}
                         {/* Notification */}
 
