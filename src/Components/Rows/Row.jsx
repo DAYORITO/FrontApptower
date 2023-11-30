@@ -22,6 +22,7 @@ export const Row = ({
     op3,
     op4,
     op5,
+    op6,
     file,
     to = "details"
 
