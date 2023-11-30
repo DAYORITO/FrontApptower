@@ -47,7 +47,7 @@ export const Aside = () => {
                             <ListNav module={'Reservas'} href='/#/admin/' icon='fe fe-calendar' /> */}
 
                             <DropDownList subprocess={"Ingresos"} href='/#/admin/guest_income/'></DropDownList>
-                            <DropDownList subprocess={"Reservas"} href='/#/admin/'></DropDownList>
+                            <DropDownList subprocess={"Reservas"} href='/#/admin/booking'></DropDownList>
 
                         </DropDownNav>
 
@@ -61,7 +61,7 @@ export const Aside = () => {
                             <DropDownList subprocess={"Propietarios"} href='/#/admin/owners'></DropDownList>
                             <DropDownList subprocess={"Residentes"} href='/#/admin/residents'></DropDownList>
                             <DropDownList subprocess={"Visitantes"} href='/#/admin/visitors'></DropDownList>
-                            <DropDownList subprocess={"Vehiculos"} href='/#/admin/'></DropDownList>
+                            <DropDownList subprocess={"Vehiculos"} href='/#/admin/vehicle'></DropDownList>
 
                         </DropDownNav>
 
