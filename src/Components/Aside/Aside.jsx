@@ -87,7 +87,7 @@ export const Aside = () => {
                                             <DropDownList subprocess={"Ingresos"} href='/#/admin/guest_income/'></DropDownList>
                                         )}
                                         {allowedPermissions.includes('Reservas') && (
-                                            <DropDownList subprocess={"Reservas"} href='/#/admin/'></DropDownList>
+                                            <DropDownList subprocess={"Reservas"} href='/#/admin/booking'></DropDownList>
                                         )}
                                     </>
 
@@ -114,7 +114,7 @@ export const Aside = () => {
                                                     <DropDownList subprocess={"Visitantes"} href='/#/admin/visitors'></DropDownList>
                                                 )}
                                                 {allowedPermissions.includes('Vehiculos') && (
-                                                    <DropDownList subprocess={"Vehiculos"} href='/#/admin/'></DropDownList>
+                                                    <DropDownList subprocess={"Vehiculos"} href='/#/admin/vehicle'></DropDownList>
                                                 )}
                                             </>
 
@@ -134,7 +134,7 @@ export const Aside = () => {
                                         {allowedPermissions.includes('Parqueaderos') && (
                                             <DropDownList subprocess={"Parqueaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
                                         )}
-                                        {allowedPermissions.includes('ZonaComunes') && (
+                                        {allowedPermissions.includes('Zona Comunes') && (
                                             <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
                                         )}
 

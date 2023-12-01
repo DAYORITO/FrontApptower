@@ -145,13 +145,13 @@ export const BookingCreate = () => {
                 <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={docType} onChange={e => setDocTypes(e.target.value)}></InputsSelect>
                 <InputsSelect id={"select"} options={userList} name={"Numero de Documento"} ></InputsSelect>
                 <InputsSelect id={"select"} options={spacesList} name={"Tipo de reserva"} ></InputsSelect>
-                <div className="d-flex" style={style}>
+                <div className="d-flex " style={style}>
                     <Inputs name="fecha de reserva" type="Date" value={bookingDate} onChange={e => setBookingDate(e.target.value)}></Inputs>
-                    <TimeInput name={"Hora de la reserva"} value={bookingTime} onChange={e => setBookingTime(e.target.value)}></TimeInput>
+                    <TimeInput name={"Hora de la reserva"} type="number" value={bookingTime} onChange={e => setBookingTime(e.target.value)}></TimeInput>
 
                 </div>
                 <Inputs name={"Cantidad de personas"} type="number" value={amount} onChange={e => setAmount(e.target.value)}></Inputs>
-                <Inputs name={"Horas de duracion"} type="Time" value={duration} onChange={e => setDuration(e.target.value)}></Inputs>
+                <TimeInput name={"Horas de duracion"} type="Time" value={duration} onChange={e => setDuration(e.target.value)}></TimeInput>
 
 
             </FormContainer>

@@ -44,7 +44,8 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Error de inicio de sesión');
+
+                Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
             }
 
             const data = await response.json();

@@ -43,7 +43,8 @@ const LoginForm = ({ setShowLoginForm }) => {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Error de inicio de sesión');
+
+                    Swal.fire('Error de inicio de sesión 2', 'El usuario o la contraseña son incorrectos.', 'error');
                 }
 
                 const responseData = await response.json();
@@ -65,7 +66,7 @@ const LoginForm = ({ setShowLoginForm }) => {
             console.log('password ', loginPassword)
             console.log('username ', username)
             console.error('Error de inicio de sesión Aleja:', error.message);
-            Swal.fire('Error de inicio de sesión', error.message, 'error');
+            Swal.fire('Error de inicio de sesión 1', error.message, 'error');
         }
     }
 
@@ -116,6 +117,8 @@ const RegisterForm = ({ setShowLoginForm }) => {
     const [phone, setPhone] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const navigate = useNavigate();
+
     const handleDocumentTypeChange = (selectedType) => {
         setDocumentType(selectedType);
     };
@@ -145,7 +148,8 @@ const RegisterForm = ({ setShowLoginForm }) => {
                 text: 'Registro Exitoso',
                 icon: 'success',
             }).then(() => {
-                navigate('/admin/residents');
+                navigate('/');
+                window.location.reload();
             }
             );
         }

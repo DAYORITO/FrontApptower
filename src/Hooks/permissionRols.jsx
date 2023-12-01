@@ -9,7 +9,7 @@ export const idToPermissionName = {
     8: 'Vehiculos',
     9: 'Apartamentos',
     10: 'Parqueaderos',
-    11: 'ZonaComunes',
+    11: 'Zona Comunes',
     12: 'Multas',
     13: 'Notificaciones',
     14: 'Ingresos',

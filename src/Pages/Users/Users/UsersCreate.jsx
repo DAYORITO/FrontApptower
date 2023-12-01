@@ -7,17 +7,25 @@ import Inputs from '../../../Components/Inputs/Inputs';
 import FormButton from '../../../Components/Forms/FormButton';
 import Swal from 'sweetalert2';
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
+import { docTypes, residentsTypes, sexs } from '../../../Hooks/consts.hooks'
+import { Uploader } from '../../../Components/Uploader/Uploader'
 
 export const UsersCreate = () => {
     const [documentType, setDocumentType] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [idrole, setIdRole] = useState("");
+    console.log(idrole, 'Hola soy id');
+
+
     const [namerole, setRole] = useState("");
+    console.log(namerole, 'Hola soy name');
     const [document, setDocument] = useState("");
     const [lastname, setLastName] = useState("");
     const [phone, setPhone] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showForm, setShowForm] = useState(false);
 
     const fetchRoles = async () => {
         try {
@@ -74,7 +82,7 @@ export const UsersCreate = () => {
             name,
             email,
             password,
-            idrole: namerole,
+            idrole,
             document,
             lastname,
             phone
@@ -112,33 +120,98 @@ export const UsersCreate = () => {
             });
             return;
         }
-    };
+    }
     return (
         <>
-            <FormContainer name='Crear Usuario' buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/users/' onClick={handleSubmit} />}>
-                <FormColumn>
-                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}></InputsSelect>
-                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} />
-                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
-                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-                    <InputsSelect
-                        id="select"
-                        options={opcionesRols}
-                        value={namerole}
-                        name="Rol"
-                        onChange={e => setRole(e.target.value)}
-                    ></InputsSelect>
+            <FormContainer
+                name='Crear Usuario'
+                buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/users/' onClick={handleSubmit} />}
+            >
 
-                </FormColumn>
+                <InputsSelect
+                    id="select"
+                    options={opcionesRols}
+                    value={idrole}
+                    name="Rol"
+                    onChange={(e) => {
+                        setIdRole(e.target.value);
+                        const selectedRole = roles.find(rol => rol.idrole === Number(e.target.value));
+                        setRole(selectedRole ? selectedRole.namerole : "");
+                        setShowForm(true);
+                    }}
+                ></InputsSelect>
 
-                <FormColumn>
-                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} />
-                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} />
-                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} />
-                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                {showForm && (
+                    <>
+                        {namerole === 'Residente' || namerole === 'Residentes' ? (
+                            <>
+                                <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf' />
+
+                                <FormColumn>
+                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
+                                    ></InputsSelect>
+                                    <Inputs name="Nombre" type='text'></Inputs>
+                                    <Inputs name="Correo" type="email" ></Inputs>
+                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"}></InputsSelect>
+                                    <Inputs name="Fecha de nacimiento" type="Date"></Inputs>
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                                </FormColumn>
 
 
-                </FormColumn>
+                                <FormColumn>
+                                    <Inputs name="Numero de documento" placeholder="1000000007"></Inputs>
+                                    <Inputs name="Apellido" type='text'></Inputs>
+                                    <Inputs name="Numero de telefono" type='number'></Inputs>
+                                    <InputsSelect id={"select"} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={sexs} name={"Sexo"} onChange={e => setSex(e.target.value)}></InputsSelect>
+                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+
+
+                                </FormColumn>
+                            </>
+                        ) : namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad' ? (
+                            <>
+                                <FormColumn>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)}></InputsSelect>
+                                    <Inputs name="Nombre" type='text'></Inputs>
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} ></Inputs>
+
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+
+
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} ></Inputs>
+                                    <Inputs name="Apellido" type='text'></Inputs>
+                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                    <Inputs name="Fecha Nacimiento" type="date"></Inputs>
+                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                                </FormColumn>
+
+                            </>
+                        ) : namerole === 'Admin' || namerole === 'Administrador' || namerole === 'Super Administrador' ? (
+
+                            <>
+
+                                <FormColumn>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}></InputsSelect>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} />
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} />
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} />
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} />
+                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                                </FormColumn>
+                            </>
+                        ) : null}
+                    </>
+                )}
+
             </FormContainer>
         </>
     );

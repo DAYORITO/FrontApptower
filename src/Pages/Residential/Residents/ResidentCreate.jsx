@@ -72,17 +72,17 @@ export const ResidentCreate = () => {
     }
   };
 
-  
+
   const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/apartments')
 
   const apartmentList = data && data.apartments
-  ? data.apartments
-    .filter(apartment => apartment.status === 'Active') 
-    .map(apartment => ({
-      value: apartment.idApartment,
-      label: apartment.apartmentName
-    }))
-  : [];
+    ? data.apartments
+      .filter(apartment => apartment.status === 'Active')
+      .map(apartment => ({
+        value: apartment.idApartment,
+        label: apartment.apartmentName
+      }))
+    : [];
 
   console.log(apartmentList)
 
@@ -90,7 +90,7 @@ export const ResidentCreate = () => {
   return (
 
     <FormContainer name='Crear residente' >
-      {/* <FormColumn> */}
+
 
       <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
         onChange={e => setPdf(e.target.files[0])} />
