@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Dropdown } from '../Dropdown/Dropdown'
 
-export const ContainerModule = ({ children, icon = "home", name, status  }) => {
+export const ContainerModule = ({ children, icon = "home", name, date1, date2, status  }) => {
 
     const [isDropdownOpen, setDropdownOpen] = useState(false)
 
@@ -21,6 +21,8 @@ export const ContainerModule = ({ children, icon = "home", name, status  }) => {
                     </div>
                     <div class="col ml-4">
                         <strong class="mb-1">{name}</strong><span class={`dot dot-lg bg-${(status === "Active") ? "success" : "damger"} ml-2`}></span>
+                        <br/><span className="badge badge-light text-secondary">{date1}</span>
+                        <span className="badge badge-light text-secondary">{date2}</span>
                         {/* <p class="small text-muted mb-1">Fringilla Ornare Placerat Consulting</p> */}
                     </div>
 

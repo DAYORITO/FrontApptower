@@ -121,7 +121,7 @@ const App = () => {
 
                         {/* Residents */}
                         <Route path='residents/' element={<Residents />} />
-                        <Route path='residents/create' element={<ResidentCreate />} />
+                        <Route path='residents/create/' element={<ResidentCreate />} />
                         <Route path='residents/details/:id' element={<ResidentDetail />} />
                         {/* Notifications */}
                         {/* Notification */}

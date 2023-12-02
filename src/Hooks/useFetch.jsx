@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
+// 0. Start UseFech integral experimental
 
-// Define las opciones de método como constantes
 const MethodOptions = {
     GET: 'GET',
     POST: 'POST',
@@ -9,21 +9,14 @@ const MethodOptions = {
     DELETE: 'DELETE',
 };
 
-// Define la estructura del objeto de respuesta según tus necesidades
-// Esto es solo un ejemplo, ajusta según tu API
 const ApiResponse = {
     data: [],
-    // Otros campos de la respuesta, como errores, metadatos, etc.
-    // Puedes ajustar según las necesidades de tu aplicación
-    // error: null,
 };
 
 export const useFetch = (baseUrl) => {
     const [data, setData] = useState({ ...ApiResponse });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    
 
     const fetchData = async (url, method, body = null) => {
         try {
@@ -71,7 +64,17 @@ export const useFetch = (baseUrl) => {
     };
 };
 
+// 0. End UseFech integer experimental
 
+
+
+
+// Usefetch by Emmanuel
+
+
+
+
+// 1. Start UseFetch by Id
 
 export const useFetchgetById = (endpoint, id) => {
     const url = 'http://localhost:3000/api/';
@@ -112,8 +115,14 @@ export const useFetchgetById = (endpoint, id) => {
     return { data, error, load, handleCancelRequest };
 };
 
+// 1. end UseFetch by Id
 
-//Fetch Get Request
+
+
+
+
+// 2. start useFetch get All
+
 export const useFetchget = (endpoint) => {
     const url = 'http://localhost:3000/api/'
     const [data, setData] = useState([]);
@@ -148,6 +157,13 @@ export const useFetchget = (endpoint) => {
     return { data, error, load, handleCancelRequest }
 }
 
+// 2. end useFetch get All
+
+
+
+
+
+// 3. start useFetch post files
 
 export const useFetchpostFile = async (url, data) => {
     const abortController = new AbortController();
@@ -191,8 +207,14 @@ export const useFetchpostFile = async (url, data) => {
     }
 }
 
+// 3. end useFetch post files
 
-//Fetch Post Request
+
+
+
+
+// 4. Start useFetch post
+
 export const useFetchpost = async (endpoint, data) => {
     const url = 'https://apptowerbackend.onrender.com/api/'
     const abortController = new AbortController();
@@ -227,8 +249,21 @@ export const useFetchpost = async (endpoint, data) => {
         abortController.abort();
     }
 
-    
+
 }
+
+// 4. End useFetch post
+
+
+
+
+
+
+
+
+
+
+
 //Fetch Put Request
 export const useFetchput = (endpoint, data) => {
     const url = 'https://apptowerbackend.onrender.com/api/'

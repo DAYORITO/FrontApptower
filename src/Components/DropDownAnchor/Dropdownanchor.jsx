@@ -27,10 +27,10 @@ export const Dropdownanchor = ({ name, to = "/admin/", icon, onClick }) => {
     );
 };
 
-export const Dropdownanchor2 = ({ name, to = "/admin/", icon = "edit" }) => {
+export const Dropdownanchor2 = ({ name, to = "/admin/", icon = "edit", onClick }) => {
     return (
         <>
-            <Link className="dropdown-item" to={to}>
+            <Link onClick={onClick} className="dropdown-item" to={to}>
                 <i className={`fe ${"fe-" + icon} fe-12 mr-4`}></i>{name}
             </Link>
 

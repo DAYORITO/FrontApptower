@@ -1,8 +1,14 @@
-import React from 'react'
-import './FormContainer.css'
-import { Link } from 'react-router-dom';
+import React from 'react';
+import './FormContainer.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 function FormButton({ name, funcion, backButton, to, onClick }) {
+  const navigate = useNavigate();
+
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <div className='botones'>
@@ -10,13 +16,16 @@ function FormButton({ name, funcion, backButton, to, onClick }) {
           <input type="submit" value={name} className="btn btn-primary btn-block" onClick={onClick} />
         </div>
         <div className="form-group">
-          <Link to={to} className="btn btn-light btn-block">{backButton}</Link>
+          {/* Utiliza la función handleBackButtonClick para el botón de retroceso */}
+          <button className="btn btn-light btn-block" onClick={handleBackButtonClick}>
+            {backButton}
+          </button>
         </div>
       </div>
     </>
-  )
+  );
 }
 
+export default FormButton;
 
 
-export default FormButton

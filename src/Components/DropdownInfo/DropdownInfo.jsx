@@ -4,7 +4,7 @@ import "./DropdownInfo.css";
 import { Link } from 'react-router-dom';
 import { Dropdownanchor, Dropdownanchor2 } from '../DropDownAnchor/Dropdownanchor';
 
-export const DropdownInfo = ({ name, children, to1="/admin/" }) => {
+export const DropdownInfo = ({ name, children, to1="/admin/", onClick }) => {
     const [isAccordionOpen, setAccordionOpen] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -27,8 +27,9 @@ export const DropdownInfo = ({ name, children, to1="/admin/" }) => {
                         <span className="sr-only"></span>
                     </button>
                     <div className={`dropdown-menu dropdown-menu-right ${isDropdownOpen ? 'show' : ''}`}>
-                        <Dropdownanchor2 icon={"user"} name={`Agregar ${name}`} to={to1}/>
-                        
+                        <Dropdownanchor2 icon={"user"} name={`Crear nuevo ${name}`} to={to1}/>
+                        <Dropdownanchor2 onClick={onClick} icon={"user"} name={`Asignar ${name} existente`}/>
+
                     </div>
                 </div>
             </div>

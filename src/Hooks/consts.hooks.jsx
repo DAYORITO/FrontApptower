@@ -69,3 +69,14 @@ export const spacesTypes = [
         label: "Area social"
     },
 ]
+
+export const bools = [
+    {
+        value: 1,
+        label: "Si"
+    },
+    {
+        value: 0,
+        label: "No"
+    },
+]
