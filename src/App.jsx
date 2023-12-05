@@ -16,10 +16,10 @@ import { Users } from "./Pages/Users/Users/UsersList";
 import { Watchman } from "./Pages/Surveillance/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
 import { RolsCreate } from "./Pages/Rols/RolsCreate";
-import { RolsEdit } from "./Pages/Rols/RolsEdit";
 import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
-import { ModifyProfile } from "./Pages/Users/Users/modifyProfile";
+import { ModifyProfile } from "./Pages/Users/Users/ModifyProfile";
+import { ModifyProfileList } from "./Pages/Users/Users/ModifyProfileList";
 import Visitors from "./Pages/Residential/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
@@ -45,6 +45,7 @@ import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 
 const App = () => {
+
     return (
 
         <AuthProvider>
@@ -136,22 +137,22 @@ const App = () => {
 
 
 
-                        {/* Residential */}
-                        {/* Vehicles */}
-                        <Route path='vehicle/' element={<Vehicle />} />
-                        <Route path='vehicle/create' element={<VehicleCreate />} />
+                                {/* Residential */}
+                                {/* Vehicles */}
+                                <Route path='vehicle/' element={<Vehicle />} />
+                                <Route path='vehicle/create' element={<VehicleCreate />} />
 
 
 
                                 <Route path='users/' element={<Users />} />
                                 <Route path='users/create' element={<UsersCreate />} />
                                 <Route path='users/profile' element={<ModifyProfile />} />
+                                <Route path='users/profileList' element={<ModifyProfileList />} />
                                 <Route path='watchman/' element={<Watchman />} />
                                 <Route path='watchman/create' element={<WatchmanCreate />} />
                                 <Route path='watchman/shifts' element={<WatchmanShifts />} />
                                 <Route path='rols/' element={<Rols />} />
                                 <Route path='rols/create' element={<RolsCreate />} />
-                                <Route path='rols/edit/:idrole' element={<RolsEdit />} />
                                 <Route path='rols/editNew/:idrole' element={<RolsEditNew />} />
 
 

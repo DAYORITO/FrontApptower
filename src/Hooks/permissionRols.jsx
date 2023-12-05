@@ -16,3 +16,12 @@ export const idToPermissionName = {
     15: 'Roles',
 
 }
+
+export const idToPrivilegesName = {
+    1: 'Listar',
+    2: 'Crear',
+    3: 'Editar',
+    4: 'Eliminar',
+};
+
+

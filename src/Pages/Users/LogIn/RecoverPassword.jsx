@@ -4,9 +4,11 @@ import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
 export const RecoverPassword = () => {
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
 
@@ -41,7 +43,9 @@ export const RecoverPassword = () => {
                         text: 'Se ha enviado un correo con el código de verificación',
                         showConfirmButton: false,
                         timer: 1500
-                    });
+                    }).then(() => {
+                        navigate('/recoveycode');
+                    })
                 } else {
                     const error = await sendCode.json();
                     console.log(error.message);
@@ -84,7 +88,7 @@ export const RecoverPassword = () => {
                         <img src={ImagenPerson} width="75" height="75" alt="" />
 
                         <form className="form" onSubmit={handleEmailSubmit}>
-                            <p>Ingresa tu correo  </p>
+                            {/* <p>Ingresa tu correo  </p> */}
                             <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} />
 
                             <button className='boton-login'>Enviar Codigo</button><br />

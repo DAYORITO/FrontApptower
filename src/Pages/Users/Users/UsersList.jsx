@@ -13,12 +13,61 @@ import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import Inputs from "../../../Components/Inputs/Inputs";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
+import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
+import Cookies from 'js-cookie';
 
 
 export const Users = () => {
     const [showModal, setShowModal] = useState(false);
     const [editedUser, setEditedUser] = useState(null);
     const [usersData, setUsersData] = useState([]);
+
+    //privileges
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+    const token = Cookies.get('token');
+
+    useEffect(() => {
+        if (token) {
+            fetchUserPrivilegeAndPermission(token);
+        }
+    }, [token]);
+
+
+    //Consulta privilegios 
+    const fetchUserPrivilegeAndPermission = async (token) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/privilegefromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user privileges');
+            }
+
+            const data = await response.json();
+            console.log(data, 'data');
+            console.log('Allowed Permissions hi:', data.privileges);
+
+            if (data && data.privileges && Array.isArray(data.privileges)) {
+                const allowed = {};
+                data.privileges.forEach(({ idpermission, idprivilege }) => {
+                    const permissionName = idToPermissionName[idpermission];
+                    const privilegeName = idToPrivilegesName[idprivilege];
+
+                    if (!allowed[permissionName]) {
+                        allowed[permissionName] = [];
+                    }
+                    allowed[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowed);
+            }
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
+
 
 
     const fetchRoles = async () => {
@@ -158,7 +207,13 @@ export const Users = () => {
             <ContainerTable title='Usuarios'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Usuario' href='/admin/users/create' />
+                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') && (
+                    <ButtonGoTo
+                        value='Crear Usuario'
+                        href='/admin/users/create'
+                    />
+                )}
+
                 <TablePerson>
                     <Thead>
                         <Th name={'Información Usuario'}></Th>
@@ -182,10 +237,14 @@ export const Users = () => {
                                 phone={user.phone}
                                 status={user.state}
                             >
-                                <Actions accion='Editar' onClick={(e) => {
-                                    e.preventDefault();
-                                    handleModal(user);
-                                }} />
+
+
+                                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
+                                    <Actions accion='Editar' onClick={(e) => {
+                                        e.preventDefault();
+                                        handleModal(user);
+                                    }} />
+                                )}
                             </Row>
                         ))}
 

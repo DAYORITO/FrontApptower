@@ -13,16 +13,69 @@ import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import Inputs from "../../../Components/Inputs/Inputs";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
+import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
+import Cookies from 'js-cookie';
 
 
 export const Watchman = () => {
     const [showModal, setShowModal] = useState(false);
     const [editedWatchman, setEditedWatchman] = useState(null);
     const [watchmanData, setWatchmanData] = useState([]);
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+    const token = Cookies.get('token');
+
+    console.log(allowedPermissions, 'allowedPermissions Aleja')
+    // console.log(allowedPermissions['Vigilantes'], 'allowedPermissions Vigilante');
+    // console.log(allowedPermissions['Vigilantes']?.includes('Crear'), 'allowedPermissions Vigilante Crear');
+
+
 
     const { data, load, error } = useFetchget('watchman')
     const { error: putError, load: putLoad, } = useFetchput('watchman', editedWatchman);
     console.log(data.watchman)
+
+
+        useEffect(() => {
+            if (token) {
+                fetchUserPrivilegeAndPermission(token);
+            }
+        }, [token]);
+
+
+        //Consulta privilegios 
+        const fetchUserPrivilegeAndPermission = async (token) => {
+            try {
+                const response = await fetch('http://localhost:3000/api/privilegefromrole', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user privileges');
+                }
+
+                const data = await response.json();
+                console.log(data, 'data');
+                console.log('Allowed Permissions hi:', data.privileges);
+
+                if (data && data.privileges && Array.isArray(data.privileges)) {
+                    const allowed = {};
+                    data.privileges.forEach(({ idpermission, idprivilege }) => {
+                        const permissionName = idToPermissionName[idpermission];
+                        const privilegeName = idToPrivilegesName[idprivilege];
+
+                        if (!allowed[permissionName]) {
+                            allowed[permissionName] = [];
+                        }
+                        allowed[permissionName].push(privilegeName);
+                    });
+
+                    setAllowedPermissions(allowed);
+                }
+            } catch (error) {
+                console.error('Error fetching user permissions:', error);
+            }
+        };
 
 
 
@@ -128,7 +181,14 @@ export const Watchman = () => {
                 <DropdownExcel />
                 <SearchButton />
 
-                <ButtonGoTo value='Crear Vigilante' href='/admin/watchman/create' />
+                {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') && (
+                    <ButtonGoTo
+                        value='Crear Vigilante'
+                        href='/admin/users/create'
+                    />
+                )}
+
+
                 <TablePerson>
                     <Thead>
                         <Th name={'Información Vigilante'}></Th>
@@ -150,10 +210,13 @@ export const Watchman = () => {
                                 email={watchman.email}
                                 status={watchman.state}
                             >
-                                <Actions accion='Editar' onClick={(e) => {
-                                    e.preventDefault();
-                                    handleModal(watchman);
-                                }} />
+                                {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
+                                    <Actions accion='Editar' onClick={(e) => {
+                                        e.preventDefault();
+                                        handleModal(watchman);
+                                    }} />
+                                )}
+
                             </Row>
                         ))}
                     </Tbody>
@@ -176,6 +239,7 @@ export const Watchman = () => {
                                 <Inputs name="Apellido" value={editedWatchman?.lastnamewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, lastnamewatchman: e.target.value })} />
                                 <Inputs name="Correo" value={editedWatchman?.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, email: e.target.value })} />
                                 <Inputs name="Teléfono" value={editedWatchman?.phone || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, phone: e.target.value })} />
+
                                 <Inputs
                                     type='date'
                                     name="Fecha Nacimiento"

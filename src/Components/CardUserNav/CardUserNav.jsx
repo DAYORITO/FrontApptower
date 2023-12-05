@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom';
 import './CardUserNav.css';
 import LogoApptower from '../../assets/Logo-Apptower.png';
 
-export const CardUserNav = ({ rol = "Administrador" , name = "Diomedes", lastname = "Diaz" }) => {
+export const CardUserNav = ({ rol, name, lastname }) => {
     return (
 
         <div className='myNav-user'>
-            <Link to={"users/details"}>
+            <Link to={"users/profileList"}>
                 <div className='myNav-user-card'>
                     <div className='myNav-user-card-img'>
-                        <img src="https://th.bing.com/th/id/R.92c842ab508f9def34fd6f5ee13ff0ab?rik=4m9tZK3a2h%2bQMg&pid=ImgRaw&r=0" id='userImg' />
+                        <img src={LogoApptower} id='userImg' />
                     </div>
                     <div className='myNav-user-card-text'>
                         <h4 className='h6'>{rol}</h4>
@@ -17,11 +17,6 @@ export const CardUserNav = ({ rol = "Administrador" , name = "Diomedes", lastnam
                     </div>
 
                 </div>
-
-                {/* <div className='myNav-user-logo'>
-                <img src={LogoApptower} alt="logoApptower" className="logo" />
-                </div> */}
-
 
             </Link>
         </div>

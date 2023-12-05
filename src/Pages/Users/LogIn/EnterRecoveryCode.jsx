@@ -9,15 +9,6 @@ import Swal from 'sweetalert2';
 export const EnterRecoveryCode = ({ handleRecoveryCodeSubmit }) => {
     const [recoveryCode, setRecoveryCode] = useState('');
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         await handleRecoveryCodeSubmit(recoveryCode);
-    //     } catch (error) {
-    //         console.error('Error al enviar el código de recuperación:', error);
-    //     }
-    // };
-
     return (
         <div className='container-login'>
             <div className="container-form login">
@@ -32,9 +23,9 @@ export const EnterRecoveryCode = ({ handleRecoveryCodeSubmit }) => {
                     <div className="form-information-childs">
                         <img src={ImagenPerson} width="75" height="75" alt="" />
 
-                        <form className="form" onSubmit={handleSubmit}>
-                            <p>Ingrese Codigo  </p>
-                            <InputsLogIn placeholder='Codigo de Verificación' type='number' value={recoveryCode} onChange={(newValue) => setRecoveryCode(newValue)} />
+                        <form className="form" >
+                            {/* <p>Codigo de Verificación  </p> */}
+                            <InputsLogIn placeholder='Codigo' type='number' value={recoveryCode} onChange={(newValue) => setRecoveryCode(newValue)} />
 
                             <button className='boton-login'>Enviar Codigo</button><br />
 

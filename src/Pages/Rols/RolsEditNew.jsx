@@ -21,7 +21,7 @@ export const RolsEditNew = () => {
     useEffect(() => {
         if (idrole) {
             const fetchEditedRole = async () => {
-                const response = await fetch(`https://apptowerbackend.onrender.com/api/rols/${idrole}`);
+                const response = await fetch(`http://localhost:3000/api/rols/${idrole}`);
                 const data = await response.json();
                 setEditedRols(data.rols);
             };
@@ -82,13 +82,21 @@ export const RolsEditNew = () => {
         if (editedRols) {
             try {
                 const formattedData = {
-                    namerole: editedRols.namerole,
-                    description: editedRols.description,
-                    detailsRols: editedRols.permissionRols.map(pr => ({
-                        permiso: permissionsList.find(permission => permission.idpermission === pr.idpermission)?.permission,
-                        privilege: privileges.find(privilege => privilege.idprivilege === pr.idprivilege)?.privilege,
-                    })),
+                    namerole: editedRols?.namerole || '',
+                    description: editedRols?.description || '',
+                    state: editedRols?.state || '',
+                    detailsRols: Object.keys(selectedPermissions).reduce((acc, permiso) => {
+                        return [
+                            ...acc,
+                            ...selectedPermissions[permiso].map(privilege => ({
+                                permiso,
+                                privilege,
+                            })),
+                        ];
+                    }, []),
                 };
+
+                console.log(formattedData, 'formattedData');
 
                 const response = await fetch(`http://localhost:3000/api/rols/${idrole}`, {
                     method: 'PUT',

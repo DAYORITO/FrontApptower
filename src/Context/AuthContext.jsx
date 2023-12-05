@@ -23,7 +23,8 @@ export const AuthProvider = ({ children }) => {
             })
             .then(data => {
                 setIsLoggedIn(true);
-                setUser(data.user);
+                setUser(data?.user);
+                console.log('Usuario obtenido:', data.user);
             })
             .catch(error => {
                 console.error('Error al obtener el usuario:', error.message);
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(null);
             });
     };
+
 
     const login = async (usuario, password) => {
 
