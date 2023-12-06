@@ -19,7 +19,7 @@ export const BigCard = ({ cosa = 'cosa', children }) => {
                         </div>
                         <div class="card-text">
                             <strong class="card-title">{cosa.spaceName}</strong>
-                            <p className='text-muted'>{cosa.area}</p>
+                            <p className='text-muted'>{`Area: ${cosa.area} m²`}</p>
                         </div>
                     </div>
                 </Link>

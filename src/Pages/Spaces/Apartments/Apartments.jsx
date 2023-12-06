@@ -1,4 +1,4 @@
-import { useFetchget } from '../../../Hooks/useFetch'
+import { useFetch, useFetchget } from '../../../Hooks/useFetch'
 import { Actions } from "../../../Components/Actions/Actions"
 import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons"
 import { Card } from "../../../Components/Card/Card"
@@ -10,13 +10,37 @@ import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
+import { useEffect, useState } from 'react'
 
 
 
 export const Apartments = () => {
 
+  // Get Data
+
   const { data, load, error } = useFetchget('apartments')
-  console.log(data.apartments)
+
+  console.log(data)
+
+
+  // Funtionality to search
+
+  const [search, setSearch] = useState('');
+  const searcher = (e) => {
+
+    setSearch(e.target.value)
+    console.log(e.target.value)
+  }
+  let filterData = [];
+
+  if (!search) {
+    filterData = data.apartments;
+  } else {
+    filterData = data.apartments.filter((dato) =>
+      dato.apartmentName.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
 
   return (
     <>
@@ -24,7 +48,7 @@ export const Apartments = () => {
       <ContainerTable title='Apartamentos'>
         <DivRow>
           <DropdownExcel />
-          <SearchButton />
+          <SearchButton value={search} onChange={searcher} />
           <ButtonGoTo value='Crear Residente' href='create' />
         </DivRow>
 
@@ -39,16 +63,16 @@ export const Apartments = () => {
 
           </Thead>
           <Tbody>
-            
-            {data.apartments?.map(apartment => (
+
+            {filterData?.map(apartment => (
               <Row
 
                 icon={"home"}
                 status={apartment.status}
-                docType={"Area"}
-                docNumber={apartment.area + " m²" }
+                docType={apartment.tower}
+                docNumber={apartment.area + " m²"}
                 name={"Apartamento"}
-                lastName={apartment.apartmentName}
+                lastName={`${apartment.apartmentName}`}
                 op1={"Jhon mario"}
                 op2={"6"}
                 op3={""}
@@ -57,7 +81,6 @@ export const Apartments = () => {
 
               >
                 <Actions accion='Editar' />
-                <Actions accion='Reservar' />
               </Row>
             ))}
 
@@ -66,5 +89,8 @@ export const Apartments = () => {
           </Tbody>
         </TablePerson>
       </ContainerTable>
+
+      
+
     </>)
 }

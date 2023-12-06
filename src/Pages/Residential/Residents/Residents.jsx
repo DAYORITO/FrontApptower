@@ -15,7 +15,7 @@ import { useAuth } from '../../../Context/AuthContext'
 export const Residents = () => {
     const { user, isAuth } = useAuth();
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/residents')
+    const { data, load, error } = useFetchget('residents')
     console.log(data.apartments)
     return (
         <>

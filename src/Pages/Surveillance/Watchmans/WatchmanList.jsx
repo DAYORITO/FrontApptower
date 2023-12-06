@@ -35,47 +35,47 @@ export const Watchman = () => {
     console.log(data.watchman)
 
 
-        useEffect(() => {
-            if (token) {
-                fetchUserPrivilegeAndPermission(token);
+    useEffect(() => {
+        if (token) {
+            fetchUserPrivilegeAndPermission(token);
+        }
+    }, [token]);
+
+
+    //Consulta privilegios 
+    const fetchUserPrivilegeAndPermission = async (token) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/privilegefromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user privileges');
             }
-        }, [token]);
 
+            const data = await response.json();
+            console.log(data, 'data');
+            console.log('Allowed Permissions hi:', data.privileges);
 
-        //Consulta privilegios 
-        const fetchUserPrivilegeAndPermission = async (token) => {
-            try {
-                const response = await fetch('http://localhost:3000/api/privilegefromrole', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+            if (data && data.privileges && Array.isArray(data.privileges)) {
+                const allowed = {};
+                data.privileges.forEach(({ idpermission, idprivilege }) => {
+                    const permissionName = idToPermissionName[idpermission];
+                    const privilegeName = idToPrivilegesName[idprivilege];
+
+                    if (!allowed[permissionName]) {
+                        allowed[permissionName] = [];
                     }
+                    allowed[permissionName].push(privilegeName);
                 });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user privileges');
-                }
 
-                const data = await response.json();
-                console.log(data, 'data');
-                console.log('Allowed Permissions hi:', data.privileges);
-
-                if (data && data.privileges && Array.isArray(data.privileges)) {
-                    const allowed = {};
-                    data.privileges.forEach(({ idpermission, idprivilege }) => {
-                        const permissionName = idToPermissionName[idpermission];
-                        const privilegeName = idToPrivilegesName[idprivilege];
-
-                        if (!allowed[permissionName]) {
-                            allowed[permissionName] = [];
-                        }
-                        allowed[permissionName].push(privilegeName);
-                    });
-
-                    setAllowedPermissions(allowed);
-                }
-            } catch (error) {
-                console.error('Error fetching user permissions:', error);
+                setAllowedPermissions(allowed);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
 
 
 
@@ -202,6 +202,7 @@ export const Watchman = () => {
 
                         {watchmanData?.map(watchman => (
                             <Row
+                                key={watchman.idwatchman}
                                 docType={watchman.documentType}
                                 docNumber={watchman.document}
                                 name={watchman.namewatchman}
@@ -209,6 +210,9 @@ export const Watchman = () => {
                                 phone={watchman.phone}
                                 email={watchman.email}
                                 status={watchman.state}
+
+
+                                to={`details/${watchman.idwatchman}`}
                             >
                                 {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
                                     <Actions accion='Editar' onClick={(e) => {

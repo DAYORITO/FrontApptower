@@ -27,20 +27,20 @@ const DropdownExcel = () => {
 }
 
 
-const SearchButton = () => {
+const SearchButton = ({value, onChange}) => {
     return (
-        <form className="form-inline" action="/Usuarios/Index" method="get">
+        <div className="form-inline" >
             <div className="form-row">
                 <div className="form-group col-auto">
                     {/* <button type="submit" className="btn btn-secondary" style={{ border: 'none', backgroundColor: 'transparent', outline: 'none', borderBottom: '0' }}>
                         <span className="fe fe-24 fe-search" style={{ color: 'gray' }}></span>
                     </button> */}
                     <label htmlFor="search" className="sr-only">Buscar</label>
-                    <input type="text" className="form-control" name="buscar" value="" placeholder="Buscar" />
+                    <input type="text" value={value} onChange={onChange} placeholder='Buscar' className="form-control" />
 
                 </div>
             </div>
-        </form>
+        </div>
     )
 }
 

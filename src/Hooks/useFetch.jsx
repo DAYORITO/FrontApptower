@@ -1,8 +1,79 @@
-import { useEffect, useState } from "react"
+import { useState, useEffect } from 'react';
+
+// 0. Start UseFech integral experimental
+
+const MethodOptions = {
+    GET: 'GET',
+    POST: 'POST',
+    PUT: 'PUT',
+    DELETE: 'DELETE',
+};
+
+const ApiResponse = {
+    data: [],
+};
+
+export const useFetch = (baseUrl) => {
+    const [data, setData] = useState({ ...ApiResponse });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const fetchData = async (url, method, body = null) => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const config = {
+                method,
+                url: `${baseUrl}${url}`,
+                // mode: "no-cors", 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body) || null,
+            };
+
+            const response = await fetch(config.url, {
+                method: config.method,
+                headers: config.headers,
+                body: config.body,
+            });
+
+            const json = await response.json();
+            setData({ data: json });
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const get = (url) => fetchData(url, MethodOptions.GET);
+    const post = (url, body) => fetchData(url, MethodOptions.POST, body);
+    const put = (url, body) => fetchData(url, MethodOptions.PUT, body);
+    const del = (url, body) => fetchData(url, MethodOptions.DELETE, body);
+
+    return {
+        data,
+        loading,
+        error,
+        get,
+        post,
+        put,
+        del,
+    };
+};
+
+// 0. End UseFech integer experimental
+
+
+
+
+// 1. Start UseFetch by Id
 
 export const useFetchgetById = (endpoint, id) => {
-    // const url = 'http://localhost:3000/api/';
-    const url = 'https://apptowerbackend.onrender.com/api/';
+    const url = 'http://localhost:3000/api/';
+    // const url = 'https://apptowerbackend.onrender.com/api/';
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
@@ -39,8 +110,14 @@ export const useFetchgetById = (endpoint, id) => {
     return { data, error, load, handleCancelRequest };
 };
 
+// 1. end UseFetch by Id
 
-//Fetch Get Request
+
+
+
+
+// 2. start useFetch get All
+
 export const useFetchget = (endpoint) => {
     const url = 'https://apptowerbackend.onrender.com/api/'
     // const url = 'http://localhost:3000/api/';
@@ -76,6 +153,13 @@ export const useFetchget = (endpoint) => {
     return { data, error, load, handleCancelRequest }
 }
 
+// 2. end useFetch get All
+
+
+
+
+
+// 3. start useFetch post files
 
 export const useFetchpostFile = async (url, data) => {
     const abortController = new AbortController();
@@ -119,8 +203,14 @@ export const useFetchpostFile = async (url, data) => {
     }
 }
 
+// 3. end useFetch post files
 
-//Fetch Post Request
+
+
+
+
+// 4. Start useFetch post
+
 export const useFetchpost = async (endpoint, data) => {
     const url = 'https://apptowerbackend.onrender.com/api/'
     const abortController = new AbortController();
@@ -155,8 +245,21 @@ export const useFetchpost = async (endpoint, data) => {
         abortController.abort();
     }
 
-    
+
 }
+
+// 4. End useFetch post
+
+
+
+
+
+
+
+
+
+
+
 //Fetch Put Request
 export const useFetchput = (endpoint, data) => {
     const url = 'https://apptowerbackend.onrender.com/api/'

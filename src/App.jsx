@@ -25,6 +25,7 @@ import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
+import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
@@ -41,10 +42,21 @@ import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
 
+import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
+import { io } from 'socket.io-client';
+import { useEffect } from 'react';
+
+const socket = io('http://localhost:3000');
+
 
 const App = () => {
+
+    // useEffect(() => {
+    //     socket.on('connect', () => {
+    //     });
+    // }, []);
 
     return (
 
@@ -63,15 +75,12 @@ const App = () => {
                         <Route element={<ProtectedRoutes />}>
                             <Route path='/admin/*' element={<Layout />}>
 
-                                {/* Surveillance */}
-                                {/* Watchman */}
-                                <Route path='watchman/' element={<Watchman />} />
-                                <Route path='watchman/create' element={<WatchmanCreate />} />
-
                                 {/* Bookings */}
                                 {/* Booking */}
                                 <Route path='booking/' element={<Booking />} />
-                                <Route path='booking/create' element={<BookingCreate />} />
+                                <Route path='booking/create' element={<BookingCreate socket={socket} />} />
+
+
 
                                 {/* GuestIncome */}
                                 <Route path='guest_income/create' element={<GuestIncomeCreate />} />
@@ -92,10 +101,13 @@ const App = () => {
                                 {/* Rols */}
                                 <Route path='rols/' element={<Rols />} />
 
-                                {/* Users */}
-                                {/* User */}
-                                <Route path='users/' element={<Users />} />
-                                <Route path='users/create' element={<UsersCreate />} />
+                                {/* Residents */}
+                                <Route path='residents/' element={<Residents />} />
+                                <Route path='residents/create/' element={<ResidentCreate />} />
+                                <Route path='residents/details/:id' element={<ResidentDetail />} />
+                                {/* Notifications */}
+                                {/* Notification */}
+                                <Route path='notifications/' element={<Notifications socket={socket} />} />
 
 
                                 {/* Surveillance */}
@@ -151,6 +163,9 @@ const App = () => {
                                 <Route path='watchman/' element={<Watchman />} />
                                 <Route path='watchman/create' element={<WatchmanCreate />} />
                                 <Route path='watchman/shifts' element={<WatchmanShifts />} />
+                                <Route path='watchman/details/:idwatchman' element={<WatchmanDetails />} />
+
+                                {/* Rols */}
                                 <Route path='rols/' element={<Rols />} />
                                 <Route path='rols/create' element={<RolsCreate />} />
                                 <Route path='rols/editNew/:idrole' element={<RolsEditNew />} />
@@ -168,10 +183,7 @@ const App = () => {
                                 <Route path='visitors/create' element={<VisitorsCreate />} />
                                 <Route path='visitors/' element={<Visitors />} />
 
-                                {/* Residents */}
-                                <Route path='residents/' element={<Residents />} />
-                                <Route path='residents/create' element={<ResidentCreate />} />
-                                <Route path='residents/details' element={<ResidentDetail />} />
+
                                 {/* Notifications */}
                                 {/* Notification */}
 
@@ -179,14 +191,14 @@ const App = () => {
 
 
 
-                            </Route>
-                        </Route>
+                            </Route >
+                        </Route >
                         {/* </Route> */}
-                    </Routes>
-                </div>
-            </HashRouter>
+                    </Routes >
+                </div >
+            </HashRouter >
 
-        </AuthProvider>
+        </AuthProvider >
 
     )
 }

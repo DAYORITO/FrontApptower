@@ -28,7 +28,7 @@ export const Checkbox = ({ label, options, onCheckboxChange, type, isCheckedAny,
     };
 
     return (
-        <div className="checkbox-container">
+        <div className="checkbox-container ml-4">
             <label className="checkbox-label">
                 <input
                     className="checkbox-input check"

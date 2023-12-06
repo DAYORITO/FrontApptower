@@ -1,0 +1,15 @@
+
+
+.myDrop {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.myDrop a {
+
+    color: black !important;
+    text-decoration: none;
+}
