@@ -1,0 +1,117 @@
+.selectContainer {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  /* padding-left: 0 !important;
+  padding-right: 0 !important; */
+  
+}
+
+/* .selectContainer .inputSpan {
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  height: 100%;
+} */
+
+/* .selectComponent {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #e6e5e5;
+  border-radius: 8px;
+  padding: 0 0.5rem;
+  outline: none;
+} */
+
+.selectComponent::placeholder {
+  opacity: 0;
+}
+
+.selectComponent:focus {
+  border: none;
+  /* box-shadow: 0 0 2px #9F212F; */
+}
+
+.selectContainer label {
+  position: absolute;
+  top: 0.3rem;
+  left: 1%;
+  pointer-events: none;
+  display: flex;
+  padding: 0 0.2rem;
+  transition: all 0.3s ease;
+  color: #7a7a7a;
+  background-color: #fff;
+}
+
+.selectContainer label.active {
+  top: -0.8rem;
+  font-size: 0.8rem;
+  color: #7ed6ff;
+  font-weight: bold;
+}
+
+/* .selectContainer label.lleno {
+  top: -0.8rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+} */
+
+/* .selectContainer::before,
+.selectContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #7ed6ff;
+  transition: all 0.3s ease;
+} */
+
+/* .selectContainer::before {
+  width: 0%;
+  height: 2px;
+}
+
+.selectContainer::after {
+  width: 2px;
+  height: 0%;
+} */
+
+/* .selectContainer:focus-within::before {
+  width: 100%;
+}
+
+.selectContainer:focus-within::after {
+  height: 100%;
+} */
+
+/* .inputSpan::before,
+.inputSpan::after {
+  content: "";
+  position: absolute;
+
+  bottom: 0;
+  left: 0;
+  background: #7ed6ff;
+  transition: all 0.3s ease;
+} */
+
+/* .inputSpan::before {
+  width: 0%;
+  height: 2px;
+}
+
+.inputSpan::after {
+  width: 2px;
+  height: 0%;
+}
+
+.inputSpan:focus-within::before {
+  width: 100%;
+}
+
+.inputSpan:focus-within::after {
+  height: 100%;
+} */
+.select2-container {
+  border: none;
+}

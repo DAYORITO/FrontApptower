@@ -72,11 +72,22 @@ export const spacesTypes = [
 
 export const bools = [
     {
-        value: 1,
+        value: true,
         label: "Si"
     },
     {
-        value: 0,
+        value: false,
         label: "No"
+    },
+]
+
+export const parkingTypes = [
+    {
+        value: "Public",
+        label: "Publico"
+    },
+    {
+        value: "Private",
+        label: "Privado"
     },
 ]

@@ -24,12 +24,10 @@ import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
 import { createPortal } from "react-dom"
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
+import { format } from 'date-fns';
 
 
 export const ApartmentDetails = (props) => {
-
-
-
 
 
 
@@ -86,7 +84,7 @@ export const ApartmentDetails = (props) => {
 
     const apartmentList = data && data.apartments
         ? data.apartments
-            .filter(apartment => apartment.status === 'Active')
+            // .filter(apartment => apartment.status === 'Active')
             .map(apartment => ({
                 value: apartment.idApartment,
                 label: apartment.apartmentName
@@ -119,6 +117,77 @@ export const ApartmentDetails = (props) => {
 
     // 2. end modal resident per resident
 
+
+
+
+    // 3. Start modal assigned parking space
+
+    const [idParkingSpace, setIdParkingSpace] = useState("");
+
+    const { data: parkingSpaces } = useFetchget('parkingSpaces')
+
+    const parkingSpaceList = parkingSpaces && parkingSpaces.parkingSpaces
+        ? parkingSpaces.parkingSpaces
+            .filter(parking => parking.parkingType === 'Private')
+            .map(parking => ({
+                value: parking.idParkingSpace,
+                label: `${parking.parkingName} - ${parking.parkingType}`
+            }))
+        : [];
+
+    console.log(parkingSpaceList)
+
+
+    const [showParkingSpacesModal, setShowParkingSpacesModal] = useState(false);
+    // const [editedUser, setEdit] = useState(null);
+
+    const handleParkingSpacesModal = (data) => {
+        // setEdit(data);
+        console.log(data, 'row')
+        setShowParkingSpacesModal(true)
+
+    }
+
+
+    // 3. End modal assigned parking space
+
+
+
+
+
+    // 3. Start get guest income 
+
+    const { data: incomes } = useFetchgetById('guestIncome/byApartment', id)
+    const [incomesList, setIncomes] = useState([])
+
+    useEffect(() => {
+        if (incomes && incomes.guestIncome) {
+            setIncomes(incomes.guestIncome);
+        }
+    }, [incomes]);
+
+
+    // Funtionality to search
+
+    const [search, setSearch] = useState('');
+    const searcher = (e) => {
+
+        setSearch(e.target.value)
+        console.log(e.target.value)
+    }
+    let filterData = [];
+
+    if (!search) {
+        filterData = incomes.guestIncome;
+    } else {
+        filterData = incomes.guestIncome.filter((dato) =>
+            dato.asociatedVisitor.name.toLowerCase().includes(search.toLowerCase())
+        );
+    }
+
+    console.log(filterData)
+
+    // 3. End get guest income
 
 
 
@@ -195,7 +264,7 @@ export const ApartmentDetails = (props) => {
 
 
 
-    
+
 
 
     return (
@@ -260,21 +329,26 @@ export const ApartmentDetails = (props) => {
                             )}
                         </DropdownInfo>
 
-                        <DropdownInfo name={"Parqueaderos"} to1="/admin/parkingSpaces/create">
-
+                        <DropdownInfo name={"Parqueaderos"} onClick={(e) => {
+                            e.preventDefault();
+                            handleParkingSpacesModal(apartment);
+                        }}>
                             {assignedParkingList.length > 0 ? (
                                 assignedParkingList.map((parking, index) => (
                                     <Dropdownanchor
+                                        onClick={() => {
+                                            console.log('Eliminar parqueadero con ID:', { key: parking.idAssignedParking });
+                                            del('aparmentResidents', { idAssignedParking: parking.idAssignedParking });
+                                        }}
                                         key={index}
                                         name={parking.parkingSpace.parkingName}
-                                        icon={"layers"}
-                                        to={`/admin/parkingSpaces/details/${parking.idParkingSpace}`}
+                                        icon={"user-check"}
+                                        to={`/admin/parkingSpace/details/${parking.idParkingSpace}`}
                                     />
                                 ))
                             ) : (
                                 <NotificationsAlert msg="No hay parqueaderos asignados" />
                             )}
-
                         </DropdownInfo>
                         <DropdownInfo name={"Vehiculos"}>
                             <Dropdownanchor name={"ABL33F"} to="/admin/vehicles/details" />
@@ -298,6 +372,7 @@ export const ApartmentDetails = (props) => {
 
                         <NavListDetails index={1} name={"Mensajes"} toggleState={toggleState} onClick={() => toggleTab(1)} />
                         <NavListDetails index={2} name={"Ingresos"} toggleState={toggleState} onClick={() => toggleTab(2)} />
+                        <NavListDetails index={3} name={"Multas"} toggleState={toggleState} onClick={() => toggleTab(3)} />
 
                     </NavDetails>
 
@@ -321,12 +396,31 @@ export const ApartmentDetails = (props) => {
                     <TableDetails index={2} toggleState={toggleState} >
                         <TablePerson>
                             <DetailsActions>
-                                <SearchButton />
-                                <ButtonGoTo value="Nuevo ingreso" />
+                                <SearchButton value={search} onChange={searcher} />
+                                <ButtonGoTo value="Nuevo ingreso" href={'/admin/guest_income/create'} />
                             </DetailsActions>
-                            <RowNotificactions status="Active" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
-                            <RowNotificactions status="Inactive" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
-                            <RowNotificactions status="Inactive" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
+
+                            {filterData && filterData.length > 0 ? (
+                                filterData.map((income, index) => (
+
+                                    // console.log(income.asociatedVisitor.name)
+                                    <RowNotificactions
+                                        status="Active"
+                                        name={`${income.asociatedVisitor.name}`}
+                                        lastName={` ${income.asociatedVisitor.lastname}`}
+                                        icon="arrow-up-right"
+
+                                        date={format(new Date(income.createdAt), 'dd MMMM yyyy HH:mm:ss')}
+                                        msg={`Se dirije al apartamento ${apartmentName} 
+                                    ${income.observations}`}
+                                    />
+
+                                ))
+                            ) : (
+                                <NotificationsAlert msg="No hay ingresos a este apartamento" />
+                            )}
+
+
 
                         </TablePerson>
 
@@ -384,6 +478,31 @@ export const ApartmentDetails = (props) => {
                                     value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
                                 <Inputs name="Fecha de fin de residencia" type={"date"}
                                     value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs>
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {showParkingSpacesModal &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setShowParkingSpacesModal}>
+                            <Modal
+                                // onClick={handleSaveChanges}
+                                showModal={setShowParkingSpacesModal}
+                                title={"Asignar parqueadero"}
+
+
+                            >
+                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+
+                                <InputsSelect id={"select"} options={parkingSpaceList} name={"Parqueaderos"}
+                                    value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}></InputsSelect>
+
+
+
                             </Modal>
                         </ModalContainer>
                     </>,

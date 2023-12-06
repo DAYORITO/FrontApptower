@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useRef } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, type, id, readonly = false }) {
+function Inputs({ name, value, onChange, placeholder, type, list, options, id, readonly = false }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   // console.log(inputRef.current);
@@ -39,7 +39,7 @@ function Inputs({ name, value, onChange, placeholder, type, id, readonly = false
   return (
     <>
 
-      <div className='form-group mb-3 col-sm-12 col-md-12 inputContainer'>
+      <div className='form-group mb-3  inputContainer'>
         <span className='inputSpan'>
           <input
             type={type}
@@ -51,9 +51,18 @@ function Inputs({ name, value, onChange, placeholder, type, id, readonly = false
             ref={inputRef}
             id={id}
             readOnly = {readonly}
+            list={list}
+            {...readonly && 'disabled'}
+            
+            
           />
         </span>
         <label htmlFor={name} className='form-label' ref={labelRef}>{name}</label>
+        {list && <datalist  className='custom-datalist' id={list}>
+          {options?.map((opcion) => (
+            <option  value={opcion.value} label={opcion.label} />
+          ))}
+        </datalist>}
       </div>
     </>
   )

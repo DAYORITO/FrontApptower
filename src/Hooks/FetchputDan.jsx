@@ -12,7 +12,6 @@ export const useApiUpdate = (dataToUpdate, endpoint) => {
       const error = await response.json();
       throw new Error(`Failed to update the data: ${error.message}`);
     }
-
     return response.json();
   });
 };
