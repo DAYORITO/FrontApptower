@@ -12,9 +12,13 @@ import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
 
+
+
+
 function GuestIncome() {
     const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });//se crea un estado para actualizar los datos al momento de cualquier accion
     const {data, load, error} = useFetchget('guestIncome')
+  
     console.log(data)
 
     useEffect(() => {
@@ -24,9 +28,10 @@ function GuestIncome() {
     }, [data])
 
     const handleEditClick = async (dataToUpdate) => {
-
+        
         useApiUpdate(dataToUpdate, 'guestIncome')
         .then((responseData)=>{
+            
             console.log(responseData)
             Swal.fire({
                 icon: 'success',
@@ -43,8 +48,6 @@ function GuestIncome() {
             setGuestIncomeData(updatedGuestIncome);
         })
     }
-
-    
     const formatDate = (date) => {
         return new Date(date).toLocaleString('es-CO', {
           format: 'dd/MM/yyyy HH:mm:ss',
@@ -55,7 +58,7 @@ function GuestIncome() {
         <ContainerTable title='Ingresos'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Visitante' href='/#/admin/guest_income/create' />
+                <ButtonGoTo value='Crear Ingreso' href='/admin/guest_income/create' />
                 <TablePerson>
                     <Thead>
                         <Th name={'Informacion del Ingreso'}></Th>
@@ -98,6 +101,7 @@ function GuestIncome() {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
+            
     </>
   )
 }
