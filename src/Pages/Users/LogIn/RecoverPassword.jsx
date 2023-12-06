@@ -16,7 +16,7 @@ export const RecoverPassword = () => {
         e.preventDefault();
 
         try {
-            const userCheck = await fetch('http://localhost:3000/api/users/email', {
+            const userCheck = await fetch('https://apptowerbackend.onrender.com/api/users/email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export const RecoverPassword = () => {
                 const userData = await userCheck.json();
                 console.log(userData.message);
 
-                const sendCode = await fetch('http://localhost:3000/api/email', {
+                const sendCode = await fetch('https://apptowerbackend.onrender.com/api/api/email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

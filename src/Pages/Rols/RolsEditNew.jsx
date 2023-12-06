@@ -21,7 +21,7 @@ export const RolsEditNew = () => {
     useEffect(() => {
         if (idrole) {
             const fetchEditedRole = async () => {
-                const response = await fetch(`http://localhost:3000/api/rols/${idrole}`);
+                const response = await fetch(`https://apptowerbackend.onrender.com/api/${idrole}`);
                 const data = await response.json();
                 setEditedRols(data.rols);
             };
@@ -98,7 +98,7 @@ export const RolsEditNew = () => {
 
                 console.log(formattedData, 'formattedData');
 
-                const response = await fetch(`http://localhost:3000/api/rols/${idrole}`, {
+                const response = await fetch(`https://apptowerbackend.onrender.com/api/${idrole}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
