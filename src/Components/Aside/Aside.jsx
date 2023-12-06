@@ -38,7 +38,7 @@ export const Aside = () => {
                     <div className='myNav-links-content'>
 
                         <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart fe-24' />
-                        <ListNav module={'Notificaciones'} href='/#/admin/' icon='fe fe-message-circle fe-24' />
+                        <ListNav module={'Notificaciones'} href='/#/admin/notifications' icon='fe fe-message-circle fe-24' />
 
 
                         <DropDownNav module={"Ingresos"} icon='fe fe-phone-outgoing fe-24'>

@@ -34,11 +34,22 @@ import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
-
+import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
+import { io } from 'socket.io-client';
+import { useEffect} from 'react';
+
+const socket = io('http://localhost:3000');
+
 
 const App = () => {
+
+    useEffect(() => {
+        socket.on('connect', () => {
+        });
+    }, []);
+
     return (
 
         <HashRouter basename='/'>
@@ -66,7 +77,7 @@ const App = () => {
                         {/* Bookings */}
                         {/* Booking */}
                         <Route path='booking/' element={<Booking />} />
-                        <Route path='booking/create' element={<BookingCreate />} />
+                        <Route path='booking/create' element={<BookingCreate socket={socket} />} />
 
                         {/* GuestIncome */}
                         <Route path='guest_income/create' element={<GuestIncomeCreate />} />
@@ -125,6 +136,7 @@ const App = () => {
                         <Route path='residents/details/:id' element={<ResidentDetail />} />
                         {/* Notifications */}
                         {/* Notification */}
+                        <Route path='notifications/' element={<Notifications socket={socket} />} />
 
                         {/* Fines */}
 
