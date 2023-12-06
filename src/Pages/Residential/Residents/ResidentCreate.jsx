@@ -13,7 +13,11 @@ import Swal from 'sweetalert2'
 import FormColumn from "../../../Components/Forms/FormColumn";
 import { Checkbox } from '../../../Components/Checkbox/Checkbox'
 
-export const ResidentCreate = () => {
+export const ResidentCreate = (props) => {
+  // socket
+  const socket = props.socket;
+
+  console.log('Socket:', socket);
 
   const [pdf, setPdf] = useState("");
   const [docType, setDocType] = useState("");
@@ -68,6 +72,7 @@ export const ResidentCreate = () => {
 
     if (response) {
       console.log('Response:', response);
+      socket.emit('message', 'Se ha creado un residente nuevo');
       Swal.fire({
         title: 'Éxito',
         text: 'Residente creado exitosamente',

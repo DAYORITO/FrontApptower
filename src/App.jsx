@@ -49,6 +49,7 @@ const App = () => {
         socket.on('connect', () => {
         });
     }, []);
+    console.log(socket.id);
 
     return (
 
@@ -132,7 +133,7 @@ const App = () => {
 
                         {/* Residents */}
                         <Route path='residents/' element={<Residents />} />
-                        <Route path='residents/create/' element={<ResidentCreate />} />
+                        <Route path='residents/create/' element={<ResidentCreate socket={socket}/>} />
                         <Route path='residents/details/:id' element={<ResidentDetail />} />
                         {/* Notifications */}
                         {/* Notification */}

@@ -15,7 +15,7 @@ import Swal from "sweetalert2"
 
 export const BookingCreate = (props) => {
     //variables
-   const socket = props.socket;
+    const socket = props.socket;
     const [docType, setDocTypes] = useState([]);
     const [user, setUsers] = useState([]);
     const [spaces, setSpaces] = useState([]);
@@ -30,7 +30,7 @@ export const BookingCreate = (props) => {
     if (isValid(parsedStartDate) && isValid(parsedEndDate)) {
         dateStart = format(parsedStartDate, 'yyyy-MM-dd HH:mm:ss');
         dateEnd = format(parsedEndDate, 'yyyy-MM-dd HH:mm:ss');
-    } 
+    }
 
     const navigate = useNavigate();
 
@@ -52,14 +52,19 @@ export const BookingCreate = (props) => {
             bookingTime: dateEnd
         };
         console.log('Data:', data);
-        const { 
+        const {
             response,
-             error 
-            } = await useFetchpostFile(url, data);
+            error
+        } = await useFetchpostFile(url, data);
 
         if (response) {
             console.log('Response:', response);
-            socket.emit('notificacion', 'Se ha creado una nueva reserva');
+            try {
+                socket.emit('notificacion', 'Se ha creado una nueva reserva');
+            } catch (error) {
+                console.log(error);
+            }
+            
             Swal.fire({
                 title: 'Éxito',
                 text: 'Reservas creado exitosamente',
@@ -113,7 +118,7 @@ export const BookingCreate = (props) => {
     return (
         <>
             <FormContainer name='Crear reserva' buttons={<FormButton name='Crear reserva' backButton='Regresar' to='/admin/booking/' onClick={handleSubmit} ></FormButton>}>
-                
+
                 <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={docType} onChange={e => setDocTypes(e.target.value)}></InputsSelect>
                 <InputsSelect id={"select"} options={userList} name={"Numero de Documento"} onChange={e => setUsers(e.target.value)}></InputsSelect>
                 <InputsSelect id={"select"} options={spacesList} name={"Tipo de reserva"} onChange={e => setSpaces(e.target.value)}></InputsSelect>
