@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
 import { useFetchpostFile } from '../../../Hooks/useFetch'
 import FormColumn from "../../../Components/Forms/FormColumn";
+import InputsSelect from '../../../Components/Inputs/InputsSelect'
+import { spacesTypes } from '../../../Hooks/consts.hooks'
 
 
 // import InputsSelect from '../../../Components/Inputs/InputsSelect'
@@ -25,7 +27,7 @@ export const SpacesCreate = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // const url = 'https://apptowerbackend.onrender.com/api/spaces';
-    // const url = 'http://localhost:3000/api/spaces';
+    const url = 'http://localhost:3000/api/spaces';
     const data = {
       spaceType,
       image,
@@ -67,8 +69,10 @@ export const SpacesCreate = () => {
         {/* <FormColumn> */}
 
         <Uploader name="img"  onChange={e => setImage(e.target.files[0])} />
-        <Inputs name="Tipo de espacio" placeholder="Ejemplo: 101"
-          value={spaceType} onChange={e => setSpaceType(e.target.value)}></Inputs>
+        
+        <InputsSelect name={"Tipo de espacio"} options={spacesTypes}
+         value={spaceType} onChange={e => setSpaceType(e.target.value)}> </InputsSelect>
+
         <Inputs name="Nombre espacio" placeholder="Ejemplo: 101"
           value={spaceName} onChange={e => setSpaceName(e.target.value)}></Inputs>
         <Inputs name="Area" type="number"

@@ -1,138 +1,103 @@
+import React, { useEffect, useState } from 'react'
 
 import { Details } from "../../../Components/Details/details"
-import React, { useState } from 'react'
-import FormContainer from '../../../Components/Forms/FormContainer'
 import Inputs from '../../../Components/Inputs/Inputs'
-import FormButton from '../../../Components/Forms/FormButton'
-import { Uploader } from '../../../Components/Uploader/Uploader'
 import InputsSelect from "../../../Components/Inputs/InputsSelect"
-import { docTypes, residentsTypes, sexs, statusList } from "../../../Hooks/consts.hooks"
+import { statusList } from "../../../Hooks/consts.hooks"
 import { TablePerson } from '../../../Components/Tables/Tables'
-import { Tbody } from '../../../Components/Tbody/Tbody'
-import { Row } from '../../../Components/Rows/Row'
 import { TableDetails } from "../../../Components/TableDetails/TableDetails"
 import { NavDetails } from "../../../Components/NavDetails/NavDetails"
 import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails"
 import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
+import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
+import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
+import { useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
+import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
+import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
+import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
+import { Acordions } from "../../../Components/Acordions/Acordions"
+import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
+import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
+import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
 
+import { createPortal } from "react-dom"
+import { Link } from "react-router-dom"
+import { useParams } from "react-router"
+import { format } from 'date-fns';
 
 export const OwnerDetail = () => {
+
   const [toggleState, setToggleState] = useState(1)
 
   const toggleTab = (index) => {
-    console.log(index)
     setToggleState(index)
   };
 
   return (
-    <>
-      <Details>
 
-        <InfoDetails>
-          <FormContainer name='Editar propietario' buttons={<FormButton name='Editar propietario' backButton='Regresar' to='/admin/owners/'
-          />}>
-            {/* <FormColumn> */}
 
-            <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
-            // onChange={e => setPdf(e.target.files[0])} 
-            />
+    <Details>
 
-            <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"}
-            // value={residentType} onChange={e => setResidentType(e.target.value)}
-            ></InputsSelect>
+      <InfoDetails>
 
-            <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
-            // value={docType} onChange={e => setDocType(e.target.value)}
-            ></InputsSelect>
 
-            <Inputs name="Numero de documento" placeholder="1000000007"
-            // value={docNumber} onChange={e => setDocNumber(e.target.value)}
-            ></Inputs>
+        {/* <ContainerModule name={`Residente`}  >
 
-            <Inputs name="Nombre"
-            // value={name} onChange={e => setName(e.target.value)}
-            ></Inputs>
-            <Inputs name="Apellido"
-            // value={lastName} onChange={e => setLastName(e.target.value)}
-            ></Inputs>
+          <Dropdownanchor2 name={"Editar residente"} icon={"edit"} onClick={(e) => {
+            e.preventDefault();
+            handleModal(apartment);
+          }} />
 
-            <InputsSelect id={"select"} options={sexs} name={"Sexo"}
-            // value={sex} onChange={e => setSex(e.target.value)}
-            ></InputsSelect>
 
-            <Inputs name="Fecha de nacimiento" type="Date"
-            // value={birthday} onChange={e => setBirthday(e.target.value)}
-            ></Inputs>
+        </ContainerModule> */}
 
-            <Inputs name="Correo" type="email"
-            // value={email} onChange={e => setEmail(e.target.value)}
-            ></Inputs>
+        <Acordions>
 
-            <Inputs name="Numero de telefono"
-            // value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
-            ></Inputs>
+          <DropdownInfo name={"Informacion personal"} to1="/admin/owners/create">
 
-            <InputsSelect id={"select"} options={statusList} name={"Estado"}
-            ></InputsSelect>
+            <Dropdownanchor name={"Emmanuel"} />
+            <Dropdownanchor name={"Tabares Ortiz"} />
+            <Dropdownanchor name={""} />
+            <Dropdownanchor name={"Emmanuel"} />
+            <Dropdownanchor name={"Emmanuel"} />
+            <Dropdownanchor name={"Emmanuel"} />
+
+          </DropdownInfo>
 
 
 
+        </Acordions>
+        <div class="col-auto back" >
+          <Link to={"/admin/owners/"} type="button" class="btn btn-sm btn-secondary">Regresar</Link>
+        </div>
 
-          </FormContainer>
-        </InfoDetails>
+      </InfoDetails>
 
-        <ListsDetails>
-          <NavDetails>
+      <ListsDetails>
+        <NavDetails>
 
-            <NavListDetails index={1} name={"Apartamento"} toggleState={toggleState} onClick={() => toggleTab(1)} />
+          <NavListDetails index={1} name={"Apartamentos"} toggleState={toggleState} onClick={() => toggleTab(1)} />
 
-          </NavDetails>
+        </NavDetails>
 
-          <TableDetails index={1} toggleState={toggleState} >
-            <TablePerson>
-              <Tbody>
-                <Row
-                  docType='CC'
-                  docNumber='1007238447'
-                  name='Emmanuel'
-                  lastName='Tabares'
-                // phone='3218298707'
-                // email='emanueltabares@gmail.com'
-                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                >
-                </Row>
-                <Row
-                  docType='CC'
-                  docNumber='1007238447'
-                  name='Emmanuel'
-                  lastName='Tabares'
-                // phone='3218298707'
-                // email='emanueltabares@gmail.com'
-                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+        <TableDetails index={1} toggleState={toggleState} >
 
-                >
-                </Row>
-                <Row
-                  docType='CC'
-                  docNumber='1007238447'
-                  name='Emmanuel'
-                  lastName='Tabares'
-                // phone='3218298707'
-                // email='emanueltabares@gmail.com'
-                // file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
+          <TablePerson>
 
-                >
-                </Row>
 
-              </Tbody>
-            </TablePerson>
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
 
-          </TableDetails>
 
-          
-        </ListsDetails>
-      </Details>
-    </>
-  )
+          </TablePerson>
+        </TableDetails>
+
+
+
+
+      </ListsDetails>
+    </Details >)
 }

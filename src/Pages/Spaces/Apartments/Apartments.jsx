@@ -73,8 +73,8 @@ export const Apartments = () => {
                 docNumber={apartment.area + " m²"}
                 name={"Apartamento"}
                 lastName={`${apartment.apartmentName}`}
-                op1={"Jhon mario"}
-                op2={"6"}
+                op1={""}
+                op2={""}
                 op3={""}
 
                 to={`details/${apartment.idApartment}`}

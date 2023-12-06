@@ -16,7 +16,7 @@ export const Residents = () => {
     const { user, isAuth } = useAuth();
 
     const { data, load, error } = useFetchget('residents')
-    console.log(data.apartments)
+    // console.log(data.apartments)
     return (
         <>
 
@@ -39,19 +39,9 @@ export const Residents = () => {
 
                     </Thead>
                     <Tbody>
-                        <Row
-                            docType='CC'
-                            docNumber='1007238447'
-                            name='Emmanuel'
-                            lastName='Tabares'
-                            phone='3218298707'
-                            email='emanueltabares@gmail.com'
-                            file={"https://res.cloudinary.com/ddptpzasb/raw/upload/v1700529918/Documents/f709663c-1a9f-46d9-8cb5-4005f22c14d8"}
-                        >
-                            <Actions accion='Edit resident'></Actions>
-                            <Actions accion='Assigned space to resident'></Actions>                        </Row>
                         {data.residents?.map(residents => (
                             <Row
+                            to={`details/${residents.idResident}`}
                                 docType={residents.docType}
                                 docNumber={residents.docNumber}
                                 name={residents.name}
