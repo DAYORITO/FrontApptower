@@ -38,7 +38,7 @@ export const Aside = () => {
                     <div className='myNav-links-content'>
 
                         <ListNav module={'Dashborad'} href='/#/admin/' icon='fe fe-bar-chart fe-24' />
-                        <ListNav module={'Notificaciones'} href='/#/admin/' icon='fe fe-message-circle fe-24' />
+                        <ListNav module={'Notificaciones'} href='/#/admin/notifications' icon='fe fe-message-circle fe-24' />
 
 
                         <DropDownNav module={"Ingresos"} icon='fe fe-phone-outgoing fe-24'>
@@ -72,7 +72,7 @@ export const Aside = () => {
                             <ListNav module={'Zonas comunes'} href='/#/admin/spaces' icon='fe fe-sun fe-24' /> */}
 
                             <DropDownList subprocess={"Apartamentos"} href='/#/admin/apartments'></DropDownList>
-                            <DropDownList subprocess={"Parkeaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
+                            <DropDownList subprocess={"Parqueaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
                             <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
 
                         </DropDownNav>

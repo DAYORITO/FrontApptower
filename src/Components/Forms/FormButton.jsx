@@ -1,8 +1,14 @@
-import React from 'react'
-import './FormContainer.css'
-import { Link } from 'react-router-dom';
+import React from 'react';
+import './FormContainer.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 function FormButton({ name, funcion, backButton, to, onClick }) {
+  const navigate = useNavigate();
+
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <div className='d-flex justify-content-end' style={{width: '100%'}}>
@@ -14,9 +20,9 @@ function FormButton({ name, funcion, backButton, to, onClick }) {
         </div>
       </div>
     </>
-  )
+  );
 }
 
+export default FormButton;
 
 
-export default FormButton

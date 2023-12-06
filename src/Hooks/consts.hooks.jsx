@@ -69,3 +69,25 @@ export const spacesTypes = [
         label: "Area social"
     },
 ]
+
+export const bools = [
+    {
+        value: true,
+        label: "Si"
+    },
+    {
+        value: false,
+        label: "No"
+    },
+]
+
+export const parkingTypes = [
+    {
+        value: "Public",
+        label: "Publico"
+    },
+    {
+        value: "Private",
+        label: "Privado"
+    },
+]

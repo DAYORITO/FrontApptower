@@ -16,10 +16,10 @@ export const Spaces = () => {
   return (
     <>
 
-      <ContainerTable title='Espacios'>
+      <ContainerTable title='Zonas comunes'>
         <DropdownExcel />
         <SearchButton />
-        <ButtonGoTo value='Crear espacio' href='create' />
+        <ButtonGoTo value='Nueva zona comun' href='create' />
 
         <TablePerson>
           <ContainerCard>
@@ -29,7 +29,7 @@ export const Spaces = () => {
                 cosa={spaces}
               >
                 <Actions accion='Editar' />
-                <Actions accion='Reservar' />
+                <Actions accion='Reservar' icon="calendar" />
               </BigCard>
             ))}
 

@@ -7,8 +7,9 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
       <div div id="formContainer" className="card shadow">
         <div className="d-flex justify-content-between">
           <strong>
-            <h4>{name}</h4>
+            <h3 className="mb-2">{name}</h3>
           </strong>
+          {/* <p>Buenos diasBuenos diasBuenos diasBuenos diasBuenos diasBuenos dias</p> */}
           {modalButton}
         </div>
         <div className="card-body" id='form'>

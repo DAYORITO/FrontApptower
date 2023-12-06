@@ -34,11 +34,22 @@ import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
-
+import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
+import { io } from 'socket.io-client';
+import { useEffect} from 'react';
+
+const socket = io('http://localhost:3000');
+
 
 const App = () => {
+
+    useEffect(() => {
+        socket.on('connect', () => {
+        });
+    }, []);
+
     return (
 
         <HashRouter basename='/'>
@@ -66,7 +77,7 @@ const App = () => {
                         {/* Bookings */}
                         {/* Booking */}
                         <Route path='booking/' element={<Booking />} />
-                        <Route path='booking/create' element={<BookingCreate />} />
+                        <Route path='booking/create' element={<BookingCreate socket={socket} />} />
 
                         {/* GuestIncome */}
                         <Route path='guest_income/create' element={<GuestIncomeCreate />} />
@@ -83,13 +94,13 @@ const App = () => {
                         {/* Space */}
                         <Route path='spaces/' element={<Spaces />} />
                         <Route path='spaces/create' element={<SpacesCreate />} />
-                        <Route path='spaces/details' element={<SpaceDetails />} />
+                        <Route path='spaces/details/:id' element={<SpaceDetails />} />
 
 
                         {/* Parking Spaces */}
                         <Route path='parkingSpaces/' element={<ParkingSpaces />} />
                         <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
-                        <Route path='parkingSpaces/details' element={<ParkingSpacesDetails />} />
+                        <Route path='parkingSpaces/details/:id' element={<ParkingSpacesDetails />} />
 
 
                         {/* Residential */}
@@ -121,10 +132,11 @@ const App = () => {
 
                         {/* Residents */}
                         <Route path='residents/' element={<Residents />} />
-                        <Route path='residents/create' element={<ResidentCreate />} />
-                        <Route path='residents/details' element={<ResidentDetail />} />
+                        <Route path='residents/create/' element={<ResidentCreate />} />
+                        <Route path='residents/details/:id' element={<ResidentDetail />} />
                         {/* Notifications */}
                         {/* Notification */}
+                        <Route path='notifications/' element={<Notifications socket={socket} />} />
 
                         {/* Fines */}
 
