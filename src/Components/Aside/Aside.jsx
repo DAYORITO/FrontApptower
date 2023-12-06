@@ -72,7 +72,7 @@ export const Aside = () => {
                             <ListNav module={'Zonas comunes'} href='/#/admin/spaces' icon='fe fe-sun fe-24' /> */}
 
                             <DropDownList subprocess={"Apartamentos"} href='/#/admin/apartments'></DropDownList>
-                            <DropDownList subprocess={"Parkeaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
+                            <DropDownList subprocess={"Parqueaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
                             <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
 
                         </DropDownNav>

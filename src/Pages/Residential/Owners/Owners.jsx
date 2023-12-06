@@ -35,6 +35,7 @@ export const Owners = () => {
 
                         {data.owners?.map(owners => (
                             <Row
+                            to={`details/${owners.idOwner}`}
                                 docType={owners.docType}
                                 docNumber={owners.docNumber}
                                 name={owners.name}

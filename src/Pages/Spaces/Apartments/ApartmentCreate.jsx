@@ -65,18 +65,18 @@ export const ApartmentCreate = () => {
 
       <FormContainer name='Crear apartamento' buttons={<FormButton name='Crear apartamento' backButton='Regresar' to='/admin/apartaments/' onClick={handleSubmit} />}>
 
-        <FormColumn>
+        {/* <FormColumn> */}
           <Inputs name="Torre " type={"text"}
             value={tower} onChange={e => setTower(e.target.value)}></Inputs>
           <Inputs name="Numero de pisos " type={"number"}
             value={floorNumber} onChange={e => setFloorNumber(e.target.value)}></Inputs>
-        </FormColumn>
-        <FormColumn>
+        {/* </FormColumn> */}
+        {/* <FormColumn> */}
           <Inputs name="Apartamentos por piso " type={"number"}
             value={apartmentsFloor} onChange={e => setApartmentsFloor(e.target.value)}></Inputs>
           <Inputs name="Area" type="number"
             value={area} onChange={e => setArea(e.target.value)}></Inputs>
-        </FormColumn>
+        {/* </FormColumn> */}
 
       </FormContainer>
     </>)
