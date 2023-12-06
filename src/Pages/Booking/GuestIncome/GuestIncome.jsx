@@ -13,13 +13,17 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../../Context/AuthContext'
 
+
+
+
 function GuestIncome() {
     // const {permisos} = useAuth()
     // if(!permisos.incudes("Ver Ingreso")){
     //     navigate
     // }
     const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });//se crea un estado para actualizar los datos al momento de cualquier accion
-    const { data, load, error } = useFetchget('guestIncome')
+    const {data, load, error} = useFetchget('guestIncome')
+  
     console.log(data)
 
     useEffect(() => {
@@ -29,7 +33,7 @@ function GuestIncome() {
     }, [data])
 
     const handleEditClick = async (dataToUpdate) => {
-
+        
         useApiUpdate(dataToUpdate, 'guestIncome')
             .then((responseData) => {
                 console.log(responseData)
@@ -60,7 +64,7 @@ function GuestIncome() {
             <ContainerTable title='Ingresos'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Visitante' href='/#/admin/guest_income/create' />
+                <ButtonGoTo value='Crear Ingreso' href='/admin/guest_income/create' />
                 <TablePerson>
                     <Thead>
                         <Th name={'Informacion del Ingreso'}></Th>
@@ -103,8 +107,9 @@ function GuestIncome() {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
-        </>
-    )
+            
+    </>
+  )
 }
 
 export default GuestIncome

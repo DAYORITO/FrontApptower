@@ -39,31 +39,7 @@
 
 .botoness {
   display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  gap: 10px;
-}
-
-.form-group {
-  margin-right: 10px;
-  margin-bottom: 20px;
-}
-
-.custom-btn,
-.custom-btn-primary {
-  padding: 10px 35px;
-  font-size: 16px;
-
-
-}
-
-.custom-btn-primary {
-  margin-right: 15px;
-  margin-top: 10px;
-
-}
-
-.custom-btn {
-  margin-top: 10px;
-  background-color: rgb(207, 207, 207);
+  justify-content: space-between;
+  flex-direction: row;
+  
 }

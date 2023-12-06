@@ -3,11 +3,9 @@ import {docTypes, sexs} from "../../../Hooks/consts.hooks"
 import Inputs from "../../../Components/Inputs/Inputs";
 import FormButton from "../../../Components/Forms/FormButton";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
-import { createPortal } from "react-dom";
-import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
-import ModalButton from "../../../Components/Modals/ModalButton";
+
 import FormContainer from "../../../Components/Forms/FormContainer";
-import FormColumn from "../../../Components/Forms/FormColumn";
+
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useFetchpost } from "../../../Hooks/useFetch";

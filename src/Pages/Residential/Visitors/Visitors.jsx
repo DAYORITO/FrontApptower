@@ -6,17 +6,35 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import { useFetchget} from '../../../Hooks/useFetch'
+import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal"; 
 import { useEffect, useState } from 'react'
+import { createPortal } from "react-dom";
 import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import Swal from 'sweetalert2';
+import { cardio } from 'ldrs'
+
+
 
 
 function Visitors() {
     //Se crea un estado para actualizar los datos al momento de cualquier accion
     const [visitorsData, setVisitorsData] = useState({ visitors: [] });
+    const [showModaload, setShowModaload] = useState(false);
+    cardio.register()
 
     const {data, load, error}= useFetchget('visitors')
+    
+    useEffect(() => {
+      // Cuando la carga está en progreso (load es true), activamos el modal de carga
+      if (load) {
+          setShowModaload(true);
+      } else {
+          // Cuando la carga se completa (load es false), desactivamos el modal de carga
+          setShowModaload(false);
+      }
+  }, [load]);
+  
     console.log(data.visitors)
     //se usa el effect para actualizar los datos del get
     useEffect(() => {
@@ -27,10 +45,13 @@ function Visitors() {
 
      //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
      const handleEditClick = async (dataToUpdate) => {
+      setShowModaload(true);
 
       //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
       useApiUpdate(dataToUpdate, 'visitors')
       .then((responseData)=>{
+        setShowModaload(false);
+        
         console.log(responseData)
         Swal.fire({
           icon: 'success',
@@ -99,7 +120,6 @@ function Visitors() {
       // 
 
     return (
-
         <>
             <ContainerTable title='Visitantes'>
                 <DropdownExcel />
@@ -138,6 +158,29 @@ function Visitors() {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
+            // {showModaload &&
+                createPortal(
+                  <>
+                    <ModalContainerload ShowModal={setShowModaload}>
+                      <Modaload
+                        showModal={setShowModaload}
+                      >
+                        <div className='d-flex justify-content-center'>
+                        <l-cardio
+                            size="50"
+                            stroke="4"
+                            speed="2" 
+                            color="black" 
+                          ></l-cardio>
+                        </div>
+                          
+                        
+                      </Modaload>
+                    </ModalContainerload>
+                  </>,
+                  document.getElementById("modalRender")
+                )}
+            
         </>
     )
 }

@@ -22,7 +22,6 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
                 {buttons}
               </div>
             </div>
-
           </form>
         </div>
       </div>
