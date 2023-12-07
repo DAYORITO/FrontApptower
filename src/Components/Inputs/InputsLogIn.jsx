@@ -1,23 +1,27 @@
 import './inputsLogIn.css';
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 
 export const InputsLogIn = ({
   type,
   name,
-  value,
+  value: propValue,
   onChange,
   placeholder,
   id
 }) => {
+  const [inputValue, setInputValue] = useState(propValue || '');
 
-  const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    setInputValue(propValue || '');
+  }, [propValue]);
 
   const handleChange = (e) => {
-    setInputValue(e.target.value);
-  }
-
-  const inputFilled = !!inputValue;
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+  };
 
   return (
     <label className="input-label">
@@ -27,13 +31,12 @@ export const InputsLogIn = ({
         value={inputValue}
         onChange={handleChange}
         id={id}
-        className={inputFilled ? 'input-filled' : ''}
-      />
 
+        className={inputValue ? 'input-filled' : ''}
+      />
       <span className="placeholder-label">
         {placeholder}
       </span>
-
     </label>
   );
-}
+};

@@ -10,7 +10,7 @@ import { Row } from '../../Components/Rows/Row'
 import { Actions } from '../../Components/Actions/Actions'
 
 export const Rols = () => {
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/rols')
+    const { data, load, error } = useFetchget('rols')
     console.log(data.rols)
 
 
@@ -24,6 +24,7 @@ export const Rols = () => {
                     <Thead>
                         <Th name={'Nombre Rol'} ></Th>
                         <Th name={'Descripción'}></Th>
+
                         <Th></Th>
 
                     </Thead>
@@ -37,7 +38,7 @@ export const Rols = () => {
                                 descripcion={rols.description}
                                 status={rols.state}
                             >
-                                <Actions accion='Editar' href={`/admin/rols/edit/${rols.idrole}`} />
+                                <Actions accion='Editar' href={`/admin/rols/editNew/${rols.idrole}`} />
                             </Row>
                         ))}
                     </Tbody>

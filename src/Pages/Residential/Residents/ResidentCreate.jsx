@@ -201,8 +201,8 @@ export const ResidentCreate = () => {
 
 
 
-
-
+      {/* 
+      <FormButton name='Crear residente' backButton='Regresar' to='/admin/residents/' onClick={handleSubmit} /> */}
     </FormContainer>
   )
 }

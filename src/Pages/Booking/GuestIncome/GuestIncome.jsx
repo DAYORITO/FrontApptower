@@ -11,10 +11,19 @@ import { useFetchget } from '../../../Hooks/useFetch'
 import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
+import { useAuth } from '../../../Context/AuthContext'
+
+
+
 
 function GuestIncome() {
+    // const {permisos} = useAuth()
+    // if(!permisos.incudes("Ver Ingreso")){
+    //     navigate
+    // }
     const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });//se crea un estado para actualizar los datos al momento de cualquier accion
     const {data, load, error} = useFetchget('guestIncome')
+  
     console.log(data)
 
     useEffect(() => {
@@ -24,38 +33,38 @@ function GuestIncome() {
     }, [data])
 
     const handleEditClick = async (dataToUpdate) => {
-
+        
         useApiUpdate(dataToUpdate, 'guestIncome')
-        .then((responseData)=>{
-            console.log(responseData)
-            Swal.fire({
-                icon: 'success',
-                title: 'Salida registrada con exito',
-                showConfirmButton: false,
-                timer: 1500
+            .then((responseData) => {
+                console.log(responseData)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Salida registrada con exito',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                const updatedGuestIncome = guestIncomeData.map((guestIncome) => {
+                    if (guestIncome.idGuest_income === dataToUpdate.idGuest_income) {
+                        guestIncome.departureDate = dataToUpdate.departureDate;
+                    }
+                    return guestIncome;
+                });
+                setGuestIncomeData(updatedGuestIncome);
             })
-            const updatedGuestIncome = guestIncomeData.map((guestIncome) => {
-                if (guestIncome.idGuest_income === dataToUpdate.idGuest_income) {
-                guestIncome.departureDate = dataToUpdate.departureDate;
-                }
-                return guestIncome;
-            });
-            setGuestIncomeData(updatedGuestIncome);
-        })
     }
 
-    
+
     const formatDate = (date) => {
         return new Date(date).toLocaleString('es-CO', {
-          format: 'dd/MM/yyyy HH:mm:ss',
+            format: 'dd/MM/yyyy HH:mm:ss',
         });
-      };
-  return (
-    <>
-        <ContainerTable title='Ingresos'>
+    };
+    return (
+        <>
+            <ContainerTable title='Ingresos'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Visitante' href='/#/admin/guest_income/create' />
+                <ButtonGoTo value='Crear Ingreso' href='/admin/guest_income/create' />
                 <TablePerson>
                     <Thead>
                         <Th name={'Informacion del Ingreso'}></Th>
@@ -81,16 +90,16 @@ function GuestIncome() {
                                 docNumber={Income.asociatedApartment.apartmentName}
                                 name={Income.asociatedVisitor.name}
                                 lastName={Income.asociatedVisitor.lastname}
-                                phone={Income.departureDate == null ?  'No registrada' : formatDate(Income.departureDate)}
+                                phone={Income.departureDate == null ? 'No registrada' : formatDate(Income.departureDate)}
                                 email={formatDate(Income.startingDate)}
                             >
-                                { Income.departureDate == null ? 
-                                    <Actions accion='Registrar salida' onClick={()=>{
-                                        handleEditClick({idGuest_income: Income.idGuest_income, departureDate: new Date()});
+                                {Income.departureDate == null ?
+                                    <Actions accion='Registrar salida' onClick={() => {
+                                        handleEditClick({ idGuest_income: Income.idGuest_income, departureDate: new Date() });
                                     }}></Actions>
                                     : ''
                                 }
-                                
+
                                 <Actions accion='Detalles del Ingreso'></Actions>
                             </Row>
                         )
@@ -98,6 +107,7 @@ function GuestIncome() {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
+            
     </>
   )
 }
