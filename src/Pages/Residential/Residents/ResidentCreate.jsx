@@ -105,58 +105,97 @@ export const ResidentCreate = () => {
   return (
 
     <FormContainer name='Crea residente' buttons={<FormButton name='Crear residente' backButton='Regresar' to='/admin/residents/' onClick={handleSubmit} />}>
+
       <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
         onChange={e => setPdf(e.target.files[0])} />
 
-      <FormColumn>
-        <h6 className='mb-4 text-muted'>Informacion personal</h6>
+      {pdf && (
 
-        <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
-          value={docType} onChange={e => setDocType(e.target.value)}></InputsSelect>
+        <>
 
-        <Inputs name="Numero de documento" placeholder="1000000007"
-          value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
+          <FormColumn>
 
 
-        <Inputs name="Nombre"
-          value={name} onChange={e => setName(e.target.value)}></Inputs>
-        <Inputs name="Apellido"
-          value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
-        <InputsSelect id={"select"} options={sexs} name={"Sexo"}
-          value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
+            <h6 className='mb-4 text-muted'>Informacion personal</h6>
 
-        <Inputs name="Fecha de nacimiento" type="Date"
-          value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+            <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
+              value={docType} onChange={e => setDocType(e.target.value)}></InputsSelect>
 
-        <Inputs name="Correo" type="email"
-          value={email} onChange={e => setEmail(e.target.value)}></Inputs>
-
-        <Inputs name="Numero de telefono"
-          value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}></Inputs>
-        {/* <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"}
-          value={residentType} onChange={e => setResidentType(e.target.value)}></InputsSelect> */}
-      </FormColumn>
-
-      <FormColumn>
-        <h6 className='mb-4 text-muted'>¿Apartamento en el que vas a vivir?</h6>
-
-        <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
-          value={idApartment} onChange={e => setIdApartment(e.target.value)}
-        ></InputsSelect>
-        <Inputs name="Fecha de inicio de residencia" type={"date"}
-          value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
-        <Inputs name="Fecha de fin de residencia" type={"date"}
-          value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs>
+            <Inputs name="Numero de documento" placeholder="1000000007"
+              value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
 
 
-        <h6 className='mb-4 text-muted'>Acceso a la app</h6>
-        <InputsSelect id={"select"} options={bools} name={"¿Vas a tener acceso al app?"}
-          value={userBool} onChange={e => setUserBool(e.target.value)}
-        ></InputsSelect>
-        <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-        <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+            <Inputs name="Nombre"
+              value={name} onChange={e => setName(e.target.value)}></Inputs>
+            <Inputs name="Apellido"
+              value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
+            <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+              value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
 
-      </FormColumn>
+            <Inputs name="Fecha de nacimiento" type="Date"
+              value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+
+            <Inputs name="Correo" type="email"
+              value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+
+            <Inputs name="Numero de telefono"
+              value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}></Inputs>
+
+          </FormColumn>
+
+          <FormColumn>
+            <h6 className='mb-4 text-muted'>¿Apartamento en el que vas a vivir?</h6>
+
+
+            <InputsSelect
+              id={"select"}
+              options={apartmentList}
+              name={"Apartamento"}
+              value={idApartment}
+              onChange={e => setIdApartment(e.target.value)}
+            ></InputsSelect>
+
+            {idApartment && (
+              <>
+                <Inputs
+                  name="Fecha de inicio de residencia"
+                  type={"date"}
+                  value={residentStartDate}
+                  onChange={e => setResidentStartDate(e.target.value)}
+                ></Inputs>
+                <Inputs
+                  name="Fecha de fin de residencia"
+                  type={"date"}
+                  value={residentEndDate}
+                  onChange={e => setResidentEndDate(e.target.value)}
+                ></Inputs>
+              </>
+            )}
+
+
+            <h6 className='mb-4 text-muted'>Acceso a la app</h6>
+
+            <InputsSelect id={"select"} options={bools} name={"¿Vas a tener acceso al app?"}
+              value={userBool} onChange={e => setUserBool(e.target.value)}
+            ></InputsSelect>
+
+            {userBool === "true" && (
+              <>
+                <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+              </>
+            )}
+
+          </FormColumn>
+        </>
+
+
+
+
+      )}
+
+
+
 
 
 
