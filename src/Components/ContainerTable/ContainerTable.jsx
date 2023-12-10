@@ -1,20 +1,30 @@
 import PropTypes from 'prop-types';
 import './ContainerTable.css'
 
-export const ContainerTable = ({ title = 'Nombre modulo', children }) => {
+export const ContainerTable = ({ title = 'Nombre modulo', children, dropdown, search, buttonToGo }) => {
     return (
         <div id='formContainer' className="card shadow" >
+            <div className="d-flex justify-content-between pr-4" >
+                <div>
+                    <strong>
+                        <h3 className="ml-2 page-title">{title}</h3>
+                    </strong>
+                </div>
+                <div className='d-flex align-items-center'>
+                    {dropdown}
+                    {search}
+                    {buttonToGo}
+                </div>
+          
+          {/* <p>Buenos diasBuenos diasBuenos diasBuenos diasBuenos diasBuenos dias</p> */}
+          
+        </div>
+            
             <div className="card-body">
                 <div className="toolbar">
                     <div id="tableContainer" className="row align-items-center">
-                        <div className="col">
-                            <h4 className="ml-4 page-title">{title}</h4>
-
-                        </div>
-
                         {/* Children must be Table Components */}
                         {children}
-
                     </div>
                     {/* <nav aria-label="Table Paging" className="mb- text-muted my-4" >
                         <ul className="pagination justify-content-center mb-0">

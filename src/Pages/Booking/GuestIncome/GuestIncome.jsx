@@ -55,10 +55,11 @@ function GuestIncome() {
       };
   return (
     <>
-        <ContainerTable title='Ingresos'>
-                <DropdownExcel />
-                <SearchButton />
-                <ButtonGoTo value='Crear Ingreso' href='/admin/guest_income/create' />
+        <ContainerTable title='Ingresos'
+            dropdown={<DropdownExcel />}
+            search={<SearchButton />}
+            buttonToGo={<ButtonGoTo value='Crear Ingreso' href='/admin/guest_income/create' />}
+        >
                 <TablePerson>
                     <Thead>
                         <Th name={'Informacion del Ingreso'}></Th>

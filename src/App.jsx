@@ -40,15 +40,15 @@ import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
 import { useEffect} from 'react';
 
-const socket = io('http://localhost:3000');
+// const socket = io('http://localhost:3000');
 
 
 const App = () => {
 
-    useEffect(() => {
-        socket.on('connect', () => {
-        });
-    }, []);
+    // useEffect(() => {
+    //     socket.on('connect', () => {
+    //     });
+    // }, []);
 
     return (
 
@@ -77,7 +77,9 @@ const App = () => {
                         {/* Bookings */}
                         {/* Booking */}
                         <Route path='booking/' element={<Booking />} />
-                        <Route path='booking/create' element={<BookingCreate socket={socket} />} />
+                        <Route path='booking/create' element={<BookingCreate 
+                        // socket={socket} 
+                        />} />
 
                         {/* GuestIncome */}
                         <Route path='guest_income/create' element={<GuestIncomeCreate />} />
@@ -136,7 +138,9 @@ const App = () => {
                         <Route path='residents/details/:id' element={<ResidentDetail />} />
                         {/* Notifications */}
                         {/* Notification */}
-                        <Route path='notifications/' element={<Notifications socket={socket} />} />
+                        <Route path='notifications/' element={<Notifications 
+                        // socket={socket}
+                         />} />
 
                         {/* Fines */}
 
