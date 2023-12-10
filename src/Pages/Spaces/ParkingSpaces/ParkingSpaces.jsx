@@ -80,7 +80,7 @@ export const ParkingSpaces = () => {
                 name={"Parqueadero "}
                 lastName={parking.parkingName}
 
-                docType={(parking.parkingType == "Private")? "Privado": (parking.parkingType == "Public")? "Private": " "}
+                docType={(parking.parkingType == "Private")? "Privado": (parking.parkingType == "Public")? "Publico": " "}
                 status={parking.status}
                 op1={""}
                 op2={""}

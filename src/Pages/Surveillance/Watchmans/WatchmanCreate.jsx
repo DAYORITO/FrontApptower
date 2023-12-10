@@ -32,7 +32,7 @@ export const WatchmanCreate = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const url = 'https://apptowerbackend.onrender.com/api/watchman';
+        const url = 'watchman';
         const data = {
             documentType,
             namewatchman,

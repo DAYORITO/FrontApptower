@@ -13,6 +13,8 @@ import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import Inputs from "../../../Components/Inputs/Inputs";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
+import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
+import Cookies from 'js-cookie';
 
 
 export const Users = () => {
@@ -20,11 +22,87 @@ export const Users = () => {
     const [editedUser, setEditedUser] = useState(null);
     const [usersData, setUsersData] = useState([]);
 
+    //privileges
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+    const token = Cookies.get('token');
+
+    useEffect(() => {
+        if (token) {
+            fetchUserPrivilegeAndPermission(token);
+        }
+    }, [token]);
+
+
+    //Consulta privilegios 
+    const fetchUserPrivilegeAndPermission = async (token) => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user privileges');
+            }
+
+            const data = await response.json();
+            console.log(data, 'data');
+            console.log('Allowed Permissions hi:', data.privileges);
+
+            if (data && data.privileges && Array.isArray(data.privileges)) {
+                const allowed = {};
+                data.privileges.forEach(({ idpermission, idprivilege }) => {
+                    const permissionName = idToPermissionName[idpermission];
+                    const privilegeName = idToPrivilegesName[idprivilege];
+
+                    if (!allowed[permissionName]) {
+                        allowed[permissionName] = [];
+                    }
+                    allowed[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowed);
+            }
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
+
+
+
+    const fetchRoles = async () => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+            if (!response.ok) {
+                throw new Error('Error al obtener los roles');
+            }
+            const data = await response.json();
+            const rolesData = data.rols || [];
+            return rolesData;
+        } catch (error) {
+            console.error('Error al obtener los roles:', error);
+            return [];
+        }
+    };
+
+
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+        const fetchRolesData = async () => {
+            const rolesData = await fetchRoles();
+            setRoles(rolesData);
+        };
+        fetchRolesData();
+    }, []);
+
+
+
 
     const { data, load, error } = useFetchget('users')
     console.log(data.user)
-    
-    // const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
+
+    const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
 
     const handleModal = (user) => {
         setEditedUser(user);
@@ -60,10 +138,12 @@ export const Users = () => {
                 if (response.ok) {
                     const updatedUsers = usersData.map(user => {
                         if (user.iduser === editedUser.iduser) {
-                            return editedUser;
+                            return { ...user, ...editedUser };
                         }
                         return user;
                     });
+                    setUsersData(updatedUsers);
+
                     Swal.fire({
                         title: 'Éxito',
                         text: 'Usuario modificado exitosamente',
@@ -104,20 +184,11 @@ export const Users = () => {
         }
     ];
 
-    const opcionesRols = [
-        {
-            value: "1",
-            label: "Administador"
-        },
-        {
-            value: "2",
-            label: "Residente"
-        },
-        {
-            value: "3",
-            label: "Vigilante"
-        }
-    ];
+    const opcionesRols = roles.map(rol => ({
+        value: rol.idrole.toString(),
+        label: rol.namerole
+    }));
+
 
     const estado = [
         {
@@ -129,22 +200,27 @@ export const Users = () => {
             label: "Inactivo"
         }
     ];
+
+
     return (
         <>
             <ContainerTable title='Usuarios'>
                 <DropdownExcel />
                 <SearchButton />
-                <ButtonGoTo value='Crear Usuario' href='/admin/users/create' />
+                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') && (
+                    <ButtonGoTo
+                        value='Crear Usuario'
+                        href='/admin/users/create'
+                    />
+                )}
+
                 <TablePerson>
                     <Thead>
                         <Th name={'Información Usuario'}></Th>
                         <Th name={'Rol'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
-                        <Th></Th> 
-
-
-
+                        <Th></Th>
                     </Thead>
                     <Tbody>
 
@@ -155,19 +231,20 @@ export const Users = () => {
                                 name={user.name}
                                 lastName={user.lastname}
                                 rol={
-                                    user.idrole === 1 ? 'Administrador' :
-                                        user.idrole === 2 ? 'Residente' :
-                                            user.idrole === 3 ? 'Vigilante' : 'Desconocido'
+                                    roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
                                 email={user.email}
                                 phone={user.phone}
                                 status={user.state}
                             >
-                                <Actions accion='Editar' onClick={(e) => {
-                                    e.preventDefault();
-                                    handleModal(user);
-                                }} />
 
+
+                                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
+                                    <Actions accion='Editar' onClick={(e) => {
+                                        e.preventDefault();
+                                        handleModal(user);
+                                    }} />
+                                )}
                             </Row>
                         ))}
 
@@ -188,10 +265,21 @@ export const Users = () => {
                                 <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
                                 <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
                                 <Inputs name="Apellido" value={editedUser?.lastname || ''} onChange={(e) => setEditedUser({ ...editedUser, lastname: e.target.value })} />
-                                <InputsSelect id={"select"} options={opcionesRols} name={"Rol"} value={editedUser?.idrole || ''} onChange={(e) => setEditedUser({ ...editedUser, idrol: e.target.value })}></InputsSelect>
+                                <InputsSelect
+                                    id={"select"}
+                                    options={opcionesRols}
+                                    name={"Rol"}
+                                    value={editedUser?.idrole.toString() || ''}
+                                    onChange={(e) => setEditedUser({ ...editedUser, idrole: Number(e.target.value) })}
+                                ></InputsSelect>
                                 <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
                                 <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
-                                <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedUser?.state || ''} onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })}></InputsSelect>
+                                <InputsSelect
+                                    id={"select"}
+                                    options={estado}
+                                    name={"Estado"}
+                                    value={editedUser?.state || ''}
+                                    onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })} ></InputsSelect>
 
 
                             </Modal>

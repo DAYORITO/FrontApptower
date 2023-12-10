@@ -16,7 +16,7 @@ function FormButton({ name, funcion, backButton, to, onClick }) {
           <input type="submit" value={name}  className="btn btn-primary" onClick={onClick} />
         </div>
         <div className="form-group">
-          <Link to={to} className="btn btn-light ">{backButton}</Link>
+          <Link to={to} onClick={handleBackButtonClick} className="btn btn-light ">{backButton}</Link>
         </div>
       </div>
     </>
@@ -24,5 +24,4 @@ function FormButton({ name, funcion, backButton, to, onClick }) {
 }
 
 export default FormButton;
-
 

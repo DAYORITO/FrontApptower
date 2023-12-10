@@ -2,29 +2,24 @@ import { Link } from 'react-router-dom';
 import './CardUserNav.css';
 import LogoApptower from '../../assets/Logo-Apptower.png';
 
-export const CardUserNav = ({ rol = "Administrador" , name = "Diomedes", lastname = "Diaz" }) => {
-    return (
+export const CardUserNav = ({ rol, name, lastname }) => {
+    // Obtén las primeras tres letras del apellido
+    const shortenedLastname = lastname.slice(0, 3);
 
+    return (
         <div className='myNav-user'>
-            <Link to={"users/details"}>
+            <Link to={"users/profileList"}>
                 <div className='myNav-user-card'>
                     <div className='myNav-user-card-img'>
-                        <img src="https://th.bing.com/th/id/R.92c842ab508f9def34fd6f5ee13ff0ab?rik=4m9tZK3a2h%2bQMg&pid=ImgRaw&r=0" id='userImg' />
+                        <img src={LogoApptower} id='userImg' alt='User Logo' />
                     </div>
                     <div className='myNav-user-card-text'>
                         <h4 className='h6'>{rol}</h4>
-                        <p className='text-muted'>{name + " " + lastname}</p>
+                        {/* Muestra las primeras tres letras del apellido */}
+                        <p className='text-muted'>{name + " " + shortenedLastname}</p>
                     </div>
-
                 </div>
-
-                {/* <div className='myNav-user-logo'>
-                <img src={LogoApptower} alt="logoApptower" className="logo" />
-                </div> */}
-
-
             </Link>
         </div>
-
-    )
+    );
 }

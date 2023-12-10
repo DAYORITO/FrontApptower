@@ -22,7 +22,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
           </form>
         </div>
       </div>
-      
+
     </>
   );
 }

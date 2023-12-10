@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/jsx-key */
 
 import { useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
@@ -36,7 +34,6 @@ export const Vehicle = () => {
             <Th></Th>
           </Thead>
           <Tbody>
-            <Row></Row>
             {
               load && <h1 className='d-flex'>Cargando...</h1>
             }
@@ -44,13 +41,13 @@ export const Vehicle = () => {
               error && <h1 className='d-flex'>Error: {error}</h1>
             }
             {
-              data.vehicle?.map(vehicle =>( 
+              data.vehicle?.map(vehicle => (
                 <Row
                   nombre={vehicle.typeuser}
                 >
                   <Actions accion='Editar' />
                 </Row>
-                
+
               ))
             }
           </Tbody>

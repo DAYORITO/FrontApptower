@@ -49,7 +49,7 @@ export const Apartments = () => {
         <DivRow>
           <DropdownExcel />
           <SearchButton value={search} onChange={searcher} />
-          <ButtonGoTo value='Crear Residente' href='create' />
+          <ButtonGoTo value='Crear apartamentos' href='create' />
         </DivRow>
 
         <TablePerson>
