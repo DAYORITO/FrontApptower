@@ -14,16 +14,18 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
         </div>
         <div className="card-body" id='form'>
           <form onSubmit={onSubmit} encType="multipart/form-data">
-            <div className="row">
-              {children}
-              {buttons}
+            <div className="col cosa">
+              <div className="row">
+                {children}
+              </div>
+              <div className="row">
+                {buttons}
+              </div>
             </div>
-            
-            
           </form>
         </div>
       </div>
-      
+
     </>
   );
 }

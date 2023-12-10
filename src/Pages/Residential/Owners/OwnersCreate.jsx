@@ -3,7 +3,7 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { useFetchget, useFetchpostFile } from '../../../Hooks/useFetch'
 import Swal from 'sweetalert2'
@@ -13,6 +13,8 @@ import FormColumn from '../../../Components/Forms/FormColumn'
 export const OwnersCreate = () => {
 
 
+  const {id} = useParams()
+  console.log(id)
   const [pdf, setPdf] = useState("");
   const [docType, setDocType] = useState("");
   const [docNumber, setDocNumber] = useState("");
@@ -24,14 +26,19 @@ export const OwnersCreate = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const [idApartment, setIdApartment] = useState("");
+  const [idApartment, setIdApartment] = useState( id != undefined? id: "" );
   const [OwnershipStartDate, setOwnershipStartDate] = useState("");
-  const [OwnershipEndDate, setOwnershipEndDate] = useState("");
+  // const [OwnershipEndDate, setOwnershipEndDate] = useState("");
   const [question, setQuestion] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userBool, setUserBool] = useState("");
 
 
   const [status, setStatus] = useState("Inactive");
 
+ 
 
   const navigate = useNavigate();
 
@@ -51,8 +58,12 @@ export const OwnersCreate = () => {
       phoneNumber,
 
       idApartment,
+
       OwnershipStartDate,
       question,
+      userBool,
+      password,
+
       status
 
     };
@@ -69,7 +80,7 @@ export const OwnersCreate = () => {
         icon: 'success',
       }).then(() => {
 
-        navigate('/admin/owners');
+        navigate(-1);
       });
     }
 
@@ -155,14 +166,42 @@ export const OwnersCreate = () => {
             value={idApartment} onChange={e => setIdApartment(e.target.value)}
           ></InputsSelect>
 
+          <Inputs name="Fecha desde que es propietario" type={"date"}
+            value={OwnershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
+
           <h6 className='mb-4 text-muted'>¿Va residir en el conjunto residencial?</h6>
           <InputsSelect id={"select"} options={bools} name={"¿Vas residit en el conjunto?"}
             value={question} onChange={e => setQuestion(e.target.value)}
           ></InputsSelect>
-          <Inputs name="Fecha de inicio de residencia" type={"date"}
-            value={OwnershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
-          <Inputs name="Fecha  de fin de residencia" type={"date"}
-            value={OwnershipEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs>
+
+
+          {question === "true" && (
+            <>
+
+              {/* <Inputs name="Fecha  de fin de residencia" type={"date"}
+                value={OwnershipEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs> */}
+
+              <h6 className='mb-4 text-muted'>Acceso a la app</h6>
+
+              <InputsSelect id={"select"} options={bools} name={"¿Vas a tener acceso al app?"}
+                value={userBool} onChange={e => setUserBool(e.target.value)}
+              ></InputsSelect>
+
+              {userBool === "true" && (
+                <>
+
+                  <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+
+                  <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                </>
+              )}
+
+            </>
+
+
+          )}
+
+
 
         </FormColumn>
 

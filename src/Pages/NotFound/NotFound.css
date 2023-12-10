@@ -1,0 +1,39 @@
+.wrapper-notfound {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contents {
+    text-align: center;
+    color: #555;
+    max-width: 50%;
+}
+
+.titlen {
+    font-size: 120px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.subTitles {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.linkl {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #002d5e;
+    font-size: 18px;
+}
+
+.linkl:hover {
+    background-color: #004b96;
+    color: #fff;
+    text-decoration: none;
+}
