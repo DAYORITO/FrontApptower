@@ -30,31 +30,38 @@ export const Residents = () => {
 
                 <TablePerson>
                     <Thead>
-                        <Th name={"Informacion del residente"} />
 
-                        <Th name={'Correo'}></Th>
-                        <Th name={'Telefono'}></Th>
-                        <Th />
-                        <Th />
+                        <Th name={"Informacion del residente"} />
+                        <Th name={'Informacion de contacto'}></Th>
 
                     </Thead>
                     <Tbody>
                         {data.residents?.map(residents => (
                             <Row
-                            to={`details/${residents.idResident}`}
-                                docType={residents.docType}
-                                docNumber={residents.docNumber}
+
+                                // Personal information
                                 name={residents.name}
                                 lastName={residents.lastName}
-                                phone={residents.phoneNumber}
+                                docType={residents.docType}
+                                docNumber={residents.docNumber}
+                                op6={residents.residentType == "owner" ? "Propietario" : "Arrendatario"}
+
+                                // Contact information
                                 email={residents.email}
-                                file={residents.pdf}
+                                phone={residents.phoneNumber}
+
+                                // Others 
+
+                                to={`details/${residents.idResident}`}
+                                status={residents.status}
+
+
+                            // file={residents.pdf}
                             >
+                                <Actions icon='download' href={residents.pdf} accion='Descargar pdf' />
                                 <Actions accion='Editar' />
-                                <Actions accion='Reservar' />
                             </Row>
                         ))}
-
 
 
                     </Tbody>

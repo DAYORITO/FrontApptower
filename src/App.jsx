@@ -104,7 +104,9 @@ const App = () => {
                                 {/* Residents */}
                                 <Route path='residents/' element={<Residents />} />
                                 <Route path='residents/create/' element={<ResidentCreate />} />
+                                <Route path='residents/create/:id' element={<ResidentCreate />} />
                                 <Route path='residents/details/:id' element={<ResidentDetail />} />
+                                
                                 {/* Notifications */}
                                 {/* Notification */}
                                 <Route path='notifications/' element={<Notifications socket={socket} />} />
@@ -122,6 +124,7 @@ const App = () => {
 
                                 {/* GuestIncome */}
                                 <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                                <Route path='guest_income/create/:id' element={<GuestIncomeCreate />} />
                                 <Route path='guest_income/' element={<GuestIncome />} />
 
                                 {/* Spaces */}
@@ -130,9 +133,11 @@ const App = () => {
                                 <Route path='apartments/' element={<Apartments />} />
                                 <Route path='apartments/create' element={<ApartmentCreate />} />
                                 <Route path='apartments/details' element={<SpaceDetails />} />
+
                                 {/* Owners */}
                                 <Route path='owners/' element={<Owners />} />
                                 <Route path='owners/create' element={<OwnersCreate />} />
+                                <Route path='owners/create/:id' element={<OwnersCreate />} />
                                 <Route path='owners/details/:id' element={<OwnerDetail />} />
 
 

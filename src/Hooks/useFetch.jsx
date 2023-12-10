@@ -26,18 +26,22 @@ export const useFetch = (baseUrl) => {
             const config = {
                 method,
                 url: `${baseUrl}${url}`,
-                // mode: "no-cors", 
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body) || null,
             };
 
-            const response = await fetch(config.url, {
-                method: config.method,
-                headers: config.headers,
-                body: config.body,
-            });
+            const response = method !== MethodOptions.GET 
+                ? await fetch(config.url, {
+                    method: config.method,
+                    headers: config.headers,
+                    body: config.body,
+                })
+                : await fetch(config.url, {
+                    method: config.method,
+                    headers: config.headers,
+                });
 
             const json = await response.json();
             setData({ data: json });

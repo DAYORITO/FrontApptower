@@ -4,7 +4,7 @@ import "./DropdownInfo.css";
 import { Link } from 'react-router-dom';
 import { Dropdownanchor, Dropdownanchor2 } from '../DropDownAnchor/Dropdownanchor';
 
-export const DropdownInfo = ({ name, children, to1="/admin/", onClick }) => {
+export const DropdownInfo = ({ name, children, to1, onClick }) => {
     const [isAccordionOpen, setAccordionOpen] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -17,19 +17,20 @@ export const DropdownInfo = ({ name, children, to1="/admin/", onClick }) => {
     };
 
     return (
-        <div className="card shadow card-drop" >
-            <div className={`card-header ${isDropdownOpen ? 'active' : ''}`} id="heading1">
+        <div className="myCard" >
+            <div className={`card-header ${isDropdownOpen ? 'active' : ''}`} >
                 <a role="button" onClick={toggleAccordion}>
                     <strong>{name}</strong>
+                    
                 </a>
                 <div className={`dropdown ${isDropdownOpen ? 'show' : ''}`}>
-                    <button className="btn btn-sm dropdown-toggle more-dropdown" type="button" onClick={toggleDropdown}>
+                    <button className="btn btn-sm dropdown-toggle more-vertical" type="button" onClick={toggleDropdown}>
                         <span className="sr-only"></span>
                     </button>
-                    <div className={`dropdown-menu dropdown-menu-right ${isDropdownOpen ? 'show' : ''}`}>
-                        <Dropdownanchor2 icon={"user"} name={`Crear nuevo ${name}`} to={to1}/>
-                        <Dropdownanchor2 onClick={onClick} icon={"user"} name={`Asignar ${name} existente`}/>
+                    <div className={`dropdown-menu dropdown-menu-right  ${isDropdownOpen ? 'show' : ''}`}>
 
+                        {to1 && <Dropdownanchor2  name={`Crear nuevo ${name}`} to={to1} />}
+                        {onClick && <Dropdownanchor2  name={`Asignar ${name} existente`} onClick={onClick} />}
                     </div>
                 </div>
             </div>
