@@ -7,7 +7,7 @@ export const Actions = ({ accion = "Module name", href, icon = "edit", onClick }
                 <i className={`fe fe-${icon} fe-12 mr-4`}></i>
                 {accion}
             </Link>
-            
+
         </>
     );
 };

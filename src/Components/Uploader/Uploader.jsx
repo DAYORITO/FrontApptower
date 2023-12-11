@@ -1,6 +1,6 @@
 import "./Uploader.css"
 
-export const Uploader = ({ label = 'Imagen de espacio', formatos = ".png, .jpg", name, value, onChange }) => {
+export const Uploader = ({ label = 'Imagen de espacio', formatos = ".png, .jpg, .mp4, .pdf", name, value, onChange }) => {
 
 
 

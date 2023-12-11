@@ -45,12 +45,16 @@ export const Apartments = () => {
   return (
     <>
 
-      <ContainerTable title='Apartamentos'>
-        <DivRow>
+      <ContainerTable title='Apartamentos'
+        dropdown={<DropdownExcel />}
+        search={<SearchButton value={search} onChange={searcher}/>}
+        buttonToGo={<ButtonGoTo value='Crear apartamentos' href='create' />}
+      >
+        {/* <DivRow>
           <DropdownExcel />
           <SearchButton value={search} onChange={searcher} />
-          <ButtonGoTo value='Crear Residente' href='create' />
-        </DivRow>
+          <ButtonGoTo value='Crear apartamentos' href='create' />
+        </DivRow> */}
 
         <TablePerson>
           <Thead>
@@ -90,7 +94,7 @@ export const Apartments = () => {
         </TablePerson>
       </ContainerTable>
 
-      
+
 
     </>)
 }

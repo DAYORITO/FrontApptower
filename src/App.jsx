@@ -16,15 +16,16 @@ import { Users } from "./Pages/Users/Users/UsersList";
 import { Watchman } from "./Pages/Surveillance/Watchmans/WatchmanList";
 import { Rols } from "./Pages/Rols/RolsList";
 import { RolsCreate } from "./Pages/Rols/RolsCreate";
-import { RolsEdit } from "./Pages/Rols/RolsEdit";
 import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
-import { ModifyProfile } from "./Pages/Users/Users/modifyProfile";
+import { ModifyProfile } from "./Pages/Users/Users/ModifyProfile";
+import { ModifyProfileList } from "./Pages/Users/Users/ModifyProfileList";
 import Visitors from "./Pages/Residential/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
+import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
 import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
@@ -33,117 +34,181 @@ import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceD
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
+import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
+import { AuthProvider } from "./Context/AuthContext";
+import { ProtectedRoutes } from "./ProtectedRoutes";
+
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
+import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
+import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
+
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
-import { useEffect} from 'react';
+import { useEffect } from 'react';
+import Fines from "./Pages/Fines/fines";
+import FinesCreate from "./Pages/Fines/finesCreate";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
 
 const App = () => {
 
-    useEffect(() => {
-        socket.on('connect', () => {
-        });
-    }, []);
+    // useEffect(() => {
+    //     socket.on('connect', () => {
+    //     });
+    // }, []);
 
     return (
 
-        <HashRouter basename='/'>
-            <div className='App'>
-                <Routes>
-                    <Route path='/' element={<LogIn />} />
-                    <Route path='/recoverpassword' element={<RecoverPassword />} />
+        <AuthProvider>
 
-                    <Route path='/admin/*' element={<Layout />}>
-                        {/* Configuration */}
-                        {/* Rols */}
-                        <Route path='rols/' element={<Rols />} />
+            <HashRouter basename='/'>
+                <div className='App'>
+                    <Routes>
 
-                        {/* Users */}
-                        {/* User */}
-                        <Route path='users/' element={<Users />} />
-                        <Route path='users/create' element={<UsersCreate />} />
+                        <Route path='/' element={<LogIn />} />
+                        <Route path='/recoverpassword' element={<RecoverPassword />} />
+                        <Route path="/recoveycode" element={<EnterRecoveryCode />} />
+                        <Route path="/resetpassword" element={<ResetPassword />} />
 
 
-                        {/* Surveillance */}
-                        {/* Watchman */}
-                        <Route path='watchman/' element={<Watchman />} />
-                        <Route path='watchman/create' element={<WatchmanCreate />} />
+                        <Route element={<ProtectedRoutes />}>
+                            <Route path='/admin/*' element={<Layout />}>
 
-                        {/* Bookings */}
-                        {/* Booking */}
-                        <Route path='booking/' element={<Booking />} />
-                        <Route path='booking/create' element={<BookingCreate socket={socket} />} />
-
-                        {/* GuestIncome */}
-                        <Route path='guest_income/create' element={<GuestIncomeCreate />} />
-                        <Route path='guest_income/' element={<GuestIncome />} />
-
-                        {/* Spaces */}
-
-                        {/* Space */}
-                        <Route path='apartments/' element={<Apartments />} />
-                        <Route path='apartments/create' element={<ApartmentCreate />} />
-                        <Route path='apartments/details/:id' element={<ApartmentDetails />} />
-
-
-                        {/* Space */}
-                        <Route path='spaces/' element={<Spaces />} />
-                        <Route path='spaces/create' element={<SpacesCreate />} />
-                        <Route path='spaces/details/:id' element={<SpaceDetails />} />
-
-
-                        {/* Parking Spaces */}
-                        <Route path='parkingSpaces/' element={<ParkingSpaces />} />
-                        <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
-                        <Route path='parkingSpaces/details/:id' element={<ParkingSpacesDetails />} />
-
-
-                        {/* Residential */}
-                        {/* Vehicles */}
-                        <Route path='vehicle/' element={<Vehicle />} />
-                        <Route path='vehicle/create' element={<VehicleCreate />} />
+                                {/* Bookings */}
+                                {/* Booking */}
+                                <Route path='booking/' element={<Booking />} />
+                                <Route path='booking/create' element={<BookingCreate socket={socket} />} />
 
 
 
-                        <Route path='users/' element={<Users />} />
-                        <Route path='users/create' element={<UsersCreate />} />
-                        <Route path='users/profile' element={<ModifyProfile />} />
-                        <Route path='watchman/' element={<Watchman />} />
-                        <Route path='watchman/create' element={<WatchmanCreate />} />
-                        <Route path='watchman/shifts' element={<WatchmanShifts />} />
-                        <Route path='rols/' element={<Rols />} />
-                        <Route path='rols/create' element={<RolsCreate />} />
-                        <Route path='rols/edit/:idrole' element={<RolsEdit />} />
+                                {/* GuestIncome */}
+                                <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                                <Route path='guest_income/' element={<GuestIncome />} />
 
-                        {/* Owners */}
-                        <Route path='owners/' element={<Owners />} />
-                        <Route path='owners/create' element={<OwnersCreate />} />
-                        <Route path='owners/details/:id' element={<OwnerDetail />} />
+                                {/* Spaces */}
+
+                                {/* Space */}
+                                <Route path='apartments/' element={<Apartments />} />
+                                <Route path='apartments/create' element={<ApartmentCreate />} />
+                                <Route path='apartments/details/:id' element={<ApartmentDetails />} />
 
 
-                        {/* Visitors */}
-                        <Route path='visitors/create' element={<VisitorsCreate />} />
-                        <Route path='visitors/' element={<Visitors />} />
 
-                        {/* Residents */}
-                        <Route path='residents/' element={<Residents />} />
-                        <Route path='residents/create/' element={<ResidentCreate socket={socket}/>} />
-                        <Route path='residents/details/:id' element={<ResidentDetail />} />
-                        {/* Notifications */}
-                        {/* Notification */}
-                        <Route path='notifications/' element={<Notifications socket={socket} />} />
 
-                        {/* Fines */}
 
-                    </Route>
-                </Routes>
-            </div>
-        </HashRouter>
+                                {/* Configuration */}
+                                {/* Rols */}
+                                <Route path='rols/' element={<Rols />} />
+
+                                {/* Residents */}
+                                <Route path='residents/' element={<Residents />} />
+                                <Route path='residents/create/' element={<ResidentCreate />} />
+                                <Route path='residents/create/:id' element={<ResidentCreate />} />
+                                <Route path='residents/details/:id' element={<ResidentDetail />} />
+                                
+                                {/* Notifications */}
+                                {/* Notification */}
+                                <Route path='notifications/' element={<Notifications socket={socket} />} />
+
+
+                                {/* Surveillance */}
+                                {/* Watchman */}
+                                <Route path='watchman/' element={<Watchman />} />
+                                <Route path='watchman/create' element={<WatchmanCreate />} />
+
+                                {/* Bookings */}
+                                {/* Booking */}
+                                <Route path='booking/' element={<Booking />} />
+                                <Route path='booking/create' element={<BookingCreate />} />
+
+                                {/* GuestIncome */}
+                                <Route path='guest_income/create' element={<GuestIncomeCreate />} />
+                                <Route path='guest_income/create/:id' element={<GuestIncomeCreate />} />
+                                <Route path='guest_income/' element={<GuestIncome />} />
+
+                                {/* Spaces */}
+
+                                {/* Space */}
+                                <Route path='apartments/' element={<Apartments />} />
+                                <Route path='apartments/create' element={<ApartmentCreate />} />
+                                <Route path='apartments/details' element={<SpaceDetails />} />
+
+                                {/* Owners */}
+                                <Route path='owners/' element={<Owners />} />
+                                <Route path='owners/create' element={<OwnersCreate />} />
+                                <Route path='owners/create/:id' element={<OwnersCreate />} />
+                                <Route path='owners/details/:id' element={<OwnerDetail />} />
+
+
+                                {/* Space */}
+                                <Route path='spaces/' element={<Spaces />} />
+                                <Route path='spaces/create' element={<SpacesCreate />} />
+                                <Route path='spaces/details' element={<SpaceDetails />} />
+
+
+                                {/* Parking Spaces */}
+                                <Route path='parkingSpaces/' element={<ParkingSpaces />} />
+                                <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
+                                <Route path='parkingSpaces/details' element={<ParkingSpacesDetails />} />
+
+
+
+                                {/* Residential */}
+                                {/* Vehicles */}
+                                <Route path='vehicle/' element={<Vehicle />} />
+                                <Route path='vehicle/create' element={<VehicleCreate />} />
+
+
+
+                                <Route path='users/' element={<Users />} />
+                                <Route path='users/create' element={<UsersCreate />} />
+                                <Route path='users/profile' element={<ModifyProfile />} />
+                                <Route path='users/profileList' element={<ModifyProfileList />} />
+                                <Route path='watchman/' element={<Watchman />} />
+                                <Route path='watchman/create' element={<WatchmanCreate />} />
+                                <Route path='watchman/shifts' element={<WatchmanShifts />} />
+                                <Route path='watchman/details/:idwatchman' element={<WatchmanDetails />} />
+
+                                {/* Rols */}
+                                <Route path='rols/' element={<Rols />} />
+                                <Route path='rols/create' element={<RolsCreate />} />
+                                <Route path='rols/editNew/:idrole' element={<RolsEditNew />} />
+
+
+
+
+                                {/* Owners */}
+                                <Route path='owners/' element={<Owners />} />
+                                <Route path='owners/create' element={<OwnersCreate />} />
+                                <Route path='owners/details' element={<OwnerDetail />} />
+
+
+                                {/* Visitors */}
+                                <Route path='visitors/create' element={<VisitorsCreate />} />
+                                <Route path='visitors/' element={<Visitors />} />
+
+
+                                {/* Notifications */}
+                                {/* Notification */}
+
+                                {/* Fines */}
+                                <Route path='fines/' element={<Fines/>} />
+                                <Route path='fines/create' element={<FinesCreate/>} />
+
+
+
+                            </Route >
+                        </Route >
+                        {/* </Route> */}
+                    </Routes >
+                </div >
+            </HashRouter >
+
+        </AuthProvider >
+
     )
 }
 

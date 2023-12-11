@@ -19,7 +19,7 @@ export const BigCard = ({ cosa = 'cosa', children }) => {
                         </div>
                         <div class="card-text">
                             <strong class="card-title">{cosa.spaceName}</strong>
-                            <p className='text-muted'>{`Area: ${cosa.area} m²`}</p>
+                            <p className='text-muted'>{` ${cosa.spaceType === "Wet area" ? "Zona humeda": "Area comun"}`}</p>
                         </div>
                     </div>
                 </Link>
@@ -33,7 +33,7 @@ export const BigCard = ({ cosa = 'cosa', children }) => {
                                     <span class="dot dot-lg bg-success mr-1"></span>
                                 )}
                             </small>
-                            <span>{cosa.status}</span>
+                            <span>{cosa.status === "Active" ? "Activo": "Inactivo"}</span>
                         </div>
                         <div class="col-auto">
                             <div class="file-action">

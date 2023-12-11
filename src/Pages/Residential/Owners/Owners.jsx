@@ -16,37 +16,46 @@ export const Owners = () => {
     return (
         <>
 
-            <ContainerTable title='Propietarios'>
-                <DropdownExcel />
-                <SearchButton />
-                <ButtonGoTo value='Nuevo propietario' href='create'/>
+            <ContainerTable title='Propietarios'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton />}
+                buttonToGo={<ButtonGoTo value='Nuevo propietario' href='create' />}
+            >
+
                 <TablePerson>
                     <Thead>
-                        <Th></Th>
-                        <Th name={'Owner information'}></Th>
-                        <Th name={'Phone'}></Th>
-                        <Th name={'Email'}></Th>
-                        <Th></Th>
+
+                        <Th name={"Informacion del residente"} />
+                        <Th name={'Informacion de contacto'}></Th>
 
                     </Thead>
                     <Tbody>
-                        
+
 
 
                         {data.owners?.map(owners => (
                             <Row
-                            to={`details/${owners.idOwner}`}
-                                docType={owners.docType}
-                                docNumber={owners.docNumber}
+
+                                // Personal information
                                 name={owners.name}
                                 lastName={owners.lastName}
-                                // sex={owners.sex}
+
+                                docType={owners.docType}
+                                docNumber={owners.docNumber}
+
+                                // Contact information
+
                                 phone={owners.phoneNumber}
                                 email={owners.email}
-                                file={owners.pdf}
+
+                                // Others 
+                                status={owners.status}
+                                to={`details/${owners.idOwner}`}
+
                             >
+
+                                <Actions icon='download' href={owners.pdf} accion='Descargar pdf' />
                                 <Actions accion='Editar' />
-                                <Actions accion='Reservar' />
                             </Row>
                         ))}
 

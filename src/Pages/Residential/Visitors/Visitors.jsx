@@ -78,53 +78,14 @@ function Visitors() {
         });
       });
     };
-    
-      // const apiHookUpdate = async (visitor, endpoint="visitors") => {
-      //   const updatedVisitor = {
-      //     idVisitor: visitor.idVisitor,
-      //     access: !visitor.access,
-      //   };
-      //   const url= `https://apptowerbackend.onrender.com/api/`
-      
-      //   try {
-      //     const response = await fetch(url+endpoint, {
-      //       method: 'PUT',
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //       body: JSON.stringify(updatedVisitor),
-      //     });
-      
-      //     if (!response.ok) {
-            
-      //       throw new Error(`Failed to update access for visitor ${visitor.idVisitor}`);
-      //     }else{
-      //       Swal.fire({
-      //           icon: 'success',
-      //           title: 'Acceso actualizado',
-      //           showConfirmButton: false,
-      //           timer: 1500
-      //         })
-      //     }
-      //     const updatedVisitors = visitorsData.map((visitor) => {
-      //       if (visitor.idVisitor === updatedVisitor.idVisitor) {
-      //         visitor.access = updatedVisitor.access;
-      //       }
-      //       return visitor;
-      //     });
-      //     setVisitorsData(updatedVisitors);
-      //   } catch (error) {
-      //     console.error('Error updating access:', error);
-      //   }
-      // };
-      // 
 
     return (
         <>
-            <ContainerTable title='Visitantes'>
-                <DropdownExcel />
-                <SearchButton />
-                <ButtonGoTo value='Crear Visitante' href='/admin/visitors/create' />
+            <ContainerTable title='Visitantes'
+              dropdown={<DropdownExcel />}
+              search={<SearchButton />}
+              buttonToGo={<ButtonGoTo value='Crear Visitante' href='/admin/visitors/create' />}
+            >
                 <TablePerson>
                     <Thead>
                     

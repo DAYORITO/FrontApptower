@@ -26,18 +26,22 @@ export const useFetch = (baseUrl) => {
             const config = {
                 method,
                 url: `${baseUrl}${url}`,
-                // mode: "no-cors", 
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body) || null,
             };
 
-            const response = await fetch(config.url, {
-                method: config.method,
-                headers: config.headers,
-                body: config.body,
-            });
+            const response = method !== MethodOptions.GET 
+                ? await fetch(config.url, {
+                    method: config.method,
+                    headers: config.headers,
+                    body: config.body,
+                })
+                : await fetch(config.url, {
+                    method: config.method,
+                    headers: config.headers,
+                });
 
             const json = await response.json();
             setData({ data: json });
@@ -69,16 +73,11 @@ export const useFetch = (baseUrl) => {
 
 
 
-// Usefetch by Emmanuel
-
-
-
-
 // 1. Start UseFetch by Id
 
 export const useFetchgetById = (endpoint, id) => {
-    const url = 'http://localhost:3000/api/';
-    // const url = 'https://apptowerbackend.onrender.com/api/';
+    // const url = 'http://localhost:3000/api/';
+    const url = 'https://apptowerbackend.onrender.com/api/';
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
@@ -124,7 +123,8 @@ export const useFetchgetById = (endpoint, id) => {
 // 2. start useFetch get All
 
 export const useFetchget = (endpoint) => {
-    const url = ''
+    const url = 'https://apptowerbackend.onrender.com/api/'
+    // const url = 'http://localhost:3000/api/';
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
@@ -216,7 +216,9 @@ export const useFetchpostFile = async (url, data) => {
 // 4. Start useFetch post
 
 export const useFetchpost = async (endpoint, data) => {
-    const url = 'https://apptowerbackend.onrender.com/api/'
+    const url = 
+    'https://apptowerbackend.onrender.com/api/'
+    
     const abortController = new AbortController();
     const signal = abortController.signal;
 

@@ -8,50 +8,60 @@ import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { useFetchget } from '../../../Hooks/useFetch'
+import { useAuth } from '../../../Context/AuthContext'
+
 
 
 export const Residents = () => {
+    const { user, isAuth } = useAuth();
 
     const { data, load, error } = useFetchget('residents')
     // console.log(data.apartments)
     return (
         <>
 
-            <ContainerTable title='Residentes'>
+            <ContainerTable title='Residentes'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton  />}
+                buttonToGo={<ButtonGoTo value='Crear Residente' href='create' />}
+            >
 
-                <DivRow>
-                    <DropdownExcel />
-                    <SearchButton />
-                    <ButtonGoTo value='Crear Residente' href='create' />
-                </DivRow>
+
 
                 <TablePerson>
                     <Thead>
-                        <Th name={"Informacion del residente"} />
 
-                        <Th name={'Correo'}></Th>
-                        <Th name={'Telefono'}></Th>
-                        <Th />
-                        <Th />
+                        <Th name={"Informacion del residente"} />
+                        <Th name={'Informacion de contacto'}></Th>
 
                     </Thead>
                     <Tbody>
                         {data.residents?.map(residents => (
                             <Row
-                            to={`details/${residents.idResident}`}
-                                docType={residents.docType}
-                                docNumber={residents.docNumber}
+
+                                // Personal information
                                 name={residents.name}
                                 lastName={residents.lastName}
-                                phone={residents.phoneNumber}
+                                docType={residents.docType}
+                                docNumber={residents.docNumber}
+                                op6={residents.residentType == "owner" ? "Propietario" : "Arrendatario"}
+
+                                // Contact information
                                 email={residents.email}
-                                file={residents.pdf}
+                                phone={residents.phoneNumber}
+
+                                // Others 
+
+                                to={`details/${residents.idResident}`}
+                                status={residents.status}
+
+
+                            // file={residents.pdf}
                             >
+                                <Actions icon='download' href={residents.pdf} accion='Descargar pdf' />
                                 <Actions accion='Editar' />
-                                <Actions accion='Reservar' />
                             </Row>
                         ))}
-
 
 
                     </Tbody>

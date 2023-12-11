@@ -7,13 +7,12 @@ export const Dropdown = ({ children, toggleDropdown, isDropdownOpen }) => {
             <>
                 <button
                     type="button"
-                    className="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto"
+                    className="btn btn-link dropdown-toggle more-vertical text-muted"
                     onClick={toggleDropdown}
                 >
-                    <span className="text-muted sr-only">Action</span>
                 </button>
                 <div className={`dropdown-menu dropdown-menu-right ${isDropdownOpen ? 'show' : ''}`}>
-                    <div className="card-body">
+                    <div >
 
                         {children}
                         

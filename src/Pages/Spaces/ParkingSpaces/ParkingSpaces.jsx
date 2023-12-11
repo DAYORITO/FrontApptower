@@ -54,15 +54,14 @@ export const ParkingSpaces = () => {
   return (
     <>
 
-      <ContainerTable title='Parqueaderos'>
+
+      <ContainerTable title='Parqueaderos'
+        dropdown={<DropdownExcel />}
+        search={<SearchButton value={search} onChange={searcher} />}
+        buttonToGo={<ButtonGoTo value='Crear parqueadero' href='create' />}
+      >
 
 
-
-        <DivRow>
-          <DropdownExcel />
-          <SearchButton value={search} onChange={searcher} />
-          <ButtonGoTo value='Crear Residente' href='create' />
-        </DivRow>
 
         <TablePerson>
           <Thead>
@@ -80,7 +79,7 @@ export const ParkingSpaces = () => {
                 name={"Parqueadero "}
                 lastName={parking.parkingName}
 
-                docType={(parking.parkingType == "Private")? "Privado": (parking.parkingType == "Public")? "Private": " "}
+                docType={(parking.parkingType == "Private") ? "Privado" : (parking.parkingType == "Public") ? "Publico" : " "}
                 status={parking.status}
                 op1={""}
                 op2={""}

@@ -15,30 +15,28 @@ export const Spaces = () => {
   console.log(data.spaces)
   return (
     <>
+      <ContainerTable title='Zonas comunes'
+        buttonToGo={<ButtonGoTo value='Nueva zona comun' href='create' />}
+      >
 
-      <ContainerTable title='Zonas comunes'>
-        <DropdownExcel />
-        <SearchButton />
-        <ButtonGoTo value='Nueva zona comun' href='create' />
+      <TablePerson>
+        <ContainerCard>
 
-        <TablePerson>
-          <ContainerCard>
+          {data.spaces?.map(spaces => (
+            <BigCard
+              cosa={spaces}
+            >
+              <Actions accion='Editar' />
+              <Actions accion='Reservar' icon="calendar" />
+            </BigCard>
+          ))}
 
-            {data.spaces?.map(spaces => (
-              <BigCard
-                cosa={spaces}
-              >
-                <Actions accion='Editar' />
-                <Actions accion='Reservar' icon="calendar" />
-              </BigCard>
-            ))}
-
-          </ContainerCard>
+        </ContainerCard>
 
 
-        </TablePerson>
+      </TablePerson>
 
-      </ContainerTable>
+    </ContainerTable >
     </>
   )
 }

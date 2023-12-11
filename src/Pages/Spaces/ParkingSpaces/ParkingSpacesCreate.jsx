@@ -18,8 +18,8 @@ export const ParkingSpacesCreate = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/apartments';
-    const url = 'http://localhost:3000/api/parkingSpaces';
+    const url = 'https://apptowerbackend.onrender.com/api/apartments';
+    // const url = 'http://localhost:3000/api/parkingSpaces';
     const data = {
       floor,
       parkingPerFloor,

@@ -5,7 +5,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
   return (
     <>
       <div div id="formContainer" className="card shadow">
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between mb-2 pr-4" >
           <strong>
             <h3 className="mb-2">{name}</h3>
           </strong>
@@ -14,16 +14,15 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
         </div>
         <div className="card-body" id='form'>
           <form onSubmit={onSubmit} encType="multipart/form-data">
-            <div className="row">
+            <div className="row" style={{minHeigh: '200px', maxHeight: '410px', overflow: 'hidden', overflowY: 'auto', padding: '0.7rem 0'}}>
               {children}
-              {buttons}
             </div>
             
-            
+            {buttons}
           </form>
         </div>
       </div>
-      
+
     </>
   );
 }

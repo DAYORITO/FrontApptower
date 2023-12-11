@@ -5,6 +5,7 @@ import './Select2.css';
 function Select2({ id, options, name, onChange, value }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
+  const [selectedValue, setSelectedValue] = useState(value || '');
   
 
   useLayoutEffect(() => {
@@ -41,27 +42,33 @@ function Select2({ id, options, name, onChange, value }) {
         width: '100%',
       });
 
-      // useEffect(() => {
-      //   $(inputRef.current).on('change', (e) => {
-      //     onChange({ target: { value: e.target.value } });
-      //   });
+      useEffect(() => {
+        $(inputRef.current).on('change', (event) => {
+          const newValue = event.target.value;
+          setSelectedValue(newValue);
     
-      //   return () => {
-      //     $(inputRef.current).off('change');
-      //   };
-      // }, [onChange]);
+          // Llama a la función onChange del componente padre y pasa el nuevo valor seleccionado
+          if (onChange) {
+            onChange(newValue);
+          }
+        });
+    
+        return () => {
+          $(inputRef.current).off('change');
+        };
+      }, [onChange]);
   return (
     <>
       <div className='selectContainer mb-3'>
         <span className='inputSpan'>
           <select
             id={id}
-            value={value}
+            value={selectedValue}
             className='selectComponent select2 form-control' 
             ref={inputRef}
             
           >
-            <option value='' disabled></option>
+            {/* <option value='' selected disabled></option> */}
             { options && options.map((opcion) => (
               <option className='' key={opcion.value} value={opcion.value}>
                 {opcion.label}
