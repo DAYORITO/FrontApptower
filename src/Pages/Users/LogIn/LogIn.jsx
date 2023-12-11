@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './LogIn.css';
 import ImageIcono from '../../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../../assets/Person.jpg';
@@ -7,6 +7,8 @@ import { SelectInput } from '../../../Components/Inputs/selectLogIn';
 import { useFetchpost } from '../../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../../Context/AuthContext';
+import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -15,9 +17,101 @@ const LoginForm = ({ setShowLoginForm }) => {
     const [username, setUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     console.log('Login:', login);
+    const token = Cookies.get('token');
     console.log('username:', username);
     console.log('loginPassword:', loginPassword);
     const navigate = useNavigate();
+    const [userData, setUserData] = useState({});
+    const [userRole, setUserRole] = useState('');
+    const [userDocument, SetUserDocument] = useState('');
+    const [idResidents, setIdResidents] = useState('');
+    console.log(userRole, 'userRole aqui en login');
+
+    console.log('userData aqui en login:', userData);
+
+
+    const redireccion = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+
+            fetchUserInformation(token);
+        }
+    }, [token]);
+
+    const fetchUserInformation = async (token) => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user information');
+            }
+
+            const data = await response.json();
+            setUserData(data);
+            SetUserDocument(data.document);
+
+        } catch (error) {
+            console.error('Error fetching user information:', error);
+        }
+    };
+
+    const fechDataRols = async () => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch roles');
+            }
+
+            const data = await response.json();
+            const rols = data.rols;
+            if (Array.isArray(rols)) {
+                const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
+                console.log('User Role:', userRole);
+                setUserRole(userRole);
+            } else {
+                console.error('Error: roles data is not an array:', rols);
+            }
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (userData.user && userData.user.idrole) {
+            fechDataRols();
+        }
+    }, [userData]);
+
+
+    fetch(`http://localhost:3000/api/residents/document/${userDocument}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.residente) {
+                setIdResidents(data.residente.idResident);
+
+                fetch(`http://localhost:3000/api/apartments/${Number(data.residente.idResident)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.spartment) {
+                            setApartment(data.spartment.apartmentName);
+                            setIdapartaments(data.spartment.idApartment)
+
+                            // navigate('/resident', {
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+
+
 
     const handleLogin = async (event) => {
 
@@ -48,15 +142,21 @@ const LoginForm = ({ setShowLoginForm }) => {
                 }
 
                 const responseData = await response.json();
-                console.log('Response data:', responseData);
+                console.log('Response data hola:', responseData);
 
                 if (responseData.message === 'Acceso denegado') {
                     Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
                 } else {
-                    if (responseData.role.toLowerCase() === 'vigilante' || responseData.role.toLowerCase() === 'seguridad') {
+                    if (responseData.role.toLowerCase() === 'vigilante' || responseData.role.toLowerCase() === 'seguridad' || responseData.role.toLowerCase() === 'vigilantes') {
+
                         navigate('/admin/watchman/shifts');
-                    } else {
+
+                    } else if (responseData.role.toLowerCase() === 'administrador' || responseData.role.toLowerCase() === 'admin' || responseData.role.toLowerCase() === 'super administrador') {
                         navigate('/admin/residents');
+                    }
+                    else if (responseData.role.toLowerCase() === 'residente' || responseData.role.toLowerCase() === 'residentes') {
+                        navigate('/resident');
+
                     }
 
                 }
@@ -87,15 +187,15 @@ const LoginForm = ({ setShowLoginForm }) => {
                         <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} />
 
                         <div>
-                            <a href="/#/recoverpassword" className='buttonStyle'>¿Olvidaste la contraseña?</a>
+                            <Link to="recoverpassword" className='buttonStyle'>¿Olvidaste la contraseña?</Link>
                         </div>
 
                         <button className='boton-login'>Iniciar Sesión</button><br />
 
 
-                        <a className='buttonStyle' href='#' onClick={() => setShowLoginForm(false)}>
+                        <Link className='buttonStyle' to='#' onClick={() => setShowLoginForm(false)}>
                             ¿No puedes acceder? Regístrate
-                        </a>
+                        </Link>
 
                     </form>
                 </div>
@@ -126,7 +226,7 @@ const RegisterForm = ({ setShowLoginForm }) => {
     const handleRegister = async (event) => {
         event.preventDefault();
 
-        const url = 'users';
+        const url = 'users/login';
         const data = {
             documentType,
             name,
@@ -206,9 +306,9 @@ const RegisterForm = ({ setShowLoginForm }) => {
 
                         <button className='boton-register'>Regístrate</button>
 
-                        <a className='buttonStyle' href='#' onClick={() => setShowLoginForm(true)}>
+                        <Link className='buttonStyle' to='#' onClick={() => setShowLoginForm(true)}>
                             ¿Ya tienes acceso? Inicia sesión
-                        </a>
+                        </Link>
 
                     </form>
                 </div>

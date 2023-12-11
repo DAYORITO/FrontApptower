@@ -31,7 +31,7 @@ export const RowNotificactions = ({
             <small className="badge badge-light text-muted">{date}</small>
           </div>
         </div>
-      </div>  
+      </div>
     </Link>
 
   );

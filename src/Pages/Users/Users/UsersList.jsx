@@ -8,18 +8,13 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { createPortal } from "react-dom";
-import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
-import Inputs from "../../../Components/Inputs/Inputs";
-import InputsSelect from "../../../Components/Inputs/InputsSelect";
-import Swal from 'sweetalert2';
+
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie';
 
 
 export const Users = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [editedUser, setEditedUser] = useState(null);
+
     const [usersData, setUsersData] = useState([]);
 
     //privileges
@@ -102,14 +97,7 @@ export const Users = () => {
     const { data, load, error } = useFetchget('users')
     console.log(data.user)
 
-    const { error: putError, load: putLoad, } = useFetchput('users', editedUser);
 
-    const handleModal = (user) => {
-        setEditedUser(user);
-        console.log(user, 'row')
-        setShowModal(true)
-
-    }
 
     useEffect(() => {
         if (data && data.user) {
@@ -117,96 +105,32 @@ export const Users = () => {
         }
     }, [data]);
 
-    // useEffect(() => {
-    //     if (!putLoad && !putError) {
-    //         setShowModal(false);
-    //     }
-    // }, [putLoad, putError]);
 
-    const handleSaveChanges = async () => {
-        console.log('Guardando cambios:', editedUser);
-        if (editedUser) {
-            try {
-                const response = await fetch('https://apptowerbackend.onrender.com/api/users', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(editedUser),
-                });
+    const [search, setSearch] = useState('');
+    const searcher = (e) => {
 
-                if (response.ok) {
-                    const updatedUsers = usersData.map(user => {
-                        if (user.iduser === editedUser.iduser) {
-                            return { ...user, ...editedUser };
-                        }
-                        return user;
-                    });
-                    setUsersData(updatedUsers);
+        setSearch(e.target.value)
+        console.log(e.target.value)
+    }
+    let filterData = [];
 
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: 'Usuario modificado exitosamente',
-                        icon: 'success',
-                    })
-                    setUsersData(updatedUsers);
-                    setEditedUser(null);
-                    setShowModal(false);
-                } else {
-                    const errorResponse = await response.json();
-                    console.error('Error al guardar los cambios:', response.status, errorResponse);
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Error al modificar usuario',
-                        icon: 'error',
-                    });
-                }
-            } catch (error) {
-                console.error('Error al procesar la solicitud:', error);
-            }
-        }
-    };
-
-
-
-    const opciones = [
-        {
-            value: "CC",
-            label: "CC"
-        },
-        {
-            value: "TI",
-            label: "TI"
-        },
-        {
-            value: "CE",
-            label: "CE"
-        }
-    ];
-
-    const opcionesRols = roles.map(rol => ({
-        value: rol.idrole.toString(),
-        label: rol.namerole
-    }));
-
-
-    const estado = [
-        {
-            value: "Activo",
-            label: "Activo"
-        },
-        {
-            value: "Inactivo",
-            label: "Inactivo"
-        }
-    ];
-
+    if (!search) {
+        filterData = usersData;
+    } else {
+        filterData = usersData.filter((dato) =>
+            (dato.name && dato.name.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.lastname && dato.lastname.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.document && dato.document.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
+        );
+    }
 
     return (
         <>
             <ContainerTable title='Usuarios'>
                 <DropdownExcel />
-                <SearchButton />
+                <SearchButton value={search} onChange={searcher} />
                 {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') && (
                     <ButtonGoTo
                         value='Crear Usuario'
@@ -224,8 +148,9 @@ export const Users = () => {
                     </Thead>
                     <Tbody>
 
-                        {usersData?.map(user => (
+                        {filterData?.map(user => (
                             <Row
+                                key={user.iduser}
                                 docType={user.documentType}
                                 docNumber={user.document}
                                 name={user.name}
@@ -240,11 +165,9 @@ export const Users = () => {
 
 
                                 {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
-                                    <Actions accion='Editar' onClick={(e) => {
-                                        e.preventDefault();
-                                        handleModal(user);
-                                    }} />
+                                    <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
                                 )}
+
                             </Row>
                         ))}
 
@@ -252,41 +175,7 @@ export const Users = () => {
                 </TablePerson>
             </ContainerTable>
 
-            {showModal &&
-                createPortal(
-                    <>
-                        <ModalContainer ShowModal={setShowModal}>
-                            <Modal
-                                onClick={handleSaveChanges}
-                                showModal={setShowModal}
-                                title={"Editar Usuario"}
-                            >
-                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.documentType || ''} onChange={(e) => setEditedUser({ ...editedUser, documentType: e.target.value })} ></InputsSelect>
-                                <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
-                                <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
-                                <Inputs name="Apellido" value={editedUser?.lastname || ''} onChange={(e) => setEditedUser({ ...editedUser, lastname: e.target.value })} />
-                                <InputsSelect
-                                    id={"select"}
-                                    options={opcionesRols}
-                                    name={"Rol"}
-                                    value={editedUser?.idrole.toString() || ''}
-                                    onChange={(e) => setEditedUser({ ...editedUser, idrole: Number(e.target.value) })}
-                                ></InputsSelect>
-                                <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
-                                <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
-                                <InputsSelect
-                                    id={"select"}
-                                    options={estado}
-                                    name={"Estado"}
-                                    value={editedUser?.state || ''}
-                                    onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })} ></InputsSelect>
 
-
-                            </Modal>
-                        </ModalContainer>
-                    </>,
-                    document.getElementById("modalRender")
-                )}
 
         </>
 

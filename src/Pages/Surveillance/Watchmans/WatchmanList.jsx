@@ -109,7 +109,7 @@ export const Watchman = () => {
                     dateOfbirth: editedWatchman.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString() : null
                 };
 
-                const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
+                const response = await fetch('http://localhost:3000/api/watchman', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -175,11 +175,31 @@ export const Watchman = () => {
     ];
 
 
+    const [search, setSearch] = useState('');
+    const searcher = (e) => {
+
+        setSearch(e.target.value)
+        console.log(e.target.value)
+    }
+    let filterData = [];
+
+    if (!search) {
+        filterData = watchmanData;
+    } else {
+        filterData = watchmanData.filter((dato) =>
+            (dato.name && dato.name.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.lastname && dato.lastname.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.document && dato.document.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
+            (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
+        );
+    }
+
     return (
         <>
             <ContainerTable title='Vigilantes'>
                 <DropdownExcel />
-                <SearchButton />
+                <SearchButton value={search} onChange={searcher} />
 
                 {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') && (
                     <ButtonGoTo
@@ -200,7 +220,7 @@ export const Watchman = () => {
                     </Thead>
                     <Tbody>
 
-                        {watchmanData?.map(watchman => (
+                        {filterData?.map(watchman => (
                             <Row
                                 key={watchman.idwatchman}
                                 docType={watchman.documentType}
@@ -238,7 +258,7 @@ export const Watchman = () => {
                             >
 
                                 <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.documentType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, documentType: e.target.value })} ></InputsSelect>
-                                <Inputs name="Documento" value={editedWatchman?.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, document: e.target.value })} />
+                                <Inputs name="Documento" value={editedWatchman?.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, document: e.target.value })} readonly={true} inputStyle={{ color: '#E3E3E3' }} />
                                 <Inputs name="Nombre" value={editedWatchman?.namewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, namewatchman: e.target.value })} />
                                 <Inputs name="Apellido" value={editedWatchman?.lastnamewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, lastnamewatchman: e.target.value })} />
                                 <Inputs name="Correo" value={editedWatchman?.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, email: e.target.value })} />

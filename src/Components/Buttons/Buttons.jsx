@@ -19,7 +19,8 @@ const DropdownExcel = () => {
                 <span className="text-muted sr-only">Action</span>
             </button>
             <div className="dropdown-menu m-2">
-                <a className="dropdown-item" href="#"><i className="fe fe-download-cloud fe-12 mr-4"></i>Download excel</a>
+
+                <Link to="#"><i className="fe fe-download-cloud fe-12 mr-4"></i>Download excel</Link>
             </div>
         </div>
 
@@ -27,16 +28,16 @@ const DropdownExcel = () => {
 }
 
 
-const SearchButton = ({value, onChange}) => {
+const SearchButton = ({ value, onChange, type = 'text', id }) => {
     return (
-        <div className="form-inline" >
-            <div className="form-row">
+        <div className="form-inline" id={id} >
+            <div className="form-row" >
                 <div className="form-group col-auto">
                     {/* <button type="submit" className="btn btn-secondary" style={{ border: 'none', backgroundColor: 'transparent', outline: 'none', borderBottom: '0' }}>
                         <span className="fe fe-24 fe-search" style={{ color: 'gray' }}></span>
                     </button> */}
                     <label htmlFor="search" className="sr-only">Buscar</label>
-                    <input type="text" value={value} onChange={onChange} placeholder='Buscar' className="form-control" />
+                    <input type={type} value={value} onChange={onChange} placeholder='Buscar' className="form-control" />
 
                 </div>
             </div>
@@ -44,4 +45,15 @@ const SearchButton = ({value, onChange}) => {
     )
 }
 
-export { ButtonGoTo, DropdownExcel, SearchButton };
+const DateButton = ({ value, onChange, id }) => {
+    return (
+        <div className="form-inline d-flex justify-content-start" id={id} >
+            <div className="form-col">
+                <div className="form-group col-auto">
+                    <input type="date" value={value} onChange={onChange} placeholder='Buscar' className="form-control" />
+                </div>
+            </div>
+        </div>
+    )
+}
+export { ButtonGoTo, DropdownExcel, SearchButton, DateButton };

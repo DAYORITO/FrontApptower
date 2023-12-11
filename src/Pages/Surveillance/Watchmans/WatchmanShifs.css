@@ -4,11 +4,12 @@
     justify-content: space-between;
     border: 2px solid #afafaf;
     border-radius: 20px;
-    padding: 20px;
+    padding: 18px;
+    margin-top: -20px;
     padding-left: 40px;
     margin-left: 6px;
     max-width: 96%;
-    margin-bottom: 17px;
+    margin-bottom: 16px;
     background-color: #f4f4f4;
     box-shadow: 5px 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -135,9 +136,11 @@
 .container-shift {
     border: 2px solid #afafaf;
     border-radius: 21px;
-    padding: 20px;
+    padding-top: 22px;
     max-width: 96%;
+    height: 185px;
     margin: 10px;
+    margin-top: 5px;
     background-color: #f4f4f4;
     box-shadow: 5px 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -153,7 +156,8 @@
     margin-top: 30px;
 }
 
-.turn-detail span {
+.turn-detail .hola {
+    margin-left: 15px;
     font-size: 16px;
     padding: 7px 20px;
     display: inline-block;
@@ -163,11 +167,43 @@
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.turn-detail span:first-child {
+.turn-detail .hola:first-child {
     font-weight: bold;
     margin-right: 10px;
 }
 
 .disabled-btn {
     cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .container-icon {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .circlecon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .buttons-shift {
+        margin-left: 0;
+    }
+
+    .buttons-shift button {
+        width: 100%;
+    }
+
+    .container-shift {
+        padding: 10px;
+    }
+
+    .turn-details {
+        margin-bottom: 20px;
+    }
+
+    .turn-detail {
+        margin-top: 15px;
+    }
 }

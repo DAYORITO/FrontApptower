@@ -18,7 +18,7 @@ export const Rols = () => {
         <>
             <ContainerTable title='Roles'>
                 <DropdownExcel />
-                <SearchButton />
+
                 <ButtonGoTo value='Crear Rol' href='/admin/rols/create' />
                 <TablePerson>
                     <Thead>

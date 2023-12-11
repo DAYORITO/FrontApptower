@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useRef } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, type, list, options, id, readonly = false }) {
+function Inputs({ name, value, onChange, placeholder, type, list, options, id, readonly = false,inputStyle  }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   // console.log(inputRef.current);
@@ -21,20 +21,20 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
       }
       labelRef.current.classList.remove('active');
     });
-    
 
-        return () => {
-            inputRef.current?.removeEventListener('focus', () => {
-                labelRef.current.classList.add('active');
-            });
-            inputRef.current?.removeEventListener('blur', () => {
-                if(inputRef.current.value === ''){
-                    labelRef.current.classList.remove('active');
-                }
-            });
-            
+
+    return () => {
+      inputRef.current?.removeEventListener('focus', () => {
+        labelRef.current.classList.add('active');
+      });
+      inputRef.current?.removeEventListener('blur', () => {
+        if (inputRef.current.value === '') {
+          labelRef.current.classList.remove('active');
         }
-    }, [])
+      });
+
+    }
+  }, [])
 
   return (
     <>
@@ -50,17 +50,18 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
             className=''
             ref={inputRef}
             id={id}
-            readOnly = {readonly}
+            readOnly={readonly}
             list={list}
-            {...readonly && 'disabled'}
-            
-            
+            style={inputStyle}
+          // {...readonly && 'disabled'}
+
+
           />
         </span>
         <label htmlFor={name} className='form-label' ref={labelRef}>{name}</label>
-        {list && <datalist  className='custom-datalist' id={list}>
+        {list && <datalist className='custom-datalist' id={list}>
           {options?.map((opcion) => (
-            <option  value={opcion.value} label={opcion.label} />
+            <option value={opcion.value} label={opcion.label} />
           ))}
         </datalist>}
       </div>
