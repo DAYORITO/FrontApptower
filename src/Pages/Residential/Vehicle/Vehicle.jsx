@@ -27,9 +27,9 @@ export const Vehicle = () => {
         </DivRow>
         <TablePerson>
           <Thead>
-            <Th name={'#'}></Th>
-            <Th name={'nombre'}></Th>
+            <Th name={''}></Th>
             <Th name={'placa'}></Th>
+            <Th name={'detalle'}></Th>
             <Th name={'apartamento'}></Th>
             <Th name={'estado'}></Th>
             <Th name={''}></Th>
@@ -46,7 +46,10 @@ export const Vehicle = () => {
             {
               data.vehicle?.map(vehicle =>( 
                 <Row
-                  nombre={vehicle.typeuser}
+                  op1={vehicle.licenseplate}
+                  op2={vehicle.description}
+                  op3={vehicle.apartment}
+                  op4={vehicle.status}
                 >
                   <Actions accion='Editar' />
                 </Row>

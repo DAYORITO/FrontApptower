@@ -16,6 +16,7 @@ export const Booking = () => {
   const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/booking')
   console.log(load)
   console.log(error)
+  console.log(data.booking)
   return (
     <>
       <ContainerTable title='Reservas'>
@@ -43,8 +44,7 @@ export const Booking = () => {
             {
               data.booking?.map(booking =>(   
                 <Row
-                  name={booking.bookingtype === 1 ? 'Salon Social':
-                    booking.bookingtype === 2 ? 'Zona Humeda': 'No definido'}
+                  name={booking.Space.spaceName}
                   lastName={''}
                   docType={booking.status}
                   op1={booking.user.name + ' ' + booking.user.lastname}
