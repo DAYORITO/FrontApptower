@@ -56,6 +56,7 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
             
             
           />
+          
         </span>
         <label htmlFor={name} className='form-label' ref={labelRef}>{name}</label>
         {list && <datalist  className='custom-datalist' id={list}>

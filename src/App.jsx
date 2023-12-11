@@ -47,6 +47,8 @@ import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
 import { useEffect } from 'react';
+import Fines from "./Pages/Fines/fines";
+import FinesCreate from "./Pages/Fines/finesCreate";
 
 const socket = io('http://localhost:3000');
 
@@ -193,6 +195,8 @@ const App = () => {
                                 {/* Notification */}
 
                                 {/* Fines */}
+                                <Route path='fines/' element={<Fines/>} />
+                                <Route path='fines/create' element={<FinesCreate/>} />
 
 
 

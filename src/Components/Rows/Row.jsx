@@ -48,7 +48,7 @@ export const Row = ({
 
                 <th scope="row">
                     {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
-                    {name != null & name != null ? name + ' ' + lastName : null} <br />
+                    {name != null & lastName != null ? name + ' ' + lastName : name != null & lastName == null ? name : ""} <br />
                     {op6 != null ? <span className="badge badge-light text-primary">{op6}</span> : null}
 
 

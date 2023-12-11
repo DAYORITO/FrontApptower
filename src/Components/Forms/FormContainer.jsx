@@ -14,7 +14,7 @@ function FormContainer({ name, children, buttons, modalButton, onSubmit, onClick
         </div>
         <div className="card-body" id='form'>
           <form onSubmit={onSubmit} encType="multipart/form-data">
-            <div className="row" style={{minHeigh: '200px', maxHeight: '430px', overflow: 'hidden', overflowY: 'auto', padding: '0.7rem 0'}}>
+            <div className="row" style={{minHeigh: '200px', maxHeight: '410px', overflow: 'hidden', overflowY: 'auto', padding: '0.7rem 0'}}>
               {children}
             </div>
             

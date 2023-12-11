@@ -200,7 +200,7 @@ export const Aside = () => {
 
 
                                 {allowedPermissions.includes('Multas') && (
-                                    <ListNav module={'Multas'} href='/#/admin/' icon='fe fe-x-square fe-24' />
+                                    <ListNav module={'Multas'} href='/#/admin/fines' icon='fe fe-x-square fe-24' />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (
