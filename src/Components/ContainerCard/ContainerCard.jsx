@@ -14,7 +14,6 @@ export const ContainerCard = ({ children }) => {
 //     return (
 //         <div className="col-md-3">
 //             <div className="card shadow mb-4">
-//                 <a style={{ textDecoration: 'none', color: 'inherit' }} href="/Details/@item.IdEspacio">
 //                     <div className="card-body text-center">
 //                         <div className="avatar avatar-lg mt-4">
 //                             {/* Ícono basado en el tipo de espacio */}

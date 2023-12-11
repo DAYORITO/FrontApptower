@@ -10,18 +10,21 @@ import { Accordion } from '../../Components/Accordion/Accordion';
 import { Checkboxs } from '../../Components/Checkbox/Checkboxs';
 import { useParams } from 'react-router-dom';
 import InputsSelect from "../../Components/Inputs/InputsSelect";
+import { useAuth } from '../../Context/AuthContext';
 
 
 export const RolsEditNew = () => {
     const { idrole } = useParams();
     console.log(idrole, 'idrole')
+    const navigate = useNavigate();
+    const { isLoggedIn, user, isLoading } = useAuth();
     const [editedRols, setEditedRols] = useState(null);
 
 
     useEffect(() => {
         if (idrole) {
             const fetchEditedRole = async () => {
-                const response = await fetch(`https://apptowerbackend.onrender.com/api/${idrole}`);
+                const response = await fetch(`https://apptowerbackend.onrender.com/api/rols/${idrole}`);
                 const data = await response.json();
                 setEditedRols(data.rols);
             };
@@ -34,6 +37,7 @@ export const RolsEditNew = () => {
     const [privileges, setPrivileges] = useState([]);
     const [permissionsList, setPermissionsList] = useState([]);
     const [permisos, setPermisos] = useState([]);
+
 
 
     useEffect(() => {
@@ -65,7 +69,6 @@ export const RolsEditNew = () => {
 
 
 
-    const navigate = useNavigate();
 
     const estado = [
         {
@@ -77,7 +80,8 @@ export const RolsEditNew = () => {
             label: "Inactivo"
         }
     ];
-    const handleSaveChanges = async () => {
+    const handleSaveChanges = async (event) => {
+        event.preventDefault();
         console.log('Guardando cambios:', editedRols);
         if (editedRols) {
             try {
@@ -98,7 +102,7 @@ export const RolsEditNew = () => {
 
                 console.log(formattedData, 'formattedData');
 
-                const response = await fetch(`https://apptowerbackend.onrender.com/api/${idrole}`, {
+                const response = await fetch(`https://apptowerbackend.onrender.com/api/rols/${idrole}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -191,7 +195,13 @@ export const RolsEditNew = () => {
                         onChange={(e) => setEditedRols({ ...editedRols, namerole: e.target.value })}
                     />
 
-                    <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedRols?.state || ''} onChange={(e) => setEditedRols({ ...editedRols, state: e.target.value })}></InputsSelect>
+                    <InputsSelect
+                        id={"select"}
+                        options={estado}
+                        name={"Estado"}
+                        value={editedRols?.state || ''}
+                        onChange={(e) => setEditedRols({ ...editedRols, state: e.target.value })} ></InputsSelect>
+
                 </FormColumn>
 
                 <FormColumn>

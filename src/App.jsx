@@ -18,6 +18,7 @@ import { Rols } from "./Pages/Rols/RolsList";
 import { RolsCreate } from "./Pages/Rols/RolsCreate";
 import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
+import { UsersEdit } from "./Pages/Users/Users/UserEdit";
 import { ModifyProfile } from "./Pages/Users/Users/ModifyProfile";
 import { ModifyProfileList } from "./Pages/Users/Users/ModifyProfileList";
 import Visitors from "./Pages/Residential/Visitors/Visitors";
@@ -37,6 +38,7 @@ import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
 import { AuthProvider } from "./Context/AuthContext";
 import { ProtectedRoutes } from "./ProtectedRoutes";
+import { NotFound } from "./Pages/NotFound/NotFound";
 
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
@@ -47,6 +49,13 @@ import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
+
+
+
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 
@@ -54,12 +63,115 @@ const socket = io('https://apptowerbackend.onrender.com/');
 
 
 const App = () => {
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+    const token = Cookies.get('token');
+    const [userData, setUserData] = useState({});
+    const [userRole, setUserRole] = useState('');
+    console.log('Yo spy el rol:', userRole);
+
+    useEffect(() => {
+        if (token) {
+            fetchUserPrivilegeAndPermission(token);
+        }
+    }, [token]);
+
+
+    //Consulta privilegios 
+    const fetchUserPrivilegeAndPermission = async (token) => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user privileges');
+            }
+
+            const data = await response.json();
+            console.log(data, 'data');
+            console.log('Allowed Permissions hi:', data.privileges);
+
+            if (data && data.privileges && Array.isArray(data.privileges)) {
+                const allowed = {};
+                data.privileges.forEach(({ idpermission, idprivilege }) => {
+                    const permissionName = idToPermissionName[idpermission];
+                    const privilegeName = idToPrivilegesName[idprivilege];
+
+                    if (!allowed[permissionName]) {
+                        allowed[permissionName] = [];
+                    }
+                    allowed[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowed);
+            }
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            fetchUserInformation(token);
+
+        }
+    }, [token]);
+
+    const fetchUserInformation = async (token) => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user information');
+            }
+
+            const data = await response.json();
+            setUserData(data);
+
+        } catch (error) {
+            console.error('Error fetching user information:', error);
+        }
+    };
+
+
+
+    const fechDataRols = async () => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch roles');
+            }
+
+            const data = await response.json();
+            const rols = data.rols;
+            if (Array.isArray(rols)) {
+                const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
+                console.log('User Role:', userRole);
+                setUserRole(userRole);
+            } else {
+                console.error('Error: roles data is not an array:', rols);
+            }
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (userData.user && userData.user.idrole) {
+            fechDataRols();
+        }
+    }, [userData]);
 
     // useEffect(() => {
     //     socket.on('connect', () => {
     //     });
     // }, []);
-
     return (
 
         <AuthProvider>
@@ -74,129 +186,238 @@ const App = () => {
                         <Route path="/resetpassword" element={<ResetPassword />} />
 
 
+
                         <Route element={<ProtectedRoutes />}>
                             <Route path='/admin/*' element={<Layout />}>
 
-                                {/* Bookings */}
-                                {/* Booking */}
-                                <Route path='booking/' element={<Booking />} />
-                                <Route path='booking/create' element={<BookingCreate socket={socket} />} />
+                                <Route path='notfound' element={<NotFound />} />
 
 
+                                {/* Users */}
+                                <Route path='users' element={
+                                    allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Listar') ?
+                                        <Users /> : <NotFound />
+                                } />
 
-                                {/* GuestIncome */}
-                                <Route path='guest_income/create' element={<GuestIncomeCreate />} />
-                                <Route path='guest_income/' element={<GuestIncome />} />
+                                <Route path='users/create' element={
+                                    allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') ?
+                                        <UsersCreate /> : <NotFound />
+                                } />
 
-                                {/* Spaces */}
+                                {/* <Route path='users/edit' element={
+                                    allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') ?
+                                        <UsersEdit /> : <NotFound />
+                                } /> */}
 
-                                {/* Space */}
-                                <Route path='apartments/' element={<Apartments />} />
-                                <Route path='apartments/create' element={<ApartmentCreate />} />
-                                <Route path='apartments/details/:id' element={<ApartmentDetails />} />
+                                <Route path='users/edit/:iduser' element={<UsersEdit />} />
+                                <Route path='users/profile' element={<ModifyProfile />} />
+                                <Route path='users/profileList' element={<ModifyProfileList />} />
 
-
-
-
-
-                                {/* Configuration */}
-                                {/* Rols */}
-                                <Route path='rols/' element={<Rols />} />
-
-                                {/* Residents */}
-                                <Route path='residents/' element={<Residents />} />
-                                <Route path='residents/create/' element={<ResidentCreate />} />
-                                <Route path='residents/create/:id' element={<ResidentCreate />} />
-                                <Route path='residents/details/:id' element={<ResidentDetail />} />
-                                
-                                {/* Notifications */}
-                                {/* Notification */}
-                                <Route path='notifications/' element={<Notifications socket={socket} />} />
 
 
                                 {/* Surveillance */}
-                                {/* Watchman */}
-                                <Route path='watchman/' element={<Watchman />} />
-                                <Route path='watchman/create' element={<WatchmanCreate />} />
+                                <Route path='watchman' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
+                                        ? (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                            ? <Watchman />
+                                            : <NotFound />
+                                        : <NotFound />
+                                } />
+
+                                <Route path='watchman/shifts' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
+                                        ? (userRole === 'Vigilante' || userRole === 'Vigilantes' || userRole === 'Seguridad')
+                                            ? <WatchmanShifts />
+                                            : <NotFound />
+                                        : <NotFound />
+                                } />
+                                <Route path='watchman/create' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') ?
+                                        <WatchmanCreate /> : <NotFound />
+                                } />
+
+                                <Route path='watchman/details/:idwatchman' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
+                                        <WatchmanDetails /> : <NotFound />
+                                } />
+
+
+
+
+
+                                {/* Rols */}
+
+                                <Route path='rols' element={
+                                    allowedPermissions['Usuarios'] ?
+                                        <Rols /> : <NotFound />
+                                } />
+                                <Route path='rols/create' element={
+                                    allowedPermissions['Usuarios'] ?
+                                        <RolsCreate /> : <NotFound />
+                                } />
+                                <Route path='rols/editNew/:idrole' element={
+                                    allowedPermissions['Usuarios'] ?
+                                        <RolsEditNew /> : <NotFound />
+                                } />
+
+
 
                                 {/* Bookings */}
-                                {/* Booking */}
-                                <Route path='booking/' element={<Booking />} />
-                                <Route path='booking/create' element={<BookingCreate />} />
+                                <Route path='booking' element={
+                                    allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Listar') ?
+                                        <Booking /> : <NotFound />
+                                } />
+
+                                <Route path='booking/create' element={
+                                    allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Crear') ?
+                                        <BookingCreate socket={socket} /> : <NotFound />
+                                } />
+
 
                                 {/* GuestIncome */}
-                                <Route path='guest_income/create' element={<GuestIncomeCreate />} />
-                                <Route path='guest_income/create/:id' element={<GuestIncomeCreate />} />
-                                <Route path='guest_income/' element={<GuestIncome />} />
+                                <Route path='guest_income' element={
+                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
+                                        <GuestIncome /> : <NotFound />
+                                } />
+
+                                <Route path='guest_income/create' element={
+                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear') ?
+                                        <GuestIncomeCreate /> : <NotFound />
+                                } />
+
+                                {/* Visitors */}
+                                <Route path='visitors' element={
+                                    allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Listar') ?
+                                        <Visitors /> : <NotFound />
+                                } />
+
+                                <Route path='visitors/create' element={
+                                    allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear') ?
+                                        <VisitorsCreate /> : <NotFound />
+                                } />
+
+
 
                                 {/* Spaces */}
 
-                                {/* Space */}
-                                <Route path='apartments/' element={<Apartments />} />
-                                <Route path='apartments/create' element={<ApartmentCreate />} />
-                                <Route path='apartments/details' element={<SpaceDetails />} />
+                                {/*Apartments*/}
+                                <Route path='apartments' element={
+                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
+                                        <Apartments /> : <NotFound />
+                                } />
+
+                                <Route path='apartments/details/:id' element={
+                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
+                                        <ApartmentDetails /> : <NotFound />
+                                } />
+
+
+                                <Route path='apartments/create' element={
+                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear') ?
+                                        <ApartmentCreate /> : <NotFound />
+                                } />
+
+
 
                                 {/* Owners */}
-                                <Route path='owners/' element={<Owners />} />
-                                <Route path='owners/create' element={<OwnersCreate />} />
+                                <Route path='owners' element={
+                                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
+                                        <Owners /> : <NotFound />
+                                } />
+
+                                <Route path='owners/details/:id' element={
+                                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
+                                        <OwnerDetail /> : <NotFound />
+                                } />
+
+
+                                <Route path='owners/create' element={
+                                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?
+                                        <OwnersCreate /> : <NotFound />
+                                } />
+
                                 <Route path='owners/create/:id' element={<OwnersCreate />} />
-                                <Route path='owners/details/:id' element={<OwnerDetail />} />
+
 
 
                                 {/* Space */}
-                                <Route path='spaces/' element={<Spaces />} />
-                                <Route path='spaces/create' element={<SpacesCreate />} />
-                                <Route path='spaces/details' element={<SpaceDetails />} />
+                                <Route path='spaces' element={
+                                    allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Listar') ?
+                                        <Spaces /> : <NotFound />
+                                } />
+
+                                <Route path='spaces/details/' element={
+                                    allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Listar') ?
+                                        <SpaceDetails /> : <NotFound />
+                                } />
+
+
+                                <Route path='spaces/create' element={
+                                    allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Crear') ?
+                                        <SpacesCreate /> : <NotFound />
+                                } />
+
 
 
                                 {/* Parking Spaces */}
-                                <Route path='parkingSpaces/' element={<ParkingSpaces />} />
-                                <Route path='parkingSpaces/create' element={<ParkingSpacesCreate />} />
-                                <Route path='parkingSpaces/details' element={<ParkingSpacesDetails />} />
-
-
-
-                                {/* Residential */}
-                                {/* Vehicles */}
-                                <Route path='vehicle/' element={<Vehicle />} />
-                                <Route path='vehicle/create' element={<VehicleCreate />} />
-
-
-
-                                <Route path='users/' element={<Users />} />
-                                <Route path='users/create' element={<UsersCreate />} />
-                                <Route path='users/profile' element={<ModifyProfile />} />
-                                <Route path='users/profileList' element={<ModifyProfileList />} />
-                                <Route path='watchman/' element={<Watchman />} />
-                                <Route path='watchman/create' element={<WatchmanCreate />} />
-                                <Route path='watchman/shifts' element={<WatchmanShifts />} />
-                                <Route path='watchman/details/:idwatchman' element={<WatchmanDetails />} />
-
-                                {/* Rols */}
-                                <Route path='rols/' element={<Rols />} />
-                                <Route path='rols/create' element={<RolsCreate />} />
-                                <Route path='rols/editNew/:idrole' element={<RolsEditNew />} />
+                                <Route path='parkingSpaces' element={
+                                    allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
+                                        <ParkingSpaces /> : <NotFound />
+                                } />
+                                <Route path='parkingSpaces/details' element={
+                                    allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
+                                        <ParkingSpacesDetails /> : <NotFound />
+                                } />
+                                <Route path='parkingSpaces/create' element={
+                                    allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear') ?
+                                        <ParkingSpacesCreate /> : <NotFound />
+                                } />
 
 
 
 
-                                {/* Owners */}
-                                <Route path='owners/' element={<Owners />} />
-                                <Route path='owners/create' element={<OwnersCreate />} />
-                                <Route path='owners/details' element={<OwnerDetail />} />
+                                {/* Residents */}
+                                <Route path='residents' element={
+                                    allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Listar') ?
+                                        <Residents /> : <NotFound />
+                                } />
+                                <Route path='residents/details:id' element={
+                                    allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Listar') ?
+                                        <ResidentDetail /> : <NotFound />
+                                } />
+                                <Route path='residents/create' element={
+                                    allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear') ?
+                                        <ResidentCreate /> : <NotFound />
+                                } />
+
+                                <Route path='residents/create/:id' element={<ResidentCreate />} />
 
 
-                                {/* Visitors */}
-                                <Route path='visitors/create' element={<VisitorsCreate />} />
-                                <Route path='visitors/' element={<Visitors />} />
 
 
                                 {/* Notifications */}
-                                {/* Notification */}
+                                <Route path='notifications' element={
+                                    allowedPermissions['Notificaciones'] ?
+                                        <Notifications socket={socket} /> : <NotFound />
+                                } />
+
+
+
+
+                                {/* Vehicles */}
+                                <Route path='vehicle' element={
+                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Listar') ?
+                                        <Vehicle /> : <NotFound />
+                                } />
+                                <Route path='vehicle/create' element={
+                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear') ?
+                                        <VehicleCreate /> : <NotFound />
+                                } />
+
 
                                 {/* Fines */}
-                                <Route path='fines/' element={<Fines/>} />
-                                <Route path='fines/create' element={<FinesCreate/>} />
+                                <Route path='fines/' element={<Fines />} />
+                                <Route path='fines/create' element={<FinesCreate />} />
 
 
 

@@ -4,6 +4,7 @@ import { ContainerTable } from '../../../Components/ContainerTable/ContainerTabl
 import './User.css'
 import Cookies from 'js-cookie';
 import { NavLink } from 'react-router-dom';
+import FormContainer from '../../../Components/Forms/FormContainer';
 
 
 export const ModifyProfileList = () => {
@@ -41,16 +42,16 @@ export const ModifyProfileList = () => {
 
     return (
         <>
-            <ContainerTable title='Modificar perfil'>
-                <TablePerson>
-                    <div className="container-profile">
-                        <div className="profile-content">
-                            <div className="profile-image">
-                                <span className='icon fe fe-user text-muted custom-icon'></span>
-                            </div>
-                            <div className="vertical-line"></div>
-                            <div className="information-user">
-                                <div className='info-user-ob'>
+            <FormContainer name='Modificar Perfil'>
+
+                <div className="container-profile">
+                    <div className="profile-content">
+                        <div className="profile-image">
+                            <span className='icon fe fe-user text-muted custom-icon'></span>
+                        </div>
+                        <div className="vertical-line"></div>
+                        <div className="information-user">
+                            <div className='info-user-ob'>
                                 <div className="user-detail">
                                     <span>Nombre:</span>
                                     <span> {userData.user?.name ? userData.user.name : ''}
@@ -65,19 +66,18 @@ export const ModifyProfileList = () => {
                                     <span>Teléfono:</span>
                                     <span>{userData.user?.phone}</span>
                                 </div>
-                                </div>
+                            </div>
 
-                                <div className="edit-buttons">
-                                    <NavLink to="/admin/users/profile" className="btn-edit">Editar</NavLink>
+                            <div className="edit-buttons">
+                                <NavLink to="/admin/users/profile" className="btn-edit">Editar</NavLink>
 
 
-                                </div>
                             </div>
                         </div>
-
                     </div>
-                </TablePerson >
-            </ContainerTable >
+
+                </div>
+            </FormContainer>
 
         </>
     )

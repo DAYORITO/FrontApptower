@@ -12,14 +12,19 @@ import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
 import { createPortal } from "react-dom";
-import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal"; 
+import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { cardio } from 'ldrs'
 import { useAuth } from '../../../Context/AuthContext'
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+
 
 
 
 
 function GuestIncome() {
+    const token = Cookies.get('token');
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
     // const {permisos} = useAuth()
     // if(!permisos.incudes("Ver Ingreso")){
     //     navigate
@@ -28,12 +33,12 @@ function GuestIncome() {
     //se crea un estado para actualizar los datos al momento de cualquier accion
     const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });
     const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({ guestIncomeParking: [] });
-    
+
     const [showModaload, setShowModaload] = useState(false);
-    const {data, load, error} = useFetchget('guestIncome')
+    const { data, load, error } = useFetchget('guestIncome')
     const { data: data2, load: load2, error: error2 } = useFetchget('guestincomeparking')
     console.log(data2)
-  
+
     console.log(data)
 
     useEffect(() => {
@@ -45,9 +50,9 @@ function GuestIncome() {
     useEffect(() => {
         if (data2 && data2.guestincomeparking) {
             setGuestIncomeParkingData(data2.guestincomeparking);
-            
+
         }
-        
+
     }, [data2])
 
     useEffect(() => {
@@ -59,21 +64,21 @@ function GuestIncome() {
             setShowModaload(false);
         }
     }, [load, load2]);
-    
-    
+
+
 
     const handleEditClick = async (dataToUpdate) => {
         setShowModaload(true);
-        
+
         const verify = guestIncomeParkingData?.find((guestIncomeParking) => guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income);
         console.log(verify)
         if (verify !== null) {
-            useApiUpdate({"idParkingSpace":verify.idParkingSpace, "status":'Active'}, 'parkingSpaces')
-            .then((responseData) => {
-                console.log(responseData)
-            })
+            useApiUpdate({ "idParkingSpace": verify.idParkingSpace, "status": 'Active' }, 'parkingSpaces')
+                .then((responseData) => {
+                    console.log(responseData)
+                })
         }
-        
+
         useApiUpdate(dataToUpdate, 'guestIncome')
             .then((responseData) => {
                 setShowModaload(false);
@@ -98,14 +103,67 @@ function GuestIncome() {
         return new Date(date).toLocaleString('es-CO', {
             format: 'dd/MM/yyyy HH:mm:ss',
         });
-      };
-  return (
-    <>
-        <ContainerTable title='Ingresos'
-            dropdown={<DropdownExcel />}
-            search={<SearchButton />}
-            buttonToGo={<ButtonGoTo value='Crear Ingreso' href='/admin/guest_income/create' />}
-        >
+    };
+
+
+
+
+
+    useEffect(() => {
+        if (token) {
+            fetchUserPrivilegeAndPermission(token);
+        }
+    }, [token]);
+
+
+    //Consulta privilegios 
+    const fetchUserPrivilegeAndPermission = async (token) => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user privileges');
+            }
+
+            const data = await response.json();
+            console.log(data, 'data');
+            console.log('Allowed Permissions hi:', data.privileges);
+
+            if (data && data.privileges && Array.isArray(data.privileges)) {
+                const allowed = {};
+                data.privileges.forEach(({ idpermission, idprivilege }) => {
+                    const permissionName = idToPermissionName[idpermission];
+                    const privilegeName = idToPrivilegesName[idprivilege];
+
+                    if (!allowed[permissionName]) {
+                        allowed[permissionName] = [];
+                    }
+                    allowed[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowed);
+            }
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
+    return (
+        <>
+
+            <ContainerTable
+                title='Ingresos'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton />}
+                buttonToGo={
+                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear')
+                        ? <ButtonGoTo value='Crear Ingreso' href='create' />
+                        : null
+                }
+            >
+
                 <TablePerson>
                     <Thead>
                         <Th name={'Informacion del Ingreso'}></Th>
@@ -150,29 +208,29 @@ function GuestIncome() {
             </ContainerTable>
             {showModaload &&
                 createPortal(
-                  <>
-                    <ModalContainerload ShowModal={setShowModaload}>
-                      <Modaload
-                        showModal={setShowModaload}
-                      >
-                        <div className='d-flex justify-content-center'>
-                        <l-cardio
-                            size="50"
-                            stroke="4"
-                            speed="2" 
-                            color="black" 
-                          ></l-cardio>
-                        </div>
-                          
-                        
-                      </Modaload>
-                    </ModalContainerload>
-                  </>,
-                  document.getElementById("modalRender")
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-cardio
+                                        size="50"
+                                        stroke="4"
+                                        speed="2"
+                                        color="black"
+                                    ></l-cardio>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
+                    </>,
+                    document.getElementById("modalRender")
                 )}
-            
-    </>
-  )
+
+        </>
+    )
 }
 
 export default GuestIncome

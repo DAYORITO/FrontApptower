@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { Details } from "../../../Components/Details/details"
-import Inputs from '../../../Components/Inputs/Inputs'
-import InputsSelect from "../../../Components/Inputs/InputsSelect"
-import { statusList } from "../../../Hooks/consts.hooks"
 import { TablePerson } from '../../../Components/Tables/Tables'
 import { TableDetails } from "../../../Components/TableDetails/TableDetails"
 import { NavDetails } from "../../../Components/NavDetails/NavDetails"
 import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails"
 import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
-import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
-import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
+import { SearchButton } from "../../../Components/Buttons/Buttons"
 import { useFetchgetById } from "../../../Hooks/useFetch"
-import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
-import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
-import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
-import { Acordions } from "../../../Components/Acordions/Acordions"
-import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
-import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
-import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
-import { createPortal } from "react-dom"
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
 import './Watchman.css'
+import { Thead } from '../../../Components/Thead/Thead'
+import { Table, ThInfo } from '../../../Components/Table/Table'
 
 
 export const WatchmanDetails = (props) => {
+
+
 
     // 1. Start Get apartment information by id
 
     const { idwatchman } = useParams();
     console.log(idwatchman, "idwatchman")
     const { data: watchman, error, load } = useFetchgetById('watchman', idwatchman);
+
+
+
+
+    console.log()
     const [idWatchman, setIdwatchman] = useState("");
     const [name, setName] = useState('');
     const [lastname, setwatchmanLastname] = useState('');
@@ -41,6 +38,8 @@ export const WatchmanDetails = (props) => {
     const [dateOfbirth, setDateOfbirth] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+
+
 
 
 
@@ -65,6 +64,25 @@ export const WatchmanDetails = (props) => {
         }
     }, [watchman]);
 
+
+
+    const [guardshifts, setGuardshifts] = useState([]);
+
+    const fetchGuardshifsforwatchman = async () => {
+        // const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idwatchman}`);
+
+        const response = await fetch(`http://localhost:3000/api/guardshifts/${idwatchman}`);
+        const data = await response.json();
+        setGuardshifts(data.shifts, 'Data watchman');
+        console.log(data.shifts, "guardshifts")
+    }
+
+
+
+    useEffect(() => {
+        fetchGuardshifsforwatchman();
+    }
+        , []);
 
     useEffect(() => {
 
@@ -92,48 +110,76 @@ export const WatchmanDetails = (props) => {
         setToggleState(index)
     };
 
+
+
+
+
+
+    const [searchDate, setSearchDate] = useState(null);
+
+    const [filteredShifts, setFilteredShifts] = useState([]);
+
+    const handleSearch = (event) => {
+        const date = event.target.value;
+        setSearchDate(date);
+    };
+
+
+    useEffect(() => {
+        if (searchDate) {
+            const filtered = guardshifts.filter(shift => {
+                const shiftDate = new Date(shift.start);
+                const searchDateObj = new Date(searchDate);
+                searchDateObj.setUTCHours(0, 0, 0, 0);
+
+                return shiftDate.getUTCFullYear() === searchDateObj.getUTCFullYear() &&
+                    shiftDate.getUTCMonth() === searchDateObj.getUTCMonth() &&
+                    shiftDate.getUTCDate() === searchDateObj.getUTCDate();
+            });
+            setFilteredShifts(filtered);
+        } else {
+            setFilteredShifts(guardshifts);
+        }
+    }, [searchDate, guardshifts]);
+
+
+
     return (
         <>
             <Details>
 
                 <InfoDetails>
 
-
-                    {/* <ContainerModule name={`Vigilante ${name} ${lastname}`} date1={`Documento: ${documentType} ${document}`} date2={`Correo: ${email} Telefono: ${phone} edad: ${dateOfbirth}`} status={status} >
-
-                        <Dropdownanchor2 name={"Editar vigilante"} icon={"edit"} onClick={(e) => {
-                            e.preventDefault();
-                            handleModal(apartment);
-                        }} />
-
-
-
-                    </ContainerModule> */}
-
-                    <div class='container-icons-custom472'>
-
-                        <div class="circlecon-unique">
-                            <span class='fe fe-shield text-muted fe-32 custom-icons'></span>
-
-                            {['Active', 'Activo'].includes(status)
-                                ? <span className="dot dot-md bg-success mr-1"></span>
-                                : <span className="dot dot-md bg-danger mr-1"></span>}
-                        </div>
-                        <div class='info-vs-custom'>
-                            <h2 class="custom-heading">Vigilante</h2>
-                            <p class="custom-paragraph">{`${name} ${lastname}`} </p>
-                            <p class="custom-paragraph">{`${documentType} ${document}`} </p>
-                            <p class="custom-paragraph">{`Correo: ${email} Teléfono:${phone}`} </p>
-                            <p class="custom-paragraph">{`Edad: ${age}`} </p>
-
-                            <div class="back-strange">
-                                <a href={"/admin/watchman/"} type="button" class="btn btn-sm btn-secondary weird-link">Regresar</a>
+                    {load ? (
+                        <p>Cargando información...</p>
+                    ) : (
+                        <div className='container-icons-custom472'>
+                            <div className="circlecon-unique">
+                                <span className='fe fe-shield text-muted fe-32 custom-icons'></span>
+                                {['Active', 'Activo'].includes(status)
+                                    ? <span className="dot dot-md bg-success mr-1"></span>
+                                    : <span className="dot dot-md bg-danger mr-1"></span>}
                             </div>
+                            <div className='info-vs-custom'>
+                                <h2 className="custom-heading">Vigilante</h2>
+                                {name != null & name != null ? name + ' ' + lastname : null} <br />
+                                {documentType != null ? <span className="badge badge-light text-secondary">{documentType}</span> : null}
+                                {document != null ? <em class="text-muted ml-2">{document}</em> : null}
+
+                                <br />
+                                <div className='container-i'>
+                                    <br /><p className="custom-paragraph text-muted ml-2 "><strong>Correo: </strong> {email ? email : ''} </p>
+                                    <p className="custom-paragraph text-muted ml-2"><strong>Teléfono: </strong>{phone ? phone : ''}</p>
+                                    <p className="custom-paragraph text-muted ml-2 "><strong>Edad: </strong> {age ? age : ''}</p>
+
+                                </div>
+
+                                <Link to="/admin/watchman/" className="btn btn-sm btn-secondary bnt">Regresar</Link>
+                            </div>
+
                         </div>
 
-                    </div>
-
-
+                    )}
 
 
 
@@ -143,99 +189,49 @@ export const WatchmanDetails = (props) => {
                 <ListsDetails>
                     <NavDetails>
 
-                        <NavListDetails index={1} name={"Mensajes"} toggleState={toggleState} onClick={() => toggleTab(1)} />
-                        <NavListDetails index={2} name={"Ingresos"} toggleState={toggleState} onClick={() => toggleTab(2)} />
+                        <NavListDetails index={1} name={"Turnos"} toggleState={toggleState} onClick={() => toggleTab(1)} />
+                        {/* <NavListDetails index={2} name={"Ingresos"} toggleState={toggleState} onClick={() => toggleTab(1)} /> */}
 
                     </NavDetails>
+
+                    <input type="date" name="" className='dateShifts' onChange={handleSearch} />
+
+
+
 
                     <TableDetails index={1} toggleState={toggleState} >
 
                         <TablePerson>
-                            {/* <DetailsActions>
-                                <SearchButton />
-                                <ButtonGoTo value="Nuevo notificacion" href={"notificaciones/"} />
-                            </DetailsActions> */}
 
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions />
+
+
+                            <Thead>
+                                <ThInfo />
+                                <ThInfo name='Fecha' />
+                                <ThInfo name='Hora inicio' />
+                                <ThInfo name='Hora fin' />
+                            </Thead>
+
+                            {filteredShifts.sort((a, b) => new Date(a.start) - new Date(b.start)).slice(-1).map(shift => {
+                                const startDate = new Date(shift.start);
+                                const endDate = new Date(shift.end);
+
+                                const date = startDate.toLocaleDateString(undefined, { timeZone: 'UTC' });
+                                const startTime = startDate.toLocaleTimeString();
+                                const endTime = endDate.toLocaleTimeString();
+
+                                return (
+                                    <Table key={idWatchman} opc1={date} opc2={startTime} opc3={endTime} status={status} />
+                                );
+                            })}
 
 
                         </TablePerson>
-                    </TableDetails>
-
-                    <TableDetails index={2} toggleState={toggleState} >
-                        <TablePerson>
-                            <DetailsActions>
-                                <SearchButton />
-                                <ButtonGoTo value="Nuevo ingreso" />
-                            </DetailsActions>
-                            <RowNotificactions status="Active" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
-                            <RowNotificactions status="Inactive" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
-                            <RowNotificactions status="Inactive" name="Ingreso" lastName="" icon="user" fecha="Fecha 22-11-2023" mensaje="Ingreso Juan Camilo" />
-
-                        </TablePerson>
-
                     </TableDetails>
 
 
                 </ListsDetails>
             </Details >
-
-            {/* {showModal &&
-                createPortal(
-                    <>
-                        <ModalContainer ShowModal={setShowModal}>
-                            <Modal
-                                // onClick={handleSaveChanges}
-                                showModal={setShowModal}
-                                title={"Editar apartamento"}
-                            >
-                                <Inputs name="Torre " type={"text"}
-                                    value={tower} onChange={e => setTower(e.target.value)}></Inputs>
-                                <Inputs name="Numero apartamento " type={"text"}
-                                    value={apartmentName} onChange={e => setApartmentName(e.target.value)}></Inputs>
-
-                                <Inputs name="Area del apartamento " type={"text"}
-                                    value={area} onChange={e => setArea(e.target.value)}></Inputs>
-
-                                <InputsSelect id={"select"} options={statusList} name={"Estado"}
-                                    value={status} onChange={e => setStatus(e.target.value)}
-                                ></InputsSelect>
-                            </Modal>
-                        </ModalContainer>
-                    </>,
-                    document.getElementById("modalRender")
-                )}
-
-            {showApartmentResidentsModal &&
-                createPortal(
-                    <>
-                        <ModalContainer ShowModal={setShowApartmentResidentsModal}>
-                            <Modal
-                                // onClick={handleSaveChanges}
-                                showModal={setShowApartmentResidentsModal}
-                                title={"Agregar residente existente"}
-
-
-                            >
-                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
-                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
-
-                                <InputsSelect id={"select"} options={residentsExistList} name={"Residente"}
-                                    value={idResident} onChange={e => setIdResident(e.target.value)}></InputsSelect>
-
-
-                                <Inputs name="Fecha de inicio de residencia" type={"date"}
-                                    value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
-                                <Inputs name="Fecha de fin de residencia" type={"date"}
-                                    value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs>
-                            </Modal>
-                        </ModalContainer>
-                    </>,
-                    document.getElementById("modalRender")
-                )} */}
         </>
     )
 }

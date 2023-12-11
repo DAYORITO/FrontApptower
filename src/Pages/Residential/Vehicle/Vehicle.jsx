@@ -9,12 +9,60 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useState } from 'react'
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import { useEffect, useState } from 'react'
+
 export const Vehicle = () => {
+  const [allowedPermissions, setAllowedPermissions] = useState([]);
+  const token = Cookies.get('token');
   const { data, load, error } = useFetchget('vehicle')
   console.log(data)
   console.log(load)
   console.log(error)
+
+
+  useEffect(() => {
+    if (token) {
+      fetchUserPrivilegeAndPermission(token);
+    }
+  }, [token]);
+
+
+  //Consulta privilegios 
+  const fetchUserPrivilegeAndPermission = async (token) => {
+    try {
+      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user privileges');
+      }
+
+      const data = await response.json();
+
+      if (data && data.privileges && Array.isArray(data.privileges)) {
+        const allowed = {};
+        data.privileges.forEach(({ idpermission, idprivilege }) => {
+          const permissionName = idToPermissionName[idpermission];
+          const privilegeName = idToPrivilegesName[idprivilege];
+
+          if (!allowed[permissionName]) {
+            allowed[permissionName] = [];
+          }
+          allowed[permissionName].push(privilegeName);
+        });
+
+        setAllowedPermissions(allowed);
+      }
+    } catch (error) {
+      console.error('Error fetching user permissions:', error);
+    }
+  };
+
+
   
   
   return (
@@ -47,7 +95,9 @@ export const Vehicle = () => {
                   op2={vehicles.description}
                   op3={vehicles.Apartment.apartmentName}
                 >
-                  <Actions accion='Editar' />
+                  {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') && (
+                    <Actions accion='Editar' />
+                  )}
                 </Row>
 
               ))

@@ -5,6 +5,7 @@ import { CardUserNav } from '../CardUserNav/CardUserNav';
 import { useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 export const Aside = () => {
     const { user, login, logout } = useAuth();
@@ -12,6 +13,14 @@ export const Aside = () => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);
     const [userData, setUserData] = useState({});
     const [userRole, setUserRole] = useState('');
+    const [userDocument, SetUserDocument] = useState('');
+    const [idResidents, setIdResidents] = useState('');
+    console.log(userRole, 'userRole aqui en login');
+    const [idApartment, setIdapartaments] = useState('');
+    console.log(idApartment, 'idapartement')
+    console.log('documento', userDocument)
+    console.log(idResidents, 'holaaaaaa id')
+    console.log('userData aqui en login:', userData);
 
 
     useEffect(() => {
@@ -58,6 +67,7 @@ export const Aside = () => {
 
             const data = await response.json();
             setUserData(data);
+            SetUserDocument(data.user.document);
 
         } catch (error) {
             console.error('Error fetching user information:', error);
@@ -96,6 +106,48 @@ export const Aside = () => {
 
 
 
+
+
+    const redireccion = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+
+            fetchUserInformation(token);
+        }
+    }, [token]);
+
+
+
+
+
+    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.residente) {
+                setIdResidents(data.residente.idResident);
+
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+
+    fetch(`http://localhost:3000/api/aparmentResidents/resident/${idResidents}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.apartmentResidents) {
+                setIdapartaments(data.apartmentResidents.idApartment)
+
+
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+
+    const rutadetailsapartment = `apartments/details/${idApartment}`
+
+
+
     console.log(allowedPermissions, 'allowedPermissions');
 
     const [isCloset, isOpem] = useState(true);
@@ -130,20 +182,20 @@ export const Aside = () => {
                         {allowedPermissions && (
                             <>
                                 {allowedPermissions.includes('Dashboard') || allowedPermissions.includes('Usuarios') && (
-                                    <ListNav module={'Dashboard'} href='/#/admin/' icon='fe fe-bar-chart fe-24' />
+                                    <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24' />
                                 )}
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav module={'Notificaciones'} href='/#/admin/notifications' icon='fe fe-message-circle fe-24' />
+                                    <ListNav module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
                                 )}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
                                     <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'>
 
                                         <>
                                             {allowedPermissions.includes('Ingresos') && (
-                                                <DropDownList subprocess={"Ingresos"} href='/#/admin/guest_income/'></DropDownList>
+                                                <DropDownList subprocess={"Ingresos"} href='guest_income/'></DropDownList>
                                             )}
                                             {allowedPermissions.includes('Reservas') && (
-                                                <DropDownList subprocess={"Reservas"} href='/#/admin/booking'></DropDownList>
+                                                <DropDownList subprocess={"Reservas"} href='booking'></DropDownList>
                                             )}
                                         </>
 
@@ -161,16 +213,16 @@ export const Aside = () => {
 
                                                 <>
                                                     {allowedPermissions.includes('Propietarios') && (
-                                                        <DropDownList subprocess={"Propietarios"} href='/#/admin/owners'></DropDownList>
+                                                        <DropDownList subprocess={"Propietarios"} href='owners'></DropDownList>
                                                     )}
                                                     {allowedPermissions.includes('Residentes') && (
-                                                        <DropDownList subprocess={"Residentes"} href='/#/admin/residents'></DropDownList>
+                                                        <DropDownList subprocess={"Residentes"} href='residents'></DropDownList>
                                                     )}
                                                     {allowedPermissions.includes('Visitantes') && (
-                                                        <DropDownList subprocess={"Visitantes"} href='/#/admin/visitors'></DropDownList>
+                                                        <DropDownList subprocess={"Visitantes"} href='visitors'></DropDownList>
                                                     )}
                                                     {allowedPermissions.includes('Vehiculos') && (
-                                                        <DropDownList subprocess={"Vehiculos"} href='/#/admin/vehicle'></DropDownList>
+                                                        <DropDownList subprocess={"Vehiculos"} href='vehicle'></DropDownList>
                                                     )}
                                                 </>
 
@@ -185,13 +237,28 @@ export const Aside = () => {
                                         <DropDownNav module={"Espacios"}>
 
                                             {allowedPermissions.includes('Apartamentos') && (
-                                                <DropDownList subprocess={"Apartamentos"} href='/#/admin/apartments'></DropDownList>
+
+                                                (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador') ?
+                                                    < DropDownList subprocess={"Apartamentos"} href='apartments' />
+                                                    : (userRole === 'Residente' || userRole === 'Residentes') ?
+                                                        < DropDownList subprocess={"Apartamentos"} href={rutadetailsapartment} />
+                                                        : null
+
                                             )}
+
+                                            {/* {allowedPermissions.includes('Apartamentos') && (
+                                                (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                                    ? <ListNav module={'Apartamentos'} href='apartments' />
+                                                    : (userRole === 'Residente' || userRole === 'Residentes')
+                                                        ? <ListNav module={'Apartamentos'} href={rutadetailsapartment} />
+                                                        : null
+                                            )} */}
+
                                             {allowedPermissions.includes('Parqueaderos') && (
-                                                <DropDownList subprocess={"Parqueaderos"} href='/#/admin/parkingSpaces/'></DropDownList>
+                                                <DropDownList subprocess={"Parqueaderos"} href='parkingSpaces/'></DropDownList>
                                             )}
                                             {allowedPermissions.includes('Zona Comunes') && (
-                                                <DropDownList subprocess={"Zonas comunes"} href='/#/admin/spaces'></DropDownList>
+                                                <DropDownList subprocess={"Zonas comunes"} href='spaces'></DropDownList>
                                             )}
 
                                         </DropDownNav>
@@ -200,15 +267,19 @@ export const Aside = () => {
 
 
                                 {allowedPermissions.includes('Multas') && (
-                                    <ListNav module={'Multas'} href='/#/admin/fines' icon='fe fe-x-square fe-24' />
+                                    <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (
-                                    <ListNav module={'Usuarios'} href='/#/admin/users/' icon='fe fe-user' />
+                                    <ListNav module={'Usuarios'} href='users/' icon='fe fe-user' />
                                 )}
 
                                 {allowedPermissions.includes('Vigilantes') && (
-                                    <ListNav module={'Vigilantes'} href='/#/admin/watchman/' icon='fe fe-shield' />
+                                    (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                        ? <ListNav module={'Vigilantes'} href='watchman/' icon='fe fe-shield' />
+                                        : (userRole === 'Vigilante' || userRole === 'Vigilantes' || userRole === 'Seguridad')
+                                            ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
+                                            : null
                                 )}
 
                             </>
@@ -218,7 +289,7 @@ export const Aside = () => {
 
                     <div className='myNav-links-end'>
                         {allowedPermissions && (allowedPermissions.includes('Usuarios') || allowedPermissions.includes('Roles')) && (
-                            <ListNav module={'Configuración'} href='/#/admin/rols/' icon='fe fe-settings fe-24' />
+                            <ListNav module={'Configuración'} href='rols/' icon='fe fe-settings fe-24' />
                         )}
                         <ListNav module={'Salir'} onClick={e => {
                             e.preventDefault();

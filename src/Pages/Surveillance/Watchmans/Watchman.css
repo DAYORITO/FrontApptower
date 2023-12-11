@@ -1,20 +1,37 @@
 .container-icons-custom472 {
     display: flex;
     align-items: flex-start;
-    border: 2px solid #dbdbdb;
     border-radius: 10px;
-    padding: 20px;
+    padding: 13%;
+    padding-top: 16vh;
+    padding-bottom: 12vh;
     margin-top: 30px;
-    margin-left: 10px;
+    margin-left: 5px;
     max-width: 95%;
     width: 100%;
     background-color: #ffffff;
-    box-shadow: 5px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .container-icons-custom472 {
+        padding: 10%;
+        padding-top: 14vh;
+        padding-bottom: 10vh;
+    }
+}
+
+#datebutton {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 71%;
+    margin-bottom: 15px;
+
 }
 
 .circlecon-unique {
-    width: 80px;
-    height: 75px;
+    width: 60px;
+    height: 60px;
     padding-left: 7px;
     border-radius: 50%;
     background-color: #e9e9e9;
@@ -31,7 +48,38 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+
 .info-vs-custom {
     color: #333;
     font-family: Arial, sans-serif;
+}
+
+.custom-paragraph strong {
+    color: rgb(0, 0, 77);
+}
+
+
+
+
+
+
+
+.container-i {
+    color: #333;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.dateShifts {
+    width: 32%;
+    border: #969696 solid 1px;
+    border-radius: 5px;
+    padding: -5px;
+    margin-left: 92%;
+
+
+
 }
