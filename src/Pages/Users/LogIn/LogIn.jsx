@@ -10,9 +10,17 @@ import { useAuth } from '../../../Context/AuthContext';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
+import { createPortal } from 'react-dom';
+// import { hourglass } from 'ldrs'
+// import { set } from 'date-fns';
+
+// Default values shown
+
 
 
 const LoginForm = ({ setShowLoginForm }) => {
+    const [showModaload, setShowModaload] = useState(false);
     const { user, login, logout } = useAuth();
     const [username, setUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -25,7 +33,13 @@ const LoginForm = ({ setShowLoginForm }) => {
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
     const [idResidents, setIdResidents] = useState('');
+    console.log('idresidente', idResidents)
     console.log(userRole, 'userRole aqui en login');
+    const [idApartment, setIdapartaments] = useState('');
+    console.log(idApartment, 'idapartement')
+    console.log('documento', userDocument)
+    // hourglass.register()
+
 
     console.log('userData aqui en login:', userData);
 
@@ -53,7 +67,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
             const data = await response.json();
             setUserData(data);
-            SetUserDocument(data.document);
+            SetUserDocument(data.user.document);
 
         } catch (error) {
             console.error('Error fetching user information:', error);
@@ -89,23 +103,24 @@ const LoginForm = ({ setShowLoginForm }) => {
     }, [userData]);
 
 
-    fetch(`http://localhost:3000/api/residents/document/${userDocument}`)
+    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
         .then(response => response.json())
         .then(data => {
             if (data.residente) {
                 setIdResidents(data.residente.idResident);
 
-                fetch(`http://localhost:3000/api/apartments/${Number(data.residente.idResident)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.spartment) {
-                            setApartment(data.spartment.apartmentName);
-                            setIdapartaments(data.spartment.idApartment)
+            }
+        })
+        .catch(error => console.error('Error:', error));
 
-                            // navigate('/resident', {
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+
+    fetch(`http://localhost:3000/api/aparmentResidents/resident/${idResidents}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.apartmentResidents) {
+                setIdapartaments(data.apartmentResidents.idApartment)
+
+
             }
         })
         .catch(error => console.error('Error:', error));
@@ -114,6 +129,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
 
     const handleLogin = async (event) => {
+        setShowModaload(true)
 
         if (!username || !loginPassword) {
 
@@ -139,6 +155,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                 if (!response.ok) {
 
                     Swal.fire('Error de inicio de sesión 2', 'El usuario o la contraseña son incorrectos.', 'error');
+
                 }
 
                 const responseData = await response.json();
@@ -146,17 +163,23 @@ const LoginForm = ({ setShowLoginForm }) => {
 
                 if (responseData.message === 'Acceso denegado') {
                     Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
+
                 } else {
+
                     if (responseData.role.toLowerCase() === 'vigilante' || responseData.role.toLowerCase() === 'seguridad' || responseData.role.toLowerCase() === 'vigilantes') {
 
                         navigate('/admin/watchman/shifts');
+                        window.location.reload();
+
 
                     } else if (responseData.role.toLowerCase() === 'administrador' || responseData.role.toLowerCase() === 'admin' || responseData.role.toLowerCase() === 'super administrador') {
                         navigate('/admin/residents');
+                        window.location.reload();
+
                     }
                     else if (responseData.role.toLowerCase() === 'residente' || responseData.role.toLowerCase() === 'residentes') {
-                        navigate('/resident');
-
+                        navigate(`/admin/apartments/details/${idApartment}`);
+                        window.location.reload();
                     }
 
                 }
@@ -198,9 +221,32 @@ const LoginForm = ({ setShowLoginForm }) => {
                         </Link>
 
                     </form>
+                    {/* {showModaload &&
+                        createPortal(
+                            <>
+                                <ModalContainerload ShowModal={setShowModaload}>
+                                    <Modaload
+                                        showModal={setShowModaload}
+                                    >
+                                        <div className='d-flex justify-content-center'>
+                                            <l-hourglass
+                                                size="90"
+                                                bg-opacity="0.1"
+                                                speed="1.75"
+                                                color="#002266"
+                                            ></l-hourglass>
+                                        </div>
+
+
+                                    </Modaload>
+                                </ModalContainerload>
+                            </>,
+                            document.getElementById("modalRender")
+                        )} */}
                 </div>
             </div>
         </div>
+
     );
 };
 

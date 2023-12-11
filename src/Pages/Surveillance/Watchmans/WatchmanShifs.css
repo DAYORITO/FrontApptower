@@ -5,7 +5,7 @@
     border: 2px solid #afafaf;
     border-radius: 20px;
     padding: 18px;
-    margin-top: -20px;
+    margin-top: 1px;
     padding-left: 40px;
     margin-left: 6px;
     max-width: 96%;
@@ -106,7 +106,7 @@
 
 .container-historial {
     position: relative;
-    margin-top: -5px;
+    /* margin-top: -5px; */
 
 
 }

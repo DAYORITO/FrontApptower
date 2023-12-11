@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {docTypes, sexs} from "../../../Hooks/consts.hooks"
+import {docTypes, sexs} from "../../../Hooks/consts.hooks";
 import Inputs from "../../../Components/Inputs/Inputs";
 import FormButton from "../../../Components/Forms/FormButton";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";

@@ -11,12 +11,14 @@ import { useFetchget } from "../../../Hooks/useFetch"
 import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
 import { DivRow } from '../../../Components/DivRow/DivRow'
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 export const ParkingSpaces = () => {
 
-
+  const [allowedPermissions, setAllowedPermissions] = useState([]);
+  const token = Cookies.get('token');
 
   // 1. Start get all parking spaces
 
@@ -51,18 +53,64 @@ export const ParkingSpaces = () => {
 
 
 
+  useEffect(() => {
+    if (token) {
+      fetchUserPrivilegeAndPermission(token);
+    }
+  }, [token]);
+
+
+  //Consulta privilegios 
+  const fetchUserPrivilegeAndPermission = async (token) => {
+    try {
+      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user privileges');
+      }
+
+      const data = await response.json();
+      console.log(data, 'data');
+      console.log('Allowed Permissions hi:', data.privileges);
+
+      if (data && data.privileges && Array.isArray(data.privileges)) {
+        const allowed = {};
+        data.privileges.forEach(({ idpermission, idprivilege }) => {
+          const permissionName = idToPermissionName[idpermission];
+          const privilegeName = idToPrivilegesName[idprivilege];
+
+          if (!allowed[permissionName]) {
+            allowed[permissionName] = [];
+          }
+          allowed[permissionName].push(privilegeName);
+        });
+
+        setAllowedPermissions(allowed);
+      }
+    } catch (error) {
+      console.error('Error fetching user permissions:', error);
+    }
+  };
+
   return (
     <>
 
-      <ContainerTable title='Parqueaderos'>
+      <ContainerTable
+        title='Parqueaderos'
+        dropdown={<DropdownExcel />}
+        search={<SearchButton value={search} onChange={searcher} />}
+        buttonToGo={
+          allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear')
+            ? <ButtonGoTo value='Crear Parqueadero' href='create' />
+            : null
+        }
+      >
 
 
 
-        <DivRow>
-          <DropdownExcel />
-          <SearchButton value={search} onChange={searcher} />
-          <ButtonGoTo value='Crear Residente' href='create' />
-        </DivRow>
 
         <TablePerson>
           <Thead>
@@ -80,13 +128,15 @@ export const ParkingSpaces = () => {
                 name={"Parqueadero "}
                 lastName={parking.parkingName}
 
-                docType={(parking.parkingType == "Private")? "Privado": (parking.parkingType == "Public")? "Private": " "}
+                docType={(parking.parkingType == "Private") ? "Privado" : (parking.parkingType == "Public") ? "Publico" : " "}
                 status={parking.status}
                 op1={""}
                 op2={""}
 
               >
-                <Actions accion='Editar' />
+                {allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Editar') && (
+                  <Actions accion='Editar' />
+                )}
                 <Actions accion='Reservar' />
               </Row>
             ))}

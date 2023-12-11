@@ -334,6 +334,8 @@ const App = () => {
                                         <OwnersCreate /> : <NotFound />
                                 } />
 
+                                <Route path='owners/create/:id' element={<OwnersCreate />} />
+
 
 
                                 {/* Space */}
@@ -385,6 +387,8 @@ const App = () => {
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear') ?
                                         <ResidentCreate /> : <NotFound />
                                 } />
+
+                                <Route path='residents/create/:id' element={<ResidentCreate />} />
 
 
 

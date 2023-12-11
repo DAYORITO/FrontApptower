@@ -21,6 +21,10 @@ export const WatchmanShifts = () => {
     const [turnState, setTurnState] = useState('Fuera de turno');
     const [watchmanId, setWatchmanId] = useState(null);
     console.log(watchmanId, 'watchmanId')
+    const [watchmanName, setWatchmanName] = useState(null);
+    const [watchmanLastName, setWatchmanLastName] = useState(null);
+    const [stateWatchman, setStateWatchman] = useState(null);
+
 
 
     const [userData, setUserData] = useState({});
@@ -132,13 +136,16 @@ export const WatchmanShifts = () => {
 
     useEffect(() => {
         if (userData?.user && userData.user?.document) {
-            fetch(`http://localhost:3000/api/watchman/document/${userData.user.document}`)
+            fetch(`https://apptowerbackend.onrender.com/api/watchman/document/${userData.user.document}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.watchman) {
                         const watchmanId = data.watchman.idwatchman;
                         console.log('Watchman id holaaa:', watchmanId);
                         setWatchmanId(data.watchman.idwatchman);
+                        setWatchmanName(data.watchman.namewatchman)
+                        setWatchmanLastName(data.watchman.lastnamewatchman)
+                        setStateWatchman(data.watchman.state)
 
                     }
                 })
@@ -157,7 +164,7 @@ export const WatchmanShifts = () => {
                         </div>
                         <div class='info-v'>
                             <h2>Vigilante</h2>
-                            <p>Alfonso Gonzalez</p>
+                            <p>{`${watchmanName ? watchmanName : ''}  ${watchmanLastName ? watchmanLastName : ''}`}</p>
                         </div>
                         <div class='observation'>
                             <h4>Estado: {turnState}</h4>

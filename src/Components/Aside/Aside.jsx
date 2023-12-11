@@ -5,6 +5,7 @@ import { CardUserNav } from '../CardUserNav/CardUserNav';
 import { useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 export const Aside = () => {
     const { user, login, logout } = useAuth();
@@ -12,6 +13,14 @@ export const Aside = () => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);
     const [userData, setUserData] = useState({});
     const [userRole, setUserRole] = useState('');
+    const [userDocument, SetUserDocument] = useState('');
+    const [idResidents, setIdResidents] = useState('');
+    console.log(userRole, 'userRole aqui en login');
+    const [idApartment, setIdapartaments] = useState('');
+    console.log(idApartment, 'idapartement')
+    console.log('documento', userDocument)
+    console.log(idResidents, 'holaaaaaa id')
+    console.log('userData aqui en login:', userData);
 
 
     useEffect(() => {
@@ -58,6 +67,7 @@ export const Aside = () => {
 
             const data = await response.json();
             setUserData(data);
+            SetUserDocument(data.user.document);
 
         } catch (error) {
             console.error('Error fetching user information:', error);
@@ -93,6 +103,48 @@ export const Aside = () => {
             fechDataRols();
         }
     }, [userData]);
+
+
+
+
+
+    const redireccion = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+
+            fetchUserInformation(token);
+        }
+    }, [token]);
+
+
+
+
+
+    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.residente) {
+                setIdResidents(data.residente.idResident);
+
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+
+    fetch(`http://localhost:3000/api/aparmentResidents/resident/${idResidents}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.apartmentResidents) {
+                setIdapartaments(data.apartmentResidents.idApartment)
+
+
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+
+    const rutadetailsapartment = `apartments/details/${idApartment}`
 
 
 
@@ -185,8 +237,23 @@ export const Aside = () => {
                                         <DropDownNav module={"Espacios"}>
 
                                             {allowedPermissions.includes('Apartamentos') && (
-                                                <DropDownList subprocess={"Apartamentos"} href='apartments'></DropDownList>
+
+                                                (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador') ?
+                                                    < DropDownList subprocess={"Apartamentos"} href='apartments' />
+                                                    : (userRole === 'Residente' || userRole === 'Residentes') ?
+                                                        < DropDownList subprocess={"Apartamentos"} href={rutadetailsapartment} />
+                                                        : null
+
                                             )}
+
+                                            {/* {allowedPermissions.includes('Apartamentos') && (
+                                                (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                                    ? <ListNav module={'Apartamentos'} href='apartments' />
+                                                    : (userRole === 'Residente' || userRole === 'Residentes')
+                                                        ? <ListNav module={'Apartamentos'} href={rutadetailsapartment} />
+                                                        : null
+                                            )} */}
+
                                             {allowedPermissions.includes('Parqueaderos') && (
                                                 <DropDownList subprocess={"Parqueaderos"} href='parkingSpaces/'></DropDownList>
                                             )}

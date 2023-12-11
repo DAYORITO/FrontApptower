@@ -197,17 +197,17 @@ export const Watchman = () => {
 
     return (
         <>
-            <ContainerTable title='Vigilantes'>
-                <DropdownExcel />
-                <SearchButton value={search} onChange={searcher} />
 
-                {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') && (
-                    <ButtonGoTo
-                        value='Crear Vigilante'
-                        href='/admin/users/create'
-                    />
-                )}
-
+            <ContainerTable
+                title='Vigilantes'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton value={search} onChange={searcher} />}
+                buttonToGo={
+                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear')
+                        ? <ButtonGoTo value='Crear Vigilante' href='/admin/users/create' />
+                        : null
+                }
+            >
 
                 <TablePerson>
                     <Thead>
@@ -222,13 +222,14 @@ export const Watchman = () => {
 
                         {filterData?.map(watchman => (
                             <Row
+                                icon='shield'
                                 key={watchman.idwatchman}
                                 docType={watchman.documentType}
                                 docNumber={watchman.document}
                                 name={watchman.namewatchman}
                                 lastName={watchman.lastnamewatchman}
-                                phone={watchman.phone}
-                                email={watchman.email}
+                                tel={watchman.phone}
+                                corr={watchman.email}
                                 status={watchman.state}
 
 

@@ -12,7 +12,7 @@ export const idToPermissionName = {
     11: 'Multas',
     12: 'Notificaciones',
     13: 'Ingresos',
-   
+
 
 }
 

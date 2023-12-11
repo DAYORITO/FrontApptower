@@ -16,23 +16,26 @@ export const Rols = () => {
 
     return (
         <>
-            <ContainerTable title='Roles'>
+            {/* <ContainerTable title='Roles'>
                 <DropdownExcel />
 
-                <ButtonGoTo value='Crear Rol' href='/admin/rols/create' />
+                <ButtonGoTo value='Crear Rol' href='/admin/rols/create' /> */}
+
+            <ContainerTable title='Roles'
+                dropdown={<DropdownExcel />}
+                buttonToGo={<ButtonGoTo value='Crear Rol' href='create' />}
+            >
                 <TablePerson>
                     <Thead>
                         <Th name={'Nombre Rol'} ></Th>
                         <Th name={'Descripción'}></Th>
-
-                        <Th></Th>
-
                     </Thead>
                     <Tbody>
 
 
                         {data.rols?.map(rols => (
                             <Row
+                                icon='settings'
                                 key={rols.idrole}
                                 namerole={rols.namerole}
                                 descripcion={rols.description}

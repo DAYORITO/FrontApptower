@@ -26,7 +26,9 @@ export const Row = ({
     file,
     to = "details",
     start,
-    end
+    end,
+    tel,
+    corr
 
 }) => {
 
@@ -48,12 +50,15 @@ export const Row = ({
                 </td>
 
                 <th scope="row">
+                    {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
                     {start != null ? <td class="text-secondary">{start}</td> : null}
                     {end != null ? <td class="text-secondary">{end}</td> : null}
-                    {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
                     {name != null & name != null ? name + ' ' + lastName : null} <br />
+                    {op6 != null ? <span className="badge badge-light text-primary">{op6}</span> : null}
+
+
                     {docType != null ? <span className="badge badge-light text-secondary">{docType}</span> : null}
-                    {docNumber != null ? <em class="text-muted ml-2">{docNumber}</em> : null}
+                    {docNumber != null ? <span class="badge badge-white text-secondary">{docNumber}</span> : null}
 
 
                 </th>
@@ -61,8 +66,18 @@ export const Row = ({
             </Link>
 
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
-            {email != null ? <td class="text-secondary">{email}</td> : null}
-            {phone != null ? <td class="text-secondary">{phone}</td> : null}
+            {tel != null ? <td class="text-secondary">{tel}</td> : null}
+            {corr != null ? <td class="text-secondary">{corr}</td> : null}
+
+
+
+
+            {email != null ? <td class="text-secondary"> <span className="badge badge-white text-secondary">Correo</span><em class="text-muted ml-2">{email}</em><br />
+                <span className="badge badge-white text-secondary">Telefono</span><em class="text-muted ml-2">{phone}</em>
+            </td> : null}
+            {phone != null ? <td class="text-secondary"></td> : null}
+
+
             {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
 
 
@@ -76,7 +91,6 @@ export const Row = ({
             {op3 != null ? <td class="text-secondary">{op3}</td> : null}
             {op4 != null ? <td class="text-secondary">{op4}</td> : null}
             {op5 != null ? <td class="text-secondary">{op5}</td> : null}
-            {op6 != null ? <td class="text-secondary">{op6}</td> : null}
 
 
             <td>

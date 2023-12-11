@@ -195,7 +195,13 @@ export const RolsEditNew = () => {
                         onChange={(e) => setEditedRols({ ...editedRols, namerole: e.target.value })}
                     />
 
-                    <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedRols?.state || ''} onChange={(e) => setEditedRols({ ...editedRols, state: e.target.value })}></InputsSelect>
+                    <InputsSelect
+                        id={"select"}
+                        options={estado}
+                        name={"Estado"}
+                        value={editedRols?.state || ''}
+                        onChange={(e) => setEditedRols({ ...editedRols, state: e.target.value })} ></InputsSelect>
+
                 </FormColumn>
 
                 <FormColumn>

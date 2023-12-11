@@ -128,22 +128,27 @@ export const Users = () => {
 
     return (
         <>
-            <ContainerTable title='Usuarios'>
-                <DropdownExcel />
-                <SearchButton value={search} onChange={searcher} />
-                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') && (
-                    <ButtonGoTo
-                        value='Crear Usuario'
-                        href='/admin/users/create'
-                    />
-                )}
+
+            <ContainerTable
+                title='Usuarios'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton value={search} onChange={searcher} />}
+                buttonToGo={
+                    allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear')
+                        ? <ButtonGoTo value='Crear Usuario' href='create' />
+                        : null
+                }
+            >
 
                 <TablePerson>
                     <Thead>
                         <Th name={'Información Usuario'}></Th>
                         <Th name={'Rol'}></Th>
-                        <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
+                        <Th name={'Correo'}></Th>
+
+
+
                         <Th></Th>
                     </Thead>
                     <Tbody>
@@ -158,8 +163,8 @@ export const Users = () => {
                                 rol={
                                     roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
-                                email={user.email}
-                                phone={user.phone}
+                                corr={user.email}
+                                tel={user.phone}
                                 status={user.state}
                             >
 

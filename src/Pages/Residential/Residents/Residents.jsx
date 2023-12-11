@@ -9,52 +9,115 @@ import { Actions } from '../../../Components/Actions/Actions'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { useFetchget } from '../../../Hooks/useFetch'
 import { useAuth } from '../../../Context/AuthContext'
+import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 
 
 export const Residents = () => {
-    const { user, isAuth } = useAuth();
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+    const token = Cookies.get('token');
+
 
     const { data, load, error } = useFetchget('residents')
     // console.log(data.apartments)
+
+
+
+    useEffect(() => {
+        if (token) {
+            fetchUserPrivilegeAndPermission(token);
+        }
+    }, [token]);
+
+
+    //Consulta privilegios 
+    const fetchUserPrivilegeAndPermission = async (token) => {
+        try {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user privileges');
+            }
+
+            const data = await response.json();
+            console.log(data, 'data');
+            console.log('Allowed Permissions hi:', data.privileges);
+
+            if (data && data.privileges && Array.isArray(data.privileges)) {
+                const allowed = {};
+                data.privileges.forEach(({ idpermission, idprivilege }) => {
+                    const permissionName = idToPermissionName[idpermission];
+                    const privilegeName = idToPrivilegesName[idprivilege];
+
+                    if (!allowed[permissionName]) {
+                        allowed[permissionName] = [];
+                    }
+                    allowed[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowed);
+            }
+        } catch (error) {
+            console.error('Error fetching user permissions:', error);
+        }
+    };
     return (
         <>
 
-            <ContainerTable title='Residentes'>
+            <ContainerTable
+                title='Residentes'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton />}
+                buttonToGo={
+                    allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear')
+                        ? <ButtonGoTo value='Crear Residente' href='create' />
+                        : null
+                }
+            >
 
-                <DivRow>
-                    <DropdownExcel />
-                    <SearchButton />
-                    <ButtonGoTo value='Crear Residente' href='create' />
-                </DivRow>
 
                 <TablePerson>
                     <Thead>
-                        <Th name={"Informacion del residente"} />
 
-                        <Th name={'Correo'}></Th>
-                        <Th name={'Telefono'}></Th>
-                        <Th />
-                        <Th />
+                        <Th name={"Informacion del residente"} />
+                        <Th name={'Informacion de contacto'}></Th>
 
                     </Thead>
                     <Tbody>
                         {data.residents?.map(residents => (
                             <Row
-                            to={`details/${residents.idResident}`}
-                                docType={residents.docType}
-                                docNumber={residents.docNumber}
+
+                                // Personal information
                                 name={residents.name}
                                 lastName={residents.lastName}
-                                phone={residents.phoneNumber}
+                                docType={residents.docType}
+                                docNumber={residents.docNumber}
+                                op6={residents.residentType == "owner" ? "Propietario" : "Arrendatario"}
+
+                                // Contact information
                                 email={residents.email}
-                                file={residents.pdf}
+                                phone={residents.phoneNumber}
+
+                                // Others 
+
+                                to={`details/${residents.idResident}`}
+                                status={residents.status}
+
+
+                            // file={residents.pdf}
                             >
-                                <Actions accion='Editar' />
-                                <Actions accion='Reservar' />
+                                <Actions icon='download' href={residents.pdf} accion='Descargar pdf' />
+
+                                {allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Editar') && (
+                                    <Actions accion='Editar' />
+                                )}
                             </Row>
                         ))}
-
 
 
                     </Tbody>

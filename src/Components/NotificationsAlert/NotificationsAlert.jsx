@@ -1,7 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-export const NotificationsAlert = ({msg}) => {
+export const NotificationsAlert = ({ msg, to }) => {
     return (
-        <div class="alert alert-warning" role="alert">
-            <span class="fe fe-alert-triangle fe-16 mr-2"></span> {msg} </div>)
-}
+        <div className="alert alert-warning" role="alert">
+            <span className="fe fe-alert-triangle fe-16 mr-2"></span>
+            {to && <Link to={to}>Has click aquí</Link>}
+            {msg && `${msg} `}
+        </div>
+    );
+};

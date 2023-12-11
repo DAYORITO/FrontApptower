@@ -11,10 +11,14 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 
 
 export const Apartments = () => {
+  const token = Cookies.get('token');
+  const [allowedPermissions, setAllowedPermissions] = useState([]);
 
   // Get Data
 
@@ -42,15 +46,61 @@ export const Apartments = () => {
   }
 
 
+  useEffect(() => {
+    if (token) {
+      fetchUserPrivilegeAndPermission(token);
+    }
+  }, [token]);
+
+
+  //Consulta privilegios 
+  const fetchUserPrivilegeAndPermission = async (token) => {
+    try {
+      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user privileges');
+      }
+
+      const data = await response.json();
+      console.log(data, 'data');
+      console.log('Allowed Permissions hi:', data.privileges);
+
+      if (data && data.privileges && Array.isArray(data.privileges)) {
+        const allowed = {};
+        data.privileges.forEach(({ idpermission, idprivilege }) => {
+          const permissionName = idToPermissionName[idpermission];
+          const privilegeName = idToPrivilegesName[idprivilege];
+
+          if (!allowed[permissionName]) {
+            allowed[permissionName] = [];
+          }
+          allowed[permissionName].push(privilegeName);
+        });
+
+        setAllowedPermissions(allowed);
+      }
+    } catch (error) {
+      console.error('Error fetching user permissions:', error);
+    }
+  };
+
   return (
     <>
+      <ContainerTable
+        title='Apartamentos'
+        dropdown={<DropdownExcel />}
+        search={<SearchButton value={search} onChange={searcher} />}
+        buttonToGo={
+          allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
+            ? <ButtonGoTo value='Crear Apartamentos' href='create' />
+            : null
+        }
+      >
 
-      <ContainerTable title='Apartamentos'>
-        <DivRow>
-          <DropdownExcel />
-          <SearchButton value={search} onChange={searcher} />
-          <ButtonGoTo value='Crear Residente' href='create' />
-        </DivRow>
 
         <TablePerson>
           <Thead>
@@ -80,7 +130,9 @@ export const Apartments = () => {
                 to={`details/${apartment.idApartment}`}
 
               >
-                <Actions accion='Editar' />
+                {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') && (
+                  <Actions accion='Editar' />
+                )}
               </Row>
             ))}
 
@@ -90,7 +142,7 @@ export const Apartments = () => {
         </TablePerson>
       </ContainerTable>
 
-      
+
 
     </>)
 }
