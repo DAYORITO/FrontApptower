@@ -28,7 +28,7 @@ import { format } from 'date-fns';
 import Swal from 'sweetalert2'
 
 
-import { filterGuestIncomes, handleRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import { filterFines, filterGuestIncomes, handleRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 
 
@@ -64,11 +64,11 @@ export const ApartmentDetails = (props) => {
     const { data: apartmentOwners, get: getApartmentOwners, del: delApartmentOwners } = useFetch(url)
     const { data: assignedParkingSpaces, post, get: getAssignedParkingSpaces, del: delAssignedParkingSpaces } = useFetch(url)
     const { data: guestIncomes, get: getGuestIncomes } = useFetch(url)
+    const { data: fines, get: getFines } = useFetch(url)
 
     // Parking spaces
 
     const [idParkingSpace, setIdParkingSpace] = useState("");
-
 
     // List
 
@@ -99,11 +99,15 @@ export const ApartmentDetails = (props) => {
     const [statusApartmentOwner, setStatusApartmentOwner] = useState("");
 
 
-    // Searcher
+    // Searcher icnomes
 
     const [search, setSearch] = useState('');
     let guestIncomesbyApartment = filterGuestIncomes(search, guestIncomes); // Don't drop
 
+    // Seacher fines
+
+    const [searchFine, setSearchFine] = useState('');
+    let fineByApartment = filterFines(searchFine, fines); 
 
     useEffect(() => {
 
@@ -122,6 +126,7 @@ export const ApartmentDetails = (props) => {
         getApartmentOwners(`apartmentOwners/${id}`)
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
         getGuestIncomes(`guestIncome/byApartment/${id}`)
+        getFines(`fines/byApartment/${id}`)
 
         // List
 
@@ -141,6 +146,12 @@ export const ApartmentDetails = (props) => {
         console.log(e.target.value);
     }
 
+    const searcherFines = (e) => {
+        setSearchFine(e.target.value);
+        console.log(e.target.value);
+    }
+
+
     // Modal edit apartment owner
 
     const handleModalEditApartmentResident = (data) => {
@@ -153,14 +164,8 @@ export const ApartmentDetails = (props) => {
         setResidentEndDate(data.residentEndDate)
         setStateApartmentResident(data.status)
         console.log(residentStartDate)
-        // setIdOwner(data.idOwner)
-        // setOwnershipStartDate(data.OwnershipStartDate)
-        // setOwnershipEndDate(data.OwnershipEndDate)
-        // setStatusApartmentOwner(data.status)
-
 
         setShowApartmentResidentEditModal(true)
-
 
     }
     // Modal edit apartment owner
@@ -259,9 +264,6 @@ export const ApartmentDetails = (props) => {
                 label: `${parking.parkingName} - ${parking.parkingType}`
             }))
         : [];
-
-
-
 
 
 
@@ -595,7 +597,43 @@ export const ApartmentDetails = (props) => {
                         </TablePerson>
 
                     </TableDetails>
+                    <TableDetails index={3} toggleState={toggleState} >
+                        <TablePerson>
+                            <DetailsActions>
+                                <SearchButton value={searchFine} onChange={searcherFines} />
+                                <ButtonGoTo value="Nueva multa" href={'/admin/fines/create'} />
+                            </DetailsActions>
 
+                            {
+                                fineByApartment && fineByApartment.length > 0 ? (
+                                    fineByApartment.map((fine, index) => (
+
+                                        <div className='mt-2'>
+                                            <RowNotificactions
+
+                                                // Information
+                                                icon="x-square"
+                                                name={`${fine.fineType}`}
+                                                lastName={``}
+                                                date={format(new Date(fine.createdAt), 'dd MMMM yyyy HH:mm:ss')}
+                                                msg={`${fine.details}`}
+
+                                            // status="Active"
+
+                                            ></RowNotificactions>
+                                        </div>
+
+                                    ))
+                                ) : (
+                                    <div className='mt-4 ml-2'>
+                                        <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} />
+
+                                    </div>
+                                )}
+
+                        </TablePerson>
+
+                    </TableDetails>
 
                 </ListsDetails>
             </Details >
