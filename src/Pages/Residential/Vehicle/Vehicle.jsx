@@ -91,6 +91,7 @@ export const Vehicle = () => {
                 <Row
                 icon='truck'
                   name={vehicles.licenseplate}
+                  lastName={''}
                   status={vehicles.state}
                   op2={vehicles.description}
                   op3={vehicles.Apartment.apartmentName}
