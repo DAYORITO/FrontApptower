@@ -2,9 +2,9 @@
 
 import "./ModalTwo.css";
 
-export const ModalContainer = ({ children, ShowModal }) => {
+export const ModalContainer = ({ children, showModal }) => {
   return (
-    <div className={`modal__container `} onClick={() => ShowModal(false)}>
+    <div className={`modal__container `} onClick={() => showModal(false)}>
       {children}
     </div>
   );

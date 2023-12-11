@@ -121,10 +121,11 @@ function Visitors() {
 
     return (
         <>
-            <ContainerTable title='Visitantes'>
-                <DropdownExcel />
-                <SearchButton />
-                <ButtonGoTo value='Crear Visitante' href='/admin/visitors/create' />
+            <ContainerTable title='Visitantes'
+              dropdown={<DropdownExcel />}
+              search={<SearchButton />}
+              buttonToGo={<ButtonGoTo value='Crear Visitante' href='/admin/visitors/create' />}
+            >
                 <TablePerson>
                     <Thead>
                     
