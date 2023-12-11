@@ -41,8 +41,8 @@ export const ResidentCreate = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/residents';
-    const url = 'http://localhost:3000/api/residents';
+    const url = 'https://apptowerbackend.onrender.com/api/residents';
+    // const url = 'http://localhost:3000/api/residents';
     const data = {
       pdf,
       docType,

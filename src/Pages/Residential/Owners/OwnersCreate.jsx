@@ -44,8 +44,8 @@ export const OwnersCreate = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/owners';
-    const url = 'http://localhost:3000/api/owners';
+    const url = 'https://apptowerbackend.onrender.com/api/owners';
+    // const url = 'http://localhost:3000/api/owners';
     const data = {
       pdf,
       docType,

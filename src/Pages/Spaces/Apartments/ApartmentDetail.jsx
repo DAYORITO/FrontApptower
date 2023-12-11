@@ -28,7 +28,7 @@ import { format } from 'date-fns';
 import Swal from 'sweetalert2'
 
 
-import { filterGuestIncomes } from '../../../Helpers/Helpers'
+import { filterFines, filterGuestIncomes, handleRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 
 
@@ -37,8 +37,8 @@ export const ApartmentDetails = (props) => {
 
     // API URL
 
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
+    // const url = "http://localhost:3000/api/"
+    const url = "https://apptowerbackend.onrender.com/api/"
 
     // Apartment information
 
@@ -54,24 +54,27 @@ export const ApartmentDetails = (props) => {
     const [idResident, setIdResident] = useState("");
     const [residentStartDate, setResidentStartDate] = useState("");
     const [residentEndDate, setResidentEndDate] = useState("");
+    const [statusApartmentResident, setStateApartmentResident] = useState("");
+
 
     // Apartments relations
 
-    const { data: apartment, get: getApartment } = useFetch(url)
+    const { data: apartment, put, get: getApartment } = useFetch(url)
     const { data: apartmentResidents, get: getApartmentResidents, del: delApartmentResidents } = useFetch(url)
     const { data: apartmentOwners, get: getApartmentOwners, del: delApartmentOwners } = useFetch(url)
     const { data: assignedParkingSpaces, post, get: getAssignedParkingSpaces, del: delAssignedParkingSpaces } = useFetch(url)
     const { data: guestIncomes, get: getGuestIncomes } = useFetch(url)
+    const { data: fines, get: getFines } = useFetch(url)
 
     // Parking spaces
 
     const [idParkingSpace, setIdParkingSpace] = useState("");
 
-
     // List
 
     const { data: apartments, get: getApartments } = useFetch(url)
     const { data: residents, get: getResidents } = useFetch(url)
+    const { data: owners, get: getOwners } = useFetch(url)
     const { data: parkingSpaces, get: getParkingSpaces } = useFetch(url)
 
 
@@ -82,11 +85,29 @@ export const ApartmentDetails = (props) => {
     const [showParkingSpacesModal, setShowParkingSpacesModal] = useState(false);
     const [showApartmentResidentsModal, setShowApartmentResidentsModal] = useState(false);
 
-    // Searcher
+    const [showApartmentOwnermODAL, setShowApartmentOwnermODAL] = useState(false);
+    const [showApartmentResidentEditModal, setShowApartmentResidentEditModal] = useState(false);
+
+    const [editingParkingSpace, setEditingParkingSpace] = useState(null);
+
+
+    // Apartment owners
+
+    const [idOwner, setIdOwner] = useState("");
+    const [OwnershipStartDate, setOwnershipStartDate] = useState("");
+    const [OwnershipEndDate, setOwnershipEndDate] = useState("");
+    const [statusApartmentOwner, setStatusApartmentOwner] = useState("");
+
+
+    // Searcher icnomes
 
     const [search, setSearch] = useState('');
     let guestIncomesbyApartment = filterGuestIncomes(search, guestIncomes); // Don't drop
 
+    // Seacher fines
+
+    const [searchFine, setSearchFine] = useState('');
+    let fineByApartment = filterFines(searchFine, fines); 
 
     useEffect(() => {
 
@@ -105,11 +126,14 @@ export const ApartmentDetails = (props) => {
         getApartmentOwners(`apartmentOwners/${id}`)
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
         getGuestIncomes(`guestIncome/byApartment/${id}`)
+        getFines(`fines/byApartment/${id}`)
 
         // List
 
         getApartments('apartments')
         getResidents('residents')
+        getOwners('owners')
+
         getParkingSpaces("parkingSpaces")
 
     }, [apartment?.data?.spartment])
@@ -122,7 +146,46 @@ export const ApartmentDetails = (props) => {
         console.log(e.target.value);
     }
 
+    const searcherFines = (e) => {
+        setSearchFine(e.target.value);
+        console.log(e.target.value);
+    }
 
+
+    // Modal edit apartment owner
+
+    const handleModalEditApartmentResident = (data) => {
+
+
+        console.log(data)
+
+        setIdResident(data.idResident)
+        setResidentStartDate(data.residentStartDate)
+        setResidentEndDate(data.residentEndDate)
+        setStateApartmentResident(data.status)
+        console.log(residentStartDate)
+
+        setShowApartmentResidentEditModal(true)
+
+    }
+    // Modal edit apartment owner
+
+    const handleModalEditApartmentOwner = (data) => {
+
+
+        console.log(data)
+
+        setIdOwner(data.idOwner)
+        setOwnershipStartDate(data.OwnershipStartDate)
+        setOwnershipEndDate(data.OwnershipEndDate)
+        setStatusApartmentOwner(data.status)
+
+        console.log(OwnershipStartDate)
+
+        setShowApartmentOwnermODAL(true)
+
+
+    }
 
     // Modal edit apartment
 
@@ -139,6 +202,17 @@ export const ApartmentDetails = (props) => {
         setShowParkingSpacesModal(true)
 
     }
+
+    const handleEditParkingSpaceModal = (data) => {
+
+        console.log(data)
+        setIdParkingSpace(data.idParkingSpace)
+        console.log(idParkingSpace)
+        console.log(data.idParkingSpace)
+
+        setShowParkingSpacesModal(true);
+    };
+
 
     // Modal create apartmentresident
     const handleApartmentResidentsModal = () => {
@@ -168,6 +242,16 @@ export const ApartmentDetails = (props) => {
             }))
         : [];
 
+    // List owners
+
+    const OwnersList = owners && owners?.data?.owners
+        ? owners?.data?.owners
+            .map(owner => ({
+                value: owner.idOwner,
+                label: ` ${owner.name} ${owner.lastName} - ${owner.docNumber}`
+            }))
+        : [];
+
 
     // List ParkingSpaces
 
@@ -183,187 +267,110 @@ export const ApartmentDetails = (props) => {
 
 
 
-    // Apartment residents create
+    // Create ApartmentResidents 
 
-    const handleCreateApartmentPerResidentExist = async (event) => {
-        try {
-            event.preventDefault();
-
-            const data = {
-                idApartment,
-                idResident,
-                residentStartDate,
-            };
-
-            console.log('Data:', data);
-
-            const { response, error } = await useFetchpostFile(`http://localhost:3000/api/aparmentResidents`, data);
-
-            if (response) {
-                console.log('Response:', response);
-
-                Swal.fire({
-                    title: 'Éxito',
-                    text: `Agregaste un residente al apartamento ${apartmentName} exitosamente`,
-                    icon: 'success',
-                }).then(() => {
-                    setShowApartmentResidentsModal(false);
-                    getApartmentResidents(`aparmentResidents/${id}`);
-                });
-            }
-
-            if (error) {
-                console.error('Hubo un error:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al crear apartamento',
-                    icon: 'error',
-                });
-            }
-        } catch (error) {
-            console.error('Error inesperado:', error);
-        }
-    };
-
-
-
-    // const [editedUser, setEdit] = useState(null);
-
-
-
-    const handleCreateAssignedParking = async (event) => {
-
-        event.preventDefault();
+    const handleCreateApartmentPerResidentExist = (event) => {
 
         const data = {
 
             idApartment,
-            idParkingSpace,
-
+            idResident,
+            residentStartDate,
+            // Add other properties as needed for different requests
         };
 
-        console.log('Data:', data);
-        // post("assignedParkingSpaces", data);
-        const { response, error } = await useFetchpostFile(`http://localhost:3000/api/assignedParkingSpaces`, data);
+        handleRequest(event, 'aparmentResidents', `Agregaste un residente al apartamento ${apartmentName} exitosamente`, setShowApartmentResidentsModal, data, url);
 
+    };
 
-        if (response) {
-            console.log('Response:', response);
+    // create assignedparkingspace 
 
-            Swal.fire({
-                title: 'Éxito',
-                text: `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`,
-                icon: 'success',
-            }).then(() => {
+    const handleCreateAssignedParking = (event) => {
 
+        const data = {
 
-                setShowParkingSpacesModal(false);
-                getAssignedParkingSpaces(`assignedParkingSpaces/${id}`);
+            idApartment,
+            idParkingSpace
 
-            });
-        }
-
-        if (error) {
-            console.log('Hubo un error');
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al crear apartamento',
-                icon: 'error',
-            });
-        }
+        };
+        handleRequest(event, 'assignedParkingSpaces', `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`, setShowParkingSpacesModal, data, url);
     };
 
 
-    // delete Apartmentresident 
+
+
+
+
+    // Delete apartmentresident
 
     const deleteResidentApartment = async (id) => {
-        try {
-            const result = await Swal.fire({
-                title: '¿Estas seguro?',
-                text: "Esta accion no es reversible",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Eliminar'
-            });
+        const deleteFunction = async () => {
+            await delApartmentResidents('aparmentResidents', { idApartmentResident: id });
+        };
 
-            if (result.isConfirmed) {
-
-
-                await delApartmentResidents('aparmentResidents', { idApartmentResident: id });
-
-                Swal.fire(
-                    'Eliminado',
-                    'Eliminaste el residente',
-                    'success'
-                );
-            }
-        } catch (error) {
-            console.error("Error al eliminar residente:", error);
-        }
+        showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
     };
 
-    // Delete apartmentowner 
+    // Delete apartmentowner
+
 
     const deleteApartmentOwner = async (id, idApartment) => {
-        try {
-            const result = await Swal.fire({
-                title: '¿Estas seguro?',
-                text: "Esta accion no es reversible",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Eliminar'
-            });
+        const deleteFunction = async () => {
+            await delApartmentOwners('apartmentOwners', { idApartmentOwner: id });
+        };
 
-            if (result.isConfirmed) {
-
-
-                await delApartmentOwners('apartmentOwners', { idApartmentOwner: id });
-
-                Swal.fire(
-                    'Eliminado',
-                    'Eliminaste el propietario',
-                    'success'
-                );
-            }
-        } catch (error) {
-            console.error("Error al eliminar propietario:", error);
-        }
+        showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
     };
 
-    // Delete assignedparkingspace 
+    // delete assigned parking space
 
     const deleteParkingSpace = async (id) => {
-        try {
-            const result = await Swal.fire({
-                title: '¿Estas seguro?',
-                text: "Esta accion no es reversible",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Eliminar'
-            });
+        const deleteFunction = async () => {
+            await delAssignedParkingSpaces('assignedParkingSpaces', { idAssignedParking: id });
+        };
 
-            if (result.isConfirmed) {
-
-
-                await delAssignedParkingSpaces('assignedParkingSpaces', { idAssignedParking: id });
-
-                Swal.fire(
-                    'Eliminado',
-                    'Eliminaste el propietario',
-                    'success'
-                );
-            }
-        } catch (error) {
-            console.error("Error al eliminar propietario:", error);
-        }
+        showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
     };
 
+
+    // const handleEditSubmit = async (event) => {
+    //     event.preventDefault();
+    //     // const url = 'https://apptowerbackend.onrender.com/api/apartments';
+    //     const url = 'http://localhost:3000/api/apartments';
+    //     const data = {
+    //         tower,
+    //         floorNumber,
+    //         apartmentsFloor,
+    //         area,
+    //         status
+    //     };
+
+    //     console.log('Data:', data);
+
+    //     put("apartments", data)
+    //     // const { response, error } = await useFetchpostFile(url, data);
+
+    //     if (response) {
+    //         console.log('Response:', response);
+    //         Swal.fire({
+    //             title: 'Éxito',
+    //             text: 'Apartamento creado creado exitosamente',
+    //             icon: 'success',
+    //         }).then(() => {
+
+    //             navigate('/admin/apartments');
+    //         });
+    //     }
+
+    //     if (error) {
+    //         console.log('Hubo un error');
+    //         Swal.fire({
+    //             title: 'Error',
+    //             text: 'Error al crear apartamento',
+    //             icon: 'error',
+    //         });
+    //     }
+    // };
 
 
 
@@ -417,7 +424,9 @@ export const ApartmentDetails = (props) => {
                                                 deleteApartmentOwner(owner.idApartmentOwner)
                                             }}
 
+                                            onClickModal={() => handleModalEditApartmentOwner(owner)}
                                         >
+
                                         </Dropdownanchor>
                                     </>
 
@@ -456,6 +465,9 @@ export const ApartmentDetails = (props) => {
                                             console.log('Eliminar residente con ID:', { key: resident.idApartmentResident });
                                             deleteResidentApartment(resident.idApartmentResident)
                                         }}
+
+                                        onClickModal={() => handleModalEditApartmentResident(resident)}
+
                                     ></Dropdownanchor>
 
                                 ))
@@ -492,7 +504,10 @@ export const ApartmentDetails = (props) => {
                                         onClick={() => {
                                             console.log('id', { idAssignedParking: parking.idAssignedParking });
                                             deleteParkingSpace(parking.idAssignedParking)
+
                                         }}
+
+                                        onClickModal={() => handleEditParkingSpaceModal(parking)}
 
                                     ></Dropdownanchor>
                                 ))
@@ -538,10 +553,8 @@ export const ApartmentDetails = (props) => {
                                 <ButtonGoTo value="Nuevo notificacion" href={"notificaciones/"} />
                             </DetailsActions> */}
 
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions />
+                            <RowNotificactions date='2023/12/10' name='Bill' lastName='Gates' msg='Va llegar a las 3:00PM, por favor dejelo pasar' />
+
 
 
                         </TablePerson>
@@ -584,7 +597,43 @@ export const ApartmentDetails = (props) => {
                         </TablePerson>
 
                     </TableDetails>
+                    <TableDetails index={3} toggleState={toggleState} >
+                        <TablePerson>
+                            <DetailsActions>
+                                <SearchButton value={searchFine} onChange={searcherFines} />
+                                <ButtonGoTo value="Nueva multa" href={'/admin/fines/create'} />
+                            </DetailsActions>
 
+                            {
+                                fineByApartment && fineByApartment.length > 0 ? (
+                                    fineByApartment.map((fine, index) => (
+
+                                        <div className='mt-2'>
+                                            <RowNotificactions
+
+                                                // Information
+                                                icon="x-square"
+                                                name={`${fine.fineType}`}
+                                                lastName={``}
+                                                date={format(new Date(fine.createdAt), 'dd MMMM yyyy HH:mm:ss')}
+                                                msg={`${fine.details}`}
+
+                                            // status="Active"
+
+                                            ></RowNotificactions>
+                                        </div>
+
+                                    ))
+                                ) : (
+                                    <div className='mt-4 ml-2'>
+                                        <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} />
+
+                                    </div>
+                                )}
+
+                        </TablePerson>
+
+                    </TableDetails>
 
                 </ListsDetails>
             </Details >
@@ -594,7 +643,7 @@ export const ApartmentDetails = (props) => {
                     <>
                         <ModalContainer ShowModal={setShowModalEditApartment}>
                             <Modal
-                                // onClick={handleSaveChanges}
+                                // onClick={handleEditSubmit}
                                 showModal={setShowModalEditApartment}
                                 title={"Editar apartamento"}
                             >
@@ -650,7 +699,7 @@ export const ApartmentDetails = (props) => {
                             <Modal
                                 onClick={handleCreateAssignedParking}
                                 showModal={setShowParkingSpacesModal}
-                                title={"Asignar parqueadero"}
+                                title={editingParkingSpace ? "Editar parqueadero" : "Asignar parqueadero"}
 
                             >
                                 <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
@@ -660,6 +709,66 @@ export const ApartmentDetails = (props) => {
                                     value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}></InputsSelect>
 
 
+
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {showApartmentOwnermODAL &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setShowApartmentOwnermODAL}>
+                            <Modal
+                                // onClick={handleCreateAssignedParking}
+                                showModal={setShowApartmentOwnermODAL}
+                                title={"Editar propietario por apartamento"}
+
+                            >
+                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+                                <InputsSelect id={"select"} options={OwnersList} name={"Propietario"}
+                                    value={idOwner} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+
+                                <Inputs name="Fecha de propiedad" type={"date"} readonly
+                                    value={OwnershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
+
+                                <Inputs name="Fecha finalizacion de propiedad" type={"date"}
+                                    value={OwnershipEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs>
+
+                                <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                    value={statusApartmentOwner} onChange={e => setStatusApartmentOwner(e.target.value)}></InputsSelect>
+
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {showApartmentResidentEditModal &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setShowApartmentResidentEditModal}>
+                            <Modal
+                                // onClick={handleCreateAssignedParking}
+                                showModal={setShowApartmentResidentEditModal}
+                                title={"Editar residente por apartamento"}
+
+                            >
+                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+                                <InputsSelect id={"select"} options={residentsList} name={"Residentes"}
+                                    value={idResident} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+
+                                <Inputs name="Fecha de inicio de residencia" type={"date"} readonly
+                                    value={residentStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
+
+                                <Inputs name="Fecha finalizacion de residencia" type={"date"}
+                                    value={residentEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs>
+
+                                <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                    value={statusApartmentResident} onChange={e => setStatusApartmentOwner(e.target.value)}></InputsSelect>
 
                             </Modal>
                         </ModalContainer>

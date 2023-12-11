@@ -16,10 +16,12 @@ export const Owners = () => {
     return (
         <>
 
-            <ContainerTable title='Propietarios'>
-                <DropdownExcel />
-                <SearchButton />
-                <ButtonGoTo value='Nuevo propietario' href='create' />
+            <ContainerTable title='Propietarios'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton />}
+                buttonToGo={<ButtonGoTo value='Nuevo propietario' href='create' />}
+            >
+
                 <TablePerson>
                     <Thead>
 

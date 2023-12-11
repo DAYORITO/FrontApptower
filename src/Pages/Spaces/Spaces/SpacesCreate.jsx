@@ -26,8 +26,8 @@ export const SpacesCreate = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/spaces';
-    const url = 'http://localhost:3000/api/spaces';
+    const url = 'https://apptowerbackend.onrender.com/api/spaces';
+    // const url = 'http://localhost:3000/api/spaces';
     const data = {
       spaceType,
       image,
