@@ -81,8 +81,6 @@ export const SpacesCreate = () => {
           value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
         {/* <Inputs name="Estado"
           value={status} onChange={e => setStatus(e.target.value)}></Inputs> */}
-
-
       </FormContainer>
     </>)
 }

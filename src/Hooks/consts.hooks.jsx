@@ -91,3 +91,30 @@ export const parkingTypes = [
         label: "Privado"
     },
 ]
+
+export const fineTypes = [
+    {
+        value: "Daño a Espacios Comunes",
+        label: "Daño a Espacios Comunes"
+    },
+    {
+        value: "Mal uso de parqueaderos",
+        label: "Mal uso de parqueaderos"
+    },
+    {
+        value: "Mal uso de zonas comunes",
+        label: "Mal uso de zonas comunes"
+    },
+    {
+        value: "Violación de Normas de Convivencia",
+        label: "Violación de Normas de Convivencia"
+    },
+    {
+        value: "Convivencia",
+        label: "Convivencia"
+    },
+    {
+        value: "Violación de Regulaciones de Mascotas",
+        label: "Violación de Regulaciones de Mascotas"
+    }
+]

@@ -17,6 +17,22 @@ export const filterGuestIncomes = (search, guestIncomes) => {
   return guestIncomesbyApartment;
 };
 
+export const filterFines = (search, fines) => {
+
+  let fineByApartment = [];
+
+  if (!search) {
+    fineByApartment = fines.data.fines;
+  } else {
+    fineByApartment = fines.data.fines.filter((dato) =>
+      dato.fineType.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  return fineByApartment;
+};
+
+
 export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {
   try {
     const result = await Swal.fire({

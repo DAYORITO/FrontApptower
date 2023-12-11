@@ -56,6 +56,8 @@ import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 
 
 
+import Fines from "./Pages/Fines/fines";
+import FinesCreate from "./Pages/Fines/finesCreate";
 
 const socket = io('http://localhost:3000');
 
@@ -414,6 +416,8 @@ const App = () => {
 
 
                                 {/* Fines */}
+                                <Route path='fines/' element={<Fines />} />
+                                <Route path='fines/create' element={<FinesCreate />} />
 
 
 
