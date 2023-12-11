@@ -9,27 +9,25 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-
+import { useState } from 'react'
 export const Vehicle = () => {
-  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/vehicle')
-  console.log(data.vehicle)
+  const { data, load, error } = useFetchget('vehicle')
+  console.log(data)
   console.log(load)
   console.log(error)
+  
+  
   return (
     <>
-      <ContainerTable title='Vehiculos'>
-        <DivRow>
-          <DropdownExcel />
-          <SearchButton />
-          <ButtonGoTo value='Crear vehiculos' href='create' />
-        </DivRow>
+      <ContainerTable title='Vehiculo'
+        buttonToGo={<ButtonGoTo value='Crear Vehiculo' href='create' />}
+      >
+        
         <TablePerson>
           <Thead>
-            <Th name={''}></Th>
             <Th name={'placa'}></Th>
             <Th name={'detalle'}></Th>
             <Th name={'apartamento'}></Th>
-            <Th name={'estado'}></Th>
             <Th name={''}></Th>
             <Th></Th>
           </Thead>
@@ -41,12 +39,13 @@ export const Vehicle = () => {
               error && <h1 className='d-flex'>Error: {error}</h1>
             }
             {
-              data.vehicle?.map(vehicle => (
+              data.vehicle?.map(vehicles => (
                 <Row
-                  op1={vehicle.licenseplate}
-                  op2={vehicle.description}
-                  op3={vehicle.apartment}
-                  op4={vehicle.status}
+                icon='truck'
+                  name={vehicles.licenseplate}
+                  status={vehicles.state}
+                  op2={vehicles.description}
+                  op3={vehicles.Apartment.apartmentName}
                 >
                   <Actions accion='Editar' />
                 </Row>

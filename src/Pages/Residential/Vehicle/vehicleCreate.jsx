@@ -5,7 +5,7 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Swal from "sweetalert2"
-
+import { useFetchpostFile } from '../../../Hooks/useFetch'
 
 
 
@@ -14,22 +14,16 @@ export const VehicleCreate = () => {
 
     const handdleSubmit = async (e) => {
         e.preventDefault();
+        const url = 'https://apptowerbackend.onrender.com/api/vehicle';
         const data = {
-            idApartment: Apartment,
-            licenseplate: plate,
-            state: state,
-            description: description,
+            "idApartment": selectedApartment,
+            "licenseplate": plate,
+            "description": description,
         }
-        const { response, error } = await fetch('https://apptowerbackend.onrender.com/api/vehicle', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-        });
-        const json = await response.json();
-        console.log(json);
-        if (json) {
+        const { response, error } = await useFetchpostFile(url, data);
+
+        
+        if (response) {
             Swal.fire({
                 title: 'Éxito',
                 text: 'Vehiculo creado exitosamente',
@@ -51,12 +45,8 @@ export const VehicleCreate = () => {
 
     const [Apartment, setApartment] = useState('');
     const [plate, setPlate] = useState('');
-    const [state, setState] = useState('');
     const [description, setDescription] = useState('');
-
-    const handleApartmentChange = (e) => {
-        setApartment(e.target.value);
-    }
+    const [selectedApartment, setSelectedApartment] = useState('');
 
     useEffect(() => {
         fetch('https://apptowerbackend.onrender.com/api/apartments')
@@ -77,9 +67,9 @@ export const VehicleCreate = () => {
     return (
         <>
             <FormContainer name='Crear vehiculo' buttons={<FormButton name='Crear vehiculo' backButton='Regresar' to='/admin/booking' onClick={handdleSubmit} ></FormButton>}>
-                <InputsSelect id={"select-apartment"} options={AparmetList} name={"Apartamento"} onChange={handleApartmentChange}></InputsSelect>
-                <Inputs name={"Tipo de usuario"} type="text"></Inputs>
-                <Inputs name={"Placa"} type="text"></Inputs>
+                <InputsSelect id={"select"} options={AparmetList} name={"Numero de Documento"} onChange={e => setSelectedApartment(e.target.value)}></InputsSelect>
+                <Inputs name={"Placa"} type="text" onChange={e => setPlate(e.target.value)}></Inputs>
+                <Inputs name={"Descripcion"} type="text" onChange={e => setDescription(e.target.value)}></Inputs>
             </FormContainer>
         </>
     )
