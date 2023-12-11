@@ -37,8 +37,8 @@ export const ApartmentDetails = (props) => {
 
     // API URL
 
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
+    // const url = "http://localhost:3000/api/"
+    const url = "https://apptowerbackend.onrender.com/api/"
 
     // Apartment information
 

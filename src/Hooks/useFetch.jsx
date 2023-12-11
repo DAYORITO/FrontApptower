@@ -76,8 +76,8 @@ export const useFetch = (baseUrl) => {
 // 1. Start UseFetch by Id
 
 export const useFetchgetById = (endpoint, id) => {
-    const url = 'http://localhost:3000/api/';
-    // const url = 'https://apptowerbackend.onrender.com/api/';
+    // const url = 'http://localhost:3000/api/';
+    const url = 'https://apptowerbackend.onrender.com/api/';
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
