@@ -48,7 +48,7 @@ import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
 import { useEffect } from 'react';
 
-// const socket = io('http://localhost:3000');
+const socket = io('http://localhost:3000');
 
 
 const App = () => {

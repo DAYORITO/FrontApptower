@@ -13,14 +13,19 @@ import Swal from 'sweetalert2'
 import { useFetchpost } from '../../../Hooks/useFetch'
 import { useNavigate } from "react-router-dom";
 import ModalButton from '../../../Components/Modals/ModalButton'
+import { useApiUpdate } from '../../../Hooks/FetchputDan'
+import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal"; 
+import { cardio } from 'ldrs'
+import { set } from 'date-fns'
 
 
 
 function GuestIncomeCreate() {
   const navigate = useNavigate();
+  cardio.register()
   //mostrar modales
   const [showModalvisitor, setShowModalvisitor] = useState(false);
-  const [showModalvehicle, setShowModalvehicle] = useState(false);
+  const [showModaload, setShowModaload] = useState(false);
   //estados para valores de los select
   const [TowerData, setTowerData] = useState([]);
   const [phone, setPhone] = useState('Seleccione un apartamento');
@@ -59,6 +64,13 @@ function GuestIncomeCreate() {
   const {data: dataVisitors, load2, error2} = useFetchget('visitors')
   const {data: dataResidentApartment, load4, error4} = useFetchget('aparmentResidents')
   const {data: dataParkingSpaces, load3, error3} = useFetchget('parkingSpaces')
+  useEffect(() => {
+    if (load || load2 || load3 || load4) {
+        setShowModaload(true);
+    }else{
+      setShowModaload(false);
+    }
+  }, [load, load2, load3, load4])
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
   const handleChange = (e) => {
@@ -222,12 +234,13 @@ function GuestIncomeCreate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowModaload(true);
     const { response, error } = await useFetchpost('guestIncome', {
       "startingDate": new Date(),
       "departureDate": null,
       "idApartment": apartment,
       "personAllowsAccess": personAllowsAccesss,
-      "observations": observationss,
+      "observations": observationss ?  observationss : "Sin observaciones",
       "idVisitor": visitor,
     });
     if (response) {
@@ -239,9 +252,18 @@ function GuestIncomeCreate() {
         if (response2) {
           // Manejar la respuesta exitosa
           console.log('Respuesta exitosa:', response2);
+          useApiUpdate({"idParkingSpace":parkingGuestIncome, "status":'Inactive'}, 'parkingSpaces')
+          .then((responseData)=>{
+            setShowModaload(false);
+            console.log(responseData)
+          }) 
+        }
+        if (error2) {
+          console.error('Error:', error2);
         }
                 
       }
+      setShowModaload(false);
       // Manejar la respuesta exitosa
       console.log('Respuesta exitosa:', response);
             Swal.fire({
@@ -255,9 +277,51 @@ function GuestIncomeCreate() {
     }
 
     if (error) {
+            setShowModaload(false);
             Swal.fire({
                 title: 'Error',
                 text: 'Error al crear ingreso',
+                icon: 'error',
+            });
+      console.error('Error:', error);
+    }
+  }
+
+  const handleSubmitVisitor = async (e) => {
+    e.preventDefault();
+    setShowModaload(true);
+    setShowModalvisitor(false);
+    const { response, error } = await useFetchpost('visitors', {
+      "name": name,
+      "lastname": lastname,
+      "documentType": documentType,
+      "documentNumber": documentvisitor,
+      "genre": genre,
+      "access": true
+    });
+    if (response) {
+      
+      // Manejar la respuesta exitosa
+      const newVisitor = {
+        value: response.visitor.idVisitor,
+        label: response.visitor.documentNumber
+      };
+      // Actualizar el estado local agregando el nuevo visitante
+      setVisitorsData((prevData) => [newVisitor, ...prevData]);
+      setShowModaload(false);
+      console.log('Respuesta exitosa:', response);
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Visitante creado exitosamente',
+                icon: 'success',
+            })
+    }
+
+    if (error) {
+            setShowModaload(false);
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al crear visitante',
                 icon: 'error',
             });
       console.error('Error:', error);
@@ -309,7 +373,7 @@ function GuestIncomeCreate() {
       showModalvisitor &&
       createPortal(
         <ModalContainer showModal={setShowModalvisitor}>
-          <Modal title={'Crear Ingreso'} showModal={setShowModalvisitor}>
+          <Modal title={'Crear Ingreso'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
           <InputsSelect name="Tipo de documento" options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
           <Inputs name="Numero Documento" onChange={(e) => setDocumentVisitor(e.target.value)} />
           <Inputs name="Nombre" onChange={(e) => setName(e.target.value)} />
@@ -320,17 +384,28 @@ function GuestIncomeCreate() {
         document.getElementById('modalRender')
       )
     }
-    {
-      showModalvehicle &&
-      createPortal(
-        <ModalContainer showModal={showModalvehicle}>
-          <Modal title={'Crear Ingreso'} showModal={setShowModalvehicle}>
-            <p>¿Está seguro que desea crear este vehiculo?</p>
-          </Modal>
-        </ModalContainer>,
-        document.getElementById('modalRender')
-      )
-    }
+    {showModaload &&
+                createPortal(
+                  <>
+                    <ModalContainerload ShowModal={setShowModaload}>
+                      <Modaload
+                        showModal={setShowModaload}
+                      >
+                        <div className='d-flex justify-content-center'>
+                        <l-cardio
+                            size="50"
+                            stroke="4"
+                            speed="2" 
+                            color="black" 
+                          ></l-cardio>
+                        </div>
+                          
+                        
+                      </Modaload>
+                    </ModalContainerload>
+                  </>,
+                  document.getElementById("modalRender")
+                )}
     </>
   )
 }
