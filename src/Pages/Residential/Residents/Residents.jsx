@@ -20,13 +20,13 @@ export const Residents = () => {
     return (
         <>
 
-            <ContainerTable title='Residentes'>
+            <ContainerTable title='Residentes'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton  />}
+                buttonToGo={<ButtonGoTo value='Crear Residente' href='create' />}
+            >
 
-                <DivRow>
-                    <DropdownExcel />
-                    <SearchButton />
-                    <ButtonGoTo value='Crear Residente' href='create' />
-                </DivRow>
+
 
                 <TablePerson>
                     <Thead>

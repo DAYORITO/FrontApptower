@@ -24,8 +24,8 @@ export const ApartmentCreate = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/apartments';
-    const url = 'http://localhost:3000/api/apartments';
+    const url = 'https://apptowerbackend.onrender.com/api/apartments';
+    // const url = 'http://localhost:3000/api/apartments';
     const data = {
       tower,
       floorNumber,

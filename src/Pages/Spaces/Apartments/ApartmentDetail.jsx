@@ -277,7 +277,7 @@ export const ApartmentDetails = (props) => {
             // Add other properties as needed for different requests
         };
 
-        handleRequest(event, 'aparmentResidents', `Agregaste un residente al apartamento ${apartmentName} exitosamente`, setShowApartmentResidentsModal, data);
+        handleRequest(event, 'aparmentResidents', `Agregaste un residente al apartamento ${apartmentName} exitosamente`, setShowApartmentResidentsModal, data, url);
 
     };
 
@@ -291,7 +291,7 @@ export const ApartmentDetails = (props) => {
             idParkingSpace
 
         };
-        handleRequest(event, 'assignedParkingSpaces', `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`, setShowParkingSpacesModal, data);
+        handleRequest(event, 'assignedParkingSpaces', `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`, setShowParkingSpacesModal, data, url);
     };
 
 
@@ -605,7 +605,7 @@ export const ApartmentDetails = (props) => {
                     <>
                         <ModalContainer ShowModal={setShowModalEditApartment}>
                             <Modal
-                                onClick={handleEditSubmit}
+                                // onClick={handleEditSubmit}
                                 showModal={setShowModalEditApartment}
                                 title={"Editar apartamento"}
                             >

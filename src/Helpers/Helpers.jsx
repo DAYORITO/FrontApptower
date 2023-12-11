@@ -44,16 +44,13 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
 
 
 
-export const handleRequest = async (event, endPoint, successMessage, modal, data) => {
+export const handleRequest = async (event, endPoint, successMessage, modal, data, url) => {
   try {
 
     event.preventDefault();
-
-
-
     console.log('Data:', data);
 
-    const { response, error } = await useFetchpostFile(`http://localhost:3000/api/${endPoint}`, data);
+    const { response, error } = await useFetchpostFile(`${url}${endPoint}`, data);
 
     if (response) {
       console.log('Response:', response);
