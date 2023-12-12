@@ -3,7 +3,7 @@ import "./Pages/Users/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import LogIn from './Pages/Users/LogIn/LogIn';
 import { Owners } from './Pages/Residential/Owners/Owners';
-import { Residents } from './Pages/Residential/Residents/Residents';
+
 import { ResidentCreate } from "./Pages/Residential/Residents/ResidentCreate";
 import VisitorsCreate from "./Pages/Residential/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
@@ -58,6 +58,7 @@ import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
+import { Residents } from "./Pages/Residential/Residents/Residents";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 

@@ -29,7 +29,7 @@ export const VehicleCreate = () => {
                 text: 'Vehiculo creado exitosamente',
                 icon: 'success',
             }).then(() => {
-                navigate('/admin/vehicle');
+                navigate(-1);
             });
         }
 

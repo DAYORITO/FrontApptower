@@ -272,7 +272,7 @@ function GuestIncomeCreate() {
                 icon: 'success',
             }).then(() => {
 
-                navigate('/admin/guest_income');
+                navigate(-1);
             });
     }
 

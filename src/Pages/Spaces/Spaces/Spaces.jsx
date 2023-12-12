@@ -80,11 +80,12 @@ export const Spaces = () => {
             {data.spaces?.map(spaces => (
               <BigCard
                 cosa={spaces}
+                to={`/admin/booking/create`}
               >
                 {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') && (
                   <Actions accion='Editar' />
                 )}
-                <Actions accion='Reservar' icon="calendar" />
+                <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
               </BigCard>
             ))}
 
