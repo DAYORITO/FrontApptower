@@ -476,22 +476,24 @@ export const ApartmentDetails = (props) => {
         <>
             <Details>
 
+                
+                <ContainerModule name={`Apartamento ${apartmentName}`} date1={`Torre: ${tower} `} date2={`Area: ${area} m²`} status={status} >
+
+                    <Dropdownanchor2 name={"Editar apartamento"} icon={"edit"} onClick={(e) => {
+                        e.preventDefault();
+                        handleModalEditApartment();
+                    }} />
+
+
+                </ContainerModule>
                 <InfoDetails>
 
 
-                    <ContainerModule name={`Apartamento ${apartmentName}`} date1={`Torre: ${tower} `} date2={`Area: ${area} m²`} status={status} >
 
-                        <Dropdownanchor2 name={"Editar apartamento"} icon={"edit"} onClick={(e) => {
-                            e.preventDefault();
-                            handleModalEditApartment();
-                        }} />
-
-
-                    </ContainerModule>
 
                     <Acordions>
 
-                        <DropdownInfo name={"Propietarios"} to1={`/admin/owners/create/${id}`}>
+                        <DropdownInfo name={`${apartmentOwnersList.length} Propietarios `} to1={`/admin/owners/create/${id}`}>
                             {apartmentOwnersList.length > 0 ? (
                                 apartmentOwnersList.map((owner, index) => (
                                     <Dropdownanchor
@@ -517,7 +519,7 @@ export const ApartmentDetails = (props) => {
 
 
                         <DropdownInfo
-                            name={"Residentes"}
+                            name={`${apartmentResidentsList.length} Residentes `}
                             to1={`/admin/residents/create/${id}`}
                             onClick={(e) => {
                                 e.preventDefault();
@@ -556,7 +558,7 @@ export const ApartmentDetails = (props) => {
 
                         <DropdownInfo
 
-                            name={"Parqueaderos"}
+                            name={`${assignedParkingSpacesList.length} Parqueaderos `}
                             onClick={(e) => {
                                 e.preventDefault();
                                 handleParkingSpacesModal();
@@ -597,19 +599,19 @@ export const ApartmentDetails = (props) => {
 
 
 
-                        <DropdownInfo name={"Vehiculos"} to1={`/admin/vehicle/create`}>
+                        <DropdownInfo name={`${vehiclesList.length} Parqueaderos `} to1={`/admin/vehicle/create`}>
                             {vehiclesList.length > 0 ? (
                                 vehiclesList.map((vehicle, index) => (
                                     <Dropdownanchor
                                         // Information
                                         key={index}
-                                        name={vehicle.licenseplate != null ?vehicle.licenseplate: vehicle.idvehicle }
+                                        name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
 
                                         // Details
                                         to={`/admin/vehicle/details/${vehicle.idvehicle}`}
 
-                                        // Funtions
-                                        
+                                    // Funtions
+
                                     >
                                     </Dropdownanchor>
                                 ))
@@ -617,44 +619,27 @@ export const ApartmentDetails = (props) => {
                                 <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
                             )}
                         </DropdownInfo>
-
+                        <div class="col-auto back mt-5 mb-5" >
+                            <Link to={"/admin/apartments/"} type="button" class="btn btn-sm btn-secondary">Regresar</Link>
+                        </div>
                     </Acordions>
-                    <div class="col-auto back" >
-                        <Link to={"/admin/apartments/"} type="button" class="btn btn-sm btn-secondary">Regresar</Link>
-                    </div>
 
 
+                    <Acordions>
+                        <DropdownInfo name={"Notificaciones"} to1={`/admin/notifications/create/${id}`}>
 
-
-
-                </InfoDetails>
-
-                <ListsDetails>
-                    <NavDetails>
-
-                        <NavListDetails index={1} name={"Mensajes"} toggleState={toggleState} onClick={() => toggleTab(1)} />
-                        <NavListDetails index={2} name={"Ingresos"} toggleState={toggleState} onClick={() => toggleTab(2)} />
-                        <NavListDetails index={3} name={"Multas"} toggleState={toggleState} onClick={() => toggleTab(3)} />
-
-                    </NavDetails>
-
-                    <TableDetails index={1} toggleState={toggleState} >
-
-                        <TablePerson>
                             {/* <DetailsActions>
-                                <SearchButton />
-                                <ButtonGoTo value="Nuevo notificacion" href={"notificaciones/"} />
-                            </DetailsActions> */}
+                            <SearchButton />
+                            <ButtonGoTo value="Nuevo notificacion" href={"notificaciones/"} />
+                        </DetailsActions> */}
 
                             <RowNotificactions date='2023/12/10' name='Bill' lastName='Gates' msg='Va llegar a las 3:00PM, por favor dejelo pasar' />
 
+                        </DropdownInfo>
 
+                        <DropdownInfo name={`${guestIncomesbyApartment?.length} Ingresos `}
+                         to1={`/admin/owners/create/${id}`}>
 
-                        </TablePerson>
-                    </TableDetails>
-
-                    <TableDetails index={2} toggleState={toggleState} >
-                        <TablePerson>
                             <DetailsActions>
                                 <SearchButton value={search} onChange={searcher} />
                                 <ButtonGoTo value="Nuevo ingreso" href={'/admin/guest_income/create'} />
@@ -686,12 +671,10 @@ export const ApartmentDetails = (props) => {
 
                                     </div>
                                 )}
+                        </DropdownInfo>
 
-                        </TablePerson>
+                        <DropdownInfo name={` Multas `} to1={`/admin/owners/create/${id}`}>
 
-                    </TableDetails>
-                    <TableDetails index={3} toggleState={toggleState} >
-                        <TablePerson>
                             <DetailsActions>
                                 <SearchButton value={searchFine} onChange={searcherFines} />
                                 <ButtonGoTo value="Nueva multa" href={'/admin/fines/create'} />
@@ -723,12 +706,18 @@ export const ApartmentDetails = (props) => {
 
                                     </div>
                                 )}
+                        </DropdownInfo>
 
-                        </TablePerson>
 
-                    </TableDetails>
 
-                </ListsDetails>
+
+                    </Acordions>
+
+
+
+                </InfoDetails>
+
+
             </Details >
 
             {showModalEditApartment &&

@@ -1,0 +1,16 @@
+.card-header-details {
+    height: auto;
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Corregir aquí */
+    margin-left: 5%;
+    /* position: fixed; Quitar esto de aquí */
+}
+
+/* Agregar un contenedor adicional y aplicar position: fixed a ese contenedor */
+.fixed-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
