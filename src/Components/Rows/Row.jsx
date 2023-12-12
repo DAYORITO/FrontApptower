@@ -24,7 +24,11 @@ export const Row = ({
     op5,
     op6,
     file,
-    to = "details"
+    to = "details",
+    start,
+    end,
+    tel,
+    corr
 
 }) => {
 
@@ -34,7 +38,6 @@ export const Row = ({
         <tr class="file-list myRow">
 
             <Link to={to} style={{ textDecoration: 'none' }} >
-                {/* <a href=""> */}
                 <td class="text-center ">
                     <div class="circle circle-sm">
                         <span class={`fe fe-${icon} fe-24 text-muted`}></span>
@@ -56,7 +59,9 @@ export const Row = ({
 
                 <th scope="row">
                     {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
-                    {name != null & lastName != null ? name + ' ' + lastName : name != null & lastName == null ? name : ""} <br />
+                    {start != null ? <td class="text-secondary">{start}</td> : null}
+                    {end != null ? <td class="text-secondary">{end}</td> : null}
+                    {name != null & name != null ? name + ' ' + lastName : null} <br />
                     {op6 != null ? <span className="badge badge-light text-primary">{op6}</span> : null}
 
 
@@ -69,6 +74,10 @@ export const Row = ({
             </Link>
 
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
+            {tel != null ? <td class="text-secondary">{tel}</td> : null}
+            {corr != null ? <td class="text-secondary">{corr}</td> : null}
+
+
 
 
             {email != null ? <td class="text-secondary"> <span className="badge badge-white text-secondary">Correo</span><em class="text-muted ml-2">{email}</em><br />
@@ -80,9 +89,9 @@ export const Row = ({
             {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
 
 
-            {file && <td className="text-secondary"><a href={file}>
+            {file && <td className="text-secondary"><Link to={file}>
                 <span className='fe fe-download-cloud fe-16 text-muted'></span>
-            </a></td>}
+            </Link></td>}
 
 
             {op1 != null ? <td class="text-secondary">{op1}</td> : null}
@@ -91,9 +100,6 @@ export const Row = ({
             {op4 != null ? <td class="text-secondary">{op4}</td> : null}
             {op5 != null ? <td class="text-secondary">{op5}</td> : null}
 
-            {/* <a href=""> */}
-
-            {/* </a> */}
 
             <td>
 

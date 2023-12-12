@@ -28,6 +28,7 @@ export const UsersCreate = () => {
     console.log(pdf, 'aqui estoy file')
 
 
+
     //campos adicionales de residentes y vigilantes
     const [sex, setSex] = useState("");
     const [birthday, setBirthday] = useState("");
@@ -88,7 +89,7 @@ export const UsersCreate = () => {
         event.preventDefault();
 
         try {
-            const userResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/api/users', {
+            const userResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/users', {
                 documentType,
                 name,
                 email,
@@ -106,13 +107,14 @@ export const UsersCreate = () => {
                 let roleResponse;
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
-                    roleResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/residents', {
+                    roleResponse = await useFetchpostFile('http://localhost:3000/api/residents', {
                         docType: documentType,
                         docNumber: document,
                         name,
                         lastName: lastname,
                         sex,
                         birthday,
+                        password,
                         email,
                         phoneNumber: phone,
                         residentType,

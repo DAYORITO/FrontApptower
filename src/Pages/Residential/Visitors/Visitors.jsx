@@ -25,6 +25,35 @@ import InputTextArea from "../../../Components/Inputs/InputTextArea";
 import { set } from "date-fns";
 
 function Visitors() {
+
+
+  const token = Cookies.get('token');
+  const [allowedPermissions, setAllowedPermissions] = useState([]);
+
+  //Se crea un estado para actualizar los datos al momento de cualquier accion
+  const [visitorsData, setVisitorsData] = useState({ visitors: [] });
+  const [showModaload, setShowModaload] = useState(false);
+  cardio.register()
+
+  const { data, load, error } = useFetchget('visitors')
+
+  useEffect(() => {
+    // Cuando la carga está en progreso (load es true), activamos el modal de carga
+    if (load) {
+      setShowModaload(true);
+    } else {
+      // Cuando la carga se completa (load es false), desactivamos el modal de carga
+      setShowModaload(false);
+    }
+  }, [load]);
+
+  console.log(data.visitors)
+  //se usa el effect para actualizar los datos del get
+  useEffect(() => {
+    if (data && data.visitors) {
+      setVisitorsData(data.visitors);
+    }
+  }, [data]);
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [visitorsData, setVisitorsData] = useState({ visitors: [] });
   const [showModaload, setShowModaload] = useState(false);

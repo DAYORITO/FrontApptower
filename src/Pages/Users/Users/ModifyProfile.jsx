@@ -5,6 +5,7 @@ import './User.css'
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import FormContainer from '../../../Components/Forms/FormContainer';
 
 export const ModifyProfile = () => {
     const token = Cookies.get('token');
@@ -89,16 +90,17 @@ export const ModifyProfile = () => {
     };
     return (
         <>
-            <ContainerTable title='Modificar perfil'>
-                <TablePerson>
-                    <div className="container-profile">
-                        <div className="profile-content">
-                            <div className="profile-image">
-                                <span className='icon fe fe-user text-muted custom-icon'></span>
-                            </div>
-                            <div className="vertical-line"></div>
-                            <div className="information-user">
-                                {/* <div className="user-detail">
+            <FormContainer name='Modificar Perfil'>
+
+
+                <div className="container-profile">
+                    <div className="profile-content">
+                        <div className="profile-image">
+                            <span className='icon fe fe-user text-muted custom-icon'></span>
+                        </div>
+                        <div className="vertical-line"></div>
+                        <div className="information-user">
+                            {/* <div className="user-detail">
                                     <div className="input-container">
                                         <select name="" className='custom-input' id="">
                                             <option value="">Tipo de documento</option>
@@ -113,73 +115,75 @@ export const ModifyProfile = () => {
                                         <label className="custom-label">Documento</label>
                                     </div>
                                 </div> */}
-                                <div className="user-detail">
-                                    <div className="input-container">
-                                        <input
-                                            type="text"
-                                            className="custom-input"
-                                            placeholder=' '
-                                            value={editedName || userData?.user?.name || ''}
-                                            onChange={(e) => setEditedName(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="input-container">
-                                        <input
-                                            type="text"
-                                            className="custom-input"
-                                            placeholder=' '
-                                            value={editedLastName || userData?.user?.lastname || ''}
-                                            onChange={(e) => setEditedLastName(e.target.value)}
-                                        />
-                                        <label className="custom-label">Apellido</label>
-                                    </div>
+                            <div className="user-detail">
+                                <div className="input-container">
+                                    <input
+                                        type="text"
+                                        className="custom-input"
+                                        placeholder=' '
+                                        value={editedName || userData?.user?.name || ''}
+                                        onChange={(e) => setEditedName(e.target.value)}
+                                    />
+                                    <label className="custom-label">Nombre</label>
                                 </div>
-
-
-
-                                <div className="user-detail">
-                                    <div className="input-container">
-                                        <input
-                                            type="text"
-                                            className="custom-input"
-                                            placeholder=' '
-                                            value={editedEmail || userData?.user?.email || ''}
-                                            onChange={(e) => setEditedEmail(e.target.value)}
-                                        />
-                                        <label className="custom-label">Correo</label>
-                                    </div>
-                                    <div className="input-container">
-                                        <input
-                                            type="text"
-                                            className="custom-input"
-                                            placeholder=' '
-                                            value={editedPhone || userData?.user?.phone || ''}
-                                            onChange={(e) => setEditedPhone(e.target.value)}
-                                        />
-                                        <label className="custom-label">Teléfono</label>
-                                    </div>
-                                </div>
-
-                                <div className="user-detail">
-                                    <div className="input-container">
-                                        <input type="password" className="custom-input" placeholder=' ' />
-                                        <label className="custom-label">Contraseña</label>
-                                    </div>
-                                    <div className="input-container">
-                                        <input type="text" className="custom-input" placeholder=' ' />
-                                        <label className="custom-label">Confirmar Contraseña</label>
-                                    </div>
-                                </div>
-                                <div className="edit-buttons">
-                                    <button className="btn-edit" onClick={putInformationUser}>Guardar</button>
-                                    <NavLink to="/admin/users/profileList" className="btn-back">Cancelar</NavLink>
+                                <div className="input-container">
+                                    <input
+                                        type="text"
+                                        className="custom-input"
+                                        placeholder=' '
+                                        value={editedLastName || userData?.user?.lastname || ''}
+                                        onChange={(e) => setEditedLastName(e.target.value)}
+                                    />
+                                    <label className="custom-label">Apellido</label>
                                 </div>
                             </div>
-                        </div>
 
+
+
+                            <div className="user-detail">
+                                <div className="input-container">
+                                    <input
+                                        type="text"
+                                        className="custom-input"
+                                        placeholder=' '
+                                        value={editedEmail || userData?.user?.email || ''}
+                                        onChange={(e) => setEditedEmail(e.target.value)}
+                                    />
+                                    <label className="custom-label">Correo</label>
+                                </div>
+                                <div className="input-container">
+                                    <input
+                                        type="text"
+                                        className="custom-input"
+                                        placeholder=' '
+                                        value={editedPhone || userData?.user?.phone || ''}
+                                        onChange={(e) => setEditedPhone(e.target.value)}
+                                    />
+                                    <label className="custom-label">Teléfono</label>
+                                </div>
+                            </div>
+
+                            <div className="user-detail">
+                                <div className="input-container">
+                                    <input type="password" className="custom-input" placeholder=' ' />
+                                    <label className="custom-label">Contraseña</label>
+                                </div>
+                                <div className="input-container">
+                                    <input type="text" className="custom-input" placeholder=' ' />
+                                    <label className="custom-label">Confirmar Contraseña</label>
+                                </div>
+                            </div>
+                            <div className="edit-buttons">
+                                <button className="btn-edit" onClick={putInformationUser}>Guardar</button>
+                                <NavLink to="/admin/users/profileList" className="btn-back">Cancelar</NavLink>
+                            </div>
+                        </div>
                     </div>
-                </TablePerson>
-            </ContainerTable>
+
+                </div>
+
+
+            </FormContainer>
 
         </>
     )

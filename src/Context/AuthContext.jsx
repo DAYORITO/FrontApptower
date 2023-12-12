@@ -7,9 +7,11 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const fetchUserData = (token) => {
-        fetch('https://apptowerbackend.onrender.com/api/login/access', {
+        return fetch('https://apptowerbackend.onrender.com/api/login/access', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -25,11 +27,13 @@ export const AuthProvider = ({ children }) => {
                 setIsLoggedIn(true);
                 setUser(data?.user);
                 console.log('Usuario obtenido:', data.user);
+                Cookies.set('isLoggedIn', 'true');
             })
             .catch(error => {
                 console.error('Error al obtener el usuario:', error.message);
                 setIsLoggedIn(false);
                 setUser(null);
+                Cookies.set('isLoggedIn', 'false');
             });
     };
 
@@ -69,17 +73,20 @@ export const AuthProvider = ({ children }) => {
         console.log('Token:', token);
 
         if (token) {
-            fetchUserData(token);
+            setIsLoading(true);
+            fetchUserData(token).finally(() => {
+                const isLoggedIn = Cookies.get('isLoggedIn') === 'true';
+                setIsLoggedIn(isLoggedIn);
+                setIsLoading(false);
+            });
         } else {
             setIsLoggedIn(false);
             setUser(null);
-
-
+            setIsLoading(false);
         }
     }, []);
 
     const logout = () => {
-
         Swal.fire({
             title: '¿Estás seguro de que quieres cerrar sesión?',
             icon: 'warning',
@@ -89,6 +96,7 @@ export const AuthProvider = ({ children }) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 Cookies.remove('token');
+                Cookies.remove('isLoggedIn');
                 setUser(null);
                 setIsLoggedIn(false);
                 Swal.fire({
@@ -98,14 +106,11 @@ export const AuthProvider = ({ children }) => {
                     showConfirmButton: false,
                     timer: 1500
                 });
-
-
             }
         });
     }
-
     return (
-        <AuthContext.Provider value={{ user, login, logout, isLoggedIn }}>
+        <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

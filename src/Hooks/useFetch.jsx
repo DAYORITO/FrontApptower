@@ -32,7 +32,7 @@ export const useFetch = (baseUrl) => {
                 body: JSON.stringify(body) || null,
             };
 
-            const response = method !== MethodOptions.GET 
+            const response = method !== MethodOptions.GET
                 ? await fetch(config.url, {
                     method: config.method,
                     headers: config.headers,
@@ -216,9 +216,8 @@ export const useFetchpostFile = async (url, data) => {
 // 4. Start useFetch post
 
 export const useFetchpost = async (endpoint, data) => {
-    const url = 
-    'https://apptowerbackend.onrender.com/api/'
-    
+    const url = 'https://apptowerbackend.onrender.com/api/'
+    // const url = 'http://localhost:3000/api/';
     const abortController = new AbortController();
     const signal = abortController.signal;
 
@@ -269,6 +268,7 @@ export const useFetchpost = async (endpoint, data) => {
 //Fetch Put Request
 export const useFetchput = (endpoint, data) => {
     const url = 'https://apptowerbackend.onrender.com/api/'
+    // const url = 'http://localhost:3000/api/';
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
     const [controllers, setControllers] = useState(null);

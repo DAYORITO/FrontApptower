@@ -4,7 +4,8 @@ import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 
 export const RecoverPassword = () => {
@@ -16,7 +17,8 @@ export const RecoverPassword = () => {
         e.preventDefault();
 
         try {
-            const userCheck = await fetch('https://apptowerbackend.onrender.com/api/users/email', {
+            // const userCheck = await fetch('https://apptowerbackend.onrender.com/api/users/email', {
+            const userCheck = await fetch('http://localhost:3000/api/users/email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,8 +29,9 @@ export const RecoverPassword = () => {
             if (userCheck.ok) {
                 const userData = await userCheck.json();
                 console.log(userData.message);
+                Cookies.set('email', email);
 
-                const sendCode = await fetch('https://apptowerbackend.onrender.com/api/api/email', {
+                const sendCode = await fetch('http://localhost:3000/api/email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -42,7 +45,7 @@ export const RecoverPassword = () => {
                         title: 'Correo enviado',
                         text: 'Se ha enviado un correo con el código de verificación',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 3000
                     }).then(() => {
                         navigate('/recoveycode');
                     })
@@ -92,7 +95,7 @@ export const RecoverPassword = () => {
                             <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} />
 
                             <button className='boton-login'>Enviar Codigo</button><br />
-                            <a href="#/" class="buttonStyle" id="sign-up">Regresar</a>
+                            <Link to="/" class="buttonStyle" id="sign-up">Regresar</Link>
                         </form>
 
                     </div>
