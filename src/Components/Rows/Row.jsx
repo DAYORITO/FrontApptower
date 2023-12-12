@@ -40,9 +40,17 @@ export const Row = ({
                         <span class={`fe fe-${icon} fe-24 text-muted`}></span>
                     </div>
 
-                    {['Active', 'Activo'].includes(status)
-                        ? <span className="dot dot-md bg-success mr-1"></span>
-                        : <span className="dot dot-md bg-danger mr-1"></span>}
+                    {
+                        status === 'Activo' || status === 'Active' ?
+                            <span className="dot dot-md bg-success mr-1"></span> :
+                            status === 'Pagada' ?
+                            <span className="dot dot-md bg-success mr-1"></span> :
+                            status === 'Por pagar' ?
+                                <span className="dot dot-md bg-danger mr-1"></span> :
+                                status === 'Pendiente' ?
+                                <span className="dot dot-md bg-warning mr-1"></span> :
+                                null
+                    }
 
                 </td>
 
