@@ -23,6 +23,8 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Select2 from "../../../Components/Inputs/Select2";
 import InputTextArea from "../../../Components/Inputs/InputTextArea";
 import { set } from "date-fns";
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 function Visitors() {
 
@@ -55,8 +57,6 @@ function Visitors() {
     }
   }, [data]);
   //Se crea un estado para actualizar los datos al momento de cualquier accion
-  const [visitorsData, setVisitorsData] = useState({ visitors: [] });
-  const [showModaload, setShowModaload] = useState(false);
   const [showModal, setShowmodal] = useState(false);
   const [TowerData, setTowerData] = useState([]);
   const [phone, setPhone] = useState("Seleccione un apartamento");
@@ -84,7 +84,6 @@ function Visitors() {
     { value: "no", label: "No" },
   ];
 
-  const { data, load, error } = useFetchget("visitors");
   const { data: dataapartments, load2, error2 } = useFetchget("apartments");
   const {
     data: dataResidentApartment,
@@ -186,6 +185,48 @@ function Visitors() {
       setVisitorsData(data.visitors);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (token) {
+      fetchUserPrivilegeAndPermission(token);
+    }
+  }, [token]);
+
+
+  //Consulta privilegios 
+  const fetchUserPrivilegeAndPermission = async (token) => {
+    try {
+      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user privileges');
+      }
+
+      const data = await response.json();
+      console.log(data, 'data');
+      console.log('Allowed Permissions hi:', data.privileges);
+
+      if (data && data.privileges && Array.isArray(data.privileges)) {
+        const allowed = {};
+        data.privileges.forEach(({ idpermission, idprivilege }) => {
+          const permissionName = idToPermissionName[idpermission];
+          const privilegeName = idToPrivilegesName[idprivilege];
+
+          if (!allowed[permissionName]) {
+            allowed[permissionName] = [];
+          }
+          allowed[permissionName].push(privilegeName);
+        });
+
+        setAllowedPermissions(allowed);
+      }
+    } catch (error) {
+      console.error('Error fetching user permissions:', error);
+    }
+  };
 
   const handleTowerChange = (selectedTower) => {
     setPhone("Seleccione un apartamento");
