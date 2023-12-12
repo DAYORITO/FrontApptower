@@ -150,6 +150,33 @@ function GuestIncome() {
             console.error('Error fetching user permissions:', error);
         }
     };
+
+
+
+    const totalPages = data.guestIncome ? Math.ceil(data.guestIncome.length / 8) : 0;
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const filteredDataguestIncome = () => {
+        if (data && data.guestIncome) {
+            return data.guestIncome.slice(currentPage, currentPage + 8);
+        } else {
+            return [];
+        }
+    };
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 8)
+    }
+
+
+    const PreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 8)
+    }
+
     return (
         <>
 
@@ -161,6 +188,25 @@ function GuestIncome() {
                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear')
                         ? <ButtonGoTo value='Crear Ingreso' href='create' />
                         : null
+                }
+                showPaginator={
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                                </li>
+                            ))}
+
+
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav >
                 }
             >
 
@@ -183,7 +229,7 @@ function GuestIncome() {
                             <Actions accion='Registrar salida'></Actions>
                             <Actions accion='Detalles del Ingreso'></Actions>
                         </Row> */}
-                        {data.guestIncome?.map(Income => (
+                        {filteredDataguestIncome().map(Income => (
                             <Row
                                 docType="Apto visitado"
                                 docNumber={Income.asociatedApartment.apartmentName}

@@ -171,6 +171,30 @@ function Visitors() {
   };
 
 
+  const totalPages = data.visitors ? Math.ceil(data.visitors.length / 8) : 0;
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const filteredDataVisitors = () => {
+    if (data && data.visitors) {
+      return data.visitors.slice(currentPage, currentPage + 8);
+    } else {
+      return [];
+    }
+  };
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 8)
+  }
+
+
+  const PreviousPage = () => {
+    if (currentPage > 0)
+      setCurrentPage(currentPage - 8)
+  }
+
 
   return (
     <>
@@ -184,6 +208,25 @@ function Visitors() {
             ? <ButtonGoTo value='Crear Visitante' href='create' />
             : null
         }
+        showPaginator={
+          <nav aria-label="Table Paging" className="mb- text-muted my-4">
+            <ul className="pagination justify-content-center mb-0">
+              <li className="page-item">
+                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+              </li>
+              {pageNumbers.map((pageNumber) => (
+                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                </li>
+              ))}
+
+
+              <li className="page-item">
+                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+              </li>
+            </ul>
+          </nav >
+        }
       >
 
         <TablePerson>
@@ -195,7 +238,7 @@ function Visitors() {
             <Th name={'Acciones'}></Th>
           </Thead>
           <Tbody>
-            {data.visitors?.map(visitor => (
+            {filteredDataVisitors().map(visitor => (
               <Row
                 docType={visitor.documentType}
                 docNumber={visitor.documentNumber}

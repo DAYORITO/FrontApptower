@@ -66,6 +66,33 @@ export const Residents = () => {
             console.error('Error fetching user permissions:', error);
         }
     };
+
+
+
+    const totalPages = data.residents ? Math.ceil(data.residents.length / 8) : 0;
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const filteredDataresidents = () => {
+        if (data && data.residents) {
+            return data.residents.slice(currentPage, currentPage + 8);
+        } else {
+            return [];
+        }
+    };
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 8)
+    }
+
+
+    const PreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 8)
+    }
+
     return (
         <>
 
@@ -78,6 +105,25 @@ export const Residents = () => {
                         ? <ButtonGoTo value='Crear Residente' href='create' />
                         : null
                 }
+                showPaginator={
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                                </li>
+                            ))}
+
+
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav >
+                }
             >
 
 
@@ -89,7 +135,7 @@ export const Residents = () => {
 
                     </Thead>
                     <Tbody>
-                        {data.residents?.map(residents => (
+                        {filteredDataresidents().map(residents => (
                             <Row
 
                                 // Personal information

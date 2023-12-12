@@ -39,7 +39,6 @@ import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
 import { AuthProvider } from "./Context/AuthContext";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { NotFound } from "./Pages/NotFound/NotFound";
-
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
@@ -198,6 +197,8 @@ const App = () => {
                                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Listar') ?
                                         <Users /> : <NotFound />
                                 } />
+
+
 
                                 <Route path='users/create' element={
                                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') ?
