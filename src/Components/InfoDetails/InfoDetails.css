@@ -1,13 +1,14 @@
-.details .container {
-    width: auto;
+.details-info .container {
+    width: auto !important;
     height: auto  !important   ;
-    display: flex;
+    display: flex !important;
     justify-content: center;
-    margin: 6% 10px 6px 10px;
+    margin: 5% 5%;
     /* background-color: aqua; */
 }
 .details-info {
     height: auto !important;
+    
 }
 
 .details .container .card-header  {

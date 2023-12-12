@@ -76,7 +76,7 @@ export const handleRequest = async (event, endPoint, successMessage, modal, data
         text: successMessage,
         icon: 'success',
       }).then(() => {
-        
+
         modal(false);
 
       });
@@ -95,3 +95,35 @@ export const handleRequest = async (event, endPoint, successMessage, modal, data
   }
 };
 
+
+export const handlePutRequest = async (event, endpoint, successMessage, data, modal, put, get) => {
+  try {
+
+    event.preventDefault();
+
+    
+    const response = await put(endpoint, data);
+    // console.log(response)
+    // console.log(responseResidents)
+
+    Swal.fire({
+      title: 'Éxito',
+      text: successMessage,
+      icon: 'success',
+    });
+
+    get(endpoint);
+
+  } catch (error) {
+    console.error('Error al realizar la operación:', error);
+
+    Swal.fire({
+      title: 'Error',
+      text: 'Error al realizar la operación',
+      icon: 'error',
+    });
+
+  } finally {
+    modal(false);
+  }
+};
