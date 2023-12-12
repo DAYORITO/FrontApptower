@@ -1,5 +1,6 @@
 export const useApiUpdate = (dataToUpdate, endpoint) => {
-  const url = `https://apptowerbackend.onrender.com/api/`;
+  // const url = `https://apptowerbackend.onrender.com/api/`;
+  const url = "http://localhost:3000/api/";
 
   return fetch(url + endpoint, {
     method: 'PUT',

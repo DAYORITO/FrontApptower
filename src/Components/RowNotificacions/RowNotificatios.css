@@ -1,9 +1,10 @@
 .notification {
 
+    width: auto;
+    height: auto;
     margin: 0% 0% 0% 0%;
     border: 0;
-    border-bottom: 1px solid #f0f0f0; /* Gris muy claro */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra suave */}
+}
 
 a {
 

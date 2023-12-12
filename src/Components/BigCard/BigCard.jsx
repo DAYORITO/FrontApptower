@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './BigCard.css';
 import imagen from "../../assets/2.jpeg"
 
-export const BigCard = ({ cosa = 'cosa', children }) => {
+export const BigCard = ({ cosa = 'cosa', to, children }) => {
     return (
 
 
@@ -11,7 +11,7 @@ export const BigCard = ({ cosa = 'cosa', children }) => {
 
             <div class="card shadow mb-4">
 
-                <Link to={'details'} style={{ textDecoration: 'none' }}>
+                <Link to={to} style={{ textDecoration: 'none' }}>
 
                     <div class="card-body text-center" id='card-space'>
                         <div class="avatar avatar-lg mt-2">

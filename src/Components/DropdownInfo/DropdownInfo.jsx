@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { DropdownExcel } from '../Buttons/Buttons';
 import "./DropdownInfo.css";
 import { Link } from 'react-router-dom';
-import { Dropdownanchor, Dropdownanchor2 } from '../DropDownAnchor/Dropdownanchor';
+import { Dropdownanchor2 } from '../DropDownAnchor/Dropdownanchor';
 
 export const DropdownInfo = ({ name, children, to1, onClick }) => {
-    const [isAccordionOpen, setAccordionOpen] = useState(false);
+    const [isAccordionOpen, setAccordionOpen] = useState(true);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleAccordion = () => {

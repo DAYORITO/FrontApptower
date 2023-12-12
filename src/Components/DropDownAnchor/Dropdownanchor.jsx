@@ -7,27 +7,26 @@ export const Dropdownanchor = ({ name, to = "/admin/", icon, onClick, onClickMod
         <>
             <div className='myDrop dropdown-item'>
 
-                <div >
+                <div>
                     <Link to={to}>
                         {name}
                     </Link>
-
                 </div>
 
                 <div>
+                    {onClickModal && (
+                        <Link onClick={onClickModal}>
+                            <i className="fe fe-edit-2 fe-12 text-secondary mr-2"></i>
+                        </Link>
+                    )}
 
-                    <Link onClick={onClickModal}>
-                        <i className="fe fe-edit-2 fe-12 text-secondary mr-2" ></i>
-                    </Link>
-
-                    <Link onClick={onClick}>
-
-                        <i className="fe fe-trash-2 fe-12 text-danger"></i>
-                    </Link>
+                    {onClick && (
+                        <Link onClick={onClick}>
+                            <i className="fe fe-trash-2 fe-12 text-danger"></i>
+                        </Link>
+                    )}
                 </div>
-            </div >
-
-
+            </div>
         </>
     );
 };
