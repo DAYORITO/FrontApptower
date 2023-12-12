@@ -72,7 +72,7 @@ export const UsersEdit = () => {
         if (editedUser) {
             try {
                 // const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
-                const response = await fetch(`http://localhost:3000/api/users/${iduser}`, {
+                const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

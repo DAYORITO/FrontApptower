@@ -42,7 +42,7 @@ import { NotFound } from "./Pages/NotFound/NotFound";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
-
+// import Dashboard from "./Pages/Dashboard/Dashboard";
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
@@ -58,7 +58,7 @@ import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 
-const socket = io('http://localhost:3000');
+const socket = io('https://apptowerbackend.onrender.com/');
 
 
 const App = () => {
@@ -190,7 +190,10 @@ const App = () => {
                             <Route path='/admin/*' element={<Layout />}>
 
                                 <Route path='notfound' element={<NotFound />} />
-
+                                {/* <Route path='dashboard' element={
+                                    allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Listar') ?
+                                        <Dashboard /> : <NotFound />
+                                } /> */}
 
                                 {/* Users */}
                                 <Route path='users' element={

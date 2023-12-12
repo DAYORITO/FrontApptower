@@ -31,3 +31,11 @@
     left: 50%;
     transform: translateX(-50%);
 }
+
+.pagination {
+    background-color: rgb(255, 255, 255);
+    /* padding: 10px; */
+    z-index: 1000;
+    padding-bottom: 10px;
+    width: 100%;
+}

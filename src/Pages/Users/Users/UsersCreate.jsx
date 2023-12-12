@@ -107,7 +107,7 @@ export const UsersCreate = () => {
                 let roleResponse;
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
-                    roleResponse = await useFetchpostFile('http://localhost:3000/api/residents', {
+                    roleResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/residents', {
                         docType: documentType,
                         docNumber: document,
                         name,
@@ -164,7 +164,7 @@ export const UsersCreate = () => {
     };
 
 
-    const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/apartments')
+    const { data, load, error } = useFetchget('apartments')
 
     const apartmentList = data && data.apartments
         ? data.apartments

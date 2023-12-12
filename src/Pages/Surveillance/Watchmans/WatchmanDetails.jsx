@@ -71,7 +71,7 @@ export const WatchmanDetails = (props) => {
     const fetchGuardshifsforwatchman = async () => {
         // const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idwatchman}`);
 
-        const response = await fetch(`http://localhost:3000/api/guardshifts/${idwatchman}`);
+        const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idwatchman}`);
         const data = await response.json();
         setGuardshifts(data.shifts, 'Data watchman');
         console.log(data.shifts, "guardshifts")

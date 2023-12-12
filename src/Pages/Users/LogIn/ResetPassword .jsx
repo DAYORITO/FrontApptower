@@ -23,7 +23,7 @@ export const ResetPassword = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/users/reset', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/users/reset', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

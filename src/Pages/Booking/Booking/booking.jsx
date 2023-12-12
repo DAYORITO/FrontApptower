@@ -18,9 +18,25 @@ import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissio
 export const Booking = () => {
   const token = Cookies.get('token');
   const [allowedPermissions, setAllowedPermissions] = useState([]);
-  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/booking')
+  const { data, load, error } = useFetchget('booking')
   console.log(load)
   console.log(error)
+  console.log(data.booking)
+  const [search, setSearch] = useState('');
+  const searcher = (e) => {
+
+    setSearch(e.target.value)
+    console.log(e.target.value)
+  }
+  let filterData = [];
+
+  if (!search) {
+    filterData = data;
+  } else {
+    filterData = data.apartments.filter((dato) =>
+      dato.apartmentName.toLowerCase().includes(search.toLowerCase())
+    );
+  }
 
 
 
@@ -93,10 +109,9 @@ export const Booking = () => {
 
   return (
     <>
-      <ContainerTable
-        title='Reservas'
+      <ContainerTable title='Reservas'
         dropdown={<DropdownExcel />}
-        search={<SearchButton />}
+        search={<SearchButton value={search} onChange={searcher} />}
         buttonToGo={
           allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Crear')
             ? <ButtonGoTo value='Crear Reserva' href='create' />
@@ -127,7 +142,7 @@ export const Booking = () => {
 
         <TablePerson>
           <Thead>
-            <Th name={''}></Th>
+            <Th name={'Zona Común'} ></Th>
             <Th name={'Nombre del Solicitante'}></Th>
             <Th name={'Cantidad de personas'}></Th>
             <Th name={'Fecha de Inicio'}></Th>
@@ -144,14 +159,15 @@ export const Booking = () => {
             {
               filteredDatabooking().map(booking => (
                 <Row
-                  name={booking.bookingtype === 1 ? 'Salon Social' :
-                    booking.bookingtype === 2 ? 'Zona Humeda' : 'No definido'}
+                  name={booking.Space.spaceName}
+                  icon='calendar'
                   lastName={''}
                   docType={booking.status}
+                  status={booking.status}
                   op1={booking.user.name + ' ' + booking.user.lastname}
-                  op4={booking.amount}
-                  op5={format(parseISO(booking.bookingdate), 'PPpp')}
-                  op6={format(parseISO(booking.finalDate), 'PPpp')}
+                  op2={booking.amount}
+                  op3={format(parseISO(booking.bookingdate), 'PPpp')}
+                  op4={format(parseISO(booking.finalDate), 'PPpp')}
                 >
                   {allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Editar') && (
                     <Actions accion='Editar' />

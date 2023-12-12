@@ -5,11 +5,11 @@
     border: 2px solid #afafaf;
     border-radius: 20px;
     padding: 18px;
-    margin-top: 1px;
+
     padding-left: 40px;
     margin-left: 6px;
     max-width: 96%;
-    margin-bottom: 16px;
+    margin-bottom: 5px;
     background-color: #f4f4f4;
     box-shadow: 5px 4px 8px rgba(0, 0, 0, 0.1);
 }

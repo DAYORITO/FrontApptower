@@ -109,7 +109,7 @@ export const Watchman = () => {
                     dateOfbirth: editedWatchman.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString() : null
                 };
 
-                const response = await fetch('http://localhost:3000/api/watchman', {
+                const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

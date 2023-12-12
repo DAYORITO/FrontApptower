@@ -198,6 +198,7 @@ function Fines() {
                                 docType="APTO"
                                 docNumber={fine.apartment.apartmentName}
                                 icon='dollar-sign'
+                                status='Pendiente'
                                 op1={fine.incidentDate}
                                 op2={fine.paymentDate}
                                 op3={"$" + fine.amount}

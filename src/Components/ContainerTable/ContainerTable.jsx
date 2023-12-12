@@ -29,7 +29,10 @@ export const ContainerTable = ({ title = 'Nombre modulo', children, dropdown, se
                         {children}
 
                     </div>
-                  {showPaginator}
+                    <div className='pagination'>
+                        {showPaginator}
+                    </div>
+
                 </div>
 
             </div>

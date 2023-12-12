@@ -97,13 +97,13 @@ export const ParkingSpaces = () => {
 
 
   console.log(filterData, 'filterData parking')
-  const totalPages = Math.ceil(filterData.length / 8);
+  const totalPages = Math.ceil(filterData?.length / 8);
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
   const [currentPage, setCurrentPage] = useState(0);
   const filteredDataParking = () => {
-    return filterData.slice(currentPage, currentPage + 8)
+    return filterData?.slice(currentPage, currentPage + 8) || []
   }
 
   const nextPage = () => {

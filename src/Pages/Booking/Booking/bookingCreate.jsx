@@ -22,6 +22,9 @@ export const BookingCreate = (props) => {
     const [bookingDate, setBookingDate] = useState("");
     const [bookingEnd, setBookingEnd] = useState("");
     const [amount, setAmount] = useState("");
+    const [selectedUser, setSelectedUser] = useState();
+    const [selectedSpace, setSelectedSpace] = useState();
+
     const parsedStartDate = parse(bookingDate, "yyyy-MM-dd'T'HH:mm", new Date());
     const parsedEndDate = parse(bookingEnd, "yyyy-MM-dd'T'HH:mm", new Date());
     let dateStart = '';
@@ -36,20 +39,16 @@ export const BookingCreate = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const url = 'https://apptowerbackend.onrender.com/api/bookings';
-        let status = 'pendiente'
-
-        if (spaces.name === 'Salon Social') {
-            status = 'por pagar'
-        }
+        const url = 'https://apptowerbackend.onrender.com/api/booking';
+        const status = 'pendiente'
 
         const data = {
-            idSpace: spaces,
-            idUser: user,
-            bookingDate: dateStart,
-            amount: amount,
-            status: status,
-            bookingTime: dateEnd
+            "idSpace": selectedSpace,
+            "iduser": selectedUser,
+            "bookingdate": dateStart,
+            "amount": amount,
+            "status": status,
+            "finalDate": dateEnd
         };
         console.log('Data:', data);
         const {
@@ -59,7 +58,12 @@ export const BookingCreate = (props) => {
 
         if (response) {
             console.log('Response:', response);
-            socket.emit('notificacion', 'Se ha creado una nueva reserva');
+            try {
+                socket.emit('notificacion', 'Se ha creado una nueva reserva');
+            } catch (error) {
+                console.log(error);
+            }
+            
             Swal.fire({
                 title: 'Éxito',
                 text: 'Reservas creado exitosamente',
@@ -115,11 +119,11 @@ export const BookingCreate = (props) => {
             <FormContainer name='Crear reserva' buttons={<FormButton name='Crear reserva' backButton='Regresar' to='/admin/booking/' onClick={handleSubmit} ></FormButton>}>
 
                 <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={docType} onChange={e => setDocTypes(e.target.value)}></InputsSelect>
-                <InputsSelect id={"select"} options={userList} name={"Numero de Documento"} onChange={e => setUsers(e.target.value)}></InputsSelect>
-                <InputsSelect id={"select"} options={spacesList} name={"Tipo de reserva"} onChange={e => setSpaces(e.target.value)}></InputsSelect>
+                <InputsSelect id={"select"} options={userList} name={"Numero de Documento"} onChange={e => setSelectedUser(parseInt(e.target.value, 10))}></InputsSelect>
+                <InputsSelect id={"select"} options={spacesList} name={"Tipo de reserva"} onChange={e => setSelectedSpace(parseInt(e.target.value, 10))}></InputsSelect>
                 <Inputs name="fecha de reserva" type="datetime-local" value={bookingDate} onChange={e => setBookingDate(e.target.value)}></Inputs>
-                <Inputs name={"Cantidad de personas"} type="number" value={amount} onChange={e => setAmount(e.target.value)}></Inputs>
-                <Inputs name={"Horas de duracion"} type="datetime-local" value={bookingEnd} onChange={e => setBookingEnd(e.target.value)}></Inputs>
+                <Inputs name={"Cantidad de personas"} type="number" value={amount} onChange={e => setAmount(parseInt(e.target.value, 10))}></Inputs>
+                <Inputs name={"Tiempo de duracion"} type="datetime-local" value={bookingEnd} onChange={e => setBookingEnd(e.target.value)}></Inputs>
 
 
             </FormContainer>

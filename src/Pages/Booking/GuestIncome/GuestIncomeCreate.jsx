@@ -60,8 +60,8 @@ function GuestIncomeCreate() {
     
   ]
   //Peticiones a la api
-  const {data, load, error}= useFetchget('apartments')
   const {data: dataVisitors, load2, error2} = useFetchget('visitors')
+  const {data, load, error}= useFetchget('apartments')
   const {data: dataResidentApartment, load4, error4} = useFetchget('aparmentResidents')
   const {data: dataParkingSpaces, load3, error3} = useFetchget('parkingSpaces')
   useEffect(() => {
@@ -121,7 +121,7 @@ function GuestIncomeCreate() {
   const getVisitors = (dataVisitors) => {
     const visitorsList = dataVisitors?.visitors?.map((visitor) => ({
       value: visitor.idVisitor,
-      label: visitor.documentNumber
+      label: `${visitor.documentNumber} ${visitor.access ? '' : '- Acceso no permitido'}`
     })) || [];
   
     // Agrega un registro vacío al principio de la lista
@@ -189,7 +189,7 @@ function GuestIncomeCreate() {
   
       if (resident) {
         if (resident.resident && resident.resident.phoneNumber) {
-          setPhone(resident.resident.phoneNumber);
+          setPhone(resident.resident.phoneNumber+" - "+resident.resident.name+" "+resident.resident.lastName);
           console.log("Phone Number:", resident.resident.phoneNumber);
         } else {
           console.log("No phone number registered for this resident.");
@@ -353,11 +353,6 @@ function GuestIncomeCreate() {
         </div>
 
       </div>
-      
-
-          
- 
-       
         <InputsSelect name="Ingreso con vehiculo" style="width: 100%" id={'tipoingreso'} onChange={handleChange} options={opciones}></InputsSelect>
         {/* <Inputs name="Apartamento" list={'opciones'} options={apartmentsOptions}></Inputs> */}
         {
@@ -366,8 +361,6 @@ function GuestIncomeCreate() {
         }
          <Inputs name="Persona que permite el acceso" type="text" onChange={(e)=>{setPersonAllowsAccess(e.target.value)}}></Inputs>
         <Inputs name="Observaciones" type="text" onChange={(e)=>{setObservations(e.target.value)}}></Inputs>
-        
-        
     </FormContainer>
     {
       showModalvisitor &&

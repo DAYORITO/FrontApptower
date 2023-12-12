@@ -114,7 +114,7 @@ const LoginForm = ({ setShowLoginForm }) => {
         .catch(error => console.error('Error:', error));
 
 
-    fetch(`http://localhost:3000/api/aparmentResidents/resident/${idResidents}`)
+    fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
         .then(response => response.json())
         .then(data => {
             if (data.apartmentResidents) {
@@ -178,8 +178,15 @@ const LoginForm = ({ setShowLoginForm }) => {
 
                     }
                     else if (responseData.role.toLowerCase() === 'residente' || responseData.role.toLowerCase() === 'residentes') {
-                        navigate(`/admin/apartments/details/${idApartment}`);
-                        window.location.reload();
+                        if (idApartment) {
+                            navigate(`/admin/apartments/details/${idApartment}`);
+                            window.location.reload();
+                        }
+                        else {
+                            navigate('/admin/spaces');
+                            window.location.reload();
+                        }
+
                     }
 
                 }

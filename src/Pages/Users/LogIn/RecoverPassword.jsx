@@ -18,7 +18,7 @@ export const RecoverPassword = () => {
 
         try {
             // const userCheck = await fetch('https://apptowerbackend.onrender.com/api/users/email', {
-            const userCheck = await fetch('http://localhost:3000/api/users/email', {
+            const userCheck = await fetch('https://apptowerbackend.onrender.com/api/users/email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export const RecoverPassword = () => {
                 console.log(userData.message);
                 Cookies.set('email', email);
 
-                const sendCode = await fetch('http://localhost:3000/api/email', {
+                const sendCode = await fetch('https://apptowerbackend.onrender.com/api/email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

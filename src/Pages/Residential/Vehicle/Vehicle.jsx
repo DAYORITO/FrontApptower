@@ -16,8 +16,8 @@ import { useEffect, useState } from 'react'
 export const Vehicle = () => {
   const [allowedPermissions, setAllowedPermissions] = useState([]);
   const token = Cookies.get('token');
-  const { data, load, error } = useFetchget('https://apptowerbackend.onrender.com/api/vehicle')
-  console.log(data.vehicle)
+  const { data, load, error } = useFetchget('vehicle')
+  console.log(data)
   console.log(load)
   console.log(error)
 
@@ -124,11 +124,9 @@ export const Vehicle = () => {
 
         <TablePerson>
           <Thead>
-            <Th name={'#'}></Th>
-            <Th name={'nombre'}></Th>
             <Th name={'placa'}></Th>
+            <Th name={'detalle'}></Th>
             <Th name={'apartamento'}></Th>
-            <Th name={'estado'}></Th>
             <Th name={''}></Th>
             <Th></Th>
           </Thead>
@@ -142,7 +140,12 @@ export const Vehicle = () => {
             {
               filteredDatavehicle().map(vehicle => (
                 <Row
-                  nombre={vehicle.typeuser}
+                  icon='truck'
+                  name={vehicle.licenseplate}
+                  lastName={''}
+                  status={vehicle.state}
+                  op2={vehicle.description}
+                  op3={vehicle.Apartment.apartmentName}
                 >
                   {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') && (
                     <Actions accion='Editar' />
