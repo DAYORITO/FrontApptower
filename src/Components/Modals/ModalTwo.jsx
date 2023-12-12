@@ -33,7 +33,7 @@ export const Modal = ({ title, children, showModal, onClick }) => {
                 <i className="fe fe-16 fe-x"></i>
               </button>
             </div>
-            <div className="modal-body">
+            <div className="modal-body" style={{overflow: 'hidden', overflowY:"auto", maxHeight: "30rem"}}>
               {children}
             </div>
             <div className="modal-footer">

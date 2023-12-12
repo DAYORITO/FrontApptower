@@ -30,7 +30,7 @@ function FinesCreate() {
 
   const { data, load, error } = useFetchget("apartments");
   console.log(data);
-
+ 
   useEffect(() => {
     // Cuando la carga está en progreso (load es true), activamos el modal de carga
     if (load) {
@@ -67,8 +67,8 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/fines';
-    const url = "http://localhost:3000/api/fines";
+    const url = 'https://apptowerbackend.onrender.com/api/fines';
+    // const url = "http://localhost:3000/api/fines";
     const data = {
       fineType: fineType,
       idApartment: idApartment,
@@ -76,7 +76,7 @@ function FinesCreate() {
       paymentDate: limitDate,
       amount: amount,
       details: description,
-      state: "Pendiente",
+      state: "Por pagar",
       evidenceFiles: evidence,
     };
 
@@ -155,12 +155,14 @@ function FinesCreate() {
             type="number"
             onChange={(e) => {
               setAmount(e.target.value);
+              console.log(amount);
             }}
           ></Inputs>
           <InputTextArea
             name="Descripción"
             onChange={(e) => {
               setDescription(e.target.value);
+              console.log(e.target.value);
             }}
           ></InputTextArea>
         </FormColumn>
