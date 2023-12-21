@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 
 
-const ButtonGoTo = ({ value = 'New module', href, modalButton }) => {
+const ButtonGoTo = ({ value = 'New module', href, modalButton, onClick }) => {
     return (
         <div className="col-auto">
-            <Link to={href} className="btn btn-primary">
+            <Link to={href} onClick={onClick} className="btn btn-primary">
                 <span>{value}</span>
             </Link>
             <div>{modalButton}</div>
