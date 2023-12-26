@@ -71,6 +71,7 @@ function Fines() {
             cancelButtonColor: '#d33',
         }).then((result) => {
             if (result.isConfirmed) {
+              
                 //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
                 useApiUpdate(dataToUpdate, 'fines')
                 .then((responseData)=>{
@@ -87,6 +88,7 @@ function Fines() {
                 const updatedFines = fines?.map((fine) => {
                     if (fine.idFines === dataToUpdate.idFines) {
                     fine.state = dataToUpdate.state;
+
                     }
                     return fine;
                 });
