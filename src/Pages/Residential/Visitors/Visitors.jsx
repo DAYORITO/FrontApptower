@@ -228,145 +228,22 @@ function Visitors() {
     }
   };
 
-  const handleTowerChange = (selectedTower) => {
-    setPhone("Seleccione un apartamento");
-    setSelectedTower(selectedTower);
-    console.log(selectedTower);
 
-    // Encuentra los apartamentos correspondientes a la torre seleccionada
-    const selectedTowerData = TowerData.find(
-      (towerData) => towerData.tower === selectedTower
-    );
-    setSelectedApartments(
-      selectedTowerData ? selectedTowerData.apartments : []
-    );
-    console.log("hola", selectedTowerData);
-  };
+  const totalPages = data.visitors ? Math.ceil(data.visitors.length / 8) : 0;
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
-  const handlePhoneSetted = (selectedValue) => {
-    console.log("Selected Value:", selectedValue);
-    setApartment(parseInt(selectedValue));
-    console.log("este es mi apartamento " + apartment);
 
-    if (dataResidentApartment && dataResidentApartment.apartmentResidents) {
-      const resident = dataResidentApartment.apartmentResidents.find(
-        (resident) => resident.idApartment === parseInt(selectedValue)
-      );
+  const [currentPage, setCurrentPage] = useState(0);
 
-      if (resident) {
-        if (resident.resident && resident.resident.phoneNumber) {
-          setPhone(
-            resident.resident.phoneNumber +
-              " - " +
-              resident.resident.name +
-              " " +
-              resident.resident.lastName
-          );
-          console.log("Phone Number:", resident.resident.phoneNumber);
-        } else {
-          console.log("No phone number registered for this resident.");
-          setPhone("No se cuenta con un numero.");
-        }
-      } else {
-        console.log("No resident found for the selected apartment.");
-        setPhone("Nadie habita");
-      }
+  const filteredDatavisitor = () => {
+    if (data && data.visitors) {
+      return data.visitors.slice(currentPage, currentPage + 8);
     } else {
-      console.log("No data or apartmentResidents property found.");
-      setPhone("No se encontro el apartamento");
+      return [];
     }
   };
 
-  //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
-  const handleEditClick = async (dataToUpdate) => {
-    setShowModaload(true);
 
-    //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-    useApiUpdate(dataToUpdate, "visitors")
-      .then((responseData) => {
-        setShowModaload(false);
-
-        console.log(responseData);
-        Swal.fire({
-          icon: "success",
-          title: "Acceso actualizado",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-        const updatedVisitors = visitorsData.map((visitor) => {
-          if (visitor.idVisitor === dataToUpdate.idVisitor) {
-            visitor.access = dataToUpdate.access;
-          }
-          return visitor;
-        });
-        setVisitorsData(updatedVisitors);
-      })
-      .catch((error) => {
-        console.error("Error updating access:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Algo salió mal!",
-        });
-      });
-  };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setShowModaload(true);
-    const { response, error } = await useFetchpost('guestIncome', {
-      "startingDate": new Date(),
-      "departureDate": null,
-      "idApartment": apartment,
-      "personAllowsAccess": personAllowsAccesss,
-      "observations": observationss ?  observationss : "Sin observaciones",
-      "idVisitor": visitor,
-    });
-    if (response) {
-      if (response && check1){
-        const { response: response2, error: error2 } = await useFetchpost('guestincomeparking', {
-          "idParkingSpace": parkingGuestIncome,
-          "idGuest_income": response.guestIncome.idGuest_income
-        });
-        if (response2) {
-          // Manejar la respuesta exitosa
-          console.log('Respuesta exitosa:', response2);
-          useApiUpdate({"idParkingSpace":parkingGuestIncome, "status":'Inactive'}, 'parkingSpaces')
-          .then((responseData)=>{
-            setShowModaload(false);
-            setShowmodal(false);
-            console.log(responseData)
-          }) 
-        }
-        if (error2) {
-          console.error('Error:', error2);
-        }
-                
-      }
-      setShowModaload(false);
-      setShowmodal(false);
-      // Manejar la respuesta exitosa
-      console.log('Respuesta exitosa:', response);
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Ingreso creado exitosamente',
-                icon: 'success',
-            }).then(() => {
-
-                navigate('/admin/guest_income');
-            });
-    }
-
-    if (error) {
-            setShowModaload(false);
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al crear ingreso',
-                icon: 'error',
-            });
-      console.error('Error:', error);
-    }
-  };
 
   return (
     <>
@@ -377,6 +254,25 @@ function Visitors() {
         buttonToGo={
           <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
         }
+        showPaginator={
+          <nav aria-label="Table Paging" className="mb- text-muted my-4">
+            <ul className="pagination justify-content-center mb-0">
+              <li className="page-item">
+                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+              </li>
+              {pageNumbers.map((pageNumber) => (
+                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                </li>
+              ))}
+
+
+              <li className="page-item">
+                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+              </li>
+            </ul>
+          </nav >
+        }
       >
         <TablePerson>
           <Thead>
@@ -386,7 +282,7 @@ function Visitors() {
             <Th name={"Acciones"}></Th>
           </Thead>
           <Tbody>
-            {data.visitors?.map((visitor) => (
+            {filteredDatavisitor().map(visitor => (
               <Row
                 docType={visitor.documentType}
                 docNumber={visitor.documentNumber}
@@ -396,19 +292,19 @@ function Visitors() {
                   visitor.access === true
                     ? "Permitido"
                     : visitor.access === false
-                    ? "Denegado"
-                    : "Desconocido"
+                      ? "Denegado"
+                      : "Desconocido"
                 }
                 op2={visitor.genre}
               >
                 {visitor.access === true ? (
-                  <Actions accion="Agregar ingreso" 
-                  onClick={() => {
-                    setVisitor(visitor.idVisitor);
-                    setName(visitor.name);
-                    setDocumentNumber(visitor.documentNumber);
-                    setShowmodal(true);
-                  }}/>
+                  <Actions accion="Agregar ingreso"
+                    onClick={() => {
+                      setVisitor(visitor.idVisitor);
+                      setName(visitor.name);
+                      setDocumentNumber(visitor.documentNumber);
+                      setShowmodal(true);
+                    }} />
                 ) : (
                   ""
                 )}
@@ -458,16 +354,16 @@ function Visitors() {
                   options={towers}
                 ></InputsSelect>
                 <div className="mb-4">
-                <Select2
-                  name={"Apartamento"}
-                  onChange={(selectedValue) => {
-                    handlePhoneSetted(selectedValue),
-                      setApartment(selectedValue);
-                  }}
-                  options={selectedApartments}
-                ></Select2>
+                  <Select2
+                    name={"Apartamento"}
+                    onChange={(selectedValue) => {
+                      handlePhoneSetted(selectedValue),
+                        setApartment(selectedValue);
+                    }}
+                    options={selectedApartments}
+                  ></Select2>
                 </div>
-                
+
                 <Inputs name="Telefono" readonly={true} value={phone}></Inputs>
 
                 <div
@@ -518,7 +414,7 @@ function Visitors() {
                     setObservations(e.target.value);
                   }}
                 ></Inputs> */}
-                <InputTextArea name={"Observaciones"} onChange={(e)=>setObservations(e.target.value)}></InputTextArea>
+                <InputTextArea name={"Observaciones"} onChange={(e) => setObservations(e.target.value)}></InputTextArea>
               </Modal>
             </ModalContainer>
           </>,

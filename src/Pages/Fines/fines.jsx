@@ -22,33 +22,29 @@ import { useApiUpdate } from '../../Hooks/FetchputDan';
 
 function Fines() {
     //Se crea un estado para actualizar los datos al momento de cualquier accion
-    const [showModal, setShowmodal] = useState(false);
-    const [fileVerifier, setFileVerifier] = useState(false);
-    const [file, setFile] = useState(null);
-    const [idfine, setIdfine] = useState("");
     const [fines, setFines] = useState({fines: []})
     const [showModaload, setShowModaload] = useState(false);
     cardio.register()
 
-    const {data, load, error}= useFetchget('fines')
-    
+    const { data, load, error } = useFetchget('fines')
+
     useEffect(() => {
-      // Cuando la carga está en progreso (load es true), activamos el modal de carga
-      if (load) {
-          setShowModaload(true);
-      } else {
-          // Cuando la carga se completa (load es false), desactivamos el modal de carga
-          setShowModaload(false);
-      }
-  }, [load]);
-  
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (load) {
+            setShowModaload(true);
+        } else {
+            // Cuando la carga se completa (load es false), desactivamos el modal de carga
+            setShowModaload(false);
+        }
+    }, [load]);
+
     console.log(data.fines)
     //se usa el effect para actualizar los datos del get
     useEffect(() => {
         if (data && data.fines) {
             setFines(data.fines);
         }
-     }, [data]);
+    }, [data]);
 
      //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
      const handleEditClick = async (dataToUpdate) => {
@@ -145,14 +141,82 @@ function Fines() {
 
     return (
         <>
-            <ContainerTable title='Multas'
-              dropdown={<DropdownExcel />}
-              search={<SearchButton />}
-              buttonToGo={<ButtonGoTo value='Crear Multa' href='/admin/fines/create' />}
+            {/* <ContainerTable title='Multas'
+                dropdown={<DropdownExcel/>}
+                search={<SearchButton/>}
+                buttonToGo={<ButtonGoTo value='Crear Multa' href='/admin/fines/create'/>}
             >
                 <TablePerson>
                     <Thead>
-                    
+                        <Th name={'Tipo de multa'}></Th>
+                    </Thead>
+                    <Tbody>
+                        {data.fines?.map(fine => (
+                            <Row
+                                name={fine.fineType}
+                            >
+                                <Actions accion='Agregar Ingreso'/>
+                                <Actions accion='Cambiar Acceso' onClick={() => {
+                                    handleEditClick({idVisitor: visitor.idVisitor, access: !visitor.access});
+                                }}/>
+                            </Row>
+                        ))}
+                    </Tbody>
+
+                </TablePerson>
+
+            </ContainerTable>
+            {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                        <Modaload
+                            showModal={setShowModaload}
+                        >
+                            <div className='d-flex justify-content-center'>
+                            <l-cardio
+                                size="50"
+                                stroke="4"
+                                speed="2" 
+                                color="black" 
+                            ></l-cardio>
+                            </div>
+                            
+                            
+                        </Modaload>
+                        </ModalContainerload>
+                    </>,
+                    document.getElementById("modalRender")
+                    )} */}
+                
+
+            <ContainerTable title='Multas'
+                dropdown={<DropdownExcel />}
+                search={<SearchButton />}
+                buttonToGo={<ButtonGoTo value='Crear Multa' href='/admin/fines/create' />}
+                showPaginator={
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                                </li>
+                            ))}
+
+
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav >
+                }
+            >
+                <TablePerson>
+                    <Thead>
+
                         <Th name={'Tipo de multa'}></Th>
                         <Th name={'Fecha del incidente'}></Th>
                         <Th name={'Fecha limite de pago'}></Th>
@@ -161,7 +225,7 @@ function Fines() {
                         <Th name={'Acciones'}></Th>
                     </Thead>
                     <Tbody>
-                        {data.fines?.map(fine => (
+                        {filteredDatafines().map(fine => (
                             <Row
                                 name={fine.fineType}
                                 docType="APTO"
@@ -170,57 +234,42 @@ function Fines() {
                                 status='Pendiente'
                                 op1={fine.incidentDate}
                                 op2={fine.paymentDate}
-                                op3={"$"+fine.amount}
+                                op3={"$" + fine.amount}
                                 op4={fine.state}
                             >
-                                <Actions accion='Agregar Comprobante' onClick={()=>{setIdfine(fine.idFine), setShowmodal(true)}}/>
-                                <Actions accion='Aprobar pago' onClick={() => {setFileVerifier(fine.paymentproof);
-                                    handleEditClick({idFine: fine.idFine, state: "Pagada"});
+                                <Actions accion='Agregar Comprobante'/>
+                                <Actions accion='Aprobar pago' onClick={() => {
+                                    handleEditClick({idVisitor: visitor.idVisitor, access: !visitor.access});
                                 }}/>
                             </Row>
                         ))}
-                        
+
 
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
             // {showModaload &&
                 createPortal(
-                  <>
-                    <ModalContainerload ShowModal={setShowModaload}>
-                      <Modaload
-                        showModal={setShowModaload}
-                      >
-                        <div className='d-flex justify-content-center'>
-                        <l-cardio
-                            size="50"
-                            stroke="4"
-                            speed="2" 
-                            color="black" 
-                          ></l-cardio>
-                        </div>
-                          
-                        
-                      </Modaload>
-                    </ModalContainerload>
-                  </>,
-                  document.getElementById("modalRender")
-                )}
-                {
-                    showModal &&
-                    createPortal(
-                        <>
-                        <ModalContainer ShowModal={setShowmodal}>
-                            <Modal title={"Adjuntar comprobante de pago"} onClick={handlePaymentproof({paymentproof: file, idFine: idfine, state: "Pendiente"})}>
-                                <Uploader label="Adjuntar comprobante de pago" onChange={(e) => {setFile(e.target.files[0]);}}></Uploader>
-                            </Modal>
-                        </ModalContainer>
-                        
-                        </>,
-                        document.getElementById("modalRender")
-                    )
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-cardio
+                                        size="50"
+                                        stroke="4"
+                                        speed="2"
+                                        color="black"
+                                    ></l-cardio>
+                                </div>
 
-                }
+
+                            </Modaload>
+                        </ModalContainerload>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
             
         </>
     )

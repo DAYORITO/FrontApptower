@@ -64,6 +64,32 @@ export const Owners = () => {
         }
     };
 
+
+
+    const totalPages = data.owners ? Math.ceil(data.owners.length / 8) : 0;
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const filteredDataowners = () => {
+        if (data && data.owners) {
+            return data.owners.slice(currentPage, currentPage + 8);
+        } else {
+            return [];
+        }
+    };
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 8)
+    }
+
+
+    const PreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 8)
+    }
+
     return (
         <>
 
@@ -77,6 +103,25 @@ export const Owners = () => {
                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear')
                         ? <ButtonGoTo value='Nuevo Propietario' href='create' />
                         : null
+                }
+                showPaginator={
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                                </li>
+                            ))}
+
+
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav >
                 }
             >
 
@@ -92,7 +137,7 @@ export const Owners = () => {
 
 
 
-                        {data.owners?.map(owners => (
+                        {filteredDataowners().map(owners => (
                             <Row
 
                                 // Personal information

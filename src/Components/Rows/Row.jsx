@@ -12,7 +12,7 @@ export const Row = ({
     docNumber,
     phone,
     email,
-    status = 'Activo',
+    status,
     rol,
     children,
     descripcion,
@@ -27,8 +27,10 @@ export const Row = ({
     to = "details",
     start,
     end,
+    address,
     tel,
     corr
+
 
 }) => {
 
@@ -47,12 +49,14 @@ export const Row = ({
                         status === 'Activo' || status === 'Active' ?
                             <span className="dot dot-md bg-success mr-1"></span> :
                             status === 'Pagada' ?
-                            <span className="dot dot-md bg-success mr-1"></span> :
-                            status === 'Por pagar' ?
-                                <span className="dot dot-md bg-danger mr-1"></span> :
-                                status === 'Pendiente' ?
-                                <span className="dot dot-md bg-warning mr-1"></span> :
-                                null
+                                <span className="dot dot-md bg-success mr-1"></span> :
+                                status === 'Por pagar' ?
+                                    <span className="dot dot-md bg-danger mr-1"></span> :
+                                    status === 'Pendiente' ?
+                                        <span className="dot dot-md bg-warning mr-1"></span> :
+                                        status === 'Inactivo' || status === 'Inactive' ?
+                                            <span className="dot dot-md bg-danger mr-1"></span> :
+                                            null
                     }
 
                 </td>
@@ -74,6 +78,8 @@ export const Row = ({
             </Link>
 
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
+            {address != null ? <td class="text-secondary">{address}</td> : null}
+
             {tel != null ? <td class="text-secondary">{tel}</td> : null}
             {corr != null ? <td class="text-secondary">{corr}</td> : null}
 

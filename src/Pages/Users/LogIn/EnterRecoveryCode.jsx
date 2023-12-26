@@ -25,7 +25,7 @@ export const EnterRecoveryCode = () => {
 
 
         try {
-            const response = await fetch('http://localhost:3000/api/email/verify', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/email/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

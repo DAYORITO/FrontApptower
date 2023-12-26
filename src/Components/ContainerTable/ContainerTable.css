@@ -1,8 +1,6 @@
-
-
 #tableContainer {
 
-    padding: 0 2vw 10vw 2vw ;
+    padding: 0 2vw 10vw 2vw;
     min-height: 100px;
     max-height: 430px;
     overflow: hidden;
@@ -14,4 +12,30 @@
     /* display: block !important; */
     overflow-x: auto;
     margin: 0 2vw 0vw 2vw;
+}
+
+#formContainer {
+    overflow-y: hidden;
+}
+
+#formContainer {
+    min-height: 500px;
+    overflow-y: auto;
+    padding-bottom: 100px;
+    position: relative;
+}
+
+.pagination {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.pagination {
+    background-color: rgb(255, 255, 255);
+    /* padding: 10px; */
+    z-index: 1000;
+    padding-bottom: 10px;
+    width: 100%;
 }

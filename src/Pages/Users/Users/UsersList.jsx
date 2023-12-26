@@ -126,6 +126,29 @@ export const Users = () => {
         );
     }
 
+
+
+
+    const totalPages = Math.ceil(filterData.length / 10);
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const filteredDataUsers = () => {
+        return filterData.slice(currentPage, currentPage + 10)
+    }
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 10)
+    }
+
+
+    const PreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 10)
+    }
+
+
     return (
         <>
 
@@ -137,6 +160,25 @@ export const Users = () => {
                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear')
                         ? <ButtonGoTo value='Crear Usuario' href='create' />
                         : null
+                }
+                showPaginator={
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                                </li>
+                            ))}
+
+
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav >
                 }
             >
 
@@ -153,7 +195,7 @@ export const Users = () => {
                     </Thead>
                     <Tbody>
 
-                        {filterData?.map(user => (
+                        {filteredDataUsers().map(user => (
                             <Row
                                 key={user.iduser}
                                 docType={user.documentType}
@@ -178,7 +220,7 @@ export const Users = () => {
 
                     </Tbody>
                 </TablePerson>
-            </ContainerTable>
+            </ContainerTable >
 
 
 

@@ -72,7 +72,7 @@ export const UsersEdit = () => {
         if (editedUser) {
             try {
                 // const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
-                const response = await fetch(`http://localhost:3000/api/users/${iduser}`, {
+                const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export const UsersEdit = () => {
                         text: 'Usuario modificado exitosamente',
                         icon: 'success',
                     }).then(() => navigate('/admin/users'));
-                    setEditedUser(null);
+                    // setEditedUser(null);
                 } else {
                     const errorResponse = await response.json();
                     console.error('Error al guardar los cambios:', response.status, errorResponse);
@@ -125,8 +125,8 @@ export const UsersEdit = () => {
     const [birthdate, setBirthdate] = useState(null);
     console.log('Birthdate:', birthdate);
 
-    if (editedUser.idrole === 3) {
-        fetch(`http://localhost:3000/api/watchman/document/${editedUser.document}`)
+    if (editedUser?.idrole === 3) {
+        fetch(`https://apptowerbackend.onrender.com/api/watchman/document/${editedUser.document}`)
             .then(response => response.json())
             .then(data => {
                 if (data.watchman) {
@@ -138,7 +138,7 @@ export const UsersEdit = () => {
             })
             .catch(error => console.error('Error:', error));
     } else if (editedUser.idrole === 2) {
-        fetch(`http://localhost:3000/api/residents/document/${editedUser.document}`)
+        fetch(`https://apptowerbackend.onrender.com/api/residents/document/${editedUser.document}`)
             .then(response => response.json())
             .then(data => {
                 if (data.residente) {
@@ -154,7 +154,7 @@ export const UsersEdit = () => {
             })
             .catch(error => console.error('Error:', error));
 
-        fetch(`http://localhost:3000/api/apartments/${Number(idResidents)}`)
+        fetch(`https://apptowerbackend.onrender.com/api/apartments/${Number(idResidents)}`)
             .then(response => response.json())
             .then(data => {
                 if (data.spartment) {
@@ -223,7 +223,9 @@ export const UsersEdit = () => {
             }))
         : [];
 
-
+    useEffect(() => {
+        console.log(birthdate);
+    }, [birthdate]);
 
     console.log(apartmentList)
     return (
@@ -273,7 +275,6 @@ export const UsersEdit = () => {
                                         value={editedUser?.email || ''}
                                         onChange={e => setEditedUser({ ...editedUser, email: e.target.value })}
                                     />
-                                    <Inputs name="Numero de telefono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} type='number'></Inputs>
                                     <Inputs name="Fecha de nacimiento" type="date" value={birthdateResident}
                                         onChange={e => setBirthdateResident(e.target.value)} ></Inputs>
 
@@ -289,9 +290,10 @@ export const UsersEdit = () => {
                                     <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={editedUser?.documentType || ''} onChange={(e) => setEditedUser({ ...editedUser, documentType: e.target.value })}
                                     ></InputsSelect>
                                     <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
+                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
 
                                     <Inputs name="Apellido" value={editedUser?.lastname || ''} onChange={(e) => setEditedUser({ ...editedUser, lastname: e.target.value })} />
-                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
+                                    <Inputs name="Numero de telefono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} type='number'></Inputs>
                                     <InputsSelect
                                         id="select"
                                         options={residentsTypes}

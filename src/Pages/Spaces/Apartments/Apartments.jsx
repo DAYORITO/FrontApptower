@@ -35,14 +35,18 @@ export const Apartments = () => {
     setSearch(e.target.value)
     console.log(e.target.value)
   }
+
+
   let filterData = [];
 
-  if (!search) {
-    filterData = data.apartments;
-  } else {
-    filterData = data.apartments.filter((dato) =>
-      dato.apartmentName.toLowerCase().includes(search.toLowerCase())
-    );
+  if (data && data.apartments) {
+    if (!search) {
+      filterData = data.apartments;
+    } else {
+      filterData = data.apartments.filter((dato) =>
+        dato.apartmentName.toLowerCase().includes(search.toLowerCase())
+      );
+    }
   }
 
 
@@ -88,6 +92,28 @@ export const Apartments = () => {
     }
   };
 
+
+  const totalPages = Math.ceil(filterData.length / 8);
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const filteredDataApartament = () => {
+    return filterData.slice(currentPage, currentPage + 8)
+  }
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 8)
+  }
+
+
+  const PreviousPage = () => {
+    if (currentPage > 0)
+      setCurrentPage(currentPage - 8)
+  }
+
+
   return (
     <>
       <ContainerTable
@@ -99,7 +125,27 @@ export const Apartments = () => {
             ? <ButtonGoTo value='Crear Apartamentos' href='create' />
             : null
         }
+        showPaginator={
+          <nav aria-label="Table Paging" className="mb- text-muted my-4">
+            <ul className="pagination justify-content-center mb-0">
+              <li className="page-item">
+                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+              </li>
+              {pageNumbers.map((pageNumber) => (
+                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                </li>
+              ))}
+
+
+              <li className="page-item">
+                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+              </li>
+            </ul>
+          </nav >
+        }
       >
+
 
 
         <TablePerson>
@@ -114,9 +160,9 @@ export const Apartments = () => {
           </Thead>
           <Tbody>
 
-            {filterData?.map(apartment => (
+            {filteredDataApartament().map(apartment => (
               <Row
-
+                key={apartment.idApartment}
                 icon={"home"}
                 status={apartment.status}
                 docType={apartment.tower}
