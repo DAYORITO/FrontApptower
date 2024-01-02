@@ -55,7 +55,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            const response = await fetch('http://localhost:3000/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -76,7 +76,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
     const fechDataRols = async () => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+            const response = await fetch('http://localhost:3000/api/rols');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch roles');
@@ -103,7 +103,7 @@ const LoginForm = ({ setShowLoginForm }) => {
     }, [userData]);
 
 
-    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+    fetch(`http://localhost:3000/api/residents/document/${userDocument}`)
         .then(response => response.json())
         .then(data => {
             if (data.residente) {
@@ -114,7 +114,7 @@ const LoginForm = ({ setShowLoginForm }) => {
         .catch(error => console.error('Error:', error));
 
 
-    fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
+    fetch(`http://localhost:3000/api/aparmentResidents/resident/${idResidents}`)
         .then(response => response.json())
         .then(data => {
             if (data.apartmentResidents) {
@@ -143,7 +143,7 @@ const LoginForm = ({ setShowLoginForm }) => {
             console.log('Token:', token);
 
             if (token) {
-                const response = await fetch('https://apptowerbackend.onrender.com/api/login/access', {
+                const response = await fetch('http://localhost:3000/api/login/access', {
                     // const response = await fetch('http://localhost:3000/api/login/access', {
                     method: 'GET',
                     headers: {
