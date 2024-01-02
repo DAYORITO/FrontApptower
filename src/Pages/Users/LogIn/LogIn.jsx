@@ -188,6 +188,9 @@ const LoginForm = ({ setShowLoginForm }) => {
                         }
 
                     }
+                    else {
+                        navigate('/admin/users/profileList');
+                    }
 
                 }
 

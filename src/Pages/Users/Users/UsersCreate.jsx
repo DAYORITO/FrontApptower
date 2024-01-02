@@ -263,7 +263,25 @@ export const UsersCreate = () => {
                                     <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
                                 </FormColumn>
                             </>
-                        ) : null}
+                        ) :
+                            <>
+                                <FormColumn>
+                                    <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+                                        onChange={e => setPdf(e.target.files[0])} />
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}></InputsSelect>
+                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} />
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} />
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                                </FormColumn>
+
+                            </>}
                     </>
                 )}
 

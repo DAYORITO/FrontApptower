@@ -42,6 +42,8 @@ import { NotFound } from "./Pages/NotFound/NotFound";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
+import { EnterpriceSecurity } from "./Pages/Surveillance/Watchmans/EnterpriceSecurity";
+import { EnterpriceSecurityCreate } from "./Pages/Surveillance/Watchmans/EnterpriceSecurityCreate";
 // import Dashboard from "./Pages/Dashboard/Dashboard";
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
@@ -221,13 +223,16 @@ const App = () => {
 
 
                                 {/* Surveillance */}
-                                <Route path='watchman' element={
+                                {/* <Route path='watchman' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
                                         ? (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
-                                            ? <Watchman />
+                                            ? <>
+                                                <Watchman />
+                                                <EnterpriceSecurity />
+                                            </>
                                             : <NotFound />
                                         : <NotFound />
-                                } />
+                                } /> */}
 
                                 <Route path='watchman/shifts' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
@@ -245,6 +250,11 @@ const App = () => {
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
                                         <WatchmanDetails /> : <NotFound />
                                 } />
+
+                                <Route path='watchman/enterprice' element={<EnterpriceSecurity />} />
+
+                                <Route path='watchman/enterprice/create' element={<EnterpriceSecurityCreate />} />
+
 
 
 
