@@ -29,7 +29,8 @@ export const Row = ({
     end,
     address,
     tel,
-    corr
+    corr,
+    enter,
 
 
 }) => {
@@ -77,6 +78,7 @@ export const Row = ({
 
             </Link>
 
+            {enter != null ? <td class="text-secondary">{enter}</td> : null}
             {rol != null ? <td class="text-secondary">{rol}</td> : null}
             {address != null ? <td class="text-secondary">{address}</td> : null}
 

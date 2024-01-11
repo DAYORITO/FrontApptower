@@ -10,6 +10,7 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { docTypes, residentsTypes, sexs } from '../../../Hooks/consts.hooks'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useFetchget } from '../../../Hooks/useFetch';
+import Select2 from '../../../Components/Inputs/Select2'
 
 
 export const UsersCreate = () => {
@@ -228,16 +229,20 @@ export const UsersCreate = () => {
                                     <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
                                         onChange={e => setPdf(e.target.files[0])} />
                                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
+                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
                                     <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}></Inputs>
 
                                 </FormColumn>
 
                                 <FormColumn>
+                                    <div className="mr-1" style={{ width: '100%' }}>
+                                        <Select2 name={'Empresa de Seguridad'}></Select2>
+
+                                    </div>
                                     <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)}></InputsSelect>
                                     <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} ></Inputs>
                                     <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} ></Inputs>
                                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} ></Inputs>
-                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
 
                                     <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />

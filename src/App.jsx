@@ -223,7 +223,7 @@ const App = () => {
 
 
                                 {/* Surveillance */}
-                                {/* <Route path='watchman' element={
+                                <Route path='watchman' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
                                         ? (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
                                             ? <>
@@ -232,7 +232,7 @@ const App = () => {
                                             </>
                                             : <NotFound />
                                         : <NotFound />
-                                } /> */}
+                                } />
 
                                 <Route path='watchman/shifts' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
@@ -251,11 +251,22 @@ const App = () => {
                                         <WatchmanDetails /> : <NotFound />
                                 } />
 
-                                <Route path='watchman/enterprice' element={<EnterpriceSecurity />} />
+                                <Route path='watchman/enterprice' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
+                                        ? (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                            ? <>
+                                                <EnterpriceSecurity />
+                                            </>
+                                            : <NotFound />
+                                        : <NotFound />
+                                } />
 
-                                <Route path='watchman/enterprice/create' element={<EnterpriceSecurityCreate />} />
 
 
+                                <Route path='watchman/enterprice/create' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') ?
+                                        <WatchmanCreate /> : <NotFound />
+                                } />
 
 
 

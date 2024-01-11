@@ -276,7 +276,18 @@ export const Aside = () => {
 
                                 {allowedPermissions.includes('Vigilantes') && (
                                     (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
-                                        ? <ListNav module={'Vigilantes'} href='watchman/' icon='fe fe-shield' />
+                                        ? <DropDownNav module={"Seguridad"} icon='fe fe-shield fe-24'>
+
+                                            <>
+                                                {allowedPermissions.includes('Vigilantes') && (
+                                                    <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
+                                                )}
+                                                {allowedPermissions.includes('Vigilantes') && (
+                                                    <DropDownList subprocess={"Empresas Aliadas"} href='watchman/enterprice'></DropDownList>
+                                                )}
+                                            </>
+
+                                        </DropDownNav>
                                         : (userRole === 'Vigilante' || userRole === 'Vigilantes' || userRole === 'Seguridad')
                                             ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
                                             : null
