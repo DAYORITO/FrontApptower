@@ -26,6 +26,9 @@ export const UsersCreate = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [pdf, setPdf] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
+    const [enterprice, setEnterprice] = useState(null);
+
     console.log(pdf, 'aqui estoy file')
 
 
@@ -41,10 +44,11 @@ export const UsersCreate = () => {
 
     const fetchRoles = async () => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+            const response = await fetch('http://localhost:3000/api/rols');
             if (!response.ok) {
                 throw new Error('Error al obtener los roles');
             }
+
             const data = await response.json();
             const rolesData = data.rols || [];
             return rolesData;
@@ -90,14 +94,14 @@ export const UsersCreate = () => {
         event.preventDefault();
 
         try {
-            const userResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/users', {
-                documentType,
+            const userResponse = await useFetchpostFile('http://localhost:3000/api/users', {
+                docType: documentType,
                 name,
                 email,
                 password,
                 idrole,
                 document,
-                lastname,
+                lastName: lastname,
                 phone,
                 pdf,
                 dateOfbirth,
@@ -105,10 +109,10 @@ export const UsersCreate = () => {
             });
 
             if (userResponse.response) {
-                let roleResponse;
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
-                    roleResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/residents', {
+                    let roleResponse;
+                    roleResponse = await useFetchpostFile('http://localhost:3000/api/residents', {
                         docType: documentType,
                         docNumber: document,
                         name,
@@ -123,11 +127,12 @@ export const UsersCreate = () => {
                         status: 'Active'
                     });
                 } else if (namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad') {
-                    roleResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/watchman', {
+                    roleResponse = await useFetchpostFile('http://localhost:3000/api/watchman', {
                         namewatchman: name,
                         lastnamewatchman: lastname,
                         documentType,
                         document,
+                        idEnterpriseSecurity: selectedEnterprice ? selectedEnterprice.idEnterpriseSecurity : null,
                         phone,
                         email,
                         dateOfbirth,
@@ -135,9 +140,9 @@ export const UsersCreate = () => {
                     });
                 }
 
-                console.log(roleResponse, 'aqui estoy roleResponse vigilante')
 
-                if (roleResponse?.response) {
+
+                if (userResponse.response) {
                     Swal.fire({
                         title: 'Éxito',
                         text: 'Usuario creado exitosamente',
@@ -146,6 +151,7 @@ export const UsersCreate = () => {
                         navigate('/admin/users');
                     });
                 } else {
+                    console.error('Error al crear el rol del usuario:');
                     Swal.fire({
                         title: 'Error',
                         text: 'Error al crear el rol del usuario',
@@ -177,6 +183,35 @@ export const UsersCreate = () => {
         : [];
 
     console.log(apartmentList)
+
+
+    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
+
+
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
+        value: enterprice.idEnterpriseSecurity,
+        label: enterprice.nameEnterprice
+    })) : [];
+
+
+    const handleEnterpriceSecurity = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue);
+        console.log("Selected Value:", selectedValueAsNumber);
+        setEnterprice(selectedValueAsNumber);
+
+        const selectedEnterprice = dataEnterprice.enterpriseSecurity.find(
+            enterprice => enterprice.idEnterpriseSecurity === selectedValueAsNumber
+        );
+
+        if (selectedEnterprice) {
+            setSelectedEnterprice(selectedEnterprice.idEnterpriseSecurity);
+        } else {
+
+            console.error("Selected Enterprice not found or undefined");
+            setSelectedEnterprice(null);
+        }
+    };
     return (
         <>
             <FormContainer
@@ -236,8 +271,8 @@ export const UsersCreate = () => {
 
                                 <FormColumn>
                                     <div className="mr-1" style={{ width: '100%' }}>
-                                        <Select2 name={'Empresa de Seguridad'}></Select2>
 
+                                        <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
                                     </div>
                                     <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)}></InputsSelect>
                                     <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} ></Inputs>

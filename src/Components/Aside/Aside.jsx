@@ -55,7 +55,7 @@ export const Aside = () => {
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            const response = await fetch('http://localhost:3000/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -148,7 +148,7 @@ export const Aside = () => {
 
 
 
-    console.log(allowedPermissions, 'allowedPermissions');
+    console.log(allowedPermissions, 'allowedPermissions Aside ');
 
     const [isCloset, isOpem] = useState(true);
 
@@ -172,7 +172,7 @@ export const Aside = () => {
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav
                     name={userData.user?.name ? userData.user.name : ''}
-                    lastname={userData.user?.lastname ? userData.user.lastname : ''}
+                    lastName={userData.user?.lastName ? userData.user.lastName : ''}
                     rol={userRole ? userRole : ''}
                 />
 
@@ -292,6 +292,10 @@ export const Aside = () => {
                                             ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
                                             : null
                                 )}
+
+                                {/* {allowedPermissions.includes('Vigilantes') && (
+                                    <ListNav module={'Vigilantes'} href='watchman/' icon='fe fe-x-square fe-24' />
+                                )} */}
 
                             </>
                         )}

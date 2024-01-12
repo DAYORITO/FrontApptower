@@ -198,10 +198,10 @@ export const Users = () => {
                         {filteredDataUsers().map(user => (
                             <Row
                                 key={user.iduser}
-                                docType={user.documentType}
+                                docType={user.docType}
                                 docNumber={user.document}
                                 name={user.name}
-                                lastName={user.lastname}
+                                lastName={user.lastName}
                                 rol={
                                     roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }

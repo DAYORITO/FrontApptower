@@ -28,7 +28,8 @@ export const WatchmanCreate = () => {
     const [dateOfbirth, setDateOfBirth] = useState("");
     const [nameEnterprice, setNameEnterprice] = useState(null)
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
-    console.log(selectedEnterprice, 'aqui estoy selectedEnterprice hola')
+    const [enterprice, setEnterprice] = useState(null);
+    console.log(enterprice, 'aqui estoy enterprice')
 
 
     const navigate = useNavigate();
@@ -86,43 +87,44 @@ export const WatchmanCreate = () => {
         label: rol.namerole
     }));
 
- 
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const idEnterpriseSecurity = selectedEnterprice ? selectedEnterprice.idEnterpriseSecurity : null;
+
         const userResponse = await useFetchpostFile('http://localhost:3000/api/watchman', {
             documentType,
             namewatchman: name,
             email,
             document,
-            idEnterpriseSecurity: selectedEnterprice,
+            idEnterpriseSecurity: idEnterpriseSecurity,
             lastnamewatchman: lastname,
             phone,
             dateOfbirth,
-            state: 'Activo',
-
-
-
-
+            state: 'Activo'
         });
+
+
+        console.log('userResponse', userResponse);
+
 
         if (userResponse.response) {
             let roleResponse;
-            roleResponse = await useFetchpostFile('https://apptowerbackend.onrender.com/api/users', {
-                documentType,
+            roleResponse = await useFetchpostFile('http://localhost:3000/api/users', {
+                docType: documentType,
                 name,
                 email,
                 password,
                 idrole,
                 document,
-                lastname,
+                lastName: lastname,
                 phone,
                 pdf,
                 state: 'Activo'
             });
         }
-
-
 
         if (userResponse.response) {
 
@@ -145,6 +147,28 @@ export const WatchmanCreate = () => {
             });
         }
     };
+
+    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
+
+
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
+        value: enterprice.idEnterpriseSecurity,
+        label: enterprice.nameEnterprice
+    })) : [];
+
+
+    const handleEnterpriceSecurity = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue);
+        console.log("Selected Value:", selectedValueAsNumber);
+        setEnterprice(selectedValueAsNumber);
+
+        setSelectedEnterprice(selectedValueAsNumber);
+    };
+
+
+
+    console.log('enterpriceOptions', enterpriceOptions);
 
 
 
@@ -194,7 +218,7 @@ export const WatchmanCreate = () => {
 
 
                 )}
-            </FormContainer>
+            </FormContainer >
         </>
     )
 }
