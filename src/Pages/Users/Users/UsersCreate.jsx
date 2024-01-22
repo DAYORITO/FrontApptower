@@ -28,6 +28,7 @@ export const UsersCreate = () => {
     const [showForm, setShowForm] = useState(false);
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
     const [enterprice, setEnterprice] = useState(null);
+    console.log(enterprice, 'aqui estoy enterprice users')
 
     console.log(pdf, 'aqui estoy file')
 
@@ -111,8 +112,8 @@ export const UsersCreate = () => {
             if (userResponse.response) {
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
-                    let roleResponse;
-                    roleResponse = await useFetchpostFile('http://localhost:3000/api/residents', {
+
+                    const userResponse = await useFetchpostFile('http://localhost:3000/api/residents', {
                         docType: documentType,
                         docNumber: document,
                         name,
@@ -127,12 +128,12 @@ export const UsersCreate = () => {
                         status: 'Active'
                     });
                 } else if (namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad') {
-                    roleResponse = await useFetchpostFile('http://localhost:3000/api/watchman', {
+                    const userResponse = await useFetchpostFile('http://localhost:3000/api/watchman', {
                         namewatchman: name,
                         lastnamewatchman: lastname,
                         documentType,
                         document,
-                        idEnterpriseSecurity: selectedEnterprice ? selectedEnterprice.idEnterpriseSecurity : null,
+                        idEnterpriseSecurity: enterprice,
                         phone,
                         email,
                         dateOfbirth,
@@ -237,7 +238,7 @@ export const UsersCreate = () => {
                         {namerole === 'Residente' || namerole === 'Residentes' ? (
                             <>
                                 <FormColumn>
-                                    <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+                                    <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
                                         onChange={e => setPdf(e.target.files[0])} />
                                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
                                     <Inputs name="Numero de telefono" value={phone} onChange={e => setPhone(e.target.value)} type='number'></Inputs>
@@ -261,7 +262,7 @@ export const UsersCreate = () => {
                         ) : namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad' ? (
                             <>
                                 <FormColumn>
-                                    <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+                                    <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
                                         onChange={e => setPdf(e.target.files[0])} />
                                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
                                     <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
@@ -288,7 +289,7 @@ export const UsersCreate = () => {
 
                             <>
                                 <FormColumn>
-                                    <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+                                    <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
                                         onChange={e => setPdf(e.target.files[0])} />
                                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} />
