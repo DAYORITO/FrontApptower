@@ -123,7 +123,7 @@ const App = () => {
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('http://localhost:3000/api/informationUser', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -145,7 +145,7 @@ const App = () => {
 
     const fechDataRols = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/rols');
+            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch roles');
