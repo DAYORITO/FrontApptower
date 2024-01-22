@@ -68,8 +68,9 @@ const App = () => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);
     const token = Cookies.get('token');
     const [userData, setUserData] = useState({});
+    console.log('Yo spy el userData App.jx:', userData);
     const [userRole, setUserRole] = useState('');
-    console.log('Yo spy el rol:', userRole);
+    console.log('Yo spy el rol App.jx:', userRole);
 
     useEffect(() => {
         if (token) {
@@ -122,7 +123,7 @@ const App = () => {
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            const response = await fetch('http://localhost:3000/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -144,7 +145,7 @@ const App = () => {
 
     const fechDataRols = async () => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+            const response = await fetch('http://localhost:3000/api/rols');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch roles');
@@ -154,7 +155,6 @@ const App = () => {
             const rols = data.rols;
             if (Array.isArray(rols)) {
                 const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
-                console.log('User Role:', userRole);
                 setUserRole(userRole);
             } else {
                 console.error('Error: roles data is not an array:', rols);
@@ -223,7 +223,7 @@ const App = () => {
 
 
                                 {/* Surveillance */}
-                                {/* <Route path='watchman' element={
+                                <Route path='watchman' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
                                         ? (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
                                             ? <>
@@ -232,7 +232,7 @@ const App = () => {
                                             </>
                                             : <NotFound />
                                         : <NotFound />
-                                } /> */}
+                                } />
 
                                 <Route path='watchman/shifts' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
@@ -251,13 +251,27 @@ const App = () => {
                                         <WatchmanDetails /> : <NotFound />
                                 } />
 
-                                <Route path='watchman/enterprice' element={<EnterpriceSecurity />} />
+                                <Route path='watchman/enterprice' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
+                                        ? (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                            ? <>
+                                                <EnterpriceSecurity />
+                                            </>
+                                            : <NotFound />
+                                        : <NotFound />
+                                } />
 
-                                <Route path='watchman/enterprice/create' element={<EnterpriceSecurityCreate />} />
 
 
+                                <Route path='watchman/enterprice/create' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') ?
+                                        <WatchmanCreate /> : <NotFound />
+                                } />
 
-
+                                {/* <Route path='watchman' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
+                                        <Watchman /> : <NotFound />
+                                } /> */}
 
 
                                 {/* Rols */}

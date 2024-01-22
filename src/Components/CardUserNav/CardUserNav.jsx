@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import './CardUserNav.css';
 import LogoApptower from '../../assets/Logo-Apptower.png';
 
-export const CardUserNav = ({ rol, name, lastname }) => {
+export const CardUserNav = ({ rol, name, lastName }) => {
     // Obtén las primeras tres letras del apellido
-    const shortenedLastname = lastname.slice(0, 3);
+    const shortenedLastname = lastName.slice(0, 3);
 
     return (
         <div className='myNav-user'>

@@ -15,6 +15,7 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie';
+import Select2 from '../../../Components/Inputs/Select2';
 
 
 export const Watchman = () => {
@@ -23,6 +24,7 @@ export const Watchman = () => {
     const [watchmanData, setWatchmanData] = useState([]);
     const [allowedPermissions, setAllowedPermissions] = useState([]);
     const token = Cookies.get('token');
+    const [enterprice, setEnterprice] = useState(null)
 
     console.log(allowedPermissions, 'allowedPermissions Aleja')
     // console.log(allowedPermissions['Vigilantes'], 'allowedPermissions Vigilante');
@@ -79,11 +81,17 @@ export const Watchman = () => {
 
 
 
-    const handleModal = (watchman) => {
-        setEditedWatchman(watchman);
-        console.log(watchman, 'row')
-        setShowModal(true)
 
+    const [selectedCompany, setSelectedCompany] = useState(null);
+
+
+    const handleModal = async (watchman) => {
+        const company = enterpriseSecurity.find(company => company.idEnterpriseSecurity === watchman.idEnterpriseSecurity);
+        setEditedWatchman({
+            ...watchman,
+            idEnterpriseSecurity: company.nameEnterprice
+        });
+        setShowModal(true);
     }
 
     useEffect(() => {
@@ -117,7 +125,24 @@ export const Watchman = () => {
                     body: JSON.stringify(formattedWatchman),
                 });
 
-                if (response.ok) {
+                const responseUser = await fetch(`https://apptowerbackend.onrender.com/api/users/edited`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formattedWatchman.namewatchman,
+                        lastname: formattedWatchman.lastnamewatchman,
+                        email: formattedWatchman.email,
+                        phone: formattedWatchman.phone,
+                        document: formattedWatchman.document,
+                        documentType: formattedWatchman.documentType,
+                        state: formattedWatchman.state,
+
+                    }),
+                });
+
+                if (response.ok && responseUser.ok) {
                     const updatedWatchman = watchmanData.map(watchman => {
                         if (watchman.idwatchman === editedWatchman.idwatchman) {
                             return editedWatchman;
@@ -146,6 +171,7 @@ export const Watchman = () => {
             }
         }
     };
+
 
     const opciones = [
         {
@@ -195,6 +221,16 @@ export const Watchman = () => {
         );
     }
 
+    const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
+
+    const [companies, setCompanies] = useState([]);
+
+    useEffect(() => {
+        if (enterpriseSecurity) {
+            setCompanies(enterpriseSecurity);
+        }
+    }, [enterpriseSecurity]);
+
     return (
         <>
 
@@ -204,7 +240,7 @@ export const Watchman = () => {
                 search={<SearchButton value={search} onChange={searcher} />}
                 buttonToGo={
                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear')
-                        ? <ButtonGoTo value='Crear Vigilante' href='/admin/users/create' />
+                        ? <ButtonGoTo value='Crear Vigilante' href='/admin/watchman/create' />
                         : null
                 }
             >
@@ -212,38 +248,41 @@ export const Watchman = () => {
                 <TablePerson>
                     <Thead>
                         <Th name={'Información Vigilante'}></Th>
+                        <Th name={'Empresa Aliada'}></Th>
                         <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>
-                        <Th></Th>
-
+                        <Th ></Th>
 
                     </Thead>
                     <Tbody>
 
-                        {filterData?.map(watchman => (
-                            <Row
-                                icon='shield'
-                                key={watchman.idwatchman}
-                                docType={watchman.documentType}
-                                docNumber={watchman.document}
-                                name={watchman.namewatchman}
-                                lastName={watchman.lastnamewatchman}
-                                tel={watchman.phone}
-                                corr={watchman.email}
-                                status={watchman.state}
+                        {filterData?.map(watchman => {
+                            const enterprice = enterpriseSecurity?.find(enterprice => enterprice.idEnterpriseSecurity === watchman.idEnterpriseSecurity);
+                            const enterpriceName = enterprice ? enterprice.nameEnterprice : 'Empresa no encontrada';
 
-
-                                to={`details/${watchman.idwatchman}`}
-                            >
-                                {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
-                                    <Actions accion='Editar' onClick={(e) => {
-                                        e.preventDefault();
-                                        handleModal(watchman);
-                                    }} />
-                                )}
-
-                            </Row>
-                        ))}
+                            return (
+                                <Row
+                                    icon='shield'
+                                    key={watchman.idwatchman}
+                                    docType={watchman.documentType}
+                                    docNumber={watchman.document}
+                                    name={watchman.namewatchman}
+                                    lastName={watchman.lastnamewatchman}
+                                    enter={enterpriceName}
+                                    tel={watchman.phone}
+                                    corr={watchman.email}
+                                    status={watchman.state}
+                                    to={`details/${watchman.idwatchman}`}
+                                >
+                                    {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
+                                        <Actions accion='Editar' onClick={(e) => {
+                                            e.preventDefault();
+                                            handleModal(watchman);
+                                        }} />
+                                    )}
+                                </Row>
+                            );
+                        })}
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
@@ -257,7 +296,13 @@ export const Watchman = () => {
                                 showModal={setShowModal}
                                 title={"Editar Vigilante"}
                             >
-
+                                <div className="mr-1" style={{ width: '100%' }}>
+                                    <Select2
+                                        name="Empresa"
+                                        options={companies.map(company => ({ value: company.idEnterpriseSecurity, label: company.name }))}
+                                        value={editedWatchman?.idEnterpriseSecurity || ''}
+                                        onChange={(e) => setEditedWatchman({ ...editedWatchman, idEnterpriseSecurity: e.target.value })}
+                                    /> </div>
                                 <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.documentType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, documentType: e.target.value })} ></InputsSelect>
                                 <Inputs name="Documento" value={editedWatchman?.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, document: e.target.value })} readonly={true} inputStyle={{ color: '#E3E3E3' }} />
                                 <Inputs name="Nombre" value={editedWatchman?.namewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, namewatchman: e.target.value })} />

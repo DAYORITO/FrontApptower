@@ -287,12 +287,12 @@ export const UsersEdit = () => {
                                     />
                                 </FormColumn>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={editedUser?.documentType || ''} onChange={(e) => setEditedUser({ ...editedUser, documentType: e.target.value })}
+                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })}
                                     ></InputsSelect>
                                     <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
                                     <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
 
-                                    <Inputs name="Apellido" value={editedUser?.lastname || ''} onChange={(e) => setEditedUser({ ...editedUser, lastname: e.target.value })} />
+                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} />
                                     <Inputs name="Numero de telefono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} type='number'></Inputs>
                                     <InputsSelect
                                         id="select"
@@ -313,8 +313,8 @@ export const UsersEdit = () => {
                                         id={"select"}
                                         options={estado}
                                         name={"Estado"}
-                                        value={editedUser?.state || ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })} ></InputsSelect>
+                                        value={editedUser?.status || ''}
+                                        onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
 
 
 
@@ -342,17 +342,17 @@ export const UsersEdit = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.documentType || ''} onChange={(e) => setEditedUser({ ...editedUser, documentType: e.target.value })} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })} ></InputsSelect>
                                     <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
                                     <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
-                                    <Inputs name="Apellido" value={editedUser?.lastname || ''} onChange={(e) => setEditedUser({ ...editedUser, lastname: e.target.value })} />
+                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} />
                                     <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
                                     <InputsSelect
                                         id={"select"}
                                         options={estado}
                                         name={"Estado"}
-                                        value={editedUser?.state || ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })} ></InputsSelect>
+                                        value={editedUser?.status || ''}
+                                        onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
 
                                 </FormColumn>
 
@@ -376,16 +376,16 @@ export const UsersEdit = () => {
 
                                 <FormColumn>
 
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.documentType || ''} onChange={(e) => setEditedUser({ ...editedUser, documentType: e.target.value })} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })} ></InputsSelect>
                                     <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
                                     <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
-                                    <Inputs name="Apellido" value={editedUser?.lastname || ''} onChange={(e) => setEditedUser({ ...editedUser, lastname: e.target.value })} />
+                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} />
                                     <InputsSelect
                                         id={"select"}
                                         options={estado}
                                         name={"Estado"}
-                                        value={editedUser?.state || ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, state: e.target.value })} ></InputsSelect>
+                                        value={editedUser?.status || ''}
+                                        onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
 
 
 
