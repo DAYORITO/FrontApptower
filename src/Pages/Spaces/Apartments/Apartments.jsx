@@ -12,106 +12,119 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
-import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import { filter, handlePutRequest } from '../../../Helpers/Helpers'
+import Inputs from '../../../Components/Inputs/Inputs'
+import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
+import { createPortal } from 'react-dom'
+import InputsSelect from '../../../Components/Inputs/InputsSelect'
+import { statusList } from '../../../Hooks/consts.hooks'
 
 
 
 export const Apartments = () => {
-  const token = Cookies.get('token');
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
+
+
+  const url = "http://localhost:3000/api/"
+  // const url = "https://apptowerbackend.onrender.com/api/"
+
 
   // Get Data
 
-  const { data, load, error } = useFetchget('apartments')
+  const { data, get: getApartments, put: putApartment } = useFetch(url)
+  const { data: towers, get: getTowers } = useFetch(url)
 
-  console.log(data)
+
+  useEffect(() => {
+
+    getApartments('apartments')
+    getTowers('towers')
+
+  }, [])
+
+
+
+  // Apartment information
+
+  const { id } = useState('');
+  const [area, setArea] = useState('');
+  const [tower, setTower] = useState('');
+  const [status, setStatus] = useState('');
+  const [idApartment, setIdApartment] = useState("");
+  const [apartmentName, setApartmentName] = useState('');
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleModal = (data) => {
+
+    setIdApartment(data.idApartment)
+    setApartmentName(data.apartmentName)
+    setTower(data.idTower)
+    setArea(data.area)
+    setStatus(data.status)
+
+    setShowModal(true)
+
+  }
+
+
+  // Edit apartmentresident
+
+  const UpdateApartment = (event) => {
+
+
+
+    const data = {
+
+      idApartment: idApartment,
+      idTower: parseInt(tower),
+      apartmentName: apartmentName,
+      area: area,
+      status: status,
+
+    }
+
+    handlePutRequest(event, 'apartments', `Modificaste el apartamento ${apartmentName}`, data, setShowModal, putApartment, getApartments);
+
+  };
+
+
+  // List Towers
+
+  const towerList = towers?.data?.towers
+
+    ? towers.data?.towers
+      .map(tower => ({
+        value: tower.idTower,
+        label: `${tower.towerName}`
+      }))
+    : [];
+
 
 
   // Funtionality to search
 
   const [search, setSearch] = useState('');
+
+  let apartmentList = filter(search, data?.data?.apartments, "apartmentName")
+
+
+  apartmentList = apartmentList.sort((a, b) => a.idApartment - b.idApartment);
+
   const searcher = (e) => {
 
     setSearch(e.target.value)
     console.log(e.target.value)
+
   }
 
 
-  let filterData = [];
-
-  if (data && data.apartments) {
-    if (!search) {
-      filterData = data.apartments;
-    } else {
-      filterData = data.apartments.filter((dato) =>
-        dato.apartmentName.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-  }
 
 
-  useEffect(() => {
-    if (token) {
-      fetchUserPrivilegeAndPermission(token);
-    }
-  }, [token]);
 
 
-  //Consulta privilegios 
-  const fetchUserPrivilegeAndPermission = async (token) => {
-    try {
-      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user privileges');
-      }
-
-      const data = await response.json();
-      console.log(data, 'data');
-      console.log('Allowed Permissions hi:', data.privileges);
-
-      if (data && data.privileges && Array.isArray(data.privileges)) {
-        const allowed = {};
-        data.privileges.forEach(({ idpermission, idprivilege }) => {
-          const permissionName = idToPermissionName[idpermission];
-          const privilegeName = idToPrivilegesName[idprivilege];
-
-          if (!allowed[permissionName]) {
-            allowed[permissionName] = [];
-          }
-          allowed[permissionName].push(privilegeName);
-        });
-
-        setAllowedPermissions(allowed);
-      }
-    } catch (error) {
-      console.error('Error fetching user permissions:', error);
-    }
-  };
 
 
-  const totalPages = Math.ceil(filterData.length / 8);
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
-
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const filteredDataApartament = () => {
-    return filterData.slice(currentPage, currentPage + 8)
-  }
-
-  const nextPage = () => {
-    setCurrentPage(currentPage + 8)
-  }
-
-
-  const PreviousPage = () => {
-    if (currentPage > 0)
-      setCurrentPage(currentPage - 8)
-  }
 
 
   return (
@@ -119,76 +132,93 @@ export const Apartments = () => {
       <ContainerTable
         title='Apartamentos'
         dropdown={<DropdownExcel />}
-        search={<SearchButton value={search} onChange={searcher} />}
-        buttonToGo={
-          allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
-            ? <ButtonGoTo value='Crear Apartamentos' href='create' />
-            : null
-        }
-        showPaginator={
-          <nav aria-label="Table Paging" className="mb- text-muted my-4">
-            <ul className="pagination justify-content-center mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-              </li>
-              {pageNumbers.map((pageNumber) => (
-                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                </li>
-              ))}
+        search={<SearchButton value={search} onChange={searcher} placeholder='Buscar apartamentos'
+        />
 
-
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-              </li>
-            </ul>
-          </nav >
         }
+        buttonToGo={<ButtonGoTo value='Agregar apartamentos' href={"create"}  ></ButtonGoTo>}
       >
-
-
 
         <TablePerson>
           <Thead>
-            <Th name={"Apartamento"} />
-
-            <Th name={'Respoonsables'}></Th>
-            <Th name={'Notificaciones'}></Th>
-            <Th />
-            <Th />
 
           </Thead>
           <Tbody>
+            {apartmentList?.map(apartment => (
 
-            {filteredDataApartament().map(apartment => (
               <Row
-                key={apartment.idApartment}
-                icon={"home"}
-                status={apartment.status}
-                docType={apartment.tower}
-                docNumber={apartment.area + " m²"}
-                name={"Apartamento"}
-                lastName={`${apartment.apartmentName}`}
-                op1={""}
-                op2={""}
-                op3={""}
+                A1='Apartamento'
+                A2={apartment.apartmentName}
+                A3={apartment.Tower.towerName}
+                A4={`Area: ${apartment.area} m² `}
 
+                A8='Residentes'
+                A9={apartment.residents}
+
+                A10='Ingresos'
+                A11={apartment.guestIncomes}
+
+                A13='Vehiculos'
+                A12={apartment.vehicles}
+
+                A14='Multas'
+                A15={apartment.fines}
+
+                A16={apartment.residents}
+
+                status={apartment.status}
+                icon='home'
                 to={`details/${apartment.idApartment}`}
 
+
               >
-                {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') && (
-                  <Actions accion='Editar' />
-                )}
+
+                <Actions accion='Ver detalle' icon='eye' href={`details/${apartment.idApartment}`} ></Actions>
+                <Actions accion='Editar apartamento' onClick={() => handleModal(apartment)}></Actions>
+
               </Row>
+
+
+
             ))}
-
-
-
           </Tbody>
         </TablePerson>
       </ContainerTable>
 
+      {showModal &&
+        createPortal(
+          <>
+            <ModalContainer ShowModal={setShowModal}>
+              <Modal
+                onClick={UpdateApartment}
+                showModal={setShowModal}
+                title={`Editar apartamento ${apartmentName}`}
+              >
 
 
-    </>)
+                <InputsSelect id={"select"} options={towerList} name={"Torre"}
+                  value={tower} onChange={e => setTower(e.target.value)}
+                ></InputsSelect>
+
+                <Inputs name="Numero apartamento " type={"text"}
+                  value={apartmentName} onChange={e => setApartmentName(e.target.value)}></Inputs>
+
+                <Inputs name="Area del apartamento " type={"text"}
+                  value={area} onChange={e => setArea(e.target.value)}></Inputs>
+
+                <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                  value={status} onChange={e => setStatus(e.target.value)}
+                ></InputsSelect>
+
+                <Inputs type={"hidden"}
+                  value={idApartment} onChange={e => setIdApartmentOwner(e.target.value)}></Inputs>
+
+              </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )}
+    </>
+  );
+
 }

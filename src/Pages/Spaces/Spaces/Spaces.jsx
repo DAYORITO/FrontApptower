@@ -123,7 +123,9 @@ export const Spaces = () => {
 
             {filteredDataSpaces().map(spaces => (
               <BigCard
-                cosa={spaces}
+                title={spaces.spaceName}
+                img={spaces.image}
+                status={spaces.status}
                 to={`/admin/booking/create`}
               >
                 {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') && (

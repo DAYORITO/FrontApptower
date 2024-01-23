@@ -39,6 +39,7 @@ import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
 import { AuthProvider } from "./Context/AuthContext";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { NotFound } from "./Pages/NotFound/NotFound";
+import { Towers } from "./Pages/Spaces/Towers/Towers";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
@@ -60,6 +61,7 @@ import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
+import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -82,7 +84,7 @@ const App = () => {
     //Consulta privilegios 
     const fetchUserPrivilegeAndPermission = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+            const response = await fetch('http://localhost:3000/api/privilegefromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -345,6 +347,12 @@ const App = () => {
                                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear') ?
                                         <ApartmentCreate /> : <NotFound />
                                 } />
+
+                                {/* Towers */}
+                                <Route path='towers' element={<Towers />} />
+                                <Route path='towers/create' element={<TowerCreate />} />
+                                <Route path='apartments/create/:id' element={<ApartmentCreate />} />
+                                <Route path='apartments/:id' element={<Apartments />} />
 
 
 
