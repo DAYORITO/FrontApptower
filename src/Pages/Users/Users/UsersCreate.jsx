@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFetchpost, useFetchpostFile } from '../../../Hooks/useFetch';
 import FormContainer from '../../../Components/Forms/FormContainer';
 import FormColumn from '../../../Components/Forms/FormColumn';
 import Inputs from '../../../Components/Inputs/Inputs';
@@ -9,7 +8,7 @@ import Swal from 'sweetalert2';
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { docTypes, residentsTypes, sexs } from '../../../Hooks/consts.hooks'
 import { Uploader } from '../../../Components/Uploader/Uploader'
-import { useFetchget } from '../../../Hooks/useFetch';
+import { useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
 import Select2 from '../../../Components/Inputs/Select2'
 
 
@@ -94,7 +93,7 @@ export const UsersCreate = () => {
         event.preventDefault();
 
         try {
-            const userResponse = await useFetchpostFile('http://localhost:3000/api/users', {
+            const userResponse = await useFetchForFile('http://localhost:3000/api/users', {
                 docType: documentType,
                 name,
                 email,
@@ -112,7 +111,7 @@ export const UsersCreate = () => {
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
                     let roleResponse;
-                    roleResponse = await useFetchpostFile('http://localhost:3000/api/residents', {
+                    roleResponse = await useFetchForFile('http://localhost:3000/api/residents', {
                         docType: documentType,
                         docNumber: document,
                         name,
@@ -127,7 +126,9 @@ export const UsersCreate = () => {
                         status: 'Active'
                     });
                 } else if (namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad') {
-                    roleResponse = await useFetchpostFile('http://localhost:3000/api/watchman', {
+                    roleResponse = await useFetchForFile('http://localhost:3000/api/watchman'
+                    , 
+                    {
                         namewatchman: name,
                         lastnamewatchman: lastname,
                         documentType,

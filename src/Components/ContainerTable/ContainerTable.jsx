@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import './ContainerTable.css'
 
-export const ContainerTable = ({ title = 'Nombre modulo', children, dropdown, search, buttonToGo, showPaginator }) => {
+export const ContainerTable = ({ title = 'Nombre modulo',search2 , children, dropdown, search, buttonToGo, showPaginator }) => {
 
 
     return (
@@ -14,6 +14,8 @@ export const ContainerTable = ({ title = 'Nombre modulo', children, dropdown, se
                 </div>
                 <div className='d-flex align-items-center'>
                     {dropdown}
+                    {search2}
+
                     {search}
                     {buttonToGo}
                 </div>

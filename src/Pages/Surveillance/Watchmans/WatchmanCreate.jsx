@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useFetchget, useFetchpost, useFetchpostFile } from '../../../Hooks/useFetch'
+import { useFetchget, useFetchpost, useFetchForFile } from '../../../Hooks/useFetch'
 import FormContainer from '../../../Components/Forms/FormContainer'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import Inputs from '../../../Components/Inputs/Inputs'
@@ -94,7 +94,7 @@ export const WatchmanCreate = () => {
 
         const idEnterpriseSecurity = selectedEnterprice ? selectedEnterprice.idEnterpriseSecurity : null;
 
-        const userResponse = await useFetchpostFile('http://localhost:3000/api/watchman', {
+        const userResponse = await useFetchForFile('http://localhost:3000/api/watchman', {
             documentType,
             namewatchman: name,
             email,
@@ -112,7 +112,7 @@ export const WatchmanCreate = () => {
 
         if (userResponse.response) {
             let roleResponse;
-            roleResponse = await useFetchpostFile('http://localhost:3000/api/users', {
+            roleResponse = await useFetchForFile('http://localhost:3000/api/users', {
                 docType: documentType,
                 name,
                 email,

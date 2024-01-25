@@ -4,12 +4,8 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useNavigate } from 'react-router'
-import Swal from 'sweetalert2'
-import { useFetchpostFile } from '../../../Hooks/useFetch'
-import FormColumn from "../../../Components/Forms/FormColumn";
-import InputsSelect from '../../../Components/Inputs/InputsSelect'
-import { spacesTypes } from '../../../Hooks/consts.hooks'
-import { handleRequest } from '../../../Helpers/Helpers'
+
+import { postRequest } from '../../../Helpers/Helpers'
 
 
 // import InputsSelect from '../../../Components/Inputs/InputsSelect'
@@ -30,17 +26,19 @@ export const TowerCreate = () => {
     const data = {
 
       towerName,
-      towerImg
+      towerImg: towerImg !== ""? towerImg: ""
 
     };
 
     console.log(data, "data pa crear")
 
-    await handleRequest(event, 'towers', `jeje`, {}, data, url);
+    await postRequest(event, 'towers', "POST", {}, data, url);
 
-    // navigate(-1)
+    navigate(-1)
 
   };
+
+  console.log(typeof towerImg)
 
 
   return (

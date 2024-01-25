@@ -4,7 +4,7 @@ import FormButton from '../../../Components/Forms/FormButton'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { useState } from 'react';
 import { parkingTypes } from '../../../Hooks/consts.hooks';
-import { useFetchpost, useFetchpostFile } from '../../../Hooks/useFetch';
+// import { useFetchpost, useFetchpostFile } from '../../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router'
 
@@ -28,7 +28,7 @@ export const ParkingSpacesCreate = () => {
 
     console.log('Data:', data);
 
-    const { response, error } = await useFetchpostFile(url, data);
+    // const { response, error } = await useFetchpostFile(url, data);
 
     if (response) {
       console.log('Response:', response);

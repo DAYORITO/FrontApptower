@@ -5,7 +5,7 @@ import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
-import { useFetchpostFile } from '../../../Hooks/useFetch'
+// import { useFetchForFile } from '../../../Hooks/useFetch'
 import FormColumn from "../../../Components/Forms/FormColumn";
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { spacesTypes } from '../../../Hooks/consts.hooks'
@@ -39,7 +39,7 @@ export const SpacesCreate = () => {
 
     console.log('Data:', data);
 
-    const { response, error } = await useFetchpostFile(url, data);
+    // const { response, error } = await useFetchForFile(url, data);
 
     if (response) {
       console.log('Response:', response);

@@ -165,7 +165,10 @@ export const useFetchget = (endpoint) => {
 
 // 3. start useFetch post files
 
-export const useFetchpostFile = async (url, data) => {
+
+// 3. start useFetch post files
+
+export const useFetchForFile = async (url, data, method = "POST") => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
@@ -179,7 +182,7 @@ export const useFetchpostFile = async (url, data) => {
         });
 
         const response = await fetch(url, {
-            method: 'POST',
+            method: method,
             body: formData,
             signal
         });
@@ -206,6 +209,8 @@ export const useFetchpostFile = async (url, data) => {
         abortController.abort();
     }
 }
+
+// 3. end useFetch post files
 
 // 3. end useFetch post files
 

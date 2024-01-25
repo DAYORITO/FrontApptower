@@ -42,12 +42,12 @@ export const Row = ({
             <Link to={to} style={{ textDecoration: 'none' }} >
                 <td class="text-cA20 ">
 
-                    {A16 != 0 ? <span className="badge text-white bg-danger mb-4">{A16}</span> : null}
 
 
                     <div class="circle circle-sm">
 
                         <span class={`fe fe-${icon} fe-24 text-muted`}></span>
+                        {A16 != 0 ? <span className="badge text-white bg-danger mb-4">{A16}</span> : null}
 
                     </div>
 

@@ -20,7 +20,7 @@ export const Spaces = () => {
   const { data, load, error } = useFetchget('spaces')
   console.log(data.spaces)
 
-
+  console.log(data)
 
   useEffect(() => {
     if (token) {

@@ -8,7 +8,7 @@ import { useState } from "react";
 import FormButton from "../../Components/Forms/FormButton";
 import InputTextArea from "../../Components/Inputs/InputTextArea";
 import { Uploader } from "../../Components/Uploader/Uploader";
-import { useFetchpostFile } from "../../Hooks/useFetch";
+import { useFetchForFile } from "../../Hooks/useFetch";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import Select2 from "../../Components/Inputs/Select2";
@@ -82,7 +82,7 @@ function FinesCreate() {
 
     console.log("Data:", data);
 
-    const { response, error } = await useFetchpostFile(url, data);
+    const { response, error } = await useFetchForFile(url, data);
 
     console.log(data);
 
