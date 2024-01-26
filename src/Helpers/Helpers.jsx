@@ -2,6 +2,29 @@ import Swal from "sweetalert2";
 import { useFetchpostFile } from "../Hooks/useFetch";
 
 
+// Filter apartment 
+
+export const filter = (search, myData, searcher) => {
+  if (!Array.isArray(myData)) {
+    console.error("myData is not an array:", myData);
+    myData = [];
+  }
+
+  let data = [];
+
+  if (!search) {
+    data = myData;
+  } else {
+    data = myData.filter((dato) =>
+      dato[searcher].toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  return data;
+};
+
+
+
 export const filterGuestIncomes = (search, guestIncomes) => {
 
   let guestIncomesbyApartment = [];
@@ -73,7 +96,7 @@ export const handleRequest = async (event, endPoint, successMessage, modal, data
 
       Swal.fire({
         title: 'Éxito',
-        text: successMessage,
+        text: successMessage == response.apartments ,
         icon: 'success',
       }).then(() => {
 
@@ -101,8 +124,41 @@ export const handlePutRequest = async (event, endpoint, successMessage, data, mo
 
     event.preventDefault();
 
-    
+
     const response = await put(endpoint, data);
+    // console.log(response)
+    // console.log(responseResidents)
+
+    Swal.fire({
+      title: 'Éxito',
+      text: successMessage,
+      icon: 'success',
+    });
+
+    get(endpoint);
+
+  } catch (error) {
+    console.error('Error al realizar la operación:', error);
+
+    Swal.fire({
+      title: 'Error',
+      text: 'Error al realizar la operación',
+      icon: 'error',
+    });
+
+  } finally {
+    modal(false);
+  }
+};
+
+
+export const handlePostRequest = async (event, endpoint, successMessage, data, modal, post, get) => {
+  try {
+
+    event.preventDefault();
+
+
+    const response = await post(endpoint, data);
     // console.log(response)
     // console.log(responseResidents)
 

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './BigCard.css';
 import imagen from "../../assets/2.jpeg"
 
-export const BigCard = ({ cosa = 'cosa', to, children }) => {
+export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) => {
     return (
 
 
@@ -15,11 +15,15 @@ export const BigCard = ({ cosa = 'cosa', to, children }) => {
 
                     <div class="card-body text-center" id='card-space'>
                         <div class="avatar avatar-lg mt-2">
-                            <img class="space-img" id='img' src={cosa.image} alt="Descripción de la imagen"></img>
+                            <img class="space-img" id='img' src={img} alt="Descripción de la imagen"></img>
                         </div>
                         <div class="card-text">
-                            <strong class="card-title">{cosa.spaceName}</strong>
-                            <p className='text-muted'>{` ${cosa.spaceType === "Wet area" ? "Zona humeda": "Area comun"}`}</p>
+                            <strong class="card-title">{title}</strong>
+                            {A1 != null ? <p className='text-muted'>{` ${A1}`}</p> : null}
+                            {A2 != null ? <p className='text-muted'>{` ${A2}`}</p> : null}
+                            {A3 != null ? <p className='text-muted'>{` ${A3}`}</p> : null}
+                            {A4 != null ? <p className='text-muted'>{` ${A4}`}</p> : null}
+
                         </div>
                     </div>
                 </Link>
@@ -27,17 +31,17 @@ export const BigCard = ({ cosa = 'cosa', to, children }) => {
                     <div class="row" id='card-footer-down'>
                         <div class="col-auto">
                             <small>
-                                {cosa.status !== 'Active' && cosa.status !== 'Activo' ? (
+                                {status !== 'Active' && status !== 'Activo' ? (
                                     <span class="dot dot-lg bg-danger mr-1"></span>
                                 ) : (
                                     <span class="dot dot-lg bg-success mr-1"></span>
                                 )}
                             </small>
-                            <span>{cosa.status === "Active" ? "Activo": "Inactivo"}</span>
+                            <span>{status === "Active" ? "Activo" : "Inactivo"}</span>
                         </div>
                         <div class="col-auto">
                             <div class="file-action">
-                                <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto"
+                                <button A1="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="text-muted sr-only">Action</span>
                                 </button>
