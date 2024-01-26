@@ -93,11 +93,19 @@ export const EnterpriceSecurity = () => {
         setShowModalCreate(true);
     }
 
+    // useEffect(() => {
+    //     if (data && data.enterpriseSecurity) {
+    //         setEnterpriceData(prevData => [...prevData, ...data.enterpriseSecurity]);
+    //     }
+    // }, [data]);
+
     useEffect(() => {
         if (data && data.enterpriseSecurity) {
             setEnterpriceData(data.enterpriseSecurity);
         }
     }, [data]);
+
+
 
     useEffect(() => {
         if (!putLoad && !putError) {
@@ -120,18 +128,17 @@ export const EnterpriceSecurity = () => {
                 });
 
                 if (response.ok) {
-                    const updateEnterprice = EnterpriceData.map(enterprice => {
-                        if (enterprice.idEnterpriseSecurity === editedEnterprice.idEnterpriseSecurity) {
-                            return editedEnterprice;
-                        }
-                        return enterprice;
+                    const updatedEnterpriceData = EnterpriceData.map(enterprice => {
+                        return enterprice.idEnterpriseSecurity === editedEnterprice.idEnterpriseSecurity ? editedEnterprice : enterprice;
                     });
+
                     Swal.fire({
                         title: 'Éxito',
                         text: 'Empresa modificada exitosamente',
                         icon: 'success',
-                    })
-                    setEnterpriceData(updateEnterprice);
+                    });
+
+                    setEnterpriceData(updatedEnterpriceData);
                     seteditedEnterprice(null);
                     setShowModal(false);
                 } else {
@@ -163,25 +170,28 @@ export const EnterpriceSecurity = () => {
     ];
 
 
+
     const [search, setSearch] = useState('');
     const searcher = (e) => {
-
         setSearch(e.target.value)
         console.log(e.target.value)
     }
-    let filterData = [];
 
-    if (!search) {
-        filterData = EnterpriceData;
-    } else {
-        filterData = EnterpriceData.filter((dato) =>
-            (dato.nameEnterprice && dato.nameEnterprice.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.NIT && dato.NIT.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
-        );
-    }
+    const [filterData, setFilterData] = useState([]);
 
+
+    useEffect(() => {
+        if (!search) {
+            setFilterData(EnterpriceData);
+        } else {
+            setFilterData(EnterpriceData.filter((dato) =>
+                (dato.nameEnterprice && dato.nameEnterprice.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.NIT && dato.NIT.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
+            ));
+        }
+    }, [EnterpriceData, search]);
 
 
     const handleSubmit = async (event) => {
@@ -195,38 +205,40 @@ export const EnterpriceSecurity = () => {
             phone,
         };
 
-        console.log('Data:', data);
+        try {
+            const { response, error } = await useFetchpost(url, data);
 
-        const { response, error } = await useFetchpost(url, data);
+            if (response) {
+                console.log('Response:', response);
 
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Empresa creada exitosamente',
+                    icon: 'success',
+                });
 
+                setEnterpriceData(prevEnterpriceData => [...prevEnterpriceData, response]);
+                setFilterData(prevFilterData => [...prevFilterData, response]);
 
-        if (response) {
-            console.log('Response:', response);
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Empresa creada exitosamente',
-                icon: 'success',
+                seteditedEnterprice(null);
+                setShowModalCreate(false);
+            }
 
-            })
-            setEnterpriceData([...EnterpriceData, response]);
-            seteditedEnterprice(null);
-            setShowModalCreate(false);
+            if (error) {
+                console.error('Error al crear la empresa:', error);
 
-
-        }
-
-
-
-        if (error) {
-            console.log('Hubo un error');
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al crear la empresa',
-                icon: 'error',
-            });
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al crear la empresa',
+                    icon: 'error',
+                });
+            }
+        } catch (error) {
+            console.error('Error en la solicitud POST:', error);
         }
     };
+
+
 
 
     const totalPages = Math.ceil(filterData?.length / 10);

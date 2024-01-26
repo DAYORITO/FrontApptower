@@ -82,23 +82,34 @@ export const Watchman = () => {
 
 
 
-    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [companies, setCompanies] = useState([]);
+    const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
 
-
-    const handleModal = async (watchman) => {
-        const company = enterpriseSecurity.find(company => company.idEnterpriseSecurity === watchman.idEnterpriseSecurity);
-        setEditedWatchman({
-            ...watchman,
-            idEnterpriseSecurity: company.nameEnterprice
-        });
-        setShowModal(true);
-    }
+    useEffect(() => {
+        if (enterpriseSecurity) {
+            setCompanies(enterpriseSecurity);
+        }
+    }, [enterpriseSecurity]);
 
     useEffect(() => {
         if (data && data.watchman) {
             setWatchmanData(data.watchman);
         }
     }, [data]);
+
+    const handleModal = async (watchman) => {
+        if (watchman.idEnterpriseSecurity) {
+            setEditedWatchman({
+                ...watchman,
+                idEnterpriseSecurity: watchman.idEnterpriseSecurity
+            });
+            setShowModal(true);
+        } else {
+            console.error('ID de Empresa no encontrado en el vigilante:', watchman);
+        }
+    };
+
+
 
     useEffect(() => {
         if (!putLoad && !putError) {
@@ -221,15 +232,31 @@ export const Watchman = () => {
         );
     }
 
-    const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
 
-    const [companies, setCompanies] = useState([]);
 
-    useEffect(() => {
-        if (enterpriseSecurity) {
-            setCompanies(enterpriseSecurity);
-        }
-    }, [enterpriseSecurity]);
+
+
+    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
+
+
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
+        value: enterprice.idEnterpriseSecurity,
+        label: enterprice.nameEnterprice
+    })) : [];
+
+
+    const handleEnterpriceSecurity = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue);
+        console.log("Selected Value:", selectedValueAsNumber);
+        setEnterprice(selectedValueAsNumber);
+
+        setSelectedEnterprice(selectedValueAsNumber);
+    };
+
+
+
+    console.log('enterpriceOptions', enterpriceOptions);
 
     return (
         <>
@@ -297,12 +324,9 @@ export const Watchman = () => {
                                 title={"Editar Vigilante"}
                             >
                                 <div className="mr-1" style={{ width: '100%' }}>
-                                    <Select2
-                                        name="Empresa"
-                                        options={companies.map(company => ({ value: company.idEnterpriseSecurity, label: company.name }))}
-                                        value={editedWatchman?.idEnterpriseSecurity || ''}
-                                        onChange={(e) => setEditedWatchman({ ...editedWatchman, idEnterpriseSecurity: e.target.value })}
-                                    /> </div>
+
+                                    <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
+                                </div>
                                 <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.documentType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, documentType: e.target.value })} ></InputsSelect>
                                 <Inputs name="Documento" value={editedWatchman?.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, document: e.target.value })} readonly={true} inputStyle={{ color: '#E3E3E3' }} />
                                 <Inputs name="Nombre" value={editedWatchman?.namewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, namewatchman: e.target.value })} />

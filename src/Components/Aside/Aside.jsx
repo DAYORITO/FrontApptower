@@ -57,7 +57,7 @@ export const Aside = () => {
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('http://localhost:3000/api/informationUser', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -134,7 +134,7 @@ export const Aside = () => {
         .catch(error => console.error('Error:', error));
 
 
-    fetch(`http://localhost:3000/api/aparmentResidents/resident/${idResidents}`)
+    fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
         .then(response => response.json())
         .then(data => {
             if (data.apartmentResidents) {

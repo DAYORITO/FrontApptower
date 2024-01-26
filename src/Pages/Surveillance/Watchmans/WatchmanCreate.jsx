@@ -87,19 +87,39 @@ export const WatchmanCreate = () => {
         label: rol.namerole
     }));
 
+    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
 
+
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
+        value: enterprice.idEnterpriseSecurity,
+        label: enterprice.nameEnterprice
+    })) : [];
+
+
+    const handleEnterpriceSecurity = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue);
+        console.log("Selected Value:", selectedValueAsNumber);
+        setEnterprice(selectedValueAsNumber);
+
+        setSelectedEnterprice(selectedValueAsNumber);
+    };
+
+
+
+    console.log('enterpriceOptions', enterpriceOptions);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const idEnterpriseSecurity = selectedEnterprice ? selectedEnterprice.idEnterpriseSecurity : null;
+
 
         const userResponse = await useFetchForFile('http://localhost:3000/api/watchman', {
             documentType,
             namewatchman: name,
             email,
             document,
-            idEnterpriseSecurity: idEnterpriseSecurity,
+            idEnterpriseSecurity: enterprice,
             lastnamewatchman: lastname,
             phone,
             dateOfbirth,
@@ -148,27 +168,7 @@ export const WatchmanCreate = () => {
         }
     };
 
-    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
 
-
-
-    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
-        value: enterprice.idEnterpriseSecurity,
-        label: enterprice.nameEnterprice
-    })) : [];
-
-
-    const handleEnterpriceSecurity = (selectedValue) => {
-        const selectedValueAsNumber = Number(selectedValue);
-        console.log("Selected Value:", selectedValueAsNumber);
-        setEnterprice(selectedValueAsNumber);
-
-        setSelectedEnterprice(selectedValueAsNumber);
-    };
-
-
-
-    console.log('enterpriceOptions', enterpriceOptions);
 
 
 
