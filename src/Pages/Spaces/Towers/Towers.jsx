@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import { useFetch } from '../../../Hooks/useFetch'
 
 
-import { filter } from "../../../Helpers/Helpers"
+import { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo"
 import { createPortal } from "react-dom"
 
@@ -27,9 +27,6 @@ import { Spinner } from "../../../Components/Spinner/Spinner"
 
 
 export const Towers = () => {
-
-
-
 
 
     const url = "http://localhost:3000/api/"
@@ -74,6 +71,8 @@ export const Towers = () => {
 
     let towerList = filter(search, towers?.data?.towers, "towerName")
 
+    towerList = towerList.sort((a, b) => a.idTower - b.idTower);
+
 
     const searcher = (e) => {
 
@@ -82,7 +81,25 @@ export const Towers = () => {
 
     }
 
-    console.log(towerList.length)
+
+    const updateTower = async (event) => {
+
+        const data = {
+
+            idTower: idTower,
+            towerName: towerName,
+            towerImg: towerImg,
+            status: status
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'towers', 'PUT', setShowModal, data, url)
+
+        getTowers('towers')
+
+    };
 
 
     return (
@@ -128,9 +145,9 @@ export const Towers = () => {
                     <>
                         <ModalContainer ShowModal={setShowModal}>
                             <Modal
-                                // onClick={UpdateApartment}
+                                onClick={updateTower}
                                 showModal={setShowModal}
-                            // title={`Editar apartamento ${apartmentName}`}
+                                title={`Editar ${towerName}`}
                             >
 
                                 <Uploader name="img" label="Foto del bloque" onChange={e => setTowerImg(e.target.files[0])} />

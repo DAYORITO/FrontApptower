@@ -30,8 +30,6 @@ export const ApartmentCreate = () => {
   }, [])
 
 
-
-
   const { id } = useParams()
 
 
@@ -69,7 +67,7 @@ export const ApartmentCreate = () => {
 
     console.log(data, "data pa crear")
 
-    await postRequest(event, 'apartments', `jeje`, {}, data, url);
+    await postRequest(event, 'apartments', 'POST', {}, data, url);
 
     navigate(-1)
 

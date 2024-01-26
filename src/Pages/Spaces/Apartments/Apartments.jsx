@@ -75,7 +75,7 @@ export const Apartments = () => {
 
   // Edit apartmentresident
 
-  const UpdateApartment = (event) => {
+  const UpdateApartment = async (event) => {
 
 
 
@@ -89,7 +89,8 @@ export const Apartments = () => {
 
     }
 
-    postRequest(event, 'apartments', `POST`, data, setShowModal, putApartment, getApartments);
+    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url)
+    getApartments('apartments')
 
   };
 
@@ -97,13 +98,14 @@ export const Apartments = () => {
   // List Towers
 
   const towerList = towers?.data?.towers
-
-    ? towers.data?.towers
-      .map(tower => ({
+    ? towers.data.towers
+      .map((tower) => ({
         value: tower.idTower,
         label: `${tower.towerName}`
       }))
+      .sort((a, b) => a.value - b.value) // Ordenar por idTower
     : [];
+
 
 
 
@@ -205,7 +207,7 @@ export const Apartments = () => {
 
                   status={apartment.status}
                   icon='home'
-                  to={`details/${apartment.idApartment}`}
+                  to={`/admin/apartments/details/${apartment.idApartment}`}
 
 
                 >
