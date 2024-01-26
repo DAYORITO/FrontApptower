@@ -1,21 +1,93 @@
-import "./Uploader.css"
+import React, { useState, useEffect } from 'react';
+import "./Uploader.css";
+import { Document, Page } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label = 'Imagen de espacio', formatos = ".png, .jpg, .mp4, .pdf", name, value, onChange }) => {
+export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange, validate }) => {
+    const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState(null);
+    const [fileError, setFileError] = useState(null);
 
+    useEffect(() => {
+        if (validate && !file) {
+            setFileError("El archivo es requerido*");
+        } else {
+            setFileError(null);
+        }
+    }, [file, validate]);
 
+    const handleFileChange = (e) => {
+        setFile(null);
+        setFileName(null);
+
+        if (!e.target.files[0]) {
+            setFileError("El archivo es requerido*");
+            return;
+        }
+
+        setFileName(e.target.files[0].name);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setFile(new Uint8Array(reader.result));
+        };
+        reader.readAsArrayBuffer(e.target.files[0]);
+
+        if (onChange) {
+            onChange(e);
+        }
+    };
+
+    const handleRemoveFile = () => {
+        setFile(null);
+        setFileName(null);
+        setFileError(null);
+    };
 
     return (
-        <div class="card-body" id="uploader">
+        <div className="card-body" id="uploader">
             <label>{label}</label>
-            <div class="dropzone bg-light rounded-lg" id="tinydash-dropzone" >
-                <div class="dz-message needsclick">
-                    <div class="circle circle-lg bg-primary">
-                        <i class="fe fe-upload fe-24 text-white" />
-                        <input type="file" name={name} value={value} aria-label="Archivo" onChange={onChange} accept={formatos} />
-                    </div>
+            <div className="dropzone bg-light rounded-lg" id="tinydash-dropzone">
+                <div className="dz-message needsclick">
+                    {!file && (
+                        <div className="circle circle-lg bg-primary">
+                            <i className="fe fe-upload fe-24 text-white" />
+                            <input type="file" name={name} aria-label="Archivo" onChange={handleFileChange} accept={formatos} />
+                        </div>
+                    )}
                 </div>
-            </div>
-        </div>
+                {file && (
+                    <div className="preview" style={{ textAlign: 'center' }}>
+                        {fileName.endsWith('.pdf') ? (
+                            <div style={{ width: '300px', height: '110px', overflow: 'auto', margin: 'auto' }}>
+                                <Document file={new Blob([file], { type: 'application/pdf' })}>
+                                    <Page pageNumber={1} width={300} height={100} />
+                                </Document>
+                            </div>
+                        ) : (
+                            <img src={URL.createObjectURL(new Blob([file]))} alt="preview" width="60%" height="5%" />
+                        )}
+                        <div className="file-name">{fileName}</div>
+                        <button
+                            onClick={handleRemoveFile}
+                            style={{
+                                background: '#8990B6',
+                                color: '#fff',
+                                padding: '5px 6px',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Eliminar
+                        </button>
+                    </div>
+                )}
 
-    )
-}
+            </div>
+            {fileError && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{fileError}</div>}
+
+        </div>
+    );
+};

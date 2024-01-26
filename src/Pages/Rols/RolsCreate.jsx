@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import './Rols.css';
 import { Accordion } from '../../Components/Accordion/Accordion';
 import { Checkboxs } from '../../Components/Checkbox/Checkboxs';
+import { regexName } from '../../Hooks/regex';
 
 
 export const RolsCreate = () => {
@@ -62,9 +63,53 @@ export const RolsCreate = () => {
         }
     };
 
+    const [isNameRoleTaken, setIsNameRoleTaken] = useState(false);
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/rols/namerole/${namerole}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsNameRoleTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [namerole]);
+
+
+    const [shouldValidate, setShouldValidate] = useState(false);
     const handleSubmit = async (event) => {
         event.preventDefault();
         // const url = 'http://localhost:3000/api/rols';
+
+        if (!namerole || !description) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+            //Activa la validacion de los campos cuando se envia el formulario
+            setShouldValidate(true);
+            return;
+        }
+
+        if (selectedCheckboxes.length === 0) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, seleccione al menos un permiso',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (isNameRoleTaken) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Este nombre de rol se encuentra registrado',
+                icon: 'error',
+            });
+            return;
+        }
         const url = 'rols';
 
         const data = {
@@ -97,17 +142,65 @@ export const RolsCreate = () => {
         }
     };
 
+    const handleDescriptionChange = (e) => {
+        if (e.target.value.length <= 30) {
+            setDescrption(e.target.value);
+        }
+    };
+
+    const [isNameRoleInvalid, setIsNameRoleInvalid] = useState(false);
+
+    const handleNameRole = (e) => {
+        const value = e.target.value;
+        if (regexName.test(value) && value.length <= 20) {
+            setNamerole(value);
+            setIsNameRoleInvalid(false);
+        } else {
+            setIsNameRoleInvalid(true);
+        }
+    };
+
+    const [permisoDescription, setPermisoDescription] = useState('');
+
+    const handleIconClick = async (permisoLabel) => {
+        try {
+            const response = await fetch(`https://your-api-url/permisos/${permisoLabel}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch permiso description');
+            }
+            const data = await response.json();
+            setPermisoDescription(data.description);
+        } catch (error) {
+            console.error('Error fetching permiso description:', error);
+        }
+    };
 
     return (
         <>
             <FormContainer name='Crear Rol' onSubmit={handleSubmit} buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/rols' />}>
                 <FormColumn>
-                    <Inputs name='Nombre Rol' value={namerole} onChange={(e) => setNamerole(e.target.value)} type='text' ></Inputs>
+                    <Inputs
+                        name='Nombre Rol'
+                        value={namerole}
+                        onChange={handleNameRole}
+                        type='text'
+                        required={true}
+                        validate={shouldValidate}
+                        errorMessage={isNameRoleTaken ? "Este rol ya esta registrado" : isNameRoleInvalid ? "No puede contener números ni caracteres especiales" : null}
+                    />
                 </FormColumn>
 
                 <FormColumn>
-                    <Inputs name='Descripción' value={description}
-                        onChange={(e) => setDescrption(e.target.value)} type='text' ></Inputs>
+                    <Inputs
+                        name='Descripción'
+                        value={description}
+                        onChange={handleDescriptionChange}
+                        type='text'
+                        validate={shouldValidate}
+                        required={true}
+                        inputStyle={description.length > 30 ? { borderColor: 'red' } : null}
+
+                    />
                 </FormColumn>
 
 
@@ -115,7 +208,7 @@ export const RolsCreate = () => {
                     {permisos.map((permiso, index) => (
                         console.log(permiso, 'permiso'),
                         <div className='accordion-item' key={index}>
-                            <Accordion title={permiso.label}>
+                            <Accordion title={permiso.label} icon='alert-circle'>
                                 {permiso.options.map((opcion, optionIndex) => (
                                     console.log(opcion, 'opcion'),
                                     <Checkboxs
