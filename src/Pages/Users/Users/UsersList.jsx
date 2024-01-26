@@ -206,11 +206,9 @@ export const Users = () => {
                                     roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
                                 corr={user.email}
-                                tel={user.phone}
-                                status={user.state}
+                                tel={user.phone ? user.phone : 'Desconocido'}
+                                status={user.status}
                             >
-
-
                                 {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
                                     <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
                                 )}

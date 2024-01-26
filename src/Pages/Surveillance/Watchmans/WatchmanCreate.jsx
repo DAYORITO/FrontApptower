@@ -47,30 +47,17 @@ export const WatchmanCreate = () => {
 
 
 
-    const fetchRoles = async () => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
-            if (!response.ok) {
-                throw new Error('Error al obtener los roles');
-            }
-            const data = await response.json();
-            const rolesData = data.rols || [];
-            return rolesData;
-        } catch (error) {
-            console.error('Error al obtener los roles:', error);
-            return [];
-        }
-    };
-
-
+    const { data: rolesData, error } = useFetchget('rols');
     const [roles, setRoles] = useState([]);
 
     useEffect(() => {
-        const fetchRolesData = async () => {
-            const rolesData = await fetchRoles();
-            const filteredRoles = rolesData.filter(rol => ['Vigilante', 'Vigilantes', 'Seguridad'].includes(rol.namerole));
-            setRoles(filteredRoles);
+        if (error) {
+            console.error('Error al obtener los roles:', error);
+        } else if (rolesData) {
+            const roles = rolesData.rols || [];
+            const filteredRoles = roles.filter(rol => ['Vigilante', 'Vigilantes', 'Seguridad'].includes(rol.namerole));
 
+            setRoles(filteredRoles);
 
             const defaultRole = filteredRoles.find(rol => rol.namerole === 'Vigilante' || rol.namerole === 'Seguridad' || rol.namerole === 'Vigilantes');
             if (defaultRole) {
@@ -78,23 +65,30 @@ export const WatchmanCreate = () => {
                 setRole(defaultRole.namerole);
                 setShowForm(true);
             }
-        };
-        fetchRolesData();
-    }, []);
+        }
+    }, [rolesData, error]);
 
-    const opcionesRols = roles.map(rol => ({
-        value: rol.idrole.toString(),
-        label: rol.namerole
-    }));
+    const opcionesRols = roles
+        ? roles
+            .filter(rol => rol.state === "Activo")
+            .map(rol => ({
+                value: rol.idrole,
+                label: rol.namerole
+            }))
+        : [];
 
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
 
 
 
-    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
-        value: enterprice.idEnterpriseSecurity,
-        label: enterprice.nameEnterprice
-    })) : [];
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
+        ? dataEnterprice.enterpriseSecurity
+            .filter(enterprice => enterprice.state === "Activo")
+            .map(enterprice => ({
+                value: enterprice.idEnterpriseSecurity,
+                label: enterprice.nameEnterprice
+            }))
+        : [];
 
 
     const handleEnterpriceSecurity = (selectedValue) => {
@@ -109,10 +103,70 @@ export const WatchmanCreate = () => {
 
     console.log('enterpriceOptions', enterpriceOptions);
 
+    const [shouldValidate, setShouldValidate] = useState(false);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
 
+
+        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+            //Activa la validacion de los campos cuando se envia el formulario
+            setShouldValidate(true);
+            return;
+        }
+
+        if (!enterprice) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, seleccione una empresa de seguridad',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+            //Activa la validacion de los campos cuando se envia el formulario
+            setShouldValidate(true);
+            return;
+        }
+
+        if (!enterprice) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, seleccione una empresa de seguridad',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error',
+            });
+            return;
+        }
 
         const userResponse = await useFetchForFile('http://localhost:3000/api/watchman', {
             documentType,
@@ -168,7 +222,31 @@ export const WatchmanCreate = () => {
         }
     };
 
+    const [isDocumentTaken, setIsDocumentTaken] = useState(false);
+    const [isEmailTaken, setIsEmailTaken] = useState(false);
 
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/document/${document}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsDocumentTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [document]);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/email/${email}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsEmailTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [email]);
 
 
 
@@ -176,6 +254,7 @@ export const WatchmanCreate = () => {
         <>
 
             <FormContainer name='Crear Vigilante' buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/watchman/' onClick={handleSubmit} />}>
+
                 <InputsSelect
                     id="select"
                     options={opcionesRols}
@@ -193,26 +272,38 @@ export const WatchmanCreate = () => {
                     <>
                         <FormColumn>
                             <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
-                                onChange={e => setPdf(e.target.files[0])} />
-                            <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} />
-                            <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
+                            <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
+                                errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
-                            <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}></Inputs>
+                            /> <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+
+                            <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}></Inputs>
 
                         </FormColumn>
 
                         <FormColumn>
                             <div className="mr-1" style={{ width: '100%' }}>
 
-                                <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
+                                <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate}></Select2>
                             </div>
-                            <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)}></InputsSelect>
-                            <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} ></Inputs>
-                            <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} ></Inputs>
-                            <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} ></Inputs>
+                            <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
+                            <Inputs
+                                name="Documento"
+                                type='number'
+                                value={document}
+                                onChange={e => setDocument(e.target.value)}
+                                inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
+                                errorMessage={isDocumentTaken ? "El documento ya existe" : null}
+                                validate={shouldValidate}
+                                required={true}
+                            />
+                            <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                            <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
 
-                            <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-                            <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                            <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
+                            <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
                         </FormColumn>
                     </>
 

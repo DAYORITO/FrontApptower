@@ -127,16 +127,17 @@ const LoginForm = ({ setShowLoginForm }) => {
 
 
 
-
     const handleLogin = async (event) => {
         setShowModaload(true)
 
         if (!username || !loginPassword) {
 
             Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
+        
             return;
         }
         event.preventDefault();
+
 
         try {
             const token = await login(username, loginPassword);
@@ -216,7 +217,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                 <div className="form-information-childs">
                     <img src={ImagenPerson} width="75" height="75" alt="" className='iconperson' />
                     <form className="form" onSubmit={handleLogin}>
-                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} />
+                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)}  />
                         <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} />
 
                         <div>
@@ -279,20 +280,26 @@ const RegisterForm = ({ setShowLoginForm }) => {
         setDocumentType(selectedType);
     };
 
+    const [shouldRegister, setShouldRegister] = useState(false);
     const handleRegister = async (event) => {
         event.preventDefault();
 
+        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword) {
+            Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
+            return;
+        }
+
         const url = 'users/login';
         const data = {
-            documentType,
+            docType: documentType,
             name,
             email,
             password,
             document,
             idrole: 2,
-            lastname,
+            lastName: lastname,
             phone,
-            state: 'Inactivo'
+            status: 'Inactivo'
         };
         const { response, error } = await useFetchpost(url, data);
         console.log('Data:', data);
