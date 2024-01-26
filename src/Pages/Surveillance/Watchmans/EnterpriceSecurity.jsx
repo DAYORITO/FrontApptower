@@ -275,8 +275,9 @@ export const EnterpriceSecurity = () => {
                     <Thead>
                         <Th name={'Información Empresa'}></Th>
                         <Th name={'Dirección'}></Th>
-                        <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>
+                        <Th name={'Telefono'}></Th>
+
                         <Th></Th>
 
 
@@ -287,14 +288,14 @@ export const EnterpriceSecurity = () => {
                             <Row
                                 icon='command'
                                 key={enterprise.idEnterpriseSecurity}
-                                docType={'NIT'}
-                                docNumber={enterprise.NIT}
-                                name={enterprise.nameEnterprice}
+                                A3={'NIT'}
+                                A4={enterprise.NIT}
+                                A1={enterprise.nameEnterprice}
                                 status={enterprise.state}
-                                lastName={''}
-                                address={enterprise.address}
-                                tel={enterprise.phone}
-                                corr={enterprise.email}
+                                A2={''}
+                                A7={enterprise.address}
+                                A6={enterprise.phone}
+                                A8={enterprise.email}
 
 
 

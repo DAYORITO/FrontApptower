@@ -330,13 +330,13 @@ export const Watchman = () => {
                                 <Row
                                     icon='shield'
                                     key={watchman.idwatchman}
-                                    docType={watchman.documentType}
-                                    docNumber={watchman.document}
-                                    name={watchman.namewatchman}
-                                    lastName={watchman.lastnamewatchman}
-                                    enter={enterpriceName}
-                                    tel={watchman.phone ? watchman.phone : 'Desconocido'}
-                                    corr={watchman.email}
+                                    A3={watchman.documentType}
+                                    A4={watchman.document}
+                                    A1={watchman.namewatchman}
+                                    A2={watchman.lastnamewatchman}
+                                    A7={enterpriceName}
+                                    A8={watchman.phone ? watchman.phone : 'Desconocido'}
+                                    A6={watchman.email}
                                     status={watchman.state}
                                     to={`details/${watchman.idwatchman}`}
                                 >

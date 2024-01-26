@@ -69,6 +69,10 @@ const LoginForm = ({ setShowLoginForm }) => {
             setUserData(data);
             SetUserDocument(data.user.document);
 
+            if (data.user && data.user.idrole) {
+                fechDataRols();
+            }
+
         } catch (error) {
             console.error('Error fetching user information:', error);
         }
@@ -133,7 +137,7 @@ const LoginForm = ({ setShowLoginForm }) => {
         if (!username || !loginPassword) {
 
             Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
-        
+
             return;
         }
         event.preventDefault();
@@ -191,6 +195,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                     }
                     else {
                         navigate('/admin/users/profileList');
+                        window.location.reload();
                     }
 
                 }
@@ -217,7 +222,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                 <div className="form-information-childs">
                     <img src={ImagenPerson} width="75" height="75" alt="" className='iconperson' />
                     <form className="form" onSubmit={handleLogin}>
-                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)}  />
+                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} />
                         <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} />
 
                         <div>

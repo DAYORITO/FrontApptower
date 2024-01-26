@@ -93,8 +93,8 @@ export const Rols = () => {
                             <Row
                                 icon='settings'
                                 key={rols.idrole}
-                                namerole={rols.namerole}
-                                descripcion={rols.description}
+                                A5={rols.namerole}
+                                description={rols.description}
                                 status={rols.state}
                             >
                                 <Actions accion='Editar' href={`/admin/rols/editNew/${rols.idrole}`} />

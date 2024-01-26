@@ -68,11 +68,10 @@ export const Row = ({
                 </td>
 
                 <th scope="row">
-
-                    {A1 != null ? <span className="badge">{A1A2}</span> : null} <br />
+                    {A5 != null ? <td class="text-secondary">{A5}</td> : null}
+                    {A1 != null ? <span>{A1A2}</span> : null} <br />
                     {A3 != null ? <span className="badge badge-light text-primary">{A3}</span> : null}
                     {A4 != null ? <span className="badge badge-light text-secondary">{A4}</span> : null}
-                    {A5 != null ? <span class="badge badge-white text-secondary">{A5}</span> : null}
 
                 </th>
 
@@ -80,6 +79,8 @@ export const Row = ({
 
 
             {description != null ? <td class="text-secondary">{description}</td> : null}
+            {A7 != null ? <td class="text-secondary">{A7}</td> : null}
+            {A8 != null ? <td class="text-secondary">{A8}</td> : null}
 
 
             {A9 != null ?
