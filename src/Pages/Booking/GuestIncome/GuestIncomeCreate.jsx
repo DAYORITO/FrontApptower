@@ -83,21 +83,21 @@ function GuestIncomeCreate() {
 
   //Obtiene las torres de TowerData
   const towers = TowerData.map((towerData) => ({
-    value: towerData.tower,
-    label: `Tower ${towerData.tower}`
+    value: towerData.idTower,
+    label: `${towerData.Tower.towerName}`
   }));
   //Obtiene los apartamentos de TowerData
   const organizeApartmentsByTower = (data) => {
     const apartmentsByTower = {};
     // Organizar los apartamentos por torre
     data?.apartments?.forEach((apartment) => {
-      const { idApartment, apartmentName, tower } = apartment;
+      const { idApartment, apartmentName, idtower } = apartment;
       // Si no existe la torre, se crea un array vacío
-      if (!apartmentsByTower[tower]) {
-        apartmentsByTower[tower] = [];
+      if (!apartmentsByTower[idtower]) {
+        apartmentsByTower[idtower] = [];
       }
       // Se agrega el apartamento al array correspondiente a la torre
-      apartmentsByTower[tower].push({ value: idApartment, label: apartmentName });
+      apartmentsByTower[idtower].push({ value: idApartment, label: apartmentName });
     });
 
     const resultArray = [];

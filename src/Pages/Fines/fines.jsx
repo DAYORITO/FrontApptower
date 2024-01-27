@@ -48,96 +48,65 @@ function Fines() {
 
      //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
      const handleEditClick = async (dataToUpdate) => {
-      
-      if(fileVerifier==="" || fileVerifier===null){
+      setShowModaload(true);
+
+      //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
+      useApiUpdate(dataToUpdate, 'visitors')
+      .then((responseData)=>{
         setShowModaload(false);
+        
+        console.log(responseData)
+        Swal.fire({
+          icon: 'success',
+          title: 'Acceso actualizado',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
+        const updatedVisitors = visitorsData.map((visitor) => {
+          if (visitor.idVisitor === dataToUpdate.idVisitor) {
+            visitor.access = dataToUpdate.access;
+          }
+          return visitor;
+        });
+        setVisitorsData(updatedVisitors);
+      
+      })
+      .catch((error)=>{
+        console.error('Error updating access:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: 'No hay un comprobante asociado!',
+          text: 'Algo salió mal!',
         });
-        return;
-      }else{
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "No podrás revertir esto!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-        }).then((result) => {
-            if (result.isConfirmed) {
-              
-                //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-                useApiUpdate(dataToUpdate, 'fines')
-                .then((responseData)=>{
-                setShowModaload(false);
-                
-                console.log(responseData)
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Estado actualizado con exito',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-                const updatedFines = fines?.map((fine) => {
-                    if (fine.idFines === dataToUpdate.idFines) {
-                    fine.state = dataToUpdate.state;
-
-                    }
-                    return fine;
-                });
-                setFines(updatedFines);
-                
-                })
-                .catch((error)=>{
-                console.error('Error updating access:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Algo salió mal!',
-                });
-                });
-            }
-        })
-      }
-    
-      
-      const handlePaymentproof = async (dataToUpdate) => {
-        if(file===null){
-          setShowModaload(false);
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'No hay un comprobante asociado!',
-          });
-          return;
-      }else{
-        setShowModaload(true);
-        useApiUpdate(dataToUpdate, 'fines')
-        .then((responseData)=>{
-            
-          setShowModaload(false);
-          Swal.fire({
-            icon: 'success',
-            title: 'Archivo agregado con exito',
-            showConfirmButton: false,
-            timer: 1500
-          })
-          //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-          const updatedFines = fines?.map((fine) => {
-            if (fine.idFines === dataToUpdate.idFines) {
-              fine.state = dataToUpdate.state;
-            }
-            return fine;
-          });
-          setFines(updatedFines);
-        })
-      }
-    }
-        
+      });
     };
+
+
+    const totalPages = data.fines ? Math.ceil(data.fines.length / 8) : 0;
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const filteredDatafines = () => {
+        if (data && data.fines) {
+            return data.fines.slice(currentPage, currentPage + 8);
+        } else {
+            return [];
+        }
+    };
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 8)
+    }
+
+
+    const PreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 8)
+    }
+
 
     return (
         <>
@@ -202,6 +171,7 @@ function Fines() {
                             </li>
                             {pageNumbers.map((pageNumber) => (
                                 <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+
                                     <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
                                 </li>
                             ))}
