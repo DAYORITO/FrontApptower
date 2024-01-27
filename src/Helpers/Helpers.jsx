@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { useFetchpostFile } from "../Hooks/useFetch";
+import { useFetchForFile } from "../Hooks/useFetch";
 
 
 // Filter apartment 
@@ -18,6 +18,31 @@ export const filter = (search, myData, searcher) => {
     data = myData.filter((dato) =>
       dato[searcher].toLowerCase().includes(search.toLowerCase())
     );
+  }
+
+  return data;
+};
+
+
+export const filterPerSelect = (search, myData, searcher) => {
+  if (!Array.isArray(myData)) {
+    console.error("myData is not an array:", myData);
+    myData = [];
+  }
+
+  let data = [];
+
+  if (!search) {
+    data = myData;
+  } else {
+    console.log(searcher)
+    data = myData.filter((dato) =>
+
+      dato[searcher] == search
+
+    );
+
+    console.log(data)
   }
 
   return data;
@@ -83,20 +108,20 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
 
 
 
-export const handleRequest = async (event, endPoint, successMessage, modal, data, url) => {
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url) => {
   try {
 
     event.preventDefault();
     console.log('Data:', data);
 
-    const { response, error } = await useFetchpostFile(`${url}${endPoint}`, data);
+    const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
       console.log('Response:', response);
 
       Swal.fire({
         title: 'Éxito',
-        text: successMessage == response.apartments ,
+        text: response,
         icon: 'success',
       }).then(() => {
 
@@ -119,7 +144,7 @@ export const handleRequest = async (event, endPoint, successMessage, modal, data
 };
 
 
-export const handlePutRequest = async (event, endpoint, successMessage, data, modal, put, get) => {
+export const putRequest = async (event, endpoint, successMessage, data, modal, put, get) => {
   try {
 
     event.preventDefault();

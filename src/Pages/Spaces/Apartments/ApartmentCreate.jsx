@@ -5,11 +5,11 @@ import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 // import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import Swal from 'sweetalert2'
-import { useFetch, useFetchpostFile } from '../../../Hooks/useFetch'
+import { useFetch, useFetchForFile } from '../../../Hooks/useFetch'
 import { useNavigate, useParams } from 'react-router'
 import FormColumn from "../../../Components/Forms/FormColumn";
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
-import { handlePostRequest, handleRequest } from '../../../Helpers/Helpers'
+import { handlePostRequest, postRequest } from '../../../Helpers/Helpers'
 
 
 export const ApartmentCreate = () => {
@@ -28,8 +28,6 @@ export const ApartmentCreate = () => {
     getTowers('towers')
 
   }, [])
-
-
 
 
   const { id } = useParams()
@@ -69,7 +67,7 @@ export const ApartmentCreate = () => {
 
     console.log(data, "data pa crear")
 
-    await handleRequest(event, 'apartments', `jeje`, {}, data, url);
+    await postRequest(event, 'apartments', 'POST', {}, data, url);
 
     navigate(-1)
 

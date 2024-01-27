@@ -27,7 +27,7 @@ import { useParams } from "react-router"
 import { format } from 'date-fns';
 
 
-import { filterFines, filterGuestIncomes, handlePutRequest, handleRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import { filterFines, filterGuestIncomes, putRequest, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 
 
@@ -329,7 +329,7 @@ export const ApartmentDetails = (props) => {
             // Add other properties as needed for different requests
         };
 
-        handleRequest(event, 'aparmentResidents', `Agregaste un residente al apartamento ${apartmentName} exitosamente`, setShowApartmentResidentsModal, data, url);
+        postRequest(event, 'aparmentResidents', `Agregaste un residente al apartamento ${apartmentName} exitosamente`, setShowApartmentResidentsModal, data, url);
 
     };
 
@@ -343,7 +343,7 @@ export const ApartmentDetails = (props) => {
             idParkingSpace
 
         };
-        handleRequest(event, 'assignedParkingSpaces', `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`, setShowParkingSpacesModal, data, url);
+        postRequest(event, 'assignedParkingSpaces', `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`, setShowParkingSpacesModal, data, url);
     };
 
 
@@ -364,7 +364,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        handlePutRequest(event, 'apartments', `Modificaste apartamento ${apartmentName}`, data, setShowModalEditApartment, putApartment, getApartment);
+        putRequest(event, 'apartments', `Modificaste apartamento ${apartmentName}`, data, setShowModalEditApartment, putApartment, getApartment);
 
     };
 
@@ -384,7 +384,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        handlePutRequest(event, 'apartmentOwners', `Modificaste al propietario del apto ${apartmentName}`, data, setShowApartmentOwnermODAL, putApartmentOwner, getApartmentOwners);
+        putRequest(event, 'apartmentOwners', `Modificaste al propietario del apto ${apartmentName}`, data, setShowApartmentOwnermODAL, putApartmentOwner, getApartmentOwners);
 
     };
 
@@ -408,7 +408,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        handlePutRequest(event, 'aparmentResidents', `Modificaste un residente del apto ${apartmentName}`, data, setShowApartmentResidentEditModal, putApartmentResidents, getApartmentResidents);
+        putRequest(event, 'aparmentResidents', `Modificaste un residente del apto ${apartmentName}`, data, setShowApartmentResidentEditModal, putApartmentResidents, getApartmentResidents);
 
     };
 
@@ -427,7 +427,7 @@ export const ApartmentDetails = (props) => {
 
         // console.log("edit data", data)
 
-        handlePutRequest(event, 'assignedParkingSpaces', `Re asignaste el parqueadero`, data, setShowParkingSpacesModal, putAssignedParkingSpaces, getAssignedParkingSpaces);
+        putRequest(event, 'assignedParkingSpaces', `Re asignaste el parqueadero`, data, setShowParkingSpacesModal, putAssignedParkingSpaces, getAssignedParkingSpaces);
 
     };
 

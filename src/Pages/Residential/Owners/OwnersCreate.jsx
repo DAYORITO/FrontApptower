@@ -5,7 +5,7 @@ import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useNavigate, useParams } from 'react-router'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
-import { useFetchget, useFetchpostFile } from '../../../Hooks/useFetch'
+// import { useFetchget, useFetchpostFile } from '../../../Hooks/useFetch'
 import Swal from 'sweetalert2'
 import { bools, docTypes } from '../../../Hooks/consts.hooks'
 import FormColumn from '../../../Components/Forms/FormColumn'
@@ -70,7 +70,7 @@ export const OwnersCreate = () => {
 
     console.log('Data:', data);
 
-    const { response, error } = await useFetchpostFile(url, data);
+    // const { response, error } = await useFetchpostFile(url, data);
 
     if (response) {
       console.log('Response:', response);

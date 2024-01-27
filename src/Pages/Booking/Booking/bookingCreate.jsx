@@ -4,7 +4,7 @@ import FormContainer from "../../../Components/Forms/FormContainer"
 import FormButton from "../../../Components/Forms/FormButton"
 import Inputs from "../../../Components/Inputs/Inputs"
 import InputsSelect from "../../../Components/Inputs/InputsSelect"
-import { useFetchget, useFetchpostFile } from '../../../Hooks/useFetch'
+import { useFetchget, useFetchForFile } from '../../../Hooks/useFetch'
 import { useEffect, useState } from "react"
 import { docTypes } from "../../../Hooks/consts.hooks"
 import { useNavigate } from "react-router"
@@ -54,7 +54,7 @@ export const BookingCreate = (props) => {
         const {
             response,
             error
-        } = await useFetchpostFile(url, data);
+        } = await useFetchForFile(url, data);
 
         if (response) {
             console.log('Response:', response);

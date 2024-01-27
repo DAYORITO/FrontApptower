@@ -1,146 +1,180 @@
-import { Actions } from "../../../Components/Actions/Actions"
-import { BigCard } from "../../../Components/BigCard/BigCard"
-import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons"
-import { Card } from "../../../Components/Card/Card"
-import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard"
-import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
-import { TablePerson } from "../../../Components/Tables/Tables"
-import Cookies from 'js-cookie'
-import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
-import { useEffect, useState } from "react"
-
-import { useFetchget } from '../../../Hooks/useFetch'
-
+import { Actions } from "../../../Components/Actions/Actions";
+import { BigCard } from "../../../Components/BigCard/BigCard";
+import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
+import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
+import { TablePerson } from "../../../Components/Tables/Tables";
+import { useEffect, useState } from "react";
+import { useFetch, useFetchget } from '../../../Hooks/useFetch';
+import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
+import { filter, postRequest } from "../../../Helpers/Helpers";
+import { Spinner } from "../../../Components/Spinner/Spinner";
+import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
+import { createPortal } from "react-dom";
+import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo";
+import { Uploader } from "../../../Components/Uploader/Uploader";
+import InputsSelect from "../../../Components/Inputs/InputsSelect";
+import { spacesTypes, statusList } from "../../../Hooks/consts.hooks";
+import Inputs from "../../../Components/Inputs/Inputs";
 
 export const Spaces = () => {
 
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
-  const token = Cookies.get('token');
+  const url = "http://localhost:3000/api/"
+  // const url = "https://apptowerbackend.onrender.com/api/"
 
-  const { data, load, error } = useFetchget('spaces')
-  console.log(data.spaces)
-
-
+  const { data: spaces, get: getSpaces, loading } = useFetch(url)
 
   useEffect(() => {
-    if (token) {
-      fetchUserPrivilegeAndPermission(token);
-    }
-  }, [token]);
+
+    getSpaces('spaces')
+
+  }, [])
 
 
-  //Consulta privilegios 
-  const fetchUserPrivilegeAndPermission = async (token) => {
-    try {
-      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user privileges');
-      }
-
-      const data = await response.json();
-      console.log(data, 'data');
-      console.log('Allowed Permissions hi:', data.privileges);
-
-      if (data && data.privileges && Array.isArray(data.privileges)) {
-        const allowed = {};
-        data.privileges.forEach(({ idpermission, idprivilege }) => {
-          const permissionName = idToPermissionName[idpermission];
-          const privilegeName = idToPrivilegesName[idprivilege];
-
-          if (!allowed[permissionName]) {
-            allowed[permissionName] = [];
-          }
-          allowed[permissionName].push(privilegeName);
-        });
-
-        setAllowedPermissions(allowed);
-      }
-    } catch (error) {
-      console.error('Error fetching user permissions:', error);
-    }
-  };
-
-  const totalPages = data.spaces ? Math.ceil(data.spaces.length / 8) : 0;
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  // Funtionality to search
 
 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [search, setSearch] = useState('');
 
-  const filteredDataSpaces = () => {
-    if (data && data.spaces) {
-      return data.spaces.slice(currentPage, currentPage + 8);
-    } else {
-      return [];
-    }
-  };
+  let spacesList = filter(search, spaces?.data?.spaces, "spaceName")
 
-  const nextPage = () => {
-    setCurrentPage(currentPage + 8)
+  spacesList = spacesList.sort((a, b) => a.idSpace - b.idSpace);
+
+
+  const searcher = (e) => {
+
+    setSearch(e.target.value)
+    console.log(e.target.value)
+
   }
 
+  const [idSpace, setIdSpace] = useState('');
 
-  const PreviousPage = () => {
-    if (currentPage > 0)
-      setCurrentPage(currentPage - 8)
+  const [spaceType, setSpaceType] = useState('');
+
+  const [image, setImage] = useState('');
+  const [spaceName, setSpaceName] = useState('');
+
+  const [area, setArea] = useState('');
+  const [capacity, setCapacity] = useState('');
+
+  const [status, setStatus] = useState('');
+
+  const [modalSpace, setModalSpace] = useState(false);
+
+  const openModal = (data) => {
+
+    setIdSpace(data.idSpace)
+    setSpaceType(data.spaceType)
+    setImage(data.image)
+    setSpaceName(data.spaceName)
+
+    setArea(data.area)
+    setCapacity(data.capacity)
+
+    setStatus(data.status)
+
+    setModalSpace(true)
+
   }
+
+  const updateSpace = async (event) => {
+
+    console.log(image)
+    const data = {
+
+      idSpace: idSpace,
+      spaceName: spaceName,
+      image: image,
+      area: area,
+      capacity: capacity,
+      status: status
+
+    }
+
+    console.log("edit data", data)
+
+    await postRequest(event, 'spaces', 'PUT', setModalSpace, data, url)
+
+    getSpaces('spaces')
+
+  };
 
 
   return (
     <>
       <ContainerTable
         title='Zonas Comunes'
-        buttonToGo={
-          allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Crear')
-            ? <ButtonGoTo value='Nueva Zona Común' href='create' />
-            : null
-        }
-        showPaginator={
-          <nav aria-label="Table Paging" className="mb- text-muted my-4">
-            <ul className="pagination justify-content-center mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-              </li>
-              {pageNumbers.map((pageNumber) => (
-                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                </li>
-              ))}
+        buttonToGo={<ButtonGoTo value='Nueva Zona Común' href='create' />}
+        search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />
 
-
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-              </li>
-            </ul>
-          </nav >
         }
       >
         <TablePerson>
           <ContainerCard>
 
-            {filteredDataSpaces().map(spaces => (
-              <BigCard
-                title={spaces.spaceName}
-                img={spaces.image}
-                status={spaces.status}
-                to={`/admin/booking/create`}
-              >
-                {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') && (
-                  <Actions accion='Editar' />
-                )}
-                <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
-              </BigCard>
-            ))}
 
+            {loading ? <Spinner /> : spacesList.length == 0 ?
+
+              <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
+              spacesList?.map((space) => (
+                <BigCard
+                  key={space.idSpace}
+                  title={space.spaceName}
+                  img={space.image}
+                  A1={"Reservas: 50"}
+                  status={space.status}
+                  to={`/admin/booking/create`}
+                >
+                  <Actions accion='Editar' onClick={() => openModal(space)} />
+                  <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
+                </BigCard>
+              ))}
           </ContainerCard>
-
 
         </TablePerson>
 
-      </ContainerTable >
+      </ContainerTable>
+
+      {modalSpace &&
+        createPortal(
+          <>
+            <ModalContainer ShowModal={setModalSpace}>
+              <Modal
+                onClick={updateSpace}
+                showModal={setModalSpace}
+                title={`Editar ${spaceName}`}
+              >
+
+                <Uploader name="img" label="Foto de zona comun" onChange={e => setImage(e.target.files[0])} />
+
+
+                <InputsSelect id={"select"} options={spacesTypes} name={"Tipo de zona comun"}
+                  value={spaceType} onChange={e => setSpaceType(e.target.value)}
+                ></InputsSelect>
+
+                <Inputs name="Nombre zona comun" type={"text"}
+                  value={spaceName} onChange={e => setSpaceName(e.target.value)}></Inputs>
+
+
+                <Inputs name="Area" type={"number"}
+                  value={area} onChange={e => setArea(e.target.value)}></Inputs>
+
+                <Inputs name="Capacidad" type={"number"}
+                  value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
+
+                <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                  value={status} onChange={e => setStatus(e.target.value)}
+                ></InputsSelect>
+
+                <Inputs type={"hidden"}
+                  value={idSpace} onChange={e => setIdSpace(e.target.value)}></Inputs>
+
+              </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )}
     </>
-  )
-}
+  );
+};
+

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import './BigCard.css';
-import imagen from "../../assets/2.jpeg"
+import imageNotImg from "../../assets/imgDontFound.png"
 
 export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) => {
     return (
@@ -15,7 +15,7 @@ export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) =>
 
                     <div class="card-body text-center" id='card-space'>
                         <div class="avatar avatar-lg mt-2">
-                            <img class="space-img" id='img' src={img} alt="Descripción de la imagen"></img>
+                            <img class="space-img" id='img' src={img == "" ? imageNotImg : img} alt="Descripción de la imagen"></img>
                         </div>
                         <div class="card-text">
                             <strong class="card-title">{title}</strong>

@@ -4,16 +4,17 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useNavigate } from 'react-router'
-import Swal from 'sweetalert2'
-import { useFetchpostFile } from '../../../Hooks/useFetch'
-import FormColumn from "../../../Components/Forms/FormColumn";
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { spacesTypes } from '../../../Hooks/consts.hooks'
+import { postRequest } from '../../../Helpers/Helpers'
 
 
 // import InputsSelect from '../../../Components/Inputs/InputsSelect'
 
 export const SpacesCreate = () => {
+
+  const url = "http://localhost:3000/api/"
+  // const url = "https://apptowerbackend.onrender.com/api/"
 
   const [spaceType, setSpaceType] = useState("");
   const [image, setImage] = useState("");
@@ -24,54 +25,39 @@ export const SpacesCreate = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const url = 'https://apptowerbackend.onrender.com/api/spaces';
-    // const url = 'http://localhost:3000/api/spaces';
+  const createSpace = async (event) => {
+
+    console.log(image)
     const data = {
-      spaceType,
-      image,
-      spaceName,
-      area,
-      capacity,
-      status,
-    };
 
-    console.log('Data:', data);
+      spaceName: spaceName,
+      image: image,
+      area: area,
+      capacity: capacity,
+      status: status
 
-    const { response, error } = await useFetchpostFile(url, data);
-
-    if (response) {
-      console.log('Response:', response);
-      Swal.fire({
-        title: 'Éxito',
-        text: 'Espacio creado exitosamente',
-        icon: 'success',
-      }).then(() => {
-
-        navigate('/admin/spaces');
-      });
     }
 
-    if (error) {
-      console.log('Hubo un error');
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al crear espacio',
-        icon: 'error',
-      });
-    }
+    console.log("edit data", data)
+
+    await postRequest(event, 'spaces', 'POST', {}, data, url)
+
+    navigate(-1)
+
   };
+
   return (
     <>
 
-      <FormContainer name='Crear espacio' buttons={<FormButton name='Crear espacio' backButton='Regresar' to='/admin/spaces/' onClick={handleSubmit} />}>
+      <FormContainer name='Crear zona comun'
+        buttons={<FormButton name='Crear espacio'
+          backButton='Regresar' to='/admin/spaces/' onClick={createSpace} />}>
         {/* <FormColumn> */}
 
-        <Uploader name="img"  onChange={e => setImage(e.target.files[0])} />
-        
+        <Uploader name="img" onChange={e => setImage(e.target.files[0])} />
+
         <InputsSelect name={"Tipo de espacio"} options={spacesTypes}
-         value={spaceType} onChange={e => setSpaceType(e.target.value)}> </InputsSelect>
+          value={spaceType} onChange={e => setSpaceType(e.target.value)}> </InputsSelect>
 
         <Inputs name="Nombre espacio" placeholder="Ejemplo: 101"
           value={spaceName} onChange={e => setSpaceName(e.target.value)}></Inputs>
