@@ -40,6 +40,8 @@ const LoginForm = ({ setShowLoginForm }) => {
     console.log('documento', userDocument)
     // hourglass.register()
 
+    console.log(userRole, 'userRole aqui en login Aleja')
+
 
     console.log('userData aqui en login:', userData);
 
@@ -88,7 +90,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
             const data = await response.json();
             const rols = data.rols;
-            if (Array.isArray(rols)) {
+            if (userData.user && Array.isArray(rols)) {
                 const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
                 console.log('User Role:', userRole);
                 setUserRole(userRole);
