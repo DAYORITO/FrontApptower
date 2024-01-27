@@ -123,8 +123,8 @@ export const useFetchgetById = (endpoint, id) => {
 // 2. start useFetch get All
 
 export const useFetchget = (endpoint) => {
-    const url = 'https://apptowerbackend.onrender.com/api/'
-    // const url = 'http://localhost:3000/api/';
+    // const url = 'https://apptowerbackend.onrender.com/api/'
+    const url = 'http://localhost:3000/api/';
     const [data, setData] = useState([]);
     const [load, setLoad] = useState(true);
     const [error, setError] = useState(null);
@@ -165,7 +165,10 @@ export const useFetchget = (endpoint) => {
 
 // 3. start useFetch post files
 
-export const useFetchpostFile = async (url, data) => {
+
+// 3. start useFetch post files
+
+export const useFetchForFile = async (url, data, method = "POST") => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
@@ -179,7 +182,7 @@ export const useFetchpostFile = async (url, data) => {
         });
 
         const response = await fetch(url, {
-            method: 'POST',
+            method: method,
             body: formData,
             signal
         });
@@ -209,6 +212,8 @@ export const useFetchpostFile = async (url, data) => {
 
 // 3. end useFetch post files
 
+// 3. end useFetch post files
+
 
 
 
@@ -217,8 +222,8 @@ export const useFetchpostFile = async (url, data) => {
 
 export const useFetchpost = async (endpoint, data) => {
     const url =
-        'https://apptowerbackend.onrender.com/api/'
-    // 'http://localhost:3000/api/';
+        // 'https://apptowerbackend.onrender.com/api/'
+        'http://localhost:3000/api/';
 
     const abortController = new AbortController();
     const signal = abortController.signal;

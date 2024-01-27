@@ -37,47 +37,6 @@ export const EnterpriceSecurity = () => {
     const { error: putError, load: putLoad, } = useFetchput('enterpricesecurity', editedEnterprice);
 
 
-    // useEffect(() => {
-    //     if (token) {
-    //         fetchUserPrivilegeAndPermission(token);
-    //     }
-    // }, [token]);
-
-
-    // //Consulta privilegios 
-    // const fetchUserPrivilegeAndPermission = async (token) => {
-    //     try {
-    //         const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //         if (!response.ok) {
-    //             throw new Error('Failed to fetch user privileges');
-    //         }
-
-    //         const data = await response.json();
-    //         console.log(data, 'data');
-    //         console.log('Allowed Permissions hi:', data.privileges);
-
-    //         if (data && data.privileges && Array.isArray(data.privileges)) {
-    //             const allowed = {};
-    //             data.privileges.forEach(({ idpermission, idprivilege }) => {
-    //                 const permissionName = idToPermissionName[idpermission];
-    //                 const privilegeName = idToPrivilegesName[idprivilege];
-
-    //                 if (!allowed[permissionName]) {
-    //                     allowed[permissionName] = [];
-    //                 }
-    //                 allowed[permissionName].push(privilegeName);
-    //             });
-
-    //             setAllowedPermissions(allowed);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching user permissions:', error);
-    //     }
-    // };
 
 
 
@@ -193,9 +152,22 @@ export const EnterpriceSecurity = () => {
         }
     }, [EnterpriceData, search]);
 
+    const [shouldValidate, setShouldValidate] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!nameEnterprice || !NIT || !email || !address || !phone) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+            //Activa la validacion de los campos cuando se envia el formulario
+            setShouldValidate(true);
+            return;
+        }
+
         const url = 'enterpricesecurity';
         const data = {
             nameEnterprice,
@@ -303,8 +275,9 @@ export const EnterpriceSecurity = () => {
                     <Thead>
                         <Th name={'Información Empresa'}></Th>
                         <Th name={'Dirección'}></Th>
-                        <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>
+                        <Th name={'Telefono'}></Th>
+
                         <Th></Th>
 
 
@@ -315,14 +288,14 @@ export const EnterpriceSecurity = () => {
                             <Row
                                 icon='command'
                                 key={enterprise.idEnterpriseSecurity}
-                                docType={'NIT'}
-                                docNumber={enterprise.NIT}
-                                name={enterprise.nameEnterprice}
+                                A3={'NIT'}
+                                A4={enterprise.NIT}
+                                A1={enterprise.nameEnterprice}
                                 status={enterprise.state}
-                                lastName={''}
-                                address={enterprise.address}
-                                tel={enterprise.phone}
-                                corr={enterprise.email}
+                                A2={''}
+                                A7={enterprise.address}
+                                A6={enterprise.phone}
+                                A8={enterprise.email}
 
 
 
@@ -382,11 +355,11 @@ export const EnterpriceSecurity = () => {
                                 showModal={setShowModalCreate}
                                 title={"Nueva Empresa"}
                             >
-                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} ></Inputs>
-                                <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => setNameEnterprice(e.target.value)}></Inputs>
-                                <Inputs name="Dirección" type='text' value={address} onChange={e => setAddress(e.target.value)}></Inputs>
-                                <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} ></Inputs>
-                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => setNameEnterprice(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                <Inputs name="Dirección" type='text' value={address} onChange={e => setAddress(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
 
                             </Modal>
                         </ModalContainer>

@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import 'select2'; // Importa Select2
 // import './Inputs.css';
 import './Select2.css';
-function Select2({ id, options, name, onChange, value }) {
+function Select2({ id, options, name, onChange, value, validate }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(value || '');
-  
+  const [selectError, setSelectError] = useState(null);
+
 
   useLayoutEffect(() => {
     // Inicializa Select2 en el elemento select
@@ -25,7 +26,7 @@ function Select2({ id, options, name, onChange, value }) {
     $(inputRef.current).on('select2:close', () => {
       if (!$(inputRef.current).val()) {
         labelRef.current.classList.remove('active');
-        
+
       }
     });
 
@@ -35,28 +36,37 @@ function Select2({ id, options, name, onChange, value }) {
     };
   }, []);
 
-  
-    $('.select2').select2(
-      {
-        theme: 'bootstrap4',
-        width: '100%',
-      });
 
-      useEffect(() => {
-        $(inputRef.current).on('change', (event) => {
-          const newValue = event.target.value;
-          setSelectedValue(newValue);
-    
-          // Llama a la función onChange del componente padre y pasa el nuevo valor seleccionado
-          if (onChange) {
-            onChange(newValue);
-          }
-        });
-    
-        return () => {
-          $(inputRef.current).off('change');
-        };
-      }, [onChange]);
+  $('.select2').select2(
+    {
+      theme: 'bootstrap4',
+      width: '100%',
+    });
+
+  useEffect(() => {
+    $(inputRef.current).on('change', (event) => {
+      const newValue = event.target.value;
+      setSelectedValue(newValue);
+
+      // Llama a la función onChange del componente padre y pasa el nuevo valor seleccionado
+      if (onChange) {
+        onChange(newValue);
+      }
+    });
+
+    return () => {
+      $(inputRef.current).off('change');
+    };
+  }, [onChange]);
+
+  useEffect(() => {
+    if (validate && !selectedValue) {
+      setSelectError("Seleccione una opción*");
+    } else {
+      setSelectError(null);
+    }
+  }, [selectedValue, validate]);
+
   return (
     <>
       <div className='selectContainer mb-3'>
@@ -64,12 +74,15 @@ function Select2({ id, options, name, onChange, value }) {
           <select
             id={id}
             value={selectedValue}
-            className='selectComponent select2 form-control' 
+            className='selectComponent select2 form-control'
             ref={inputRef}
-            
+
           >
+            <option value='' disabled>
+              Seleccione una opción
+            </option>
             {/* <option value='' selected disabled></option> */}
-            { options && options.map((opcion) => (
+            {options && options.map((opcion) => (
               <option className='' key={opcion.value} value={opcion.value}>
                 {opcion.label}
               </option>
@@ -79,6 +92,8 @@ function Select2({ id, options, name, onChange, value }) {
         <label htmlFor={name} className='form-label ' ref={labelRef}>
           {name}
         </label>
+        {selectError && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingBottom: '1.4px' }}>{selectError}</div>}
+
       </div>
     </>
   );

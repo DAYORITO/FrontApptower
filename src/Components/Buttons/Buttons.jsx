@@ -28,7 +28,7 @@ const DropdownExcel = () => {
 }
 
 
-const SearchButton = ({ value, onChange, type = 'text', id }) => {
+const SearchButton = ({ value, onChange, type = 'text', id, placeholder = "Buscar" }) => {
     return (
         <div className="form-inline" id={id} >
             <div className="form-row" >
@@ -37,7 +37,7 @@ const SearchButton = ({ value, onChange, type = 'text', id }) => {
                         <span className="fe fe-24 fe-search" style={{ color: 'gray' }}></span>
                     </button> */}
                     <label htmlFor="search" className="sr-only">Buscar</label>
-                    <input type={type} value={value} onChange={onChange} placeholder='Buscar' className="form-control" />
+                    <input type={type} value={value} onChange={onChange} placeholder={placeholder} className="form-control" />
 
                 </div>
             </div>
@@ -56,4 +56,23 @@ const DateButton = ({ value, onChange, id }) => {
         </div>
     )
 }
-export { ButtonGoTo, DropdownExcel, SearchButton, DateButton };
+
+
+const SearchSelect = ({ options, value, onChange }) => {
+
+    return (
+        <select value={value} onChange={onChange} class="form-select mr-2 form-control" aria-label="Disabled select example">
+
+
+            {options?.map((option) => (
+
+                // console.log(option.label)
+                <option key={option.value} value={option.value} onClick={() => console.log(option.label)}
+                >{option.label} </option>
+                
+            ))}
+
+        </select>)
+}
+
+export { ButtonGoTo, DropdownExcel, SearchButton, DateButton, SearchSelect };

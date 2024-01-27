@@ -1,17 +1,34 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-function InputsSelect({ id, options, name, onChange, value }) {
+function InputsSelect({ id, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle }) {
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
+  const [internalErrorMessage, setInternalErrorMessage] = useState(null);
+  const [labelText, setLabelText] = useState(name);
   const inputRef = useRef(null);
   const labelRef = useRef(null);
+
+  useEffect(() => {
+    if (value !== '') {
+      labelRef.current.classList.add('lleno');
+    } else {
+      labelRef.current.classList.remove('lleno');
+    }
+  }, [value]);
+
+
   useEffect(() => {
     if (inputRef.current.value !== '') {
       labelRef.current.classList.add('lleno');
     }
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
+      if (required) {
+        setLabelText(name + '*');
+      }
     });
+
+
     inputRef.current.addEventListener('blur', () => {
       if (inputRef.current.value !== '') {
         labelRef.current.classList.add('lleno');
@@ -19,7 +36,12 @@ function InputsSelect({ id, options, name, onChange, value }) {
         labelRef.current.classList.remove('lleno');
       }
       labelRef.current.classList.remove('active');
+      if (required) {
+        setLabelText(name);
+      }
     });
+
+
 
     return () => {
       inputRef.current?.removeEventListener('focus', () => {
@@ -33,10 +55,22 @@ function InputsSelect({ id, options, name, onChange, value }) {
     }
   }, [])
 
+  //Aqui esta utilizando el prop validate para validar si el campo esta vacio y mostrar un mensaje de error
+  useEffect(() => {
+    if (validate && value === "") {
+      setInternalErrorMessage("Este campo es requerido*");
+    } else {
+      setInternalErrorMessage(null);
+
+    }
+  }, [value, validate]);
+
+  const errorMessage = externalErrorMessage || internalErrorMessage;
+
   return (
     <>
       <div className='inputContainer mb-3'>
-        <span className='inputSpan'>
+        <span className='inputSpan ' style={inputStyle}>
           <select
             id={id}
             // value={valorSeleccionado}
@@ -44,6 +78,7 @@ function InputsSelect({ id, options, name, onChange, value }) {
             className='selectComponent'
             ref={inputRef}
             onChange={onChange}
+
           // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
             <option value='' selected disabled></option>
@@ -56,7 +91,9 @@ function InputsSelect({ id, options, name, onChange, value }) {
             ))}
           </select>
         </span>
-        <label htmlFor={name} className='form-label ' ref={labelRef}>{name}</label>
+        <label htmlFor={name} className='form-label' ref={labelRef}>{labelText}</label>
+        {errorMessage && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
+
       </div>
     </>
   )

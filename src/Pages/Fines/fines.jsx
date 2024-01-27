@@ -22,7 +22,7 @@ import { useApiUpdate } from '../../Hooks/FetchputDan';
 
 function Fines() {
     //Se crea un estado para actualizar los datos al momento de cualquier accion
-    const [fines, setFines] = useState({fines: []})
+    const [fines, setFines] = useState({ fines: [] })
     const [showModaload, setShowModaload] = useState(false);
     cardio.register()
 
@@ -46,40 +46,40 @@ function Fines() {
         }
     }, [data]);
 
-     //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
-     const handleEditClick = async (dataToUpdate) => {
-      setShowModaload(true);
+    //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
+    const handleEditClick = async (dataToUpdate) => {
+        setShowModaload(true);
 
-      //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-      useApiUpdate(dataToUpdate, 'visitors')
-      .then((responseData)=>{
-        setShowModaload(false);
-        
-        console.log(responseData)
-        Swal.fire({
-          icon: 'success',
-          title: 'Acceso actualizado',
-          showConfirmButton: false,
-          timer: 1500
-        })
-        //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-        const updatedVisitors = visitorsData.map((visitor) => {
-          if (visitor.idVisitor === dataToUpdate.idVisitor) {
-            visitor.access = dataToUpdate.access;
-          }
-          return visitor;
-        });
-        setVisitorsData(updatedVisitors);
-      
-      })
-      .catch((error)=>{
-        console.error('Error updating access:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Algo salió mal!',
-        });
-      });
+        //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
+        useApiUpdate(dataToUpdate, 'visitors')
+            .then((responseData) => {
+                setShowModaload(false);
+
+                console.log(responseData)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Acceso actualizado',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
+                const updatedVisitors = visitorsData.map((visitor) => {
+                    if (visitor.idVisitor === dataToUpdate.idVisitor) {
+                        visitor.access = dataToUpdate.access;
+                    }
+                    return visitor;
+                });
+                setVisitorsData(updatedVisitors);
+
+            })
+            .catch((error) => {
+                console.error('Error updating access:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Algo salió mal!',
+                });
+            });
     };
 
 
@@ -157,7 +157,7 @@ function Fines() {
                     </>,
                     document.getElementById("modalRender")
                     )} */}
-                
+
 
             <ContainerTable title='Multas'
                 dropdown={<DropdownExcel />}
@@ -207,10 +207,10 @@ function Fines() {
                                 op3={"$" + fine.amount}
                                 op4={fine.state}
                             >
-                                <Actions accion='Agregar Comprobante'/>
+                                <Actions accion='Agregar Comprobante' />
                                 <Actions accion='Aprobar pago' onClick={() => {
-                                    handleEditClick({idVisitor: visitor.idVisitor, access: !visitor.access});
-                                }}/>
+                                    handleEditClick({ idVisitor: visitor.idVisitor, access: !visitor.access });
+                                }} />
                             </Row>
                         ))}
 
@@ -240,7 +240,7 @@ function Fines() {
                     </>,
                     document.getElementById("modalRender")
                 )}
-            
+
         </>
     )
 }
