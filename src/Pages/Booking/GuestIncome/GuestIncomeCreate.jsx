@@ -64,13 +64,14 @@ function GuestIncomeCreate() {
   const { data, load, error } = useFetchget('apartments')
   const { data: dataResidentApartment, load4, error4 } = useFetchget('aparmentResidents')
   const { data: dataParkingSpaces, load3, error3 } = useFetchget('parkingSpaces')
+  const { data: dataTowers, load5, error5 } = useFetchget('towers')
   useEffect(() => {
-    if (load || load2 || load3 || load4) {
+    if (load || load2 || load3 || load4 || load5) {
       setShowModaload(true);
     } else {
       setShowModaload(false);
     }
-  }, [load, load2, load3, load4])
+  }, [load, load2, load3, load4, load5])
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
   const handleChange = (e) => {
@@ -83,22 +84,23 @@ function GuestIncomeCreate() {
 
   //Obtiene las torres de TowerData
   const towers = TowerData.map((towerData) => ({
-    value: towerData.idTower,
-    label: `${towerData.Tower.towerName}`
+    value: towerData.tower,
+    label: dataTowers.towers.find((tower) => tower.idTower === towerData.tower).towerName
   }));
   //Obtiene los apartamentos de TowerData
   const organizeApartmentsByTower = (data) => {
     const apartmentsByTower = {};
     // Organizar los apartamentos por torre
     data?.apartments?.forEach((apartment) => {
-      const { idApartment, apartmentName, idtower } = apartment;
+      const { idApartment, apartmentName, idTower } = apartment;
       // Si no existe la torre, se crea un array vacío
-      if (!apartmentsByTower[idtower]) {
-        apartmentsByTower[idtower] = [];
+      if (!apartmentsByTower[idTower]) {
+        apartmentsByTower[idTower] = [];
       }
       // Se agrega el apartamento al array correspondiente a la torre
-      apartmentsByTower[idtower].push({ value: idApartment, label: apartmentName });
+      apartmentsByTower[idTower].push({ value: idApartment, label: apartmentName });
     });
+    console.log("Apartamentos por torreprimero:", apartmentsByTower);
 
     const resultArray = [];
 
@@ -115,6 +117,7 @@ function GuestIncomeCreate() {
         });
       }
     }
+    console.log("Apartamentos por torre:", resultArray);
 
     return resultArray;
   };
@@ -150,6 +153,8 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (data.apartments)
       setTowerData(organizeApartmentsByTower(data))
+      console.log("Datos de las turres Xd", TowerData)
+      console.log("Datos de las turres", data)
   }, [data])
 
 
@@ -187,16 +192,18 @@ function GuestIncomeCreate() {
         (resident) => resident.idApartment === parseInt(selectedValue)
       );
 
-      if (resident) {
-        if (resident.resident && resident.resident.phoneNumber) {
-          setPhone(resident.resident.phoneNumber + " - " + resident.resident.name + " " + resident.resident.lastName);
-          console.log("Phone Number:", resident.resident.phoneNumber);
+      if (resident && resident.resident && resident.resident.status === "Active") {
+        console.log(resident.resident.status)
+        const user = resident.resident.user;
+        if (user && user.phone) {
+          setPhone(`${user.phone} - ${user.name} ${user.lastName}`);
+          console.log("Phone Number:", user.phone);
         } else {
           console.log("No phone number registered for this resident.");
           setPhone("No se cuenta con un numero.");
         }
       } else {
-        console.log("No resident found for the selected apartment.");
+        console.log("No active resident found for the selected apartment.");
         setPhone("Nadie habita");
       }
     } else {

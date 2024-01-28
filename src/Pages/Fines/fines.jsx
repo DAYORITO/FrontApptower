@@ -197,15 +197,16 @@ function Fines() {
                     <Tbody>
                         {filteredDatafines().map(fine => (
                             <Row
-                                name={fine.fineType}
-                                docType="APTO"
-                                docNumber={fine.apartment.apartmentName}
+                                key={fine.idFines}
+                                A1={fine.fineType}
+                                A3="APTO"
+                                A4={fine.apartment.apartmentName}
                                 icon='dollar-sign'
-                                status='Pendiente'
-                                op1={fine.incidentDate}
-                                op2={fine.paymentDate}
-                                op3={"$" + fine.amount}
-                                op4={fine.state}
+                                // status='Pendiente'
+                                A7={fine.incidentDate}
+                                // A8={fine.paymentDate}
+                                A9={"$" + fine.amount}
+                                A6={fine.state}
                             >
                                 <Actions accion='Agregar Comprobante' />
                                 <Actions accion='Aprobar pago' onClick={() => {

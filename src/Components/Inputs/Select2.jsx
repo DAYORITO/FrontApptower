@@ -79,7 +79,7 @@ function Select2({ id, options, name, onChange, value, validate }) {
 
           >
             <option value='' disabled>
-              Seleccione una opción
+              
             </option>
             {/* <option value='' selected disabled></option> */}
             {options && options.map((opcion) => (
