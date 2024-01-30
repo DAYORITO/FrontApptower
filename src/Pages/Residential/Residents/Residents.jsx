@@ -9,7 +9,7 @@ import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
 import { useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import { filter, postRequest } from '../../../Helpers/Helpers'
+import { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -32,6 +32,8 @@ export const Residents = () => {
 
     const { data: residents, get: getResidents, loading } = useFetch(url)
     const { data: apartments, get: getApartments, loading: loadingApartments } = useFetch(url)
+    const { del: delApartmentResidents } = useFetch(url)
+
 
 
     useEffect(() => {
@@ -119,8 +121,6 @@ export const Residents = () => {
             }))
         : [];
 
-    console.log(residentsList)
-
 
     const openModal = (data) => {
 
@@ -199,7 +199,7 @@ export const Residents = () => {
         }
         console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'PUT',{}, data, url)
+        await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url)
 
         setModalAddChangeApartment(false)
         getResidents('residents')
@@ -220,7 +220,7 @@ export const Residents = () => {
         }
         console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'POST',{}, data, url)
+        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url)
 
         setModalAddChangeApartment(false)
         getResidents('residents')
@@ -274,6 +274,19 @@ export const Residents = () => {
     };
 
 
+    const deleteApartmentResident = async (event) => {
+
+
+        const deleteFunction = async () => {
+            await delApartmentResidents('aparmentResidents', { idApartmentResident: idApartmentResident });
+        };
+
+        await showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
+        setModalAddChangeApartment(false)
+        getResidents('residents')
+    };
+
+
 
 
 
@@ -287,13 +300,14 @@ export const Residents = () => {
                 buttonToGo={<ButtonGoTo value='Nuevo residente' href={'/admin/residents/create'} />}
             >
                 <TablePerson>
-                    
-                    <Thead>
-                        <Th name={"Informacion perosonal"}/>
-                        <Th name={"Apartamento residencia"}/>
-                        <Th name={"Informacion de contacto"}/>
 
-                    </Thead>
+                    {/* <Thead>
+                        <Th name={"Informacion perosonal"} />
+                        <Th name={"Apartamento residencia"} />
+                        <Th name={"Informacion de contacto"} />
+                        <Th name={"Acciones"} />
+
+                    </Thead> */}
 
                     <Tbody>
 
@@ -324,18 +338,22 @@ export const Residents = () => {
                                     to2={`${resident.apartmentInfo == "" ? "/admin/residents/" : `/admin/apartments/details/${resident.apartmentInfo.idApartment}`}  `}
 
                                 >
-                                    {resident.apartments.idApartment == undefined ?
-                                        null :
-                                        <Actions accion='Ver apartamento'
-                                            icon='home'
-                                            href={`/admin/apartments/details/${resident.apartments.idApartment}`}
-                                        />
+                                    {resident.apartmentInfo.idApartment == undefined ?
+                                        <Actions accion={`Asiganar apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions> :
+                                        <>
+                                            <Actions accion='Ver apartamento'
+                                                icon='home'
+                                                href={`/admin/apartments/details/${resident.apartmentInfo.idApartment}`}
+                                            />
+                                            <Actions accion={`Modificar residencia apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions>
+                                        </>
+
                                     }
 
-                                    <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions>
                                     <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(resident)}></Actions>
                                     <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions>
-                                    <Actions accion={`Asiganar apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions>
+                                    <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions>
+
 
                                     {/* <Actions accion='Ver detalle' icon='eye' href={`/admin/residents/details/${resident.idResident}`} ></Actions> */}
 
@@ -357,6 +375,8 @@ export const Residents = () => {
                                 onClick={isCreateApartmentResident ? CreateApartmentResident : updateApartmentResident}
                                 showModal={setModalAddChangeApartment}
                                 title={`${isCreateApartmentResident ? "Asignar apartamento" : "Modificar apartamento asignado"}`}
+                                buttonDelete={isCreateApartmentResident ? false : true}
+                                onClickForDelete={deleteApartmentResident}
                             >
 
                                 <InputsSelect id={"select"} options={residentsList} name={"Residente"}
@@ -405,6 +425,7 @@ export const Residents = () => {
                                 onClick={updateResident}
                                 showModal={setModalResident}
                                 title={`Modificar residencia ${residentName}`}
+
                             >
 
 
