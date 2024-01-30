@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange, validate }) => {
+export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange, validate, fileUrl }) => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState(null);
     const [fileError, setFileError] = useState(null);
@@ -17,6 +17,16 @@ export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange,
         }
     }, [file, validate]);
 
+    useEffect(() => {
+        if (fileUrl) {
+            fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    setFile(URL.createObjectURL(blob));
+                    setFileName(fileUrl.split('/').pop());
+                });
+        }
+    }, [fileUrl]);
     const handleFileChange = (e) => {
         setFile(null);
         setFileName(null);
@@ -30,7 +40,7 @@ export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange,
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setFile(new Uint8Array(reader.result));
+            setFile(new Blob([reader.result]));
         };
         reader.readAsArrayBuffer(e.target.files[0]);
 
@@ -59,7 +69,13 @@ export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange,
                 </div>
                 {file && (
                     <div className="preview" style={{ textAlign: 'center' }}>
-                        {fileName.endsWith('.pdf') ? (
+                        {typeof file === 'string' && fileName.endsWith('.pdf') ? (
+                            <div style={{ width: '300px', height: '110px', overflow: 'auto', margin: 'auto' }}>
+                                <Document file={file}>
+                                    <Page pageNumber={1} width={300} height={100} />
+                                </Document>
+                            </div>
+                        ) : fileName.endsWith('.pdf') ? (
                             <div style={{ width: '300px', height: '110px', overflow: 'auto', margin: 'auto' }}>
                                 <Document file={new Blob([file], { type: 'application/pdf' })}>
                                     <Page pageNumber={1} width={300} height={100} />

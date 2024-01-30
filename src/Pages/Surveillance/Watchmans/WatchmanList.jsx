@@ -223,6 +223,7 @@ export const Watchman = () => {
     })) : [];
 
     const selectedEnterpriceOption = editedWatchman && enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity)?.value;
+ 
     const handleEnterpriceSecurity = (selectedValue) => {
         const selectedValueAsNumber = Number(selectedValue);
         console.log("Selected Value:", selectedValueAsNumber);
