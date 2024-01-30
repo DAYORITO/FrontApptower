@@ -160,20 +160,6 @@ export const RolsCreate = () => {
         }
     };
 
-    const [permisoDescription, setPermisoDescription] = useState('');
-
-    const handleIconClick = async (permisoLabel) => {
-        try {
-            const response = await fetch(`https://your-api-url/permisos/${permisoLabel}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch permiso description');
-            }
-            const data = await response.json();
-            setPermisoDescription(data.description);
-        } catch (error) {
-            console.error('Error fetching permiso description:', error);
-        }
-    };
 
     return (
         <>
@@ -208,7 +194,7 @@ export const RolsCreate = () => {
                     {permisos.map((permiso, index) => (
                         console.log(permiso, 'permiso'),
                         <div className='accordion-item' key={index}>
-                            <Accordion title={permiso.label} icon='alert-circle'>
+                            <Accordion title={permiso.label} >
                                 {permiso.options.map((opcion, optionIndex) => (
                                     console.log(opcion, 'opcion'),
                                     <Checkboxs

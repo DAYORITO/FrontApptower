@@ -6,6 +6,7 @@ export const Row = ({
 
     file,
     to = "details",
+    to2 = "details",
 
     children,
     description,
@@ -13,7 +14,7 @@ export const Row = ({
     status,
 
     A1,
-    A2,
+    A2 = "",
     A3,
     A4,
     A5,
@@ -77,10 +78,13 @@ export const Row = ({
 
             </Link>
 
+            {A6 != null ?  <td  class="text-secondary"><Link to={to2}>{A6}</Link> </td> : null}
+
+
 
             {description != null ? <td class="text-secondary">{description}</td> : null}
             {A7 != null ? <td class="text-secondary">{A7}</td> : null}
-            {A8 != null ? <td class="text-secondary">{A8}</td> : null}
+            {/* {A8 != null ? <td class="text-secondary">{A8}</td> : null} */}
 
 
             {A9 != null ?
@@ -101,7 +105,6 @@ export const Row = ({
 
 
 
-            {A6 != null ? <td class="text-secondary">{A6}</td> : null}
 
 
 

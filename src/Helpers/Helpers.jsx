@@ -4,7 +4,7 @@ import { useFetchForFile } from "../Hooks/useFetch";
 
 // Filter apartment 
 
-export const filter = (search, myData, searcher) => {
+export const filter = (search, myData, searcher, searcher2) => {
   if (!Array.isArray(myData)) {
     console.error("myData is not an array:", myData);
     myData = [];
@@ -15,8 +15,12 @@ export const filter = (search, myData, searcher) => {
   if (!search) {
     data = myData;
   } else {
+    console.log(searcher)
     data = myData.filter((dato) =>
-      dato[searcher].toLowerCase().includes(search.toLowerCase())
+      searcher2 != null ?
+        dato[searcher][searcher2].toLowerCase().includes(search.toLowerCase()) :
+        dato[searcher].toLowerCase().includes(search.toLowerCase())
+
     );
   }
 

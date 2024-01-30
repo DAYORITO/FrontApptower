@@ -109,13 +109,12 @@ export const Watchman = () => {
         }
     };
 
-
-
     useEffect(() => {
         if (!putLoad && !putError) {
             setShowModal(false);
         }
     }, [putLoad, putError]);
+
 
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedWatchman);
@@ -128,7 +127,7 @@ export const Watchman = () => {
                     dateOfbirth: editedWatchman.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString() : null
                 };
 
-                const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
+                const response = await fetch('http://localhost:3000/api/watchman', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -136,24 +135,7 @@ export const Watchman = () => {
                     body: JSON.stringify(formattedWatchman),
                 });
 
-                const responseUser = await fetch(`https://apptowerbackend.onrender.com/api/users/edited`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        name: formattedWatchman.namewatchman,
-                        lastname: formattedWatchman.lastnamewatchman,
-                        email: formattedWatchman.email,
-                        phone: formattedWatchman.phone,
-                        document: formattedWatchman.document,
-                        documentType: formattedWatchman.documentType,
-                        state: formattedWatchman.state,
-
-                    }),
-                });
-
-                if (response.ok && responseUser.ok) {
+                if (response.ok) {
                     const updatedWatchman = watchmanData.map(watchman => {
                         if (watchman.idwatchman === editedWatchman.idwatchman) {
                             return editedWatchman;
@@ -189,10 +171,7 @@ export const Watchman = () => {
             value: "CC",
             label: "CC"
         },
-        {
-            value: "TI",
-            label: "TI"
-        },
+
         {
             value: "CE",
             label: "CE"
@@ -212,6 +191,7 @@ export const Watchman = () => {
     ];
 
 
+    // Buscador
     const [search, setSearch] = useState('');
     const searcher = (e) => {
 
@@ -233,32 +213,25 @@ export const Watchman = () => {
     }
 
 
-
-
-
+    // Traer empresas de seguridad
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
-
-
+    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
     const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
         value: enterprice.idEnterpriseSecurity,
         label: enterprice.nameEnterprice
     })) : [];
 
-
+    const selectedEnterpriceOption = editedWatchman && enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity)?.value;
     const handleEnterpriceSecurity = (selectedValue) => {
         const selectedValueAsNumber = Number(selectedValue);
         console.log("Selected Value:", selectedValueAsNumber);
-        setEnterprice(selectedValueAsNumber);
-
         setSelectedEnterprice(selectedValueAsNumber);
+        setEditedWatchman({ ...editedWatchman, idEnterpriseSecurity: selectedValueAsNumber });
     };
 
 
-
-    console.log('enterpriceOptions', enterpriceOptions);
-
-
+    //paginador
     const totalPages = Math.ceil(filterData.length / 10);
     const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
@@ -330,13 +303,13 @@ export const Watchman = () => {
                                 <Row
                                     icon='shield'
                                     key={watchman.idwatchman}
-                                    A3={watchman.documentType}
-                                    A4={watchman.document}
-                                    A1={watchman.namewatchman}
-                                    A2={watchman.lastnamewatchman}
+                                    A3={watchman.user ? watchman.user.docType : 'Desconocido'}
+                                    A4={watchman.user ? watchman.user.document : 'Desconocido'}
+                                    A1={watchman.user ? watchman.user.name : 'Desconocido'}
+                                    A2={watchman.user ? watchman.user.lastName : 'Desconocido'}
                                     A7={enterpriceName}
-                                    A8={watchman.phone ? watchman.phone : 'Desconocido'}
-                                    A6={watchman.email}
+                                    A8={watchman.user && watchman.user.phone ? watchman.user.phone : 'Desconocido'}
+                                    A6={watchman.user ? watchman.user.email : 'Desconocido'}
                                     status={watchman.state}
                                     to={`details/${watchman.idwatchman}`}
                                 >
@@ -363,23 +336,30 @@ export const Watchman = () => {
                                 title={"Editar Vigilante"}
                             >
                                 <div className="mr-1" style={{ width: '100%' }}>
-
-                                    <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
+                                    <Select2
+                                        name={'Empresa de Seguridad'}
+                                        onChange={(newValue) => {
+                                            const setSelectedEnterprice = enterpriceOptions.find(option => option.value === Number(newValue));
+                                            const newNameEnterprice = setSelectedEnterprice ? setSelectedEnterprice.label : '';
+                                            handleEnterpriceSecurity(newValue);
+                                        }}
+                                        options={enterpriceOptions}
+                                        value={selectedEnterpriceOption}
+                                    />
                                 </div>
-                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.documentType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, documentType: e.target.value })} ></InputsSelect>
-                                <Inputs name="Documento" value={editedWatchman?.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, document: e.target.value })} readonly={true} inputStyle={{ color: '#E3E3E3' }} />
-                                <Inputs name="Nombre" value={editedWatchman?.namewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, namewatchman: e.target.value })} />
-                                <Inputs name="Apellido" value={editedWatchman?.lastnamewatchman || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, lastnamewatchman: e.target.value })} />
-                                <Inputs name="Correo" value={editedWatchman?.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, email: e.target.value })} />
-                                <Inputs name="Teléfono" value={editedWatchman?.phone || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, phone: e.target.value })} />
-
+                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.user.docType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, docType: e.target.value } })} ></InputsSelect>
+                                <Inputs name="Documento" value={editedWatchman?.user.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, document: e.target.value } })} />
+                                <Inputs name="Nombre" value={editedWatchman?.user.name || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, name: e.target.value } })} />
+                                <Inputs name="Apellido" value={editedWatchman?.user.lastName || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, lastName: e.target.value } })} />
+                                <Inputs name="Correo" value={editedWatchman?.user.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, email: e.target.value } })} />
+                                <Inputs name="Teléfono" value={editedWatchman?.user.phone || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, phone: e.target.value } })} />
                                 <Inputs
                                     type='date'
                                     name="Fecha Nacimiento"
-                                    value={editedWatchman?.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString().split('T')[0] : ''}
+                                    value={editedWatchman?.user.birthday ? new Date(editedWatchman.user.birthday).toISOString().split('T')[0] : ''}
                                     onChange={(e) => {
                                         const selectedDate = e.target.value;
-                                        setEditedWatchman({ ...editedWatchman, dateOfbirth: selectedDate });
+                                        setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, birthday: e.target.value } });
                                     }}
                                 />
 

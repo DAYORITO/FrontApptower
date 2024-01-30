@@ -4,7 +4,7 @@ import ImageIcono from '../../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../../Components/Inputs/selectLogIn';
-import { useFetchpost } from '../../../Hooks/useFetch';
+import { useFetchget, useFetchpost } from '../../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../../Context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -12,10 +12,6 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
 import { createPortal } from 'react-dom';
-// import { hourglass } from 'ldrs'
-// import { set } from 'date-fns';
-
-// Default values shown
 
 
 
@@ -37,27 +33,19 @@ const LoginForm = ({ setShowLoginForm }) => {
     console.log(userRole, 'userRole aqui en login');
     const [idApartment, setIdapartaments] = useState('');
     console.log(idApartment, 'idapartement')
-    console.log('documento', userDocument)
-    // hourglass.register()
 
-    console.log(userRole, 'userRole aqui en login Aleja')
-
-
-    console.log('userData aqui en login:', userData);
-
-
-    const redireccion = useNavigate();
+    const [userIdRole, setUserIdRole] = useState(null);
 
     useEffect(() => {
         if (token) {
-
             fetchUserInformation(token);
+
         }
     }, [token]);
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            const response = await fetch('http://localhost:3000/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -68,68 +56,58 @@ const LoginForm = ({ setShowLoginForm }) => {
             }
 
             const data = await response.json();
-            setUserData(data);
-            SetUserDocument(data.user.document);
-
-            if (data.user && data.user.idrole) {
-                fechDataRols();
-            }
+            setUserData(data.user);
 
         } catch (error) {
             console.error('Error fetching user information:', error);
         }
     };
 
-    const fechDataRols = async () => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+    console.log('userData aqui en login Aleja hoy:', userData);
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch roles');
-            }
 
-            const data = await response.json();
-            const rols = data.rols;
-            if (userData.user && Array.isArray(rols)) {
-                const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
-                console.log('User Role:', userRole);
-                setUserRole(userRole);
-            } else {
-                console.error('Error: roles data is not an array:', rols);
-            }
-        } catch (error) {
-            console.error('Error fetching roles:', error);
-        }
-    };
+    const { data: dataRols, load: loadRols, error: errorRols } = useFetchget('rols');
 
     useEffect(() => {
-        if (userData.user && userData.user.idrole) {
-            fechDataRols();
+        if (userIdRole && Array.isArray(dataRols)) {
+            const userRole = dataRols.find(role => role.idrole === userIdRole)?.namerole;
+            console.log('User Role:', userRole);
+            setUserRole(userRole);
+        } else {
+            console.error('Error: roles data is not an array:', dataRols);
         }
-    }, [userData]);
+    }, [userIdRole, dataRols]);
 
 
-    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.residente) {
-                setIdResidents(data.residente.idResident);
 
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    useEffect(() => {
+        if (userDocument) {
+            fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.residente) {
+                        setIdResidents(data.residente.idResident);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }, [userDocument]);
 
+    useEffect(() => {
+        if (idResidents) {
+            fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.apartmentResidents) {
+                        setIdapartaments(data.apartmentResidents.idApartment)
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }, [idResidents]);
 
-    fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.apartmentResidents) {
-                setIdapartaments(data.apartmentResidents.idApartment)
+    console.log('userData aqui en login Holaaaaa:', userData);
 
-
-            }
-        })
-        .catch(error => console.error('Error:', error));
 
 
 
@@ -168,6 +146,8 @@ const LoginForm = ({ setShowLoginForm }) => {
                 const responseData = await response.json();
                 console.log('Response data hola:', responseData);
 
+                console.log(responseData.role, 'role');
+
                 if (responseData.message === 'Acceso denegado') {
                     Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
 
@@ -179,7 +159,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                         window.location.reload();
 
 
-                    } else if (responseData.role.toLowerCase() === 'administrador' || responseData.role.toLowerCase() === 'admin' || responseData.role.toLowerCase() === 'super administrador') {
+                    } else if (responseData.role === 'Administrador' || responseData.role.toLowerCase() === 'admin' || responseData.role.toLowerCase() === 'super administrador') {
                         navigate('/admin/residents');
                         window.location.reload();
 
