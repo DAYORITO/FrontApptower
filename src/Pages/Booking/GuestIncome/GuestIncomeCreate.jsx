@@ -60,18 +60,18 @@ function GuestIncomeCreate() {
 
   ]
   //Peticiones a la api
-  const { data: dataVisitors, load2, error2 } = useFetchget('visitors')
+  const { data: dataVisitors, load: load1, error2 } = useFetchget('visitors')
   const { data, load, error } = useFetchget('apartments')
-  const { data: dataResidentApartment, load4, error4 } = useFetchget('aparmentResidents')
-  const { data: dataParkingSpaces, load3, error3 } = useFetchget('parkingSpaces')
-  const { data: dataTowers, load5, error5 } = useFetchget('towers')
+  const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
+  const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
+  const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
   useEffect(() => {
-    if (load || load2 || load3 || load4 || load5) {
+    if (load || load2 || load3 || load4 || load1) {
       setShowModaload(true);
     } else {
       setShowModaload(false);
     }
-  }, [load, load2, load3, load4, load5])
+  }, [load, load2, load3, load4, load1])
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
   const handleChange = (e) => {
