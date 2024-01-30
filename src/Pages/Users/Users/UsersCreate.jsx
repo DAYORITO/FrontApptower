@@ -75,6 +75,32 @@ export const UsersCreate = () => {
             }))
         : [];
 
+    const [isDocumentTaken, setIsDocumentTaken] = useState(false);
+    const [isEmailTaken, setIsEmailTaken] = useState(false);
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/document/${document}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsDocumentTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [document]);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/email/${email}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsEmailTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [email]);
+
     const [shouldValidate, setShouldValidate] = useState(false);
 
     const handleSubmit = async (event) => {
@@ -92,6 +118,16 @@ export const UsersCreate = () => {
             setShouldValidate(true);
             return;
         }
+
+        if (isDocumentTaken || isEmailTaken) {
+            Swal.fire({
+                title: 'Error',
+                text: 'El documento o el correo ya existen',
+                icon: 'error',
+            });
+            return;
+        }
+
         if (password !== confirmPassword) {
             Swal.fire({
                 title: 'Error',
@@ -121,14 +157,15 @@ export const UsersCreate = () => {
                 lastName: lastname,
                 phone,
                 pdf,
-                dateOfbirth,
-                state: 'Activo'
+                birthday: dateOfbirth,
+                state: 'Activo',
+                idEnterpriseSecurity: enterprice
             });
 
             if (userResponse.response) {
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
-                    let roleResponse;
+
                     roleResponse = await useFetchForFile('http://localhost:3000/api/residents', {
                         docType: documentType,
                         docNumber: document,
@@ -144,19 +181,11 @@ export const UsersCreate = () => {
                         status: 'Active'
                     });
                 } else if (namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad') {
-                    roleResponse = await useFetchForFile('http://localhost:3000/api/watchman'
-                    , 
-                    {
-                        namewatchman: name,
-                        lastnamewatchman: lastname,
-                        documentType,
-                        document,
-                        idEnterpriseSecurity: enterprice,
-                        phone,
-                        email,
-                        dateOfbirth,
-                        state: 'Activo'
-                    });
+                    await useFetchForFile('http://localhost:3000/api/watchman',
+                        {
+                            iduser: userResponse.response.iduser,
+                            idEnterpriseSecurity: userResponse.response.idEnterpriseSecurity,
+                        });
                 }
 
 
@@ -205,35 +234,6 @@ export const UsersCreate = () => {
 
 
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
-
-
-
-    const [isDocumentTaken, setIsDocumentTaken] = useState(false);
-    const [isEmailTaken, setIsEmailTaken] = useState(false);
-
-    useEffect(() => {
-        fetch(`http://localhost:3000/api/users/document/${document}`)
-            .then(response => response.json())
-            .then(data => {
-                setIsDocumentTaken(data && data.message ? true : false);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }, [document]);
-
-
-    useEffect(() => {
-        fetch(`http://localhost:3000/api/users/email/${email}`)
-            .then(response => response.json())
-            .then(data => {
-                setIsEmailTaken(data && data.message ? true : false);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }, [email]);
-
 
 
     const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({

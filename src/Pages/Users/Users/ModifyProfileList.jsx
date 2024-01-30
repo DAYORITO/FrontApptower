@@ -55,7 +55,7 @@ export const ModifyProfileList = () => {
                                 <div className="user-detail">
                                     <span>Nombre:</span>
                                     <span> {userData.user?.name ? userData.user.name : ''}
-                                        {userData.user?.lastname ? ' ' + userData.user.lastname : ''}</span>
+                                        {userData.user?.lastName ? ' ' + userData.user.lastName : ''}</span>
                                 </div>
 
                                 <div className="user-detail">

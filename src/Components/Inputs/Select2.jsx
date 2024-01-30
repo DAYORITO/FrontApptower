@@ -18,7 +18,14 @@ function Select2({ id, options, name, onChange, value, validate }) {
       $(inputRef.current).select2('destroy');
     };
   }, []);
+
+
   useEffect(() => {
+    // Si el select ya tiene un valor al cargar el componente, agrega la clase 'active' a la etiqueta
+    if ($(inputRef.current).val()) {
+      labelRef.current.classList.add('active');
+    }
+
     $(inputRef.current).on('select2:open', () => {
       labelRef.current.classList.add('active');
     });
@@ -26,7 +33,27 @@ function Select2({ id, options, name, onChange, value, validate }) {
     $(inputRef.current).on('select2:close', () => {
       if (!$(inputRef.current).val()) {
         labelRef.current.classList.remove('active');
+      }
+    });
 
+    return () => {
+      $(inputRef.current).off('select2:open');
+      $(inputRef.current).off('select2:close');
+    };
+  }, []);
+
+  useEffect(() => {
+    if ($(inputRef.current).val()) {
+      labelRef.current.classList.add('active');
+    }
+
+    $(inputRef.current).on('select2:open', () => {
+      labelRef.current.classList.add('active');
+    });
+
+    $(inputRef.current).on('select2:close', () => {
+      if (!$(inputRef.current).val()) {
+        labelRef.current.classList.remove('active');
       }
     });
 

@@ -11,6 +11,7 @@ import { docTypes, residentsTypes, sexs } from '../../../Hooks/consts.hooks'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useFetchget } from '../../../Hooks/useFetch';
 import { useParams } from 'react-router-dom';
+import Select2 from '../../../Components/Inputs/Select2';
 
 
 export const UsersEdit = () => {
@@ -24,7 +25,7 @@ export const UsersEdit = () => {
     const [usersData, setUsersData] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [namerole, setNamerole] = useState('');
-    const [urlDelPdf, setUrlDelPdf] = useState('');
+
     console.log(editedUser, 'editedUserssss')
 
 
@@ -72,13 +73,15 @@ export const UsersEdit = () => {
         if (editedUser) {
             try {
                 // const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
-                const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
+                const response = await fetch(`http://localhost:3000/api/users/${iduser}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(editedUser),
                 });
+
+                editedUser.pdf = editedUser.pdf ? editedUser.pdf : null;
 
                 if (response.ok) {
                     const updatedUsers = usersData.map(user => {
@@ -125,19 +128,20 @@ export const UsersEdit = () => {
     const [birthdate, setBirthdate] = useState(null);
     console.log('Birthdate:', birthdate);
 
-    if (editedUser?.idrole === 3) {
-        fetch(`https://apptowerbackend.onrender.com/api/watchman/document/${editedUser.document}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.watchman) {
+    // if (editedUser?.idrole === 3) {
+    //     fetch(`https://apptowerbackend.onrender.com/api/watchman/document/${editedUser.document}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.watchman) {
 
-                    const birthdate = new Date(data.watchman.dateOfbirth);
-                    const formattedBirthdate = birthdate.toISOString().split('T')[0];
-                    setBirthdate(formattedBirthdate);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    } else if (editedUser.idrole === 2) {
+    //                 const birthdate = new Date(data.watchman.birthday);
+    //                 const formattedBirthdate = birthdate.toISOString().split('T')[0];
+    //                 setBirthdate(formattedBirthdate);
+    //             }
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // } else 
+    if (editedUser.idrole === 2) {
         fetch(`https://apptowerbackend.onrender.com/api/residents/document/${editedUser.document}`)
             .then(response => response.json())
             .then(data => {
@@ -228,7 +232,27 @@ export const UsersEdit = () => {
     }, [birthdate]);
 
     console.log(apartmentList)
+
+
+    // Traer empresas de seguridad
+    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
+    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
+        value: enterprice.idEnterpriseSecurity,
+        label: enterprice.nameEnterprice
+    })) : [];
+
+    const selectedEnterpriceOption = editedUser && enterpriceOptions.find(option => option.value === editedUser.idEnterpriseSecurity)?.value;
+    const handleEnterpriceSecurity = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue);
+        setSelectedEnterprice(selectedValueAsNumber);
+        setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedValueAsNumber });
+    };
+
+
     return (
+
         <>
             <FormContainer
                 name='Editar Usuario'
@@ -249,13 +273,13 @@ export const UsersEdit = () => {
                             idrole: Number(selectedRoleId),
                             namerole: newNamerole,
                         }));
-                        setNamerole(newNamerole);
                         setShowForm(true);
                     }}
                 ></InputsSelect>
 
 
                 {showForm && (
+
                     <>
                         {editedUser?.idrole === 2 || editedUser?.namerole === 'Residentes' || editedUser?.namerole === 'Residente' ? (
                             <>
@@ -264,7 +288,7 @@ export const UsersEdit = () => {
                                         name='pdf'
                                         label='Documento de identidad'
                                         formatos='.pdf'
-                                        onChange={e => setEditedUser(e.target.files[0])}
+                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
                                     />
                                     {/* <a href={urlDelPdf} target="_blank" rel="noopener noreferrer">Ver PDF registrado</a> */}
 
@@ -325,28 +349,40 @@ export const UsersEdit = () => {
                                 <FormColumn>
                                     <Uploader
                                         name='pdf'
-                                        label='Documento de identidad'
+                                        label='Documento de Identidad'
                                         formatos='.pdf'
                                         onChange={e => setEditedUser(e.target.files[0])}
                                     />
-                                    {/* <a href={urlDelPdf} target="_blank" rel="noopener noreferrer">Ver PDF registrado</a> */}
 
                                     <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
+                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
+
                                     <Inputs
                                         name="Fecha Nacimiento"
                                         type="date"
-                                        value={birthdate}
-                                        onChange={e => setBirthdate(e.target.value)}
+                                        value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
+                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
                                     />
 
                                 </FormColumn>
 
                                 <FormColumn>
+                                    <div className="mr-1" style={{ width: '100%' }}>
+                                        <Select2
+                                            name={'Empresa de Seguridad'}
+                                            onChange={(newValue) => {
+                                                const setSelectedEnterprice = enterpriceOptions.find(option => option.value === Number(newValue));
+                                                const newNameEnterprice = setSelectedEnterprice ? setSelectedEnterprice.label : '';
+                                                handleEnterpriceSecurity(newValue);
+                                            }}
+                                            options={enterpriceOptions}
+                                            value={selectedEnterpriceOption}
+                                        />
+                                    </div>
                                     <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })} ></InputsSelect>
                                     <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
                                     <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
                                     <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} />
-                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
                                     <InputsSelect
                                         id={"select"}
                                         options={estado}
@@ -391,7 +427,39 @@ export const UsersEdit = () => {
 
                                 </FormColumn>
                             </>
-                        ) : null}
+                        ) : <>
+                            <FormColumn>
+                                <Uploader
+                                    name='pdf'
+                                    label='Documento de identidad'
+                                    formatos='.pdf'
+                                    onChange={e => setEditedUser(e.target.files[0])}
+                                />
+                                {/* <a href={urlDelPdf} target="_blank" rel="noopener noreferrer">Ver PDF registrado</a> */}
+
+                                <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
+                                <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
+
+                            </FormColumn>
+
+                            <FormColumn>
+
+                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })} ></InputsSelect>
+                                <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} />
+                                <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
+                                <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} />
+                                <InputsSelect
+                                    id={"select"}
+                                    options={estado}
+                                    name={"Estado"}
+                                    value={editedUser?.status || ''}
+                                    onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
+
+
+
+                            </FormColumn>
+                        </>
+                        }
                     </>
                 )}
 
