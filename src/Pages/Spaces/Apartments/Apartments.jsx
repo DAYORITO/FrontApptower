@@ -37,7 +37,6 @@ export const Apartments = () => {
   const { data, get: getApartments, put: putApartment, loading } = useFetch(url)
   const { data: towers, get: getTowers } = useFetch(url)
 
-  console.log(loading)
   useEffect(() => {
 
     getApartments('apartments')
@@ -158,8 +157,6 @@ export const Apartments = () => {
   searchApartments()
 
 
-
-  console.log(apartmentList.length)
 
 
   return (

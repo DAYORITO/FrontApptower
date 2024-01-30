@@ -35,7 +35,7 @@ export const Aside = () => {
 
     const fetchUserPermissions = async (token) => {
         try {
-            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/permissionfromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -80,7 +80,7 @@ export const Aside = () => {
 
     const fechDataRols = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/rols');
+            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch roles');
@@ -123,7 +123,7 @@ export const Aside = () => {
 
 
 
-    fetch(`http://localhost:3000/api/residents/document/${userDocument}`)
+    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
         .then(response => response.json())
         .then(data => {
             if (data.residente) {
@@ -176,7 +176,7 @@ export const Aside = () => {
                     name={userData.user?.name ? userData.user.name : ''}
                     lastName={userData.user?.lastName ? userData.user.lastName : ''}
                     rol={userRole ? userRole : ''}
-                    userImg={userData.user?.userImg }
+                    userImg={userData.user?.userImg}
                 />
 
 
@@ -192,8 +192,8 @@ export const Aside = () => {
                                     <ListNav module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
                                 )} */}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
-                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24' 
->
+                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'
+                                    >
 
                                         <>
                                             {allowedPermissions.includes('Ingresos') && (

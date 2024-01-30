@@ -1,192 +1,179 @@
-import { Actions } from "../../../Components/Actions/Actions"
-import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons"
-import { Card } from "../../../Components/Card/Card"
-import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard"
-import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
-import { Row } from "../../../Components/Rows/Row"
-import { TablePerson } from "../../../Components/Tables/Tables"
-import { Tbody } from "../../../Components/Tbody/Tbody"
-import { useFetchget } from "../../../Hooks/useFetch"
+import React, { useState, useEffect } from "react";
+import { useFetch, useFetchget } from "../../../Hooks/useFetch";
+import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons";
+import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
+import { TablePerson } from "../../../Components/Tables/Tables";
+import { Thead } from '../../../Components/Thead/Thead';
+import { Th } from '../../../Components/Th/Th';
+import { Row } from "../../../Components/Rows/Row";
+import { Actions } from "../../../Components/Actions/Actions";
+import { Spinner } from "../../../Components/Spinner/Spinner";
 
-import { Thead } from '../../../Components/Thead/Thead'
-import { Th } from '../../../Components/Th/Th'
-import { DivRow } from '../../../Components/DivRow/DivRow'
-import { useState, useEffect } from "react"
-import Cookies from 'js-cookie'
-import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
+import { filter, postRequest } from "../../../Helpers/Helpers";
+import { Tbody } from "../../../Components/Tbody/Tbody";
+import { createPortal } from "react-dom";
+import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo";
+import { parkingTypes, statusList } from "../../../Hooks/consts.hooks";
+import { useParams } from "react-router";
+import InputsSelect from "../../../Components/Inputs/InputsSelect";
+import Inputs from "../../../Components/Inputs/Inputs";
+
 
 export const ParkingSpaces = () => {
 
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
-  const token = Cookies.get('token');
-
-  // 1. Start get all parking spaces
-
-  const { data: parkingSpaces, load, error } = useFetchget('parkingSpaces')
-  console.log(parkingSpaces.parkingSpaces)
-
-  // 1. End get all parking spaces
+  const url = "http://localhost:3000/api/"
+  // const url = "https://appparkingTypebackend.onrender.com/api/"
 
 
+  // Get Data
 
+  const { data: parkingSpaces, get: getParkingSpace, loading } = useFetch(url)
 
+  useEffect(() => {
 
-  // 2. Start Funtionality to search
+    getParkingSpace('parkingSpaces')
+
+  }, [])
+
+  console.log(parkingSpaces)
+
+  // Funtionality to search
+
 
   const [search, setSearch] = useState('');
+
+  let parkingList = filter(search, parkingSpaces?.data?.parkingSpaces, "parkingName")
+
+  parkingList = parkingList.sort((a, b) => a.idParkingSpace - b.idParkingSpace);
+
+
   const searcher = (e) => {
 
     setSearch(e.target.value)
     console.log(e.target.value)
-  }
-  let filterData = [];
 
-  if (!search) {
-    filterData = parkingSpaces.parkingSpaces;
-  } else {
-    filterData = parkingSpaces.parkingSpaces.filter((parking) =>
-      parking.parkingName.toLowerCase().includes(search.toLowerCase())
-    );
   }
 
-  // 2. End Funtionality to search
+  const [modalParking, setModalParkin] = useState(false);
 
+  const { id } = useParams()
+  const [idParkingSpace, setIdParkingSpace] = useState("");
+  const [parkingName, setParkingName] = useState('');
+  const [parkingType, setParkingType] = useState("");
+  const [status, setStatus] = useState('');
 
+  const openModal = (data) => {
 
-  useEffect(() => {
-    if (token) {
-      fetchUserPrivilegeAndPermission(token);
+    setIdParkingSpace(data.idParkingSpace)
+    setParkingName(data.parkingName)
+    setParkingType(data.parkingType)
+    setStatus(data.status)
+
+    setModalParkin(true)
+
+  }
+
+  // Edit parking
+
+  const updateParking = async (event) => {
+
+    const data = {
+
+      idParkingSpace: idParkingSpace,
+      parkingName: parkingName,
+      parkingType: parkingType,
+      status: status,
+
     }
-  }, [token]);
 
+    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url)
 
-  //Consulta privilegios 
-  const fetchUserPrivilegeAndPermission = async (token) => {
-    try {
-      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user privileges');
-      }
+    getParkingSpace('parkingSpaces')
 
-      const data = await response.json();
-      console.log(data, 'data');
-      console.log('Allowed Permissions hi:', data.privileges);
-
-      if (data && data.privileges && Array.isArray(data.privileges)) {
-        const allowed = {};
-        data.privileges.forEach(({ idpermission, idprivilege }) => {
-          const permissionName = idToPermissionName[idpermission];
-          const privilegeName = idToPrivilegesName[idprivilege];
-
-          if (!allowed[permissionName]) {
-            allowed[permissionName] = [];
-          }
-          allowed[permissionName].push(privilegeName);
-        });
-
-        setAllowedPermissions(allowed);
-      }
-    } catch (error) {
-      console.error('Error fetching user permissions:', error);
-    }
   };
 
-
-  console.log(filterData, 'filterData parking')
-  const totalPages = Math.ceil(filterData?.length / 8);
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
-
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const filteredDataParking = () => {
-    return filterData?.slice(currentPage, currentPage + 8) || []
-  }
-
-  const nextPage = () => {
-    setCurrentPage(currentPage + 8)
-  }
-
-
-  const PreviousPage = () => {
-    if (currentPage > 0)
-      setCurrentPage(currentPage - 8)
-  }
 
 
   return (
     <>
-
       <ContainerTable
         title='Parqueaderos'
         dropdown={<DropdownExcel />}
         search={<SearchButton value={search} onChange={searcher} />}
-        buttonToGo={
-          allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear')
-            ? <ButtonGoTo value='Crear Parqueadero' href='create' />
-            : null
-        }
-        showPaginator={
-          <nav aria-label="Table Paging" className="mb- text-muted my-4">
-            <ul className="pagination justify-content-center mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-              </li>
-              {pageNumbers.map((pageNumber) => (
-                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                </li>
-              ))}
+        buttonToGo={<ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>}
 
-
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-              </li>
-            </ul>
-          </nav >
-        }
       >
-
-
-
-
         <TablePerson>
-          <Thead>
 
-            <Th name={"Informacion del parqueadero"} />
-
-
-
-          </Thead>
           <Tbody>
-            {filteredDataParking().map(parking => (
-              <Row
-                icon="octagon"
-                to={`details/${parking.idParkingSpace}`}
-                name={"Parqueadero "}
-                lastName={parking.parkingName}
 
-                docType={(parking.parkingType == "Private") ? "Privado" : (parking.parkingType == "Public") ? "Publico" : " "}
-                status={parking.status}
-                op1={""}
-                op2={""}
 
-              >
-                {allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Editar') && (
-                  <Actions accion='Editar' />
-                )}
-                <Actions accion='Reservar' />
-              </Row>
-            ))}
+            {loading ? <Spinner /> : parkingList.length == 0 ?
 
+              <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
+
+              parkingList?.map(parking => (
+
+                <Row
+                  A1='Parqueadero'
+                  A2={parking.parkingName}
+                  A3={parking.parkingType == "Public" ? "Publico" : "Privado "}
+                  A4={`${parking.status == "Active" && parking.parkingType == "Public" ? "Disponible" : "Ocupado"}`}
+
+                  status={parking.status}
+                  icon='map-pin'
+                  to={`/admin/parkingSpaces/details/${parking.idParkingSpace}`}
+
+
+                >
+
+                  <Actions accion='Asignar vehiculo' icon="map-pin" href={`/admin/guest_income/create/${parking.idParkingSpace}`}></Actions>
+                  <Actions accion='Editar parqueadero' onClick={() => openModal(parking)}></Actions>
+                  <Actions accion='Ver detalle' icon='eye' href={`/admin/parkingSpaces/details/${parking.idParkingSpace}`} ></Actions>
+
+
+                </Row>
+
+
+
+              ))
+            }
           </Tbody>
         </TablePerson>
-
-
-
       </ContainerTable>
-    </>)
+
+      {modalParking &&
+        createPortal(
+          <>
+            <ModalContainer modalParking={setModalParkin}>
+              <Modal
+                onClick={updateParking}
+                modalParking={setModalParkin}
+                title={`Editar parqueadero ${parkingName}`}
+                showModal={setModalParkin}
+              >
+
+
+                <InputsSelect id={"select"} options={parkingTypes} name={"Torre"}
+                  value={parkingType} onChange={e => setParkingType(e.target.value)}
+                ></InputsSelect>
+
+                <Inputs name="Nombre parqueadero" type={"text"}
+                  value={parkingName} onChange={e => setParkingName(e.target.value)}></Inputs>
+
+                <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                  value={status} onChange={e => setStatus(e.target.value)}
+                ></InputsSelect>
+
+                <Inputs type={"hidden"}
+                  value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}></Inputs>
+
+              </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )}
+    </>
+  );
 }

@@ -4,60 +4,51 @@ import FormButton from '../../../Components/Forms/FormButton'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { useState } from 'react';
 import { parkingTypes } from '../../../Hooks/consts.hooks';
-// import { useFetchpost, useFetchpostFile } from '../../../Hooks/useFetch';
-import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router'
+import { postRequest } from '../../../Helpers/Helpers';
 
 export const ParkingSpacesCreate = () => {
+
+  // const url = 'https://apptowerbackend.onrender.com/api/';
+  const url = 'http://localhost:3000/api/';
 
   const [floor, setFloor] = useState("");
   const [parkingPerFloor, setParkingPerFloor] = useState("");
   const [parkingType, setParkingType] = useState("");
+
   const navigate = useNavigate();
 
+  const createParking = async (event) => {
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const url = 'https://apptowerbackend.onrender.com/api/apartments';
-    // const url = 'http://localhost:3000/api/parkingSpaces';
     const data = {
-      floor,
-      parkingPerFloor,
-      parkingType,
+
+      floor: floor,
+      parkingPerFloor: parseInt(parkingPerFloor) ,
+      parkingType: parkingType,
+
+
     };
 
-    console.log('Data:', data);
+    console.log(data, "data pa crear")
 
-    // const { response, error } = await useFetchpostFile(url, data);
+    await postRequest(event, 'parkingSpaces', 'POST', {}, data, url);
 
-    if (response) {
-      console.log('Response:', response);
-      Swal.fire({
-        title: 'Éxito',
-        text: 'Parqueadero creado creado exitosamente',
-        icon: 'success',
-      }).then(() => {
+    navigate(-1)
 
-        navigate(-1);
-      });
-    }
-
-    if (error) {
-      console.log('Hubo un error');
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al crear parqueadero',
-        icon: 'error',
-      });
-    }
   };
 
 
+
+
   return (
-    <FormContainer name='Crear parqueadero'  buttons={<FormButton  onClick={handleSubmit} name='Crear parqueadero' backButton='Regresar' />}>
+    <FormContainer name='Crear parqueadero'
+      buttons={<FormButton onClick={createParking} name='Crear parqueaderos' backButton='Regresar' />}>
       {/* <FormColumn> */}
 
-      <Inputs name="Piso" type={"text"}
+      <InputsSelect id={"select"} options={parkingTypes} name={"Tipo de parqueaderos"}
+        value={parkingType} onChange={e => setParkingType(e.target.value)}></InputsSelect>
+
+      <Inputs name="Nombre del piso" type={"text"} placeholder={"S1"}
         value={floor} onChange={e => setFloor(e.target.value)}
       ></Inputs>
 
@@ -65,8 +56,7 @@ export const ParkingSpacesCreate = () => {
         value={parkingPerFloor} onChange={e => setParkingPerFloor(e.target.value)}
       ></Inputs>
 
-      <InputsSelect id={"select"} options={parkingTypes} name={"Tipo de parqueadero"}
-        value={parkingType} onChange={e => setParkingType(e.target.value)}></InputsSelect>
+
 
 
       {/* </FormColumn> */}
