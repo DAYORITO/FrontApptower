@@ -84,7 +84,7 @@ const App = () => {
     //Consulta privilegios 
     const fetchUserPrivilegeAndPermission = async (token) => {
         try {
-            const response = await fetch('http://localhost:3000/api/privilegefromrole', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -427,10 +427,8 @@ const App = () => {
                                         <ResidentCreate /> : <NotFound />
                                 } />
 
+
                                 <Route path='residents/create/:id' element={<ResidentCreate />} />
-
-
-
 
                                 {/* Notifications */}
                                 <Route path='notifications' element={

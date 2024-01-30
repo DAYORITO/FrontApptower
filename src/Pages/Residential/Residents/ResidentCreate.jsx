@@ -3,123 +3,116 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router'
-import { bools, docTypes, residentsTypes, sexs, statusList } from '../../../Hooks/consts.hooks'
-
-import Swal from 'sweetalert2'
-
+import { docTypes, sexs } from '../../../Hooks/consts.hooks'
 import FormColumn from "../../../Components/Forms/FormColumn";
-import { Checkbox } from '../../../Components/Checkbox/Checkbox'
+import { useFetch } from '../../../Hooks/useFetch'
+import { postRequest } from '../../../Helpers/Helpers'
 
 export const ResidentCreate = (props) => {
+
+
+  // API URL
+
+  const url = "http://localhost:3000/api/"
+  // const url = "https://apptowerbackend.onrender.com/api/"
+
   const { id } = useParams()
-  // socket
-  const socket = props.socket;
 
-  console.log('Socket:', socket);
-
+  const [userImg, setUserImg] = useState("");
   const [pdf, setPdf] = useState("");
   const [docType, setDocType] = useState("");
-  const [docNumber, setDocNumber] = useState("");
+  const [document, setDocument] = useState("");
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [sex, setSex] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  // const [residentType, setResidentType] = useState("");
-  const [idApartment, setIdApartment] = useState( id != undefined? id: "" );
-
-  const [residentStartDate, setResidentStartDate] = useState("");
-  const [residentEndDate, setResidentEndDate] = useState("");
-
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [userBool, setUserBool] = useState("");
 
-  const [status, setStatus] = useState("Inactive");
+  // const [status, setStatus] = useState("");
+
+  const [idApartment, setIdApartment] = useState(id != undefined ? id : "");
+  const [residentStartDate, setResidentStartDate] = useState("");
+  // const [residentEndDate, setResidentEndDate] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const url = 'https://apptowerbackend.onrender.com/api/residents';
-    // const url = 'http://localhost:3000/api/residents';
-    const data = {
-      pdf,
-      docType,
-      docNumber,
-      name,
-      lastName,
-      sex,
-      birthday,
-      email,
-      phoneNumber,
-      status,
+  const { data: apartments, get: getApartment } = useFetch(url)
 
-      idApartment,
-      residentStartDate,
-      residentEndDate,
+  useEffect(() => {
 
-      userBool,
-      password
-    };
+    getApartment("apartments")
 
-    console.log('Data:', data);
-
-    // const { response, error } = await useFetchpostFile(url, data);
-
-    if (response) {
-      console.log('Response:', response);
-      socket.emit('message', 'Se ha creado un residente nuevo');
-      Swal.fire({
-        title: 'Éxito',
-        text: 'Residente creado exitosamente',
-        icon: 'success',
-      }).then(() => {
-
-        navigate(-1);
-      });
-    }
-
-    if (error) {
-      console.log('Hubo un error');
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al crear residente',
-        icon: 'error',
-      });
-    }
-  };
+  }, [])
 
 
-  const { data, load, error } = useFetchget('apartments')
-
-  const apartmentList = data && data.apartments
-    ? data.apartments
+  const apartmentList = apartments && apartments?.data?.apartments
+    ? apartments?.data?.apartments
       .filter(apartment => apartment.status === 'Active')
       .map(apartment => ({
         value: apartment.idApartment,
-        label: apartment.apartmentName
+        label: `${apartment.apartmentName} ${apartment.Tower.towerName}`
       }))
     : [];
+
+  // Edit resident
+
+  const createResident = async (event) => {
+
+    const data = {
+
+      userImg: userImg,
+      pdf: pdf,
+      docType: docType,
+      document: document,
+      name: name,
+      lastName: lastName,
+      birthday: birthday,
+      sex: sex,
+      email: email,
+      phone: phone,
+      password: password,
+
+      idApartment: parseInt(idApartment),
+      residentStartDate: residentStartDate
+      // status: status,
+
+    }
+
+    console.log(data)
+
+    await postRequest(event, 'residents', 'POST', {}, data, url)
+
+    navigate(-1)
+
+  };
+
+  console.log(apartmentList)
 
 
 
   return (
 
-    <FormContainer name='Crea residente' buttons={<FormButton name='Crear residente' backButton='Regresar' to='/admin/residents/' onClick={handleSubmit} />}>
+    <FormContainer name='Agregar un nuevo residente'
 
-      <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
-        onChange={e => setPdf(e.target.files[0])} />
-
-
+      buttons={
+        <FormButton
+          name='Crear residente'
+          backButton='Regresar'
+          to='/admin/residents/'
+          onClick={createResident}
+        />}
+    >
 
       <>
 
-        <FormColumn>
 
+
+        <FormColumn>
 
           <h6 className='mb-4 text-muted'>Informacion personal</h6>
 
@@ -127,13 +120,15 @@ export const ResidentCreate = (props) => {
             value={docType} onChange={e => setDocType(e.target.value)}></InputsSelect>
 
           <Inputs name="Numero de documento" placeholder="1000000007"
-            value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
+            value={document} onChange={e => setDocument(e.target.value)}></Inputs>
 
 
           <Inputs name="Nombre"
             value={name} onChange={e => setName(e.target.value)}></Inputs>
+
           <Inputs name="Apellido"
             value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
+
           <InputsSelect id={"select"} options={sexs} name={"Sexo"}
             value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
 
@@ -144,11 +139,23 @@ export const ResidentCreate = (props) => {
             value={email} onChange={e => setEmail(e.target.value)}></Inputs>
 
           <Inputs name="Numero de telefono"
-            value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}></Inputs>
+            value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+
+
+          <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+
+          <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
 
         </FormColumn>
 
         <FormColumn>
+
+          <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+            onChange={e => setPdf(e.target.files[0])} />
+
+          <Uploader name='pdf' label='Foto de perfil'
+            onChange={e => setUserImg(e.target.files[0])} />
+
           <h6 className='mb-4 text-muted'>¿Apartamento en el que vas a vivir?</h6>
 
 
@@ -169,32 +176,18 @@ export const ResidentCreate = (props) => {
                 onChange={e => setResidentStartDate(e.target.value)}
               ></Inputs>
               {/* <Inputs
-                name="Fecha de fin de residencia"
-                type={"date"}
-                value={residentEndDate}
-                onChange={e => setResidentEndDate(e.target.value)}
-              ></Inputs> */}
+name="Fecha de fin de residencia"
+type={"date"}
+value={residentEndDate}
+onChange={e => setResidentEndDate(e.target.value)}
+></Inputs> */}
             </>
           )}
 
 
-          <h6 className='mb-4 text-muted'>Acceso a la app</h6>
-
-          <InputsSelect id={"select"} options={bools} name={"¿Vas a tener acceso al app?"}
-            value={userBool} onChange={e => setUserBool(e.target.value)}
-          ></InputsSelect>
-
-          {userBool === "true" && (
-            <>
-              <Inputs name="Tipo de usuario " type='text' readonly value={"Residente"} onChange={e => setConfirmPassword(e.target.value)} />
-
-              <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-
-              <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-            </>
-          )}
 
         </FormColumn>
+
       </>
 
 

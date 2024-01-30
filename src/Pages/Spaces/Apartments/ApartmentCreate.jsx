@@ -61,7 +61,7 @@ export const ApartmentCreate = () => {
       apartmentsFloor: parseInt(apartmentsFloor),
       idTower: parseInt(tower),
       rangeStart: parseInt(rangeStart),
-      rangeEnd: parseInt(rangeEnd),
+      rangeEnd  : parseInt(rangeEnd),
       area: parseFloat(area)
     };
 
