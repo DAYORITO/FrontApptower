@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
 
 
+
     const fetchUserData = (token) => {
         return fetch('https://apptowerbackend.onrender.com/api/login/access', {
             method: 'GET',
@@ -25,8 +26,7 @@ export const AuthProvider = ({ children }) => {
             })
             .then(data => {
                 setIsLoggedIn(true);
-                setUser(data?.user);
-                console.log('Usuario obtenido:', data.user);
+                setUser(data?.role);
                 Cookies.set('isLoggedIn', 'true');
             })
             .catch(error => {
@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
                 Cookies.set('isLoggedIn', 'false');
             });
     };
+
 
 
     const login = async (usuario, password) => {
@@ -110,7 +111,7 @@ export const AuthProvider = ({ children }) => {
         });
     }
     return (
-        <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isLoading }}>
+        <AuthContext.Provider value={{ login, logout, isLoggedIn, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

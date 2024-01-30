@@ -9,6 +9,7 @@ import Swal from 'sweetalert2'
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import Select2 from '../../../Components/Inputs/Select2'
+import { is } from 'date-fns/locale'
 
 
 export const WatchmanCreate = () => {
@@ -100,128 +101,6 @@ export const WatchmanCreate = () => {
     };
 
 
-
-    console.log('enterpriceOptions', enterpriceOptions);
-
-    const [shouldValidate, setShouldValidate] = useState(false);
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-
-
-        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, rellene todos los campos requeridos',
-                icon: 'error',
-            });
-            //Activa la validacion de los campos cuando se envia el formulario
-            setShouldValidate(true);
-            return;
-        }
-
-        if (!enterprice) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, seleccione una empresa de seguridad',
-                icon: 'error',
-            });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Las contraseñas no coinciden',
-                icon: 'error',
-            });
-            return;
-        }
-
-        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, rellene todos los campos requeridos',
-                icon: 'error',
-            });
-            //Activa la validacion de los campos cuando se envia el formulario
-            setShouldValidate(true);
-            return;
-        }
-
-        if (!enterprice) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, seleccione una empresa de seguridad',
-                icon: 'error',
-            });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Las contraseñas no coinciden',
-                icon: 'error',
-            });
-            return;
-        }
-
-        const userResponse = await useFetchForFile('http://localhost:3000/api/watchman', {
-            documentType,
-            namewatchman: name,
-            email,
-            document,
-            idEnterpriseSecurity: enterprice,
-            lastnamewatchman: lastname,
-            phone,
-            dateOfbirth,
-            state: 'Activo'
-        });
-
-
-        console.log('userResponse', userResponse);
-
-
-        if (userResponse.response) {
-            let roleResponse;
-            roleResponse = await useFetchForFile('http://localhost:3000/api/users', {
-                docType: documentType,
-                name,
-                email,
-                password,
-                idrole,
-                document,
-                lastName: lastname,
-                phone,
-                pdf,
-                state: 'Activo'
-            });
-        }
-
-        if (userResponse.response) {
-
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Vigilante creado exitosamente',
-                icon: 'success',
-            }).then(() => {
-
-                navigate('/admin/watchman');
-            });
-        }
-
-        if (userResponse.error) {
-            console.log('Hubo un error');
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al crear vigilante',
-                icon: 'error',
-            });
-        }
-    };
-
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
 
@@ -247,6 +126,126 @@ export const WatchmanCreate = () => {
                 console.error('Error:', error);
             });
     }, [email]);
+
+
+    console.log('enterpriceOptions', enterpriceOptions);
+
+    const [shouldValidate, setShouldValidate] = useState(false);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+
+
+        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+            //Activa la validacion de los campos cuando se envia el formulario
+            setShouldValidate(true);
+            return;
+        }
+
+        if (isDocumentTaken || isEmailTaken) {
+            Swal.fire({
+                title: 'Error',
+                text: 'El documento o el correo ya existen',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (!enterprice) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, seleccione una empresa de seguridad',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+            //Activa la validacion de los campos cuando se envia el formulario
+            setShouldValidate(true);
+            return;
+        }
+
+        if (!enterprice) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, seleccione una empresa de seguridad',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error',
+            });
+            return;
+        }
+
+        let userResponse;
+        userResponse = await useFetchForFile('http://localhost:3000/api/users', {
+            docType: documentType,
+            name,
+            email,
+            password,
+            idrole: Number(idrole),
+            document,
+            birthday: dateOfbirth,
+            lastName: lastname,
+            phone,
+            pdf,
+            state: 'Activo',
+            idEnterpriseSecurity: enterprice,
+        });
+
+        if (userResponse.response) {
+            const watchmanResponse = await useFetchForFile('http://localhost:3000/api/watchman', {
+                idEnterpriseSecurity: userResponse.response.idEnterpriseSecurity,
+                iduser: userResponse.response.iduser,
+            });
+
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Vigilante creado exitosamente',
+                icon: 'success',
+            }).then(() => {
+                navigate('/admin/watchman');
+            });
+        }
+
+        if (userResponse.error) {
+            console.log('Hubo un error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al crear vigilante',
+                icon: 'error',
+            });
+        }
+    };
+
+
 
 
 
