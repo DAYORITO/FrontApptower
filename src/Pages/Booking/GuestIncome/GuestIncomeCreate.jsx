@@ -83,28 +83,23 @@ function GuestIncomeCreate() {
   }
 
   //Obtiene las torres de TowerData
-  const towers = TowerData.map((towerData) => {
-    const matchingTower = dataTowers.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
-
-    return {
-        value: towerData.tower,
-        label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
-    };
-});
+  const towers = TowerData.map((towerData) => ({
+    value: towerData.idTower,
+    label: `${towerData.Tower.towerName}`
+  }));
   //Obtiene los apartamentos de TowerData
   const organizeApartmentsByTower = (data) => {
     const apartmentsByTower = {};
     // Organizar los apartamentos por torre
     data?.apartments?.forEach((apartment) => {
-      const { idApartment, apartmentName, idTower } = apartment;
+      const { idApartment, apartmentName, idtower } = apartment;
       // Si no existe la torre, se crea un array vacío
-      if (!apartmentsByTower[idTower]) {
-        apartmentsByTower[idTower] = [];
+      if (!apartmentsByTower[idtower]) {
+        apartmentsByTower[idtower] = [];
       }
       // Se agrega el apartamento al array correspondiente a la torre
-      apartmentsByTower[idTower].push({ value: idApartment, label: apartmentName });
+      apartmentsByTower[idtower].push({ value: idApartment, label: apartmentName });
     });
-    console.log("Apartamentos por torreprimero:", apartmentsByTower);
 
     const resultArray = [];
 
@@ -121,7 +116,6 @@ function GuestIncomeCreate() {
         });
       }
     }
-    console.log("Apartamentos por torre:", resultArray);
 
     return resultArray;
   };
@@ -157,8 +151,6 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (data.apartments)
       setTowerData(organizeApartmentsByTower(data))
-      console.log("Datos de las turres Xd", TowerData)
-      console.log("Datos de las turres", data)
   }, [data])
 
 

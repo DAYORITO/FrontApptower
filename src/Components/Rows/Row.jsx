@@ -4,34 +4,33 @@ import "./RowsStyle.css"
 
 export const Row = ({
 
-    module,
-    name,
-    lastName,
-    namerole,
-    docType,
-    docNumber,
-    phone,
-    email,
-    status,
-    rol,
-    children,
-    descripcion,
-    icon = "user",
-    op1,
-    op2,
-    op3,
-    op4,
-    op5,
-    op6,
     file,
     to = "details",
-    start,
-    end,
-    address,
-    tel,
-    corr,
-    enter,
 
+    children,
+    description,
+    icon = "user",
+    status,
+
+    A1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6,
+    A7,
+    A8,
+    A9,
+    A10,
+    A11,
+    A12,
+    A13,
+    A14,
+    A15,
+    A16,
+
+
+    A1A2 = A1 + " " + A2
 
 }) => {
 
@@ -41,9 +40,15 @@ export const Row = ({
         <tr class="file-list myRow">
 
             <Link to={to} style={{ textDecoration: 'none' }} >
-                <td class="text-center ">
+                <td class="text-cA20 ">
+
+
+
                     <div class="circle circle-sm">
+
                         <span class={`fe fe-${icon} fe-24 text-muted`}></span>
+                        {A16 != 0 ? <span className="badge text-white bg-danger mb-4">{A16}</span> : null}
+
                     </div>
 
                     {
@@ -53,7 +58,7 @@ export const Row = ({
                                 <span className="dot dot-md bg-success mr-1"></span> :
                                 status === 'Por pagar' ?
                                     <span className="dot dot-md bg-danger mr-1"></span> :
-                                    status === 'Pendiente' ?
+                                    status === 'PA16iente' ?
                                         <span className="dot dot-md bg-warning mr-1"></span> :
                                         status === 'Inactivo' || status === 'Inactive' ?
                                             <span className="dot dot-md bg-danger mr-1"></span> :
@@ -63,50 +68,49 @@ export const Row = ({
                 </td>
 
                 <th scope="row">
-                    {namerole != null ? <td class="text-secondary">{namerole}</td> : null}
-                    {start != null ? <td class="text-secondary">{start}</td> : null}
-                    {end != null ? <td class="text-secondary">{end}</td> : null}
-                    {name != null & name != null ? name + ' ' + lastName : null} <br />
-                    {op6 != null ? <span className="badge badge-light text-primary">{op6}</span> : null}
-
-
-                    {docType != null ? <span className="badge badge-light text-secondary">{docType}</span> : null}
-                    {docNumber != null ? <span class="badge badge-white text-secondary">{docNumber}</span> : null}
-
+                    {A5 != null ? <td class="text-secondary">{A5}</td> : null}
+                    {A1 != null ? <span>{A1A2}</span> : null} <br />
+                    {A3 != null ? <span className="badge badge-light text-primary">{A3}</span> : null}
+                    {A4 != null ? <span className="badge badge-light text-secondary">{A4}</span> : null}
 
                 </th>
 
             </Link>
 
-            {enter != null ? <td class="text-secondary">{enter}</td> : null}
-            {rol != null ? <td class="text-secondary">{rol}</td> : null}
-            {address != null ? <td class="text-secondary">{address}</td> : null}
 
-            {tel != null ? <td class="text-secondary">{tel}</td> : null}
-            {corr != null ? <td class="text-secondary">{corr}</td> : null}
+            {description != null ? <td class="text-secondary">{description}</td> : null}
+            {A7 != null ? <td class="text-secondary">{A7}</td> : null}
+            {A8 != null ? <td class="text-secondary">{A8}</td> : null}
 
 
+            {A9 != null ?
+                <td class="text-secondary">
+                    <span className="badge badge-white text-secondary">{A8}</span>
+                    <em class="badge badge-white text-muted">{A9}</em>
+                    <br />
+                    <span className="badge badge-white text-secondary">{A10}</span><em class="badge badge-white text-muted">{A11}</em>
+                </td> : null}
+
+            {A12 != null ?
+                <td class="text-secondary">
+                    <span className="badge badge-white text-secondary">{A13}</span>
+                    <em class="badge badge-white text-muted">{A12}</em>
+                    <br />
+                    <span className="badge badge-white text-secondary">{A14}</span><em class="badge badge-white text-muted">{A15}</em>
+                </td> : null}
 
 
-            {email != null ? <td class="text-secondary"> <span className="badge badge-white text-secondary">Correo</span><em class="text-muted ml-2">{email}</em><br />
-                <span className="badge badge-white text-secondary">Telefono</span><em class="text-muted ml-2">{phone}</em>
-            </td> : null}
-            {phone != null ? <td class="text-secondary"></td> : null}
+
+            {A6 != null ? <td class="text-secondary">{A6}</td> : null}
 
 
-            {descripcion != null ? <td class="text-secondary">{descripcion}</td> : null}
 
+            {file && <td className="text-secondary">
+                <Link to={file}>
+                    <span className='fe fe-download-cloud fe-16 text-muted'></span>
+                </Link>
+            </td>}
 
-            {file && <td className="text-secondary"><Link to={file}>
-                <span className='fe fe-download-cloud fe-16 text-muted'></span>
-            </Link></td>}
-
-
-            {op1 != null ? <td class="text-secondary">{op1}</td> : null}
-            {op2 != null ? <td class="text-secondary">{op2}</td> : null}
-            {op3 != null ? <td class="text-secondary">{op3}</td> : null}
-            {op4 != null ? <td class="text-secondary">{op4}</td> : null}
-            {op5 != null ? <td class="text-secondary">{op5}</td> : null}
 
 
             <td>

@@ -5,7 +5,7 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import Swal from "sweetalert2"
-import { useFetchpostFile } from '../../../Hooks/useFetch'
+import { useFetchForFile } from '../../../Hooks/useFetch'
 
 
 
@@ -20,7 +20,7 @@ export const VehicleCreate = () => {
             "licenseplate": plate,
             "description": description,
         }
-        const { response, error } = await useFetchpostFile(url, data);
+        const { response, error } = await useFetchForFile(url, data);
 
         
         if (response) {

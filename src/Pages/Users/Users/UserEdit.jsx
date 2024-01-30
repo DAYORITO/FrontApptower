@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFetchpost, useFetchpostFile, useFetchput } from '../../../Hooks/useFetch';
+import { useFetchpost, useFetchForFile, useFetchput } from '../../../Hooks/useFetch';
 import FormContainer from '../../../Components/Forms/FormContainer';
 import FormColumn from '../../../Components/Forms/FormColumn';
 import Inputs from '../../../Components/Inputs/Inputs';

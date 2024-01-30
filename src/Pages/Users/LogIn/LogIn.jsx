@@ -40,6 +40,8 @@ const LoginForm = ({ setShowLoginForm }) => {
     console.log('documento', userDocument)
     // hourglass.register()
 
+    console.log(userRole, 'userRole aqui en login Aleja')
+
 
     console.log('userData aqui en login:', userData);
 
@@ -69,6 +71,10 @@ const LoginForm = ({ setShowLoginForm }) => {
             setUserData(data);
             SetUserDocument(data.user.document);
 
+            if (data.user && data.user.idrole) {
+                fechDataRols();
+            }
+
         } catch (error) {
             console.error('Error fetching user information:', error);
         }
@@ -84,7 +90,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
             const data = await response.json();
             const rols = data.rols;
-            if (Array.isArray(rols)) {
+            if (userData.user && Array.isArray(rols)) {
                 const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
                 console.log('User Role:', userRole);
                 setUserRole(userRole);
@@ -127,16 +133,17 @@ const LoginForm = ({ setShowLoginForm }) => {
 
 
 
-
     const handleLogin = async (event) => {
         setShowModaload(true)
 
         if (!username || !loginPassword) {
 
             Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
+
             return;
         }
         event.preventDefault();
+
 
         try {
             const token = await login(username, loginPassword);
@@ -190,6 +197,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                     }
                     else {
                         navigate('/admin/users/profileList');
+                        window.location.reload();
                     }
 
                 }
@@ -279,20 +287,26 @@ const RegisterForm = ({ setShowLoginForm }) => {
         setDocumentType(selectedType);
     };
 
+    const [shouldRegister, setShouldRegister] = useState(false);
     const handleRegister = async (event) => {
         event.preventDefault();
 
+        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword) {
+            Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
+            return;
+        }
+
         const url = 'users/login';
         const data = {
-            documentType,
+            docType: documentType,
             name,
             email,
             password,
             document,
             idrole: 2,
-            lastname,
+            lastName: lastname,
             phone,
-            state: 'Inactivo'
+            status: 'Inactivo'
         };
         const { response, error } = await useFetchpost(url, data);
         console.log('Data:', data);

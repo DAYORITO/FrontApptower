@@ -258,6 +258,26 @@ export const Watchman = () => {
 
     console.log('enterpriceOptions', enterpriceOptions);
 
+
+    const totalPages = Math.ceil(filterData.length / 10);
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const filteredDataWatchman = () => {
+        return filterData.slice(currentPage, currentPage + 10)
+    }
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 10)
+    }
+
+
+    const PreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 10)
+    }
+
     return (
         <>
 
@@ -269,6 +289,25 @@ export const Watchman = () => {
                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear')
                         ? <ButtonGoTo value='Crear Vigilante' href='/admin/watchman/create' />
                         : null
+                }
+                showPaginator={
+                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
+                        <ul className="pagination justify-content-center mb-0">
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+                                </li>
+                            ))}
+
+
+                            <li className="page-item">
+                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav >
                 }
             >
 
@@ -283,7 +322,7 @@ export const Watchman = () => {
                     </Thead>
                     <Tbody>
 
-                        {filterData?.map(watchman => {
+                        {filteredDataWatchman().map(watchman => {
                             const enterprice = enterpriseSecurity?.find(enterprice => enterprice.idEnterpriseSecurity === watchman.idEnterpriseSecurity);
                             const enterpriceName = enterprice ? enterprice.nameEnterprice : 'Empresa no encontrada';
 
@@ -291,13 +330,13 @@ export const Watchman = () => {
                                 <Row
                                     icon='shield'
                                     key={watchman.idwatchman}
-                                    docType={watchman.documentType}
-                                    docNumber={watchman.document}
-                                    name={watchman.namewatchman}
-                                    lastName={watchman.lastnamewatchman}
-                                    enter={enterpriceName}
-                                    tel={watchman.phone}
-                                    corr={watchman.email}
+                                    A3={watchman.documentType}
+                                    A4={watchman.document}
+                                    A1={watchman.namewatchman}
+                                    A2={watchman.lastnamewatchman}
+                                    A7={enterpriceName}
+                                    A8={watchman.phone ? watchman.phone : 'Desconocido'}
+                                    A6={watchman.email}
                                     status={watchman.state}
                                     to={`details/${watchman.idwatchman}`}
                                 >

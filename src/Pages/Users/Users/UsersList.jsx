@@ -186,8 +186,9 @@ export const Users = () => {
                     <Thead>
                         <Th name={'Información Usuario'}></Th>
                         <Th name={'Rol'}></Th>
-                        <Th name={'Telefono'}></Th>
                         <Th name={'Correo'}></Th>
+                        <Th name={'Teléfono'}></Th>
+
 
 
 
@@ -198,19 +199,17 @@ export const Users = () => {
                         {filteredDataUsers().map(user => (
                             <Row
                                 key={user.iduser}
-                                docType={user.docType}
-                                docNumber={user.document}
-                                name={user.name}
-                                lastName={user.lastName}
-                                rol={
+                                A3={user.docType}
+                                A4={user.document}
+                                A1={user.name}
+                                A2={user.lastName}
+                                A7={
                                     roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
-                                corr={user.email}
-                                tel={user.phone}
-                                status={user.state}
+                                A8={user.email}
+                                A6={user.phone ? user.phone : 'Desconocido'}
+                                status={user.status}
                             >
-
-
                                 {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
                                     <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
                                 )}

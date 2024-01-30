@@ -5,7 +5,6 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router'
-import { useFetchget, useFetchpostFile } from '../../../Hooks/useFetch'
 import { bools, docTypes, residentsTypes, sexs, statusList } from '../../../Hooks/consts.hooks'
 
 import Swal from 'sweetalert2'
@@ -69,7 +68,7 @@ export const ResidentCreate = (props) => {
 
     console.log('Data:', data);
 
-    const { response, error } = await useFetchpostFile(url, data);
+    // const { response, error } = await useFetchpostFile(url, data);
 
     if (response) {
       console.log('Response:', response);

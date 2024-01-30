@@ -6,6 +6,8 @@ import { useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import LogoApptower from '../../assets/Logo-Apptower.png';
+
 
 export const Aside = () => {
     const { user, login, logout } = useAuth();
@@ -33,7 +35,7 @@ export const Aside = () => {
 
     const fetchUserPermissions = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/permissionfromrole', {
+            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -78,7 +80,7 @@ export const Aside = () => {
 
     const fechDataRols = async () => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
+            const response = await fetch('http://localhost:3000/api/rols');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch roles');
@@ -121,7 +123,7 @@ export const Aside = () => {
 
 
 
-    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+    fetch(`http://localhost:3000/api/residents/document/${userDocument}`)
         .then(response => response.json())
         .then(data => {
             if (data.residente) {
@@ -168,27 +170,30 @@ export const Aside = () => {
                         <i className="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
                 </div>
-
+                {console.log(userData)}
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav
                     name={userData.user?.name ? userData.user.name : ''}
                     lastName={userData.user?.lastName ? userData.user.lastName : ''}
                     rol={userRole ? userRole : ''}
+                    userImg={userData.user?.userImg }
                 />
 
 
                 <div className='myNav-links'>
-                    <div className='myNav-links-content'>
+                    <div className='myNav-links-content'  >
                         {allowedPermissions && (
                             <>
                                 {allowedPermissions.includes('Dashboard') || allowedPermissions.includes('Usuarios') && (
-                                    <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24' />
+                                    <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24'
+                                    />
                                 )}
                                 {/* {allowedPermissions.includes('Notificaciones') && (
                                     <ListNav module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
                                 )} */}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
-                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'>
+                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24' 
+>
 
                                         <>
                                             {allowedPermissions.includes('Ingresos') && (
@@ -259,6 +264,9 @@ export const Aside = () => {
                                             )}
                                             {allowedPermissions.includes('Zona Comunes') && (
                                                 <DropDownList subprocess={"Zonas comunes"} href='spaces'></DropDownList>
+                                            )}
+                                            {allowedPermissions.includes('Zona Comunes') && (
+                                                <DropDownList subprocess={"Boques"} href='towers'></DropDownList>
                                             )}
 
                                         </DropDownNav>
