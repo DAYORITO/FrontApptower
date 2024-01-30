@@ -85,7 +85,6 @@ function GuestIncomeCreate() {
   //Obtiene las torres de TowerData
   const towers = TowerData.map((towerData) => {
     const matchingTower = dataTowers.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
-
     return {
         value: towerData.tower,
         label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
