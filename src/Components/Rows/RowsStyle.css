@@ -29,3 +29,9 @@
     overflow: auto;
 }
 
+
+.myRow .text-secondary a {
+
+    /* border-bottom: 1px solid; */
+    color: grey;
+}

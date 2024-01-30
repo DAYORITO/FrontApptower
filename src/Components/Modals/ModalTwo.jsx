@@ -10,7 +10,7 @@ export const ModalContainer = ({ children, showModal }) => {
   );
 };
 
-export const Modal = ({ title, children, showModal, onClick }) => {
+export const Modal = ({ title, children, showModal, onClick, onClickForDelete, buttonDelete = false }) => {
   return (
     <div onClick={(e) => e.stopPropagation()} className="divModal__Container">
       <div
@@ -33,7 +33,7 @@ export const Modal = ({ title, children, showModal, onClick }) => {
                 <i className="fe fe-16 fe-x"></i>
               </button>
             </div>
-            <div className="modal-body" style={{overflow: 'hidden', overflowY:"auto", maxHeight: "30rem"}}>
+            <div className="modal-body" style={{ overflow: 'hidden', overflowY: "auto", maxHeight: "30rem" }}>
               {children}
             </div>
             <div className="modal-footer">
@@ -44,9 +44,17 @@ export const Modal = ({ title, children, showModal, onClick }) => {
               >
                 Cerrar
               </button>
+              {
+                buttonDelete ?
+                  <button type="button" onClick={onClickForDelete} className="btn mb-2 btn-danger">
+                    Desagregar
+                  </button> : null
+              }
               <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
                 Guardar Cambios
               </button>
+
+
             </div>
           </div>
         </div>
