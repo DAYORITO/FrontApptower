@@ -534,7 +534,7 @@ export const ApartmentDetails = (props) => {
 
                                         key={index}
                                         icon={"user-check"}
-                                        name={resident.resident.name + " " + resident.resident.lastName}
+                                        name={resident.resident.user.name + " " + resident.resident.user.lastName}
 
                                         // Details
 
