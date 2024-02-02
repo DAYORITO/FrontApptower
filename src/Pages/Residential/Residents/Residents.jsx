@@ -22,6 +22,7 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
+import { format } from 'date-fns'
 
 
 export const Residents = () => {
@@ -124,10 +125,13 @@ export const Residents = () => {
 
     const openModal = (data) => {
 
+        console.log(data)
+        !data.apartments.length == 0 ? setIdApartment(data.apartments[0].idApartment) : setIdApartment("")
+
         setIdResident(data.idResident)
         setResidentType(data.residentType)
-        setCreatedAt(data.createdAt)
-        setUpdatedAt(data.updatedAt)
+        setCreatedAt(format(new Date(data.createdAt), 'yyyy-MM-dd'))
+        setUpdatedAt(format(new Date(data.updatedAt), 'yyyy-MM-dd'))
         setStatus(data.status)
 
         setResidentName(`${data.user.name + data.user.lastName}`)
@@ -144,7 +148,7 @@ export const Residents = () => {
         setDocNumber(data.user.document)
         setName(data.user.name)
         setLastName(data.user.lastName)
-        setBirthday(data.user.birthday)
+        setBirthday(format(new Date(data.user.birthday), 'yyyy-MM-dd'))
         setSex(data.user.sex)
         setEmail(data.user.email)
         setPhone(data.user.phone)
@@ -161,12 +165,12 @@ export const Residents = () => {
         if (data.apartments.length != 0) {
 
             setIsCreateApartmentResident(false)
-            setIdApartmentResident(data.apartments[0].idApartmentResident)
-            setIdApartment(data.apartments[0].idApartment)
-            setIdResident(data.apartments[0].idResident)
-            setResidentStartDate(data.apartments[0].residentStartDate)
-            setResidentEndDate(data.apartments[0].residentEndDate)
-            setStatus(data.apartments[0].status)
+            setIdApartmentResident(data.apartmentResidents[0].idApartmentResident)
+            setIdApartment(data.apartmentResidents[0].idApartment)
+            setIdResident(data.apartmentResidents[0].idResident)
+            setResidentStartDate(format(new Date(data.apartmentResidents[0].residentStartDate), 'yyyy-MM-dd'))
+            setResidentEndDate(format(new Date(data.apartmentResidents[0].residentEndDate), 'yyyy-MM-dd'))
+            setStatus(data.apartmentResidents[0].status)
 
 
         }
@@ -264,6 +268,7 @@ export const Residents = () => {
             idResident: idResident,
             residentType: residentType,
             status: status,
+            idApartment: idApartment
 
         }
 
@@ -324,26 +329,26 @@ export const Residents = () => {
                                     A3={resident.residentType == "tenant" ? "Arrendatario" : "Propietario"}
                                     A4={`${resident.user.docType} ${resident.user.document}`}
 
-                                    A6={`${resident.apartmentInfo == "" ? "No hay apartamentos" : `${resident.apartmentInfo.apartmentName}`}`}
+                                    A9={"Apartamento"}
+                                    A10={`${resident.apartments && resident.apartments.length == 0 ? "No hay apartamentos" : resident.apartments.map((index) => index.apartmentName).join(', ')}`}
 
-                                    A8='Correo'
-                                    A9={resident.user.email}
+                                    A13='Correo'
+                                    A12={resident.user.email}
 
-                                    A10='Telefono'
-                                    A11={resident.user.phone}
+                                    A14='Telefono'
+                                    A15={resident.user.phone}
 
                                     status={resident.status}
 
                                     to={`/admin/residents/details/${resident.iduser}`}
-                                    to2={`${resident.apartmentInfo == "" ? "/admin/residents/" : `/admin/apartments/details/${resident.apartmentInfo.idApartment}`}  `}
 
                                 >
-                                    {resident.apartmentInfo.idApartment == undefined ?
-                                        <Actions accion={`Asiganar apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions> :
+                                    {resident.apartments.length == 0 ?
+                                        <Actions accion={`Asiganar apartamento`} icon='home' onClick={() => openModalAddChangeApartment(resident)}></Actions> :
                                         <>
                                             <Actions accion='Ver apartamento'
                                                 icon='home'
-                                                href={`/admin/apartments/details/${resident.apartmentInfo.idApartment}`}
+                                                href={`/admin/apartments/details/${resident.apartments[0].idApartment}`}
                                             />
                                             <Actions accion={`Modificar residencia apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions>
                                         </>
@@ -352,8 +357,9 @@ export const Residents = () => {
 
                                     <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(resident)}></Actions>
                                     <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions>
-                                    <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions>
-
+                                    {
+                                        resident.user.pdf ? <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions> : null
+                                    }
 
                                     {/* <Actions accion='Ver detalle' icon='eye' href={`/admin/residents/details/${resident.idResident}`} ></Actions> */}
 
@@ -365,12 +371,12 @@ export const Residents = () => {
                         }
                     </Tbody>
                 </TablePerson>
-            </ContainerTable>
+            </ContainerTable >
 
             {modalAddChangeApartment &&
                 createPortal(
                     <>
-                        <ModalContainer modalResident={setModalAddChangeApartment}>
+                        <ModalContainer showModal={setModalAddChangeApartment}>
                             <Modal
                                 onClick={isCreateApartmentResident ? CreateApartmentResident : updateApartmentResident}
                                 showModal={setModalAddChangeApartment}
@@ -415,9 +421,11 @@ export const Residents = () => {
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
+                )
+            }
 
-            {modalResident &&
+            {
+                modalResident &&
                 createPortal(
                     <>
                         <ModalContainer modalResident={setModalResident}>
@@ -450,8 +458,10 @@ export const Residents = () => {
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
-            {modalResidentEdit &&
+                )
+            }
+            {
+                modalResidentEdit &&
                 createPortal(
                     <>
                         <ModalContainer modalResident={setModalResidentEdit}>
@@ -496,7 +506,8 @@ export const Residents = () => {
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
+                )
+            }
         </>
     )
 }

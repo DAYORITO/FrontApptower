@@ -249,6 +249,8 @@ export const ApartmentDetails = (props) => {
             }))
         : [];
 
+        console.log()
+
     // List apartmentsResidents
 
     const apartmentResidentsList = apartmentResidents?.data && Array.isArray(apartmentResidents?.data?.apartmentResidents)
@@ -500,7 +502,7 @@ export const ApartmentDetails = (props) => {
                                         // Information
                                         key={index}
                                         icon={"user-check"}
-                                        name={owner.owner.name + " " + owner.owner.lastName}
+                                        name={owner.owner.user.name + " " + owner.owner.user.lastName}
                                         // Details
                                         to={`/admin/owners/details/${owner.idOwner}`}
                                         // Funtions

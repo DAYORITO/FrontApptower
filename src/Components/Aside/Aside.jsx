@@ -266,7 +266,7 @@ export const Aside = () => {
                                                 <DropDownList subprocess={"Zonas comunes"} href='spaces'></DropDownList>
                                             )}
                                             {allowedPermissions.includes('Zona Comunes') && (
-                                                <DropDownList subprocess={"Boques"} href='towers'></DropDownList>
+                                                <DropDownList subprocess={"Bloques"} href='towers'></DropDownList>
                                             )}
 
                                         </DropDownNav>
