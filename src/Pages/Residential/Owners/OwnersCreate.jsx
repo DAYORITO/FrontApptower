@@ -38,7 +38,7 @@ export const OwnersCreate = () => {
 
   // const [status, setStatus] = useState("");
 
-  const [idApartment, setIdApartment] = useState("");
+  const [idApartment, setIdApartment] = useState(id ? id : "");
   const [ownershipStartDate, setOwnershipStartDate] = useState("");
   // const [residentEndDate, setResidentEndDate] = useState("");
 
@@ -83,7 +83,7 @@ export const OwnersCreate = () => {
       idApartment: parseInt(idApartment),
       OwnershipStartDate: ownershipStartDate,
 
-      isResident: Boolean(isResident) 
+      isResident: Boolean(isResident)
       // status: status,
 
     }

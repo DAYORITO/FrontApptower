@@ -1,8 +1,16 @@
 .container-spinner {
+  height: 50vh !important;
+  width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    height: 50vh !important;
-    width: 100% !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.container-small-spinner {
+
+  height: 15vh !important;
+  width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -12,3 +12,14 @@ export const Spinner = () => {
         </div>
     )
 }
+
+export const SmalSpinner = () => {
+    return (
+
+        <div class="container-small-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    )
+}

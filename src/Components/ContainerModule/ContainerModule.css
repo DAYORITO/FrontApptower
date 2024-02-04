@@ -1,9 +1,10 @@
 .card-header-details {
-    height: auto;
+    height: 10%;
     width: 100% !important;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Corregir aquí */
+    align-items: flex-start;
+    /* Corregir aquí */
     margin-left: 5%;
     /* position: fixed; Quitar esto de aquí */
 }
@@ -13,4 +14,20 @@
     position: fixed;
     top: 0;
     width: 100%;
+}
+
+.container-module .card-body {
+
+    width: 90% !important;
+    align-items: flex-start;
+}
+
+.container-module .info {
+
+    display: flex;
+}
+
+.container-module .header {
+
+    
 }

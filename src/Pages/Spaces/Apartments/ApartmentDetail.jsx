@@ -4,11 +4,6 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import InputsSelect from "../../../Components/Inputs/InputsSelect"
 import { Details } from "../../../Components/Details/details"
 import { statusList } from "../../../Hooks/consts.hooks"
-import { TablePerson } from '../../../Components/Tables/Tables'
-import { TableDetails } from "../../../Components/TableDetails/TableDetails"
-import { NavDetails } from "../../../Components/NavDetails/NavDetails"
-import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails"
-import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
@@ -27,7 +22,8 @@ import { useParams } from "react-router"
 import { format } from 'date-fns';
 
 
-import { filterFines, filterGuestIncomes, putRequest, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import { filterFines, filterGuestIncomes, putRequest, postRequest, showConfirmationDialog, filter } from '../../../Helpers/Helpers'
+import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 
 
 
@@ -43,7 +39,8 @@ export const ApartmentDetails = (props) => {
 
     const { id } = useParams();
     const [area, setArea] = useState('');
-    const [tower, setTower] = useState('');
+    const [idTower, setIdTower] = useState('');
+    const [towerName, setTowerName] = useState('');
     const [status, setStatus] = useState('');
     const [idApartment, setIdApartment] = useState("");
     const [apartmentName, setapartmentName] = useState('');
@@ -60,11 +57,11 @@ export const ApartmentDetails = (props) => {
     // Apartments relations
 
     const { data: apartment, put: putApartment, get: getApartment } = useFetch(url)
-    const { data: apartmentResidents, put: putApartmentResidents, get: getApartmentResidents, del: delApartmentResidents } = useFetch(url)
-    const { data: apartmentOwners, put: putApartmentOwner, get: getApartmentOwners, del: delApartmentOwners } = useFetch(url)
-    const { data: assignedParkingSpaces, put: putAssignedParkingSpaces, get: getAssignedParkingSpaces, del: delAssignedParkingSpaces } = useFetch(url)
-    const { data: guestIncomes, get: getGuestIncomes } = useFetch(url)
-    const { data: fines, get: getFines } = useFetch(url)
+    const { data: apartmentResidents, put: putApartmentResidents, get: getApartmentResidents, del: delApartmentResidents, loading: loadingApartmentResidents } = useFetch(url)
+    const { data: apartmentOwners, put: putApartmentOwner, get: getApartmentOwners, del: delApartmentOwners, loading: loadingApartmentOwners } = useFetch(url)
+    const { data: assignedParkingSpaces, put: putAssignedParkingSpaces, get: getAssignedParkingSpaces, del: delAssignedParkingSpaces, loading: loadingAssignedParkingSpaces } = useFetch(url)
+    const { data: guestIncomes, get: getGuestIncomes, loading: loadingGuestIncomes } = useFetch(url)
+    const { data: fines, get: getFines, loading: loadingFines } = useFetch(url)
     const { data: vehicles, get: getVehicles } = useFetch(url)
 
 
@@ -80,7 +77,7 @@ export const ApartmentDetails = (props) => {
     const { data: residents, get: getResidents } = useFetch(url)
     const { data: owners, get: getOwners } = useFetch(url)
     const { data: parkingSpaces, get: getParkingSpaces } = useFetch(url)
-
+    const { data: towers, get: getTowers } = useFetch(url)
 
 
     // Modals
@@ -107,43 +104,63 @@ export const ApartmentDetails = (props) => {
     // Searcher icnomes
 
     const [search, setSearch] = useState('');
-    let guestIncomesbyApartment = filterGuestIncomes(search, guestIncomes); // Don't drop
+
+    let guestIncomesbyApartment = filter(search, guestIncomes, 'asociatedVisitor');
 
     // Seacher fines
 
     const [searchFine, setSearchFine] = useState('');
-    let fineByApartment = filterFines(searchFine, fines);
+
+    let fineByApartment = filter(searchFine, fines, 'fineType');
+
 
     useEffect(() => {
 
         // Apartment information
 
+        console.log(apartment?.data?.spartment)
         setIdApartment(apartment?.data?.spartment?.idApartment);
-        setTower(apartment?.data?.spartment?.tower);
+        setIdTower(apartment?.data?.spartment?.idTower);
+        setTowerName(apartment?.data?.spartment?.Tower?.towerName)
         setapartmentName(apartment?.data?.spartment?.apartmentName);
         setArea(apartment?.data?.spartment?.area);
         setStatus(apartment?.data?.spartment?.status);
 
-        // Apartments relations
-
-        getApartment(`apartments/${id}`)
-        getApartmentResidents(`aparmentResidents/${id}`)
-        getApartmentOwners(`apartmentOwners/${id}`)
-        getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
-        getGuestIncomes(`guestIncome/byApartment/${id}`)
-        getFines(`fines/byApartment/${id}`)
-        getVehicles(`vehicle/${id}`)
-
-
-        // List
-
-        getApartments('apartments')
-        getResidents('residents')
-        getOwners('owners')
-
-        getParkingSpaces("parkingSpaces")
-
     }, [apartment?.data?.spartment])
+
+    useEffect(() => {
+
+        try {
+
+            // Apartments relations
+
+            getApartment(`apartments/${id}`)
+            getApartmentResidents(`aparmentResidents/${id}`)
+            getApartmentOwners(`apartmentOwners/${id}`)
+            getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
+            getGuestIncomes(`guestIncome/byApartment/${id}`)
+            getFines(`fines/byApartment/${id}`)
+            getVehicles(`vehicle/${id}`)
+
+
+            // List
+
+            getApartments('apartments')
+            getResidents('residents')
+            getOwners('owners')
+            getTowers('towers')
+
+            getParkingSpaces("parkingSpaces")
+
+        } catch (error) {
+
+            console.error('Error al obtener datos del apartamento', error);
+
+        }
+
+
+
+    }, [])
 
 
     // Funtion searcher
@@ -167,8 +184,9 @@ export const ApartmentDetails = (props) => {
         console.log(data)
         setIdApartmentResident(data.idApartmentResident)
         setIdResident(data.idResident)
+        setIdApartment(data.idApartment)
         setResidentStartDate(format(new Date(data.residentStartDate), 'yyyy-MM-dd'))
-        setResidentEndDate(format(new Date(data.residentEndDate), 'yyyy-MM-dd'))
+        setResidentEndDate(data.residentEndDate ? format(new Date(data.residentEndDate), 'yyyy-MM-dd') : "")
         setStateApartmentResident(data.status)
         setShowApartmentResidentEditModal(true)
 
@@ -235,7 +253,7 @@ export const ApartmentDetails = (props) => {
         ? apartments.data.apartments
             .map(apartment => ({
                 value: apartment.idApartment,
-                label: `${apartment.apartmentName} - ${apartment.tower}`
+                label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
             }))
         : [];
 
@@ -248,8 +266,6 @@ export const ApartmentDetails = (props) => {
                 ...apartmentOwner,
             }))
         : [];
-
-        console.log()
 
     // List apartmentsResidents
 
@@ -277,7 +293,7 @@ export const ApartmentDetails = (props) => {
         ? residents?.data?.residents
             .map(resident => ({
                 value: resident.idResident,
-                label: ` ${resident.name} ${resident.lastName} - ${resident.docNumber}`
+                label: ` ${resident.user.name} ${resident.user.lastName} - ${resident.user.document}`
             }))
         : [];
 
@@ -314,14 +330,19 @@ export const ApartmentDetails = (props) => {
             }))
         : [];
 
-    console.log(vehiclesList)
-
-
+    const towerList = towers?.data?.towers
+        ? towers.data.towers
+            .map((tower) => ({
+                value: tower.idTower,
+                label: `${tower.towerName}`
+            }))
+            .sort((a, b) => a.value - b.value) // Ordenar por idTower
+        : [];
 
 
     // Create ApartmentResidents 
 
-    const handleCreateApartmentPerResidentExist = (event) => {
+    const handleCreateApartmentPerResidentExist = async (event) => {
 
         const data = {
 
@@ -331,13 +352,15 @@ export const ApartmentDetails = (props) => {
             // Add other properties as needed for different requests
         };
 
-        postRequest(event, 'aparmentResidents', `Agregaste un residente al apartamento ${apartmentName} exitosamente`, setShowApartmentResidentsModal, data, url);
+        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url);
 
+        getApartmentResidents(`aparmentResidents/${id}`)
+        setShowApartmentResidentsModal(false)
     };
 
     // create assignedparkingspace 
 
-    const handleCreateAssignedParking = (event) => {
+    const handleCreateAssignedParking = async (event) => {
 
         const data = {
 
@@ -345,7 +368,12 @@ export const ApartmentDetails = (props) => {
             idParkingSpace
 
         };
-        postRequest(event, 'assignedParkingSpaces', `Agregaste un parqueadero al apartamento ${apartmentName} exitosamente`, setShowParkingSpacesModal, data, url);
+
+        await postRequest(event, 'assignedParkingSpaces', 'POST', {}, data, url);
+
+        getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
+        setShowParkingSpacesModal(false)
+
     };
 
 
@@ -366,7 +394,10 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        putRequest(event, 'apartments', `Modificaste apartamento ${apartmentName}`, data, setShowModalEditApartment, putApartment, getApartment);
+        postRequest(event, 'apartments', 'PUT', {}, data, url);
+
+        setShowModalEditApartment(false)
+
 
     };
 
@@ -392,7 +423,7 @@ export const ApartmentDetails = (props) => {
 
     // Edit apartmentresident
 
-    const handleUpdateApartmentResident = (event) => {
+    const handleUpdateApartmentResident = async (event) => {
 
 
 
@@ -410,7 +441,9 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        putRequest(event, 'aparmentResidents', `Modificaste un residente del apto ${apartmentName}`, data, setShowApartmentResidentEditModal, putApartmentResidents, getApartmentResidents);
+        await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url);
+        setShowApartmentResidentEditModal(false)
+
 
     };
 
@@ -441,6 +474,9 @@ export const ApartmentDetails = (props) => {
         };
 
         showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
+
+        getApartmentResidents(`aparmentResidents/${id}`)
+
     };
 
     // Delete apartmentowner
@@ -452,6 +488,9 @@ export const ApartmentDetails = (props) => {
         };
 
         showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
+
+        getApartmentOwners(`apartmentOwners/${id}`)
+
     };
 
     // delete assigned parking space
@@ -478,130 +517,142 @@ export const ApartmentDetails = (props) => {
         <>
             <Details>
 
-                
-                <ContainerModule name={`Apartamento ${apartmentName}`} date1={`Torre: ${tower} `} date2={`Area: ${area} m²`} status={status} >
 
-                    <Dropdownanchor2 name={"Editar apartamento"} icon={"edit"} onClick={(e) => {
-                        e.preventDefault();
-                        handleModalEditApartment();
-                    }} />
+                <ContainerModule
+
+                    A1={`Apartamento ${apartmentName}`}
+                    A3={`${towerName} `}
+                    A4={`Area: ${area} m²`}
+                    status={status}
+                    onClickEdit={setShowModalEditApartment}
+                >
 
 
                 </ContainerModule>
                 <InfoDetails>
 
-
-
-
                     <Acordions>
 
-                        <DropdownInfo name={`${apartmentOwnersList.length} Propietarios `} to1={`/admin/owners/create/${id}`}>
-                            {apartmentOwnersList.length > 0 ? (
-                                apartmentOwnersList.map((owner, index) => (
-                                    <Dropdownanchor
-                                        // Information
-                                        key={index}
-                                        icon={"user-check"}
-                                        name={owner.owner.user.name + " " + owner.owner.user.lastName}
-                                        // Details
-                                        to={`/admin/owners/details/${owner.idOwner}`}
-                                        // Funtions
-                                        onClick={() => {
-                                            console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
-                                            deleteApartmentOwner(owner.idApartmentOwner);
-                                        }}
-                                        onClickModal={() => handleModalEditApartmentOwner(owner)}
-                                    >
-                                    </Dropdownanchor>
-                                ))
-                            ) : (
-                                <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} />
-                            )}
+                        <DropdownInfo
+                            name={`${apartmentOwnersList.length} Propietarios `}
+                            action1={"Asignar propietario"}
+                            toAction1={`/admin/owners/create/${id}`}>
+
+                            {
+                                loadingApartmentOwners ? <SmalSpinner /> :
+                                    apartmentOwnersList.length > 0 ? (
+                                        apartmentOwnersList.map((owner, index) => (
+                                            <Dropdownanchor
+                                                // Information
+                                                key={index}
+                                                icon={"user-check"}
+                                                name={owner.owner.user.name + " " + owner.owner.user.lastName}
+                                                // Details
+                                                to={`/admin/owners/details/${owner.idOwner}`}
+                                                // // Funtions
+                                                // onClick={() => {
+                                                //     console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
+                                                //     deleteApartmentOwner(owner.idApartmentOwner);
+                                                // }}
+                                                onClickModal={() => handleModalEditApartmentOwner(owner)}
+                                            >
+                                            </Dropdownanchor>
+                                        ))
+                                    ) : (
+                                        <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} />
+                                    )}
                         </DropdownInfo>
 
 
                         <DropdownInfo
+
                             name={`${apartmentResidentsList.length} Residentes `}
-                            to1={`/admin/residents/create/${id}`}
-                            onClick={(e) => {
+                            action1={"Agregar residente existente"}
+                            onClickAction1={(e) => {
                                 e.preventDefault();
                                 handleApartmentResidentsModal();
                             }}
+
+                            action2={"Agregar nuevo residente"}
+                            toAction2={`/admin/residents/create/${id}`}
                         >
-                            {apartmentResidentsList.length > 0 ? (
-                                apartmentResidentsList.map((resident, index) => (
-                                    <Dropdownanchor
+                            {loadingApartmentResidents ? <SmalSpinner /> :
+                                apartmentResidentsList.length > 0 ? (
+                                    apartmentResidentsList.map((resident, index) => (
+                                        <Dropdownanchor
 
-                                        // Information
+                                            // Information
 
-                                        key={index}
-                                        icon={"user-check"}
-                                        name={resident.resident.user.name + " " + resident.resident.user.lastName}
+                                            key={index}
+                                            icon={"user-check"}
+                                            name={resident.resident.user.name + " " + resident.resident.user.lastName}
 
-                                        // Details
+                                            // Details
 
-                                        to={`/admin/residents/details/${resident.idResident}`}
+                                            to={`/admin/residents/details/${resident.idResident}`}
 
-                                        // Functions
+                                            // Functions
 
-                                        onClick={() => {
-                                            console.log('Eliminar residente con ID:', { key: resident.idApartmentResident });
-                                            deleteResidentApartment(resident.idApartmentResident);
-                                        }}
+                                            // onClick={() => {
+                                            //     console.log('Eliminar residente con ID:', { key: resident.idApartmentResident });
+                                            //     deleteResidentApartment(resident.idApartmentResident);
+                                            // }}
 
-                                        onClickModal={() => handleModalEditApartmentResident(resident)}
+                                            onClickModal={() => handleModalEditApartmentResident(resident)}
 
-                                    ></Dropdownanchor>
-                                ))
-                            ) : (
-                                <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
-                            )}
+                                        ></Dropdownanchor>
+                                    ))
+                                ) : (
+                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
+                                )}
                         </DropdownInfo>
 
                         <DropdownInfo
 
                             name={`${assignedParkingSpacesList.length} Parqueaderos `}
-                            onClick={(e) => {
+                            action1={'Asignar parqueadero'}
+                            onClickAction1={(e) => {
                                 e.preventDefault();
                                 handleParkingSpacesModal();
+                            }} >
 
-                            }}>
 
 
-                            {assignedParkingSpacesList?.length > 0 ? (
-                                assignedParkingSpacesList?.map((parking, index) => (
+                            {loadingAssignedParkingSpaces ? <SmalSpinner /> :
+                                assignedParkingSpacesList?.length > 0 ? (
+                                    assignedParkingSpacesList?.map((parking, index) => (
 
-                                    <Dropdownanchor
+                                        <Dropdownanchor
 
-                                        // Information
+                                            // Information
 
-                                        key={index}
-                                        icon={"user-check"}
-                                        name={"Plaza " + parking.parkingSpace.parkingName}
+                                            key={index}
+                                            icon={"user-check"}
+                                            name={"Plaza " + parking.parkingSpace.parkingName}
 
-                                        // Details
-                                        to={`/ admin / parkingSpace / details / ${parking.idParkingSpace} `}
+                                            // Details
+                                            to={`/admin/parkingSpaces`}
 
-                                        // Funtions
-                                        // onClick={() => {
-                                        //     console.log('id', { idAssignedParking: parking.idAssignedParking });
-                                        //     deleteParkingSpace(parking.idAssignedParking)
+                                            // Funtions
+                                            // onClick={() => {
+                                            //     console.log('id', { idAssignedParking: parking.idAssignedParking });
+                                            //     deleteParkingSpace(parking.idAssignedParking)
 
-                                        // }}
+                                            // }}
 
-                                        onClickModal={() => handleEditParkingSpaceModal(parking)}
+                                            onClickModal={() => handleEditParkingSpaceModal(parking)}
 
-                                    ></Dropdownanchor>
-                                ))
-                            ) : (
-                                <NotificationsAlert to={`/ admin / residents / create / ${id} `} msg={` para agregar un residente.`} />
-                            )}
+                                        ></Dropdownanchor>
+                                    ))
+                                ) : (
+                                    <NotificationsAlert to={`/ admin / residents / create / ${id} `} msg={` para agregar un residente.`} />
+                                )}
 
                         </DropdownInfo>
 
 
 
-                        <DropdownInfo name={`${vehiclesList.length} Parqueaderos `} to1={`/admin/vehicle/create`}>
+                        <DropdownInfo name={`${vehiclesList.length} Vehiculos `} to1={`/admin/vehicle/create`}>
                             {vehiclesList.length > 0 ? (
                                 vehiclesList.map((vehicle, index) => (
                                     <Dropdownanchor
@@ -621,33 +672,24 @@ export const ApartmentDetails = (props) => {
                                 <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
                             )}
                         </DropdownInfo>
-                        <div class="col-auto back mt-5 mb-5" >
-                            <Link to={"/admin/apartments/"} type="button" class="btn btn-sm btn-secondary">Regresar</Link>
-                        </div>
+
                     </Acordions>
 
 
                     <Acordions>
-                        <DropdownInfo name={"Notificaciones"} to1={`/admin/notifications/create/${id}`}>
 
-                            {/* <DetailsActions>
-                            <SearchButton />
-                            <ButtonGoTo value="Nuevo notificacion" href={"notificaciones/"} />
-                        </DetailsActions> */}
 
-                            <RowNotificactions date='2023/12/10' name='Bill' lastName='Gates' msg='Va llegar a las 3:00PM, por favor dejelo pasar' />
-
-                        </DropdownInfo>
-
-                        <DropdownInfo name={`${guestIncomesbyApartment?.length} Ingresos `}
-                         to1={`/admin/owners/create/${id}`}>
+                        <DropdownInfo
+                            name={`${guestIncomesbyApartment.length} Ingresos `}
+                            action1={'Agregar nuevo ingreso'}
+                            toAction1={`/admin/guest_income/create/${id}`}>
 
                             <DetailsActions>
                                 <SearchButton value={search} onChange={searcher} />
                                 <ButtonGoTo value="Nuevo ingreso" href={'/admin/guest_income/create'} />
                             </DetailsActions>
 
-                            {
+                            {loadingGuestIncomes ? <SmalSpinner /> :
                                 guestIncomesbyApartment && guestIncomesbyApartment.length > 0 ? (
                                     guestIncomesbyApartment.map((income, index) => (
 
@@ -669,20 +711,23 @@ export const ApartmentDetails = (props) => {
                                     ))
                                 ) : (
                                     <div className='mt-4 ml-2'>
-                                        <NotificationsAlert to={`/ admin / guest_income / create / ${id} `} msg={` para agregar un ingreso.`} />
+                                        <NotificationsAlert to={`/admin/guest_income/create/${id}`} msg={` para agregar un ingreso.`} />
 
                                     </div>
                                 )}
                         </DropdownInfo>
 
-                        <DropdownInfo name={` Multas `} to1={`/admin/owners/create/${id}`}>
+                        <DropdownInfo
+                            name={`${fineByApartment.length} Multas `}
+                            action1={'Agregar nueva multa'}
+                            toAction1={`/admin/fines/create/${id}`}>
 
                             <DetailsActions>
                                 <SearchButton value={searchFine} onChange={searcherFines} />
                                 <ButtonGoTo value="Nueva multa" href={'/admin/fines/create'} />
                             </DetailsActions>
 
-                            {
+                            {loadingFines ? <SmalSpinner /> :
                                 fineByApartment && fineByApartment.length > 0 ? (
                                     fineByApartment.map((fine, index) => (
 
@@ -704,7 +749,7 @@ export const ApartmentDetails = (props) => {
                                     ))
                                 ) : (
                                     <div className='mt-4 ml-2'>
-                                        <NotificationsAlert to={`/ admin / fines / create / ${id} `} msg={` para agregar un multa.`} />
+                                        <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} />
 
                                     </div>
                                 )}
@@ -732,8 +777,9 @@ export const ApartmentDetails = (props) => {
                                 title={"Editar apartamento"}
                             >
 
-                                <Inputs name="Torre " type={"text"}
-                                    value={tower} onChange={e => setTower(e.target.value)}></Inputs>
+                                <InputsSelect id={"select"} options={towerList} name={"Estado"}
+                                    value={idTower} onChange={e => setIdTower(e.target.value)}
+                                ></InputsSelect>
 
                                 <Inputs name="Numero apartamento " type={"text"}
                                     value={apartmentName} onChange={e => setApartmentName(e.target.value)}></Inputs>
@@ -790,7 +836,7 @@ export const ApartmentDetails = (props) => {
                                 onClick={editingParkingSpace ? handleUpdateAssignedParking : handleCreateAssignedParking}
                                 showModal={setShowParkingSpacesModal}
                                 title={editingParkingSpace ? "Editar parqueadero" : "Asignar parqueadero"}
-
+                                buttonDelete={editingParkingSpace ? true : false}
                             >
                                 <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
@@ -816,6 +862,7 @@ export const ApartmentDetails = (props) => {
                                 onClick={handleUpdateApartmentOwner}
                                 showModal={setShowApartmentOwnermODAL}
                                 title={"Editar propietario por apartamento"}
+                                buttonDelete={true}
 
                             >
                                 <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
@@ -846,6 +893,7 @@ export const ApartmentDetails = (props) => {
                                 onClick={handleUpdateApartmentResident}
                                 showModal={setShowApartmentResidentEditModal}
                                 title={"Editar residente por apartamento"}
+                                buttonDelete={true}
 
                             >
                                 <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
