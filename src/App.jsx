@@ -316,6 +316,9 @@ const App = () => {
                                         <GuestIncomeCreate /> : <NotFound />
                                 } />
 
+                                <Route path='guest_income/create/:id' element={<GuestIncomeCreate />} />
+                                <Route path='fines/create/:id' element={<FinesCreate />} />
+
                                 {/* Visitors */}
                                 <Route path='visitors' element={
                                     allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Listar') ?
@@ -326,6 +329,8 @@ const App = () => {
                                     allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear') ?
                                         <VisitorsCreate /> : <NotFound />
                                 } />
+
+
 
 
 
@@ -353,6 +358,7 @@ const App = () => {
                                 <Route path='towers/create' element={<TowerCreate />} />
                                 <Route path='apartments/create/:id' element={<ApartmentCreate />} />
                                 <Route path='apartments/:id' element={<Apartments />} />
+
 
 
 

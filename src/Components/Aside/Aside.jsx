@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Aside.css';
+import './AsideNotifications.css';
+
 import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
 import { useAuth } from '../../Context/AuthContext';
@@ -24,6 +26,12 @@ export const Aside = () => {
     console.log(idResidents, 'holaaaaaa id')
     console.log('userData aqui en login:', userData);
 
+    const [notificationsModal, setNotificationsModal] = useState(false)
+
+    const openNotifications = () => {
+
+        setNotificationsModal(!notificationsModal)
+    }
 
     useEffect(() => {
         if (token) {
@@ -160,12 +168,14 @@ export const Aside = () => {
 
     return (
         <>
-            <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}>
+            <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
+                onMouseEnter={isCloset ? null : toggleSidebar}>
                 <div className='myNav-header'>
                     <button
                         type="button"
                         className="navbar-toggler text-muted collapseSidebar"
                         onClick={toggleSidebar}
+
                     >
                         <i className="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
@@ -189,7 +199,7 @@ export const Aside = () => {
                                     />
                                 )}
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
+                                    <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
                                 )}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
                                     <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'
@@ -266,7 +276,7 @@ export const Aside = () => {
                                                 <DropDownList subprocess={"Zonas comunes"} href='spaces'></DropDownList>
                                             )}
                                             {allowedPermissions.includes('Zona Comunes') && (
-                                                <DropDownList subprocess={"Boques"} href='towers'></DropDownList>
+                                                <DropDownList subprocess={"Bloques"} href='towers'></DropDownList>
                                             )}
 
                                         </DropDownNav>
@@ -274,9 +284,10 @@ export const Aside = () => {
                                 ) : null}
 
 
-                                {allowedPermissions.includes('Multas') && (
+                                {/* {allowedPermissions.includes('Multas') && (
                                     <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
-                                )}
+                                )} */}
+                                <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
 
                                 {allowedPermissions.includes('Usuarios') && (
                                     <ListNav module={'Usuarios'} href='users/' icon='fe fe-user' />
@@ -321,7 +332,85 @@ export const Aside = () => {
                     </div>
 
                 </div>
+
             </nav >
+
+            {/* Notifications */}
+
+            {
+                notificationsModal ?
+                
+                    <div class="modal fade modal-notif modal-slide notifications" >
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-group list-group-flush my-n3">
+                                        <div class="list-group-item bg-transparent">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <span class="fe fe-box fe-24"></span>
+                                                </div>
+                                                <div class="col">
+                                                    <small><strong>Package has uploaded successfull</strong></small>
+                                                    <div class="my-0 text-muted small">Package is zipped and uploaded</div>
+                                                    <small class="badge badge-pill badge-light text-muted">1m ago</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item bg-transparent">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <span class="fe fe-download fe-24"></span>
+                                                </div>
+                                                <div class="col">
+                                                    <small><strong>Widgets are updated successfull</strong></small>
+                                                    <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
+                                                    <small class="badge badge-pill badge-light text-muted">2m ago</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item bg-transparent">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <span class="fe fe-inbox fe-24"></span>
+                                                </div>
+                                                <div class="col">
+                                                    <small><strong>Notifications have been sent</strong></small>
+                                                    <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
+                                                    <small class="badge badge-pill badge-light text-muted">30m ago</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item bg-transparent">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <span class="fe fe-link fe-24"></span>
+                                                </div>
+                                                <div class="col">
+                                                    <small><strong>Link was attached to menu</strong></small>
+                                                    <div class="my-0 text-muted small">New layout has been attached to the menu</div>
+                                                    <small class="badge badge-pill badge-light text-muted">1h ago</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> : null
+            }
+
+
         </>
+
     )
 }

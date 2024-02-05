@@ -4,7 +4,18 @@ import "./DropdownInfo.css";
 import { Link } from 'react-router-dom';
 import { Dropdownanchor2 } from '../DropDownAnchor/Dropdownanchor';
 
-export const DropdownInfo = ({ name, children, to1, onClick }) => {
+export const DropdownInfo = ({
+
+    name,
+    action1,
+    toAction1 = "",
+    onClickAction1,
+    action2,
+    toAction2,
+    onClickAction2,
+    children
+
+}) => {
     const [isAccordionOpen, setAccordionOpen] = useState(true);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -21,16 +32,27 @@ export const DropdownInfo = ({ name, children, to1, onClick }) => {
             <div className={`card-header ${isDropdownOpen ? 'active' : ''}`} >
                 <a role="button" onClick={toggleAccordion}>
                     <strong>{name}</strong>
-                    
+
                 </a>
                 <div className={`dropdown ${isDropdownOpen ? 'show' : ''}`}>
                     <button className="btn btn-sm dropdown-toggle more-vertical" type="button" onClick={toggleDropdown}>
                         <span className="sr-only"></span>
                     </button>
                     <div className={`dropdown-menu dropdown-menu-right  ${isDropdownOpen ? 'show' : ''}`}>
+                        {
+                            action1 ? <Link onClick={onClickAction1} className="dropdown-item" to={toAction1}>
+                                {action1}
+                            </Link> : null
+                        }
 
-                        {to1 && <Dropdownanchor2  name={`Crear nuevo ${name}`} to={to1} />}
-                        {onClick && <Dropdownanchor2  name={`Asignar ${name} existente`} onClick={onClick} />}
+                        {
+
+                            action2 ? <Link onClick={onClickAction2} className="dropdown-item" to={toAction2}>
+                                {action2}
+                            </Link> : null
+                        }
+
+
                     </div>
                 </div>
             </div>

@@ -1,7 +1,5 @@
 /* Inicio tarjeta de tabla y formulario */
-* {
-
-}
+* {}
 
 #formContainer {
 
@@ -131,9 +129,8 @@
 
 body {
   overflow: hidden;
-  /* background: linear-gradient(135deg, #FFEEA5, #277BC0); */
-  background: linear-gradient(135deg, #FFF4CF, #277BC0);
-    background: linear-gradient(135deg, #BEADFA, #4599DE);
+
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(24, 24, 102, 1) 35%, rgba(0, 112, 155, 1) 100%);
 
 
   /* background: linear-gradient(135deg, white, rgba(64,198,186), rgba(1,81,133)); */
@@ -175,7 +172,7 @@ body::before {
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #e6e6e6; 
+  background-color: #e6e6e6;
   border: 1px solid #e5edff;
 }
 
@@ -187,4 +184,3 @@ body::before {
   display: flex;
 
 }
-

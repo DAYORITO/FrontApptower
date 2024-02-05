@@ -188,11 +188,6 @@ export const Users = () => {
                         <Th name={'Rol'}></Th>
                         <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>
-
-
-
-
-
                         <Th></Th>
                     </Thead>
                     <Tbody>
@@ -200,6 +195,7 @@ export const Users = () => {
                         {filteredDataUsers().map(user => (
                             <Row
                                 key={user.iduser}
+                                img={user.userImg}
                                 A3={user.docType}
                                 A4={user.document}
                                 A1={user.name}

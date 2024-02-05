@@ -3,7 +3,12 @@ import './DropDownNav.css'
 import { Link } from 'react-router-dom';
 
 
-export const DropDownNav = ({ module, dropdownName = "#", id = 'id', icon = "fe fe-home fe-24", children }) => {
+export const DropDownNav = ({
+  module,
+  dropdownName = "#",
+  id = 'id',
+  icon = "fe fe-home fe-24",
+  children }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -43,12 +48,20 @@ export const DropDownNav = ({ module, dropdownName = "#", id = 'id', icon = "fe 
 //     );
 //   };
 
-export const ListNav = ({ href, module, icon = "fe fe-home", id = 'process', onClick }) => {
+export const ListNav = ({ href, module, icon = "fe fe-home", id = 'process', onClick, A1 = 0,
+}) => {
   return (
     <li className="nav-item">
       <Link className="nav-link" to={href || ''} onClick={onClick}>
-        <i className={icon} id='fas'></i>
-        <span className='item-text span'>{module}</span>
+        <div>
+          <i className={icon} id='fas'></i>
+          {A1 != 0 ? <p className="badge text-white bg-danger mb-4">{A1}</p> : null}
+
+          <span className='item-text span'>{module}</span>
+
+        </div>
+
+
       </Link>
     </li>
   )

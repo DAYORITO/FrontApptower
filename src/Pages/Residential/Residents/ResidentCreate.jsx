@@ -141,20 +141,12 @@ export const ResidentCreate = (props) => {
           <Inputs name="Numero de telefono"
             value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
 
+          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
+
 
           <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
 
           <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-
-        </FormColumn>
-
-        <FormColumn>
-
-          <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
-            onChange={e => setPdf(e.target.files[0])} />
-
-          <Uploader name='pdf' label='Foto de perfil'
-            onChange={e => setUserImg(e.target.files[0])} />
 
           <h6 className='mb-4 text-muted'>¿Apartamento en el que vas a vivir?</h6>
 
@@ -175,30 +167,21 @@ export const ResidentCreate = (props) => {
                 value={residentStartDate}
                 onChange={e => setResidentStartDate(e.target.value)}
               ></Inputs>
-              {/* <Inputs
-name="Fecha de fin de residencia"
-type={"date"}
-value={residentEndDate}
-onChange={e => setResidentEndDate(e.target.value)}
-></Inputs> */}
+              
             </>
           )}
 
+        </FormColumn>
 
+        <FormColumn>
+
+          <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
+            onChange={e => setPdf(e.target.files[0])} />
 
         </FormColumn>
 
       </>
 
-
-
-
-
-
-
-
-      {/* 
-      <FormButton name='Crear residente' backButton='Regresar' to='/admin/residents/' onClick={handleSubmit} /> */}
     </FormContainer>
   )
 }

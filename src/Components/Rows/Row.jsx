@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
 import "./RowsStyle.css"
+import LogoApptower from '../../assets/Logo-Apptower.png';
 
 export const Row = ({
 
@@ -12,6 +13,7 @@ export const Row = ({
     description,
     icon = "user",
     status,
+    img,
 
     A1,
     A2 = "",
@@ -47,8 +49,14 @@ export const Row = ({
 
                     <div class="circle circle-sm">
 
-                        <span class={`fe fe-${icon} fe-24 text-muted`}></span>
-                        {A16 != 0 ? <span className="badge text-white bg-danger mb-4">{A16}</span> : null}
+                        {img ? <img src={img != null ? img : LogoApptower} id='userImg' alt='User Logo' /> :
+                            <>
+                                <span class={`fe fe-${icon} fe-24 text-muted`}></span>
+                                {A16 != 0 ? <span className="badge text-white bg-danger mb-4">{A16}</span> : null}
+                            </>
+
+                        }
+
 
                     </div>
 
