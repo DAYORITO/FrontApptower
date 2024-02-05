@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -85,6 +85,7 @@ export const Watchman = () => {
     const [companies, setCompanies] = useState([]);
     const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
 
+
     useEffect(() => {
         if (enterpriseSecurity) {
             setCompanies(enterpriseSecurity);
@@ -116,6 +117,49 @@ export const Watchman = () => {
     }, [putLoad, putError]);
 
 
+    const [isDocumentTaken, setIsDocumentTaken] = useState(false);
+    const [isEmailTaken, setIsEmailTaken] = useState(false);
+
+    const originalDocument = useRef('');
+    const originalEmail = useRef('');
+
+    useEffect(() => {
+        if (editedWatchman?.user?.document && originalDocument.current === '') {
+            originalDocument.current = editedWatchman?.user?.document;
+        }
+    }, [editedWatchman?.user?.document]);
+
+    useEffect(() => {
+        if (editedWatchman?.user?.email && originalEmail.current === '') {
+            originalEmail.current = editedWatchman?.user?.email;
+        }
+    }, [editedWatchman?.user?.email]);
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/document/${editedWatchman?.user?.document}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsDocumentTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [editedWatchman?.user?.document]);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/email/${editedWatchman?.user?.email}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsEmailTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [editedWatchman?.user?.email]);
+
+    const [shouldValidate, setShouldValidate] = useState(false);
+
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedWatchman);
 
@@ -126,6 +170,36 @@ export const Watchman = () => {
                     ...editedWatchman,
                     dateOfbirth: editedWatchman.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString() : null
                 };
+
+                if (!editedWatchman.user.docType || !editedWatchman.user.name || !editedWatchman.user.email || !editedWatchman.user.document || !editedWatchman.user.lastName) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Por favor, rellene todos los campos requeridos',
+                        icon: 'error',
+                    });
+                    //Activa la validacion de los campos cuando se envia el formulario
+                    setShouldValidate(true);
+                    return;
+                }
+
+                if (editedWatchman?.user.document !== originalDocument.current && isDocumentTaken) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este documento se encuentra registrado',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                if (editedWatchman?.user.email !== originalEmail.current && isEmailTaken) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este correo se encuentra registrado',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
 
                 const response = await fetch('http://localhost:3000/api/watchman', {
                     method: 'PUT',
@@ -223,7 +297,7 @@ export const Watchman = () => {
     })) : [];
 
     const selectedEnterpriceOption = editedWatchman && enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity)?.value;
- 
+
     const handleEnterpriceSecurity = (selectedValue) => {
         const selectedValueAsNumber = Number(selectedValue);
         console.log("Selected Value:", selectedValueAsNumber);
@@ -308,9 +382,9 @@ export const Watchman = () => {
                                     A4={watchman.user ? watchman.user.document : 'Desconocido'}
                                     A1={watchman.user ? watchman.user.name : 'Desconocido'}
                                     A2={watchman.user ? watchman.user.lastName : 'Desconocido'}
-                                    A7={enterpriceName}
-                                    A8={watchman.user && watchman.user.phone ? watchman.user.phone : 'Desconocido'}
-                                    A6={watchman.user ? watchman.user.email : 'Desconocido'}
+                                    description={enterpriceName}
+                                    A7={watchman.user && watchman.user.phone ? watchman.user.phone : 'Desconocido'}
+                                    A8={watchman.user ? watchman.user.email : 'Desconocido'}
                                     status={watchman.state}
                                     to={`details/${watchman.idwatchman}`}
                                 >
@@ -346,14 +420,27 @@ export const Watchman = () => {
                                         }}
                                         options={enterpriceOptions}
                                         value={selectedEnterpriceOption}
+                                        validate={shouldValidate}
                                     />
                                 </div>
-                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.user.docType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, docType: e.target.value } })} ></InputsSelect>
-                                <Inputs name="Documento" value={editedWatchman?.user.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, document: e.target.value } })} />
-                                <Inputs name="Nombre" value={editedWatchman?.user.name || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, name: e.target.value } })} />
-                                <Inputs name="Apellido" value={editedWatchman?.user.lastName || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, lastName: e.target.value } })} />
-                                <Inputs name="Correo" value={editedWatchman?.user.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, email: e.target.value } })} />
-                                <Inputs name="Teléfono" value={editedWatchman?.user.phone || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, phone: e.target.value } })} />
+                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.user.docType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, docType: e.target.value } })}
+                                    validate={shouldValidate} required={true}></InputsSelect>
+                                <Inputs name="Documento" value={editedWatchman?.user.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, document: e.target.value } })}
+                                    inputStyle={editedWatchman?.user.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
+                                    errorMessage={editedWatchman?.user.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
+                                    validate={shouldValidate} required={true}
+                                />
+                                <Inputs name="Nombre" value={editedWatchman?.user.name || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, name: e.target.value } })}
+                                    validate={shouldValidate} required={true} />
+                                <Inputs name="Apellido" value={editedWatchman?.user.lastName || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, lastName: e.target.value } })}
+                                    validate={shouldValidate} required={true} />
+
+                                <Inputs name="Correo" value={editedWatchman?.user.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, email: e.target.value } })}
+                                    inputStyle={editedWatchman?.user.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
+                                    errorMessage={editedWatchman?.user.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
+                                    validate={shouldValidate} required={true} />
+
+                                <Inputs name="Teléfono" value={editedWatchman?.user.phone || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, phone: e.target.value } })} validate={shouldValidate} required={true} />
                                 <Inputs
                                     type='date'
                                     name="Fecha Nacimiento"
@@ -362,6 +449,7 @@ export const Watchman = () => {
                                         const selectedDate = e.target.value;
                                         setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, birthday: e.target.value } });
                                     }}
+                                    validate={shouldValidate} required={true}
                                 />
 
                                 <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedWatchman?.state || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, state: e.target.value })}></InputsSelect>

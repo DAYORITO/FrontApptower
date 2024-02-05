@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 export const ResetPassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
     const email = Cookies.get('email');
     const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ export const ResetPassword = () => {
         }
 
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/users/reset', {
+            const response = await fetch('http://localhost:3000/api/users/reset', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,15 +44,24 @@ export const ResetPassword = () => {
                     showConfirmButton: false,
                 }).then(() => navigate('/'));
 
-                setVerifiedRecoveryCode(recoveryCode);
+
             } else {
                 Swal.fire('Error', data.message, 'error');
             }
 
         } catch (error) {
-            Swal.fire('Error', 'Ocurrió un error al restablecer la contraseña', 'error');
+            console.error('Error al restablecer la contraseña:', error);
+
+            // Mostrar un mensaje de error más específico o realizar otras acciones según el tipo de error.
+            if (error instanceof TypeError) {
+                Swal.fire('Error', 'Error de tipo al restablecer la contraseña', 'error');
+            } else if (error instanceof SyntaxError) {
+                Swal.fire('Error', 'Error de sintaxis al restablecer la contraseña', 'error');
+            } else {
+                Swal.fire('Error', 'Ocurrió un error al restablecer la contraseña', 'error');
+            }
         }
-    };
+    }
     return (
         <div className='container-login'>
             <div className="container-form login">

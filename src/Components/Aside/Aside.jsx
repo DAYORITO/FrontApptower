@@ -188,9 +188,9 @@ export const Aside = () => {
                                     <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24'
                                     />
                                 )}
-                                {/* {allowedPermissions.includes('Notificaciones') && (
+                                {allowedPermissions.includes('Notificaciones') && (
                                     <ListNav module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
-                                )} */}
+                                )}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
                                     <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'
                                     >

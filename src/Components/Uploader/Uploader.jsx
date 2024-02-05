@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange, validate, fileUrl }) => {
+export const Uploader = ({ label, formatos = ".pdf", name, onChange, validate, fileUrl }) => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState(null);
     const [fileError, setFileError] = useState(null);
@@ -27,6 +27,7 @@ export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange,
                 });
         }
     }, [fileUrl]);
+
     const handleFileChange = (e) => {
         setFile(null);
         setFileName(null);
@@ -35,6 +36,12 @@ export const Uploader = ({ label, formatos = ".png, .jpg, .pdf", name, onChange,
             setFileError("El archivo es requerido*");
             return;
         }
+
+
+        // if (e.target.files[0].type !== 'application/pdf') {
+        //     setFileError("Solo se permiten archivos PDF*");
+        //     return;
+        // }
 
         setFileName(e.target.files[0].name);
 

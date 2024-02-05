@@ -199,7 +199,7 @@ export const Residents = () => {
         }
         console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'PUT',{}, data, url)
+        await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url)
 
         setModalAddChangeApartment(false)
         getResidents('residents')
@@ -220,7 +220,7 @@ export const Residents = () => {
         }
         console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'POST',{}, data, url)
+        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url)
 
         setModalAddChangeApartment(false)
         getResidents('residents')
@@ -245,7 +245,7 @@ export const Residents = () => {
             phone: phone,
 
         }
-        console.log(data)
+
 
         await postRequest(event, 'users', 'PUT', data, url)
 
@@ -287,11 +287,11 @@ export const Residents = () => {
                 buttonToGo={<ButtonGoTo value='Nuevo residente' href={'/admin/residents/create'} />}
             >
                 <TablePerson>
-                    
+
                     <Thead>
-                        <Th name={"Informacion perosonal"}/>
-                        <Th name={"Apartamento residencia"}/>
-                        <Th name={"Informacion de contacto"}/>
+                        <Th name={"Informacion perosonal"} />
+                        <Th name={"Apartamento residencia"} />
+                        <Th name={"Informacion de contacto"} />
 
                     </Thead>
 
