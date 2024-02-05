@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import 'select2'; // Importa Select2
 // import './Inputs.css';
 import './Select2.css';
-function Select2({ id, options, name, onChange, value, validate }) {
+function Select2({ id, options, name, onChange, value, validate, readOnly = false, inputStyle }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(value || '');
@@ -64,6 +64,8 @@ function Select2({ id, options, name, onChange, value, validate }) {
   }, []);
 
 
+
+
   $('.select2').select2(
     {
       theme: 'bootstrap4',
@@ -103,10 +105,12 @@ function Select2({ id, options, name, onChange, value, validate }) {
             value={selectedValue}
             className='selectComponent select2 form-control'
             ref={inputRef}
+            disabled={readOnly}
+            style={inputStyle}
 
           >
             <option value='' disabled>
-              
+
             </option>
             {/* <option value='' selected disabled></option> */}
             {options && options.map((opcion) => (

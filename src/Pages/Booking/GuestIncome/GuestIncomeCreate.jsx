@@ -17,6 +17,7 @@ import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { cardio } from 'ldrs'
 import { set } from 'date-fns'
+import { useParams } from 'react-router-dom'
 
 
 
@@ -24,6 +25,7 @@ function GuestIncomeCreate() {
   const navigate = useNavigate();
   cardio.register()
   //mostrar modales
+  const { id } = useParams()
   const [showModalvisitor, setShowModalvisitor] = useState(false);
   const [showModaload, setShowModaload] = useState(false);
   //estados para valores de los select
@@ -51,6 +53,7 @@ function GuestIncomeCreate() {
   const [name, setName] = useState("");
   const [lastname, setLastName] = useState("");
   const [genre, setGenre] = useState("");
+
 
 
 
@@ -82,14 +85,50 @@ function GuestIncomeCreate() {
     }
   }
 
+  const [idTower, setIdTower] = useState(null);
+  const [nameTower, setNameTower] = useState('');
+
+  const getTower = (id) => {
+    const tower = data?.apartments?.find(tower => tower.idApartment === id);
+    if (tower) {
+      setIdTower(tower.idTower);
+      return tower.idTower;
+    }
+    return "";
+  };
+
+  const getDataTowers = (idTower) => {
+    const tower = dataTowers?.towers?.find(tower => tower.idTower === idTower);
+    if (tower) {
+      setNameTower(tower.towerName);
+      return tower.towerName;
+    }
+    return "";
+  };
+
+  useEffect(() => {
+    if (apartment) {
+      const towerId = getTower(apartment);
+      getDataTowers(towerId);
+    }
+  }, [apartment]);
+
+
+
+
+  const getApartmentName = (id) => {
+    const apartment = data?.apartments?.find(apartment => apartment.idApartment === id);
+    return apartment ? apartment.apartmentName : "";
+  };
+
   //Obtiene las torres de TowerData
   const towers = TowerData.map((towerData) => {
     const matchingTower = dataTowers.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
     return {
-        value: towerData.tower,
-        label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
+      value: towerData.tower,
+      label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
     };
-});
+  });
   //Obtiene los apartamentos de TowerData
   const organizeApartmentsByTower = (data) => {
     const apartmentsByTower = {};
@@ -156,8 +195,8 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (data.apartments)
       setTowerData(organizeApartmentsByTower(data))
-      console.log("Datos de las turres Xd", TowerData)
-      console.log("Datos de las turres", data)
+    console.log("Datos de las turres Xd", TowerData)
+    console.log("Datos de las turres", data)
   }, [data])
 
 
@@ -181,11 +220,15 @@ function GuestIncomeCreate() {
 
     // Encuentra los apartamentos correspondientes a la torre seleccionada
     const selectedTowerData = TowerData.find((towerData) => towerData.tower === selectedTower);
+    if (apartment) {
+      setSelectedApartments(apartment)
+    }
     setSelectedApartments(selectedTowerData ? selectedTowerData.apartments : []);
     console.log('hola', selectedTowerData)
 
   };
   const handlePhoneSetted = (selectedValue) => {
+    selectedValue = selectedValue ? selectedValue : apartment;
     console.log("Selected Value:", selectedValue);
     setApartment(parseInt(selectedValue))
     console.log('este es mi apartamento ' + apartment)
@@ -194,6 +237,7 @@ function GuestIncomeCreate() {
       const resident = dataResidentApartment.apartmentResidents.find(
         (resident) => resident.idApartment === parseInt(selectedValue)
       );
+
 
       if (resident && resident.resident && resident.resident.status === "Active") {
         console.log(resident.resident.status)
@@ -214,6 +258,8 @@ function GuestIncomeCreate() {
       setPhone("No se encontro el apartamento");
     }
   };
+
+
   const handleSelectedVisitor = (selectedValue) => {
     console.log("Selected Value:", selectedValue);
     setVisitor(parseInt(selectedValue))
@@ -240,6 +286,17 @@ function GuestIncomeCreate() {
       setVisitorname("No existe");
     }
   }
+
+
+  useEffect(() => {
+    if (data && data.apartments) {
+      const apartment = data.apartments.find((apartment) => apartment.idApartment === Number(id));
+      if (apartment) {
+        setApartment(apartment.idApartment);
+        console.log(apartment.idApartment, "apartment.idApartment");
+      }
+    }
+  }, [data, id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -326,6 +383,7 @@ function GuestIncomeCreate() {
       })
     }
 
+
     if (error) {
       setShowModaload(false);
       Swal.fire({
@@ -342,15 +400,38 @@ function GuestIncomeCreate() {
       <FormContainer name='Crear Ingreso' buttons={<FormButton name='Crear' backButton='Cancelar' onClick={handleSubmit} />} modalButton={<ModalButton name="Crear visitante" onClick={setShowModalvisitor} />}>
         <div className='d-flex justify-content-around' style={{ width: '100%' }}>
           <div className='mr-1' style={{ width: '100%' }} >
-            <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers}></InputsSelect>
+            {!id ?
+              <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              :
+              <Inputs
+                key={apartment}
+                name="Torre"
+                value={nameTower || ""}
+                type="text"
+                readonly={true}
+                inputStyle={{ backgroundColor: '#F8F8F8' }}
+              />
+            }
           </div>
 
           <div className="mr-1" style={{ width: '100%' }}>
-            <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+            {!id ?
+              <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              :
+              <Inputs
+                key={apartment}
+                name="Apartamento"
+                value={getApartmentName(apartment) || ""}
+                type="text"
+                readonly={true}
+                inputStyle={{ backgroundColor: '#F8F8F8' }}
+              />}
 
           </div>
           <div style={{ width: '100%' }}>
-            <Inputs name='Telefono' readonly={true} value={phone} ></Inputs>
+
+            <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
+
           </div>
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%' }}>

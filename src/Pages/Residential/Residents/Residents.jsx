@@ -305,14 +305,6 @@ export const Residents = () => {
                 buttonToGo={<ButtonGoTo value='Nuevo residente' href={'/admin/residents/create'} />}
             >
                 <TablePerson>
-<<<<<<< HEAD
-
-                    <Thead>
-                        <Th name={"Informacion perosonal"} />
-                        <Th name={"Apartamento residencia"} />
-                        <Th name={"Informacion de contacto"} />
-=======
->>>>>>> e27274e8764bc10f3872d4da576a6860f12ba3f4
 
                     {/* <Thead>
                         <Th name={"Informacion perosonal"} />
