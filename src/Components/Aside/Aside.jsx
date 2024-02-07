@@ -9,9 +9,13 @@ import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import LogoApptower from '../../assets/Logo-Apptower.png';
+import { createPortal } from 'react-dom';
+import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
+import { io } from 'socket.io-client';
 
 
 export const Aside = () => {
+    
     const { user, login, logout } = useAuth();
     const token = Cookies.get('token');
     const [allowedPermissions, setAllowedPermissions] = useState([]);
@@ -19,12 +23,7 @@ export const Aside = () => {
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
     const [idResidents, setIdResidents] = useState('');
-    console.log(userRole, 'userRole aqui en login');
     const [idApartment, setIdapartaments] = useState('');
-    console.log(idApartment, 'idapartement')
-    console.log('documento', userDocument)
-    console.log(idResidents, 'holaaaaaa id')
-    console.log('userData aqui en login:', userData);
 
     const [notificationsModal, setNotificationsModal] = useState(false)
 
@@ -98,7 +97,6 @@ export const Aside = () => {
             const rols = data.rols;
             if (Array.isArray(rols)) {
                 const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
-                console.log('User Role:', userRole);
                 setUserRole(userRole);
             } else {
                 console.error('Error: roles data is not an array:', rols);
@@ -156,18 +154,30 @@ export const Aside = () => {
 
     const rutadetailsapartment = `apartments/details/${idApartment}`
 
-
-
-    console.log(allowedPermissions, 'allowedPermissions Aside ');
-
-    const [isCloset, isOpem] = useState(true);
+    const [isCloset, isOpem] = useState(false);
 
     const toggleSidebar = () => {
         isOpem(!isCloset);
     };
 
+
+
+
+    const socket = io("http://localhost:3000/socket.io/socket.io.js");
+
+    console.log(socket)
+
+    socket.on('connect', () => {
+      console.log('Conexión establecida con el servidor');
+    });
+
+    
+
     return (
         <>
+            <div>
+
+            </div>
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
                 onMouseEnter={isCloset ? null : toggleSidebar}>
                 <div className='myNav-header'>
@@ -180,7 +190,6 @@ export const Aside = () => {
                         <i className="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
                 </div>
-                {console.log(userData)}
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav
                     name={userData.user?.name ? userData.user.name : ''}
@@ -199,7 +208,7 @@ export const Aside = () => {
                                     />
                                 )}
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} href='notifications' icon='fe fe-message-circle fe-24' />
+                                    <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} icon='fe fe-message-circle fe-24' />
                                 )}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
                                     <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'
@@ -335,79 +344,27 @@ export const Aside = () => {
 
             </nav >
 
+            {notificationsModal &&
+                createPortal(
+                    <>
+                        <ModalContainer showModal={setNotificationsModal}>
+                            <ModalNotifications showModal={setNotificationsModal}>
+
+                            </ModalNotifications>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
             {/* Notifications */}
 
-            {
+            {/* {
                 notificationsModal ?
+
                 
-                    <div class="modal fade modal-notif modal-slide notifications" >
-                        <div class="modal-dialog modal-sm" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="list-group list-group-flush my-n3">
-                                        <div class="list-group-item bg-transparent">
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                    <span class="fe fe-box fe-24"></span>
-                                                </div>
-                                                <div class="col">
-                                                    <small><strong>Package has uploaded successfull</strong></small>
-                                                    <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                                                    <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item bg-transparent">
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                    <span class="fe fe-download fe-24"></span>
-                                                </div>
-                                                <div class="col">
-                                                    <small><strong>Widgets are updated successfull</strong></small>
-                                                    <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                                                    <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item bg-transparent">
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                    <span class="fe fe-inbox fe-24"></span>
-                                                </div>
-                                                <div class="col">
-                                                    <small><strong>Notifications have been sent</strong></small>
-                                                    <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                                                    <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item bg-transparent">
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                    <span class="fe fe-link fe-24"></span>
-                                                </div>
-                                                <div class="col">
-                                                    <small><strong>Link was attached to menu</strong></small>
-                                                    <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                                                    <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> : null
-            }
+                    
+                    : null
+            } */}
 
 
         </>

@@ -27,7 +27,6 @@ import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
-import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
@@ -70,9 +69,7 @@ const App = () => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);
     const token = Cookies.get('token');
     const [userData, setUserData] = useState({});
-    console.log('Yo spy el userData App.jx:', userData);
     const [userRole, setUserRole] = useState('');
-    console.log('Yo spy el rol App.jx:', userRole);
 
     useEffect(() => {
         if (token) {
@@ -94,8 +91,6 @@ const App = () => {
             }
 
             const data = await response.json();
-            console.log(data, 'data');
-            console.log('Allowed Permissions hi:', data.privileges);
 
             if (data && data.privileges && Array.isArray(data.privileges)) {
                 const allowed = {};
@@ -424,10 +419,10 @@ const App = () => {
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Listar') ?
                                         <Residents /> : <NotFound />
                                 } />
-                                <Route path='residents/details:id' element={
+                                {/* <Route path='residents/details:id' element={
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Listar') ?
                                         <ResidentDetail /> : <NotFound />
-                                } />
+                                } /> */}
                                 <Route path='residents/create' element={
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear') ?
                                         <ResidentCreate /> : <NotFound />

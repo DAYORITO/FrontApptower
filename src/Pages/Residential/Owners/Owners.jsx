@@ -194,7 +194,7 @@ export const Owners = () => {
 
                                     status={owner.status}
 
-                                    to={`/admin/owners/details/${owner.iduser}`}
+                                    to={`/admin/owners/details/${owner.idOwner}`}
 
                                 >
                                     {owner.apartments.length == 0 ?

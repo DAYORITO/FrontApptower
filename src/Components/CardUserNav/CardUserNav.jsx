@@ -3,10 +3,10 @@ import './CardUserNav.css';
 import LogoApptower from '../../assets/Logo-Apptower.png';
 
 export const CardUserNav = ({ rol, name, lastName, userImg }) => {
+    
     // Obtén las primeras tres letras del apellido
     const shortenedLastname = lastName.slice(0, 3);
 
-    console.log(userImg)
     return (
         <div className='myNav-user'>
             <Link to={"users/profileList"}>

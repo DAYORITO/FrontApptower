@@ -11,6 +11,9 @@ export const ContainerModule = ({
 
     A3,
     A4,
+    A5,
+    A6,
+    A7,
 
     onClickEdit,
     status
@@ -18,7 +21,7 @@ export const ContainerModule = ({
 
 }) => {
 
-    let A1A2 = `${A1} ${A2}`
+    let A1A2 = `${A1} ${A2}`.toUpperCase()
     const navigate = useNavigate()
 
     return (
@@ -32,15 +35,36 @@ export const ContainerModule = ({
                             </div>
                         </div>
                         <div className="col ml-4">
-                            <strong className="mb-1">{A1 + A2}</strong><span className={`dot dot-lg bg-${(status === "Active") ? "success" : "danger"} ml-2`}></span>
-                            <br /><span className="badge badge-light text-secondary">{A3}</span>
-                            <span className="badge badge-light text-secondary">{A4}</span>
+                            <strong className="mb-1">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active") ? "success" : "danger"} ml-2`}></span>
+
+                            {
+                                A4 ? <><br /><span className="badge badge-light text-secondary">{A4}</span></> : null
+                            }
+                            {
+                                A5 ? <><br /><span className="badge badge-white text-secondary">{A5}</span></> : null
+                            }
+                            {
+                                A6 ? <><br /><span className="badge badge-white text-secondary">{A6}</span></> : null
+                            }
+                            {
+                                A3 ? <><br /><span className="badge badge-white text-secondary">{A3}</span></> : null
+                            }
+
                         </div>
                     </div>
 
-                    <div className="file-action text-right">
-                        <button onClick={onClickEdit} className={`btn btn-primary mr-2`}>Editar</button>
-                        <button onClick={() => navigate(-1)} className={`btn btn-secondary`}>Regresar</button>
+                    <div className="file-action text-right m-4">
+
+
+                        <button onClick={onClickEdit} className={`btn btn-light mr-2`}>Editar</button>
+                        {A7 ?
+                            <>
+                                <a href={A7}><button className={`btn btn-light mr-2`}> <i className='fe fe-printer mr-2'></i>Descargar documento</button></a>
+                                {/* <button onClick={onClickEdit} className={`btn btn-light mr-2`}>Editar</button> */}
+                            </>
+                            : null}
+                        <button onClick={() => navigate(-1)} className={`btn btn-light`}>Regresar</button>
+
                     </div>
                 </div>
             </div>

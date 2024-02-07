@@ -14,6 +14,7 @@ export const filter = (search, myData, searcher, searcher2) => {
 
   if (!search) {
     data = myData;
+    console.log(myData)
   } else {
     console.log(searcher)
     data = myData.filter((dato) =>
