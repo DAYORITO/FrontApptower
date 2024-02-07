@@ -276,7 +276,7 @@ const RegisterForm = ({ setShowLoginForm }) => {
             return;
         }
 
-        const url = 'users/login';
+        const url = 'login/users';
         const data = {
             docType: documentType,
             name,
@@ -294,14 +294,12 @@ const RegisterForm = ({ setShowLoginForm }) => {
         if (response) {
             console.log('Response:', response);
             Swal.fire({
-                title: 'Éxito',
-                text: 'Registro Exitoso',
+                title: '¡Registro Exitoso!',
+                text: 'Tu cuenta ha sido creada con éxito. Por favor revise su correo.',
                 icon: 'success',
             }).then(() => {
                 navigate('/');
-                window.location.reload();
-            }
-            );
+            });
         }
 
         if (error) {

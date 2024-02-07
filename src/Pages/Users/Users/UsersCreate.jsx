@@ -39,6 +39,8 @@ export const UsersCreate = () => {
     const [birthday, setBirthday] = useState("");
     const [residentType, setResidentType] = useState("");
     const [dateOfbirth, setDateOfBirth] = useState("");
+    const [idApartment, setIdApartment] = useState("");
+    console.log(idApartment, ' soy hola idApartment')
 
 
     const { data: roles } = useFetchget('rols');
@@ -157,28 +159,23 @@ export const UsersCreate = () => {
                 lastName: lastname,
                 phone,
                 pdf,
-                birthday: dateOfbirth,
-                state: 'Activo',
-                idEnterpriseSecurity: enterprice
+                birthday: dateOfbirth ? dateOfbirth : birthday,
+                sex: sex,
+                status: 'Activo',
+                idEnterpriseSecurity: enterprice,
+                residentType: residentType,
+                idApartment: Number(idApartment)
+
             });
 
             if (userResponse.response) {
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
 
-                    roleResponse = await useFetchForFile('http://localhost:3000/api/residents', {
-                        docType: documentType,
-                        docNumber: document,
-                        name,
-                        lastName: lastname,
-                        sex,
-                        birthday,
-                        password,
-                        email,
-                        phoneNumber: phone,
-                        residentType,
-                        pdf,
-                        status: 'Active'
+                    await useFetchForFile('http://localhost:3000/api/residents', {
+                        residentType: userResponse.response.residentType,
+                        iduser: userResponse.response.iduser,
+                        idApartment: userResponse.response.idApartment,
                     });
                 } else if (namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad') {
                     await useFetchForFile('http://localhost:3000/api/watchman',
@@ -302,7 +299,15 @@ export const UsersCreate = () => {
                                     <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
                                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
                                     <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
-                                    <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"} validate={shouldValidate} required={true} ></InputsSelect>
+
+                                    <InputsSelect
+                                        id={"select"}
+                                        options={apartmentList}
+                                        name={"Apartamento"}
+                                        value={idApartment}
+                                        onChange={e => setIdApartment(e.target.value)}
+                                    ></InputsSelect>
+
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
                                     <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
 
@@ -358,6 +363,8 @@ export const UsersCreate = () => {
 
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+
                                 </FormColumn>
 
                                 <FormColumn>
@@ -386,7 +393,6 @@ export const UsersCreate = () => {
                                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
-
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
                                 </FormColumn>

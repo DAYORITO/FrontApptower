@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useFetchget, useFetchpost, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -36,8 +36,46 @@ export const EnterpriceSecurity = () => {
     const { data, load, error } = useFetchget('enterpricesecurity')
     const { error: putError, load: putLoad, } = useFetchput('enterpricesecurity', editedEnterprice);
 
+    const [isDocumentTaken, setIsDocumentTaken] = useState(false);
+    const [isEmailTaken, setIsEmailTaken] = useState(false);
+
+    const originalDocument = useRef('');
+    const originalEmail = useRef('');
+
+    useEffect(() => {
+        if (editedEnterprice?.NIT && originalDocument.current === '') {
+            originalDocument.current = editedEnterprice?.NIT;
+        }
+        if (editedEnterprice?.email && originalEmail.current === '') {
+            originalEmail.current = editedEnterprice?.email;
+        }
+    }, [editedEnterprice?.NIT, editedEnterprice?.email]);
 
 
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/document/${editedEnterprice?.NIT}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsDocumentTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [editedEnterprice?.NIT]);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/users/email/${editedEnterprice?.email}`)
+            .then(response => response.json())
+            .then(data => {
+                setIsEmailTaken(data && data.message ? true : false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, [editedEnterprice?.email]);
 
 
     const handleModal = (enterpriseSecurity) => {
@@ -72,6 +110,7 @@ export const EnterpriceSecurity = () => {
         }
     }, [putLoad, putError]);
 
+    const [shouldValidate, setShouldValidate] = useState(false);
     const handleSaveChanges = async () => {
         console.log('Guardando cambios:', editedEnterprice);
 
@@ -85,6 +124,35 @@ export const EnterpriceSecurity = () => {
                     },
                     body: JSON.stringify(editedEnterprice),
                 });
+
+                if (!editedEnterprice.NIT || !editedEnterprice.nameEnterprice || !editedEnterprice.email || !editedEnterprice.address || !editedEnterprice.phone) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Por favor, rellene todos los campos requeridos',
+                        icon: 'error',
+                    });
+                    //Activa la validacion de los campos cuando se envia el formulario
+                    setShouldValidate(true);
+                    return;
+                }
+
+                if (editedEnterprice?.NIT !== originalDocument.current && isDocumentTaken) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este documento se encuentra registrado',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                if (editedEnterprice?.email !== originalEmail.current && isEmailTaken) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este correo se encuentra registrado',
+                        icon: 'error',
+                    });
+                    return;
+                }
 
                 if (response.ok) {
                     const updatedEnterpriceData = EnterpriceData.map(enterprice => {
@@ -152,7 +220,6 @@ export const EnterpriceSecurity = () => {
         }
     }, [EnterpriceData, search]);
 
-    const [shouldValidate, setShouldValidate] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -189,8 +256,6 @@ export const EnterpriceSecurity = () => {
                     icon: 'success',
                 });
 
-                setEnterpriceData(prevEnterpriceData => [...prevEnterpriceData, response]);
-                setFilterData(prevFilterData => [...prevFilterData, response]);
 
                 seteditedEnterprice(null);
                 setShowModalCreate(false);
@@ -275,8 +340,9 @@ export const EnterpriceSecurity = () => {
                     <Thead>
                         <Th name={'Información Empresa'}></Th>
                         <Th name={'Dirección'}></Th>
-                        <Th name={'Correo'}></Th>
                         <Th name={'Telefono'}></Th>
+                        <Th name={'Correo'}></Th>
+
 
                         <Th></Th>
 
@@ -293,8 +359,8 @@ export const EnterpriceSecurity = () => {
                                 A1={enterprise.nameEnterprice}
                                 status={enterprise.state}
                                 A2={''}
-                                A7={enterprise.address}
-                                A6={enterprise.phone}
+                                description={enterprise.address}
+                                A7={enterprise.phone}
                                 A8={enterprise.email}
 
 
@@ -331,11 +397,20 @@ export const EnterpriceSecurity = () => {
                                 title={"Editar Empresa"}
                             >
 
-                                <Inputs name="NIT" value={editedEnterprice?.NIT || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, NIT: e.target.value })} readonly={true} inputStyle={{ color: '#E3E3E3' }} />
-                                <Inputs name="Nombre Empresa" value={editedEnterprice?.nameEnterprice || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, nameEnterprice: e.target.value })} />
-                                <Inputs name="Dirección" value={editedEnterprice?.address || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, address: e.target.value })} />
-                                <Inputs name="Correo" value={editedEnterprice?.email || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, email: e.target.value })} />
-                                <Inputs name="Teléfono" value={editedEnterprice?.phone || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, phone: e.target.value })} />
+                                <Inputs name="NIT" value={editedEnterprice?.NIT || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, NIT: e.target.value })}
+                                    inputStyle={editedEnterprice?.NIT !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
+                                    errorMessage={editedEnterprice?.NIT !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
+                                    validate={shouldValidate} required={true} />
+                                <Inputs name="Nombre Empresa" value={editedEnterprice?.nameEnterprice || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, nameEnterprice: e.target.value })}
+                                    validate={shouldValidate} required={true} />
+                                <Inputs name="Dirección" value={editedEnterprice?.address || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, address: e.target.value })} validate={shouldValidate} required={true} />
+                                <Inputs name="Correo" value={editedEnterprice?.email || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, email: e.target.value })}
+                                    validate={shouldValidate} required={true}
+                                    inputStyle={editedEnterprice?.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
+                                    errorMessage={editedEnterprice?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
+
+                                />
+                                <Inputs name="Teléfono" value={editedEnterprice?.phone || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, phone: e.target.value })} validate={shouldValidate} required={true} />
                                 <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedEnterprice?.state || ''} onChange={(e) => seteditedEnterprice({ ...editedEnterprice, state: e.target.value })}></InputsSelect>
 
 
@@ -355,7 +430,7 @@ export const EnterpriceSecurity = () => {
                                 showModal={setShowModalCreate}
                                 title={"Nueva Empresa"}
                             >
-                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
                                 <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => setNameEnterprice(e.target.value)} validate={shouldValidate} required={true}></Inputs>
                                 <Inputs name="Dirección" type='text' value={address} onChange={e => setAddress(e.target.value)} validate={shouldValidate} required={true}></Inputs>
                                 <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true} ></Inputs>

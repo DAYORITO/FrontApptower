@@ -15,8 +15,11 @@ import Select2 from "../../Components/Inputs/Select2";
 import { useFetchget } from "../../Hooks/useFetch";
 import { get } from "jquery";
 import FormColumn from "../../Components/Forms/FormColumn";
+import { useParams } from "react-router";
+import { tr } from "date-fns/locale";
 
 function FinesCreate() {
+  const { id } = useParams();
   const [fineType, setFineType] = useState("");
   const [idApartment, setIdApartment] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
@@ -30,7 +33,7 @@ function FinesCreate() {
 
   const { data, load, error } = useFetchget("apartments");
   console.log(data);
- 
+
   useEffect(() => {
     // Cuando la carga está en progreso (load es true), activamos el modal de carga
     if (load) {
@@ -64,6 +67,22 @@ function FinesCreate() {
     console.log(apartmentsList);
     return apartmentsList;
   };
+
+  useEffect(() => {
+    if (data && data.apartments) {
+      const apartment = data.apartments.find((apartment) => apartment.idApartment === Number(id));
+      if (apartment) {
+        setIdApartment(apartment.idApartment);
+        console.log(apartment.idApartment, "apartment.idApartment");
+      }
+    }
+  }, [data, id]);
+
+  const getApartmentName = (id) => {
+    const apartment = data?.apartments?.find(apartment => apartment.idApartment === id);
+    return apartment ? apartment.apartmentName : "";
+  };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -115,7 +134,7 @@ function FinesCreate() {
           <FormButton
             name="Crear multa"
             backButton="Cancelar"
-            
+
             onClick={handleSubmit}
           />
         }
@@ -128,13 +147,29 @@ function FinesCreate() {
             }}
             options={fineTypes}
           ></InputsSelect>
-          <Select2
-            name="Apartamento"
-            onChange={(selectedValue) => {
-              setIdApartment(selectedValue);
-            }}
-            options={getApartments(data)}
-          ></Select2>
+
+
+          {!id ?
+            <Select2
+              // key={idApartment}
+              name="Apartamento"
+              value={idApartment || ""}
+              onChange={(selectedValue) => {
+                setIdApartment(selectedValue);
+              }}
+              inputStyle={{ border: '1px solid red' }}
+              options={getApartments(data)}
+            />
+            :
+            <Inputs
+              key={idApartment}
+              name="Apartamento"
+              value={getApartmentName(idApartment) || ""}
+              type="text"
+              readonly={true}
+              inputStyle={{ backgroundColor: '#F8F8F8' }}
+            />
+          }
           <Inputs
             name="Fecha del incidente"
             onChange={(e) => {

@@ -186,8 +186,8 @@ export const Users = () => {
                     <Thead>
                         <Th name={'Información Usuario'}></Th>
                         <Th name={'Rol'}></Th>
-                        <Th name={'Correo'}></Th>
                         <Th name={'Teléfono'}></Th>
+                        <Th name={'Correo'}></Th>
                         <Th></Th>
                     </Thead>
                     <Tbody>
@@ -200,11 +200,11 @@ export const Users = () => {
                                 A4={user.document}
                                 A1={user.name}
                                 A2={user.lastName}
-                                A7={
+                                description={
                                     roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
                                 A8={user.email}
-                                A6={user.phone ? user.phone : 'Desconocido'}
+                                A7={user.phone ? user.phone : 'Desconocido'}
                                 status={user.status}
                             >
                                 {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (

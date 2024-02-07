@@ -249,7 +249,7 @@ export const Residents = () => {
             phone: phone,
 
         }
-        console.log(data)
+
 
         await postRequest(event, 'users', 'PUT', data, url)
 

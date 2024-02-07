@@ -63,6 +63,8 @@ export const ApartmentDetails = (props) => {
     const { data: fines, get: getFines, loading: loadingFines } = useFetch(url)
     const { data: vehicles, get: getVehicles, loading: loadingVehicles } = useFetch(url)
 
+    console.log('fines', fines)
+
 
     // Parking spaces
 
@@ -698,7 +700,7 @@ export const ApartmentDetails = (props) => {
 
                             <DetailsActions>
                                 <SearchButton value={search} onChange={searcher} />
-                                <ButtonGoTo value="Nuevo ingreso" href={'/admin/guest_income/create'} />
+                                <ButtonGoTo value="Nuevo ingreso" href={`/admin/guest_income/create/${id}`} />
                             </DetailsActions>
 
                             {loadingGuestIncomes ? <SmalSpinner /> :
@@ -734,9 +736,10 @@ export const ApartmentDetails = (props) => {
                             action1={'Agregar nueva multa'}
                             toAction1={`/admin/fines/create/${id}`}>
 
+
                             <DetailsActions>
                                 <SearchButton value={searchFine} onChange={searcherFines} />
-                                <ButtonGoTo value="Nueva multa" href={'/admin/fines/create'} />
+                                <ButtonGoTo value="Nueva multa" href={`/admin/fines/create/${id}`} />
                             </DetailsActions>
 
                             {loadingFines ? <SmalSpinner /> :
