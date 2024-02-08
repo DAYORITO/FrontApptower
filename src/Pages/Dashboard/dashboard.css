@@ -1,31 +1,4 @@
-.dashboard {
-    /* display: grid;
-    grid-template-columns: repeat(2, 1fr); */
-    background-color: white;
-    gap: 20px;
+.container-dashboard {
 
-}
-
-.chart-container {
-    border: 1px solid #ccc;
-    margin-left: 500px;
-    width: 200px;
-    height: 180px;
-    padding: 10px;
-    text-align: center;
-    margin-top: 100px;
-}
-
-.chart-container h2 {
-    font-size: 1.5em;
-
-    margin-bottom: px;
-
-    color: #333;
-}
-
-canvas {
-    width: 100%;
-    height: auto;
-
+    margin: 8% 5%;
 }

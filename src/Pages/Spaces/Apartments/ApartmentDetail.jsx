@@ -275,7 +275,7 @@ export const ApartmentDetails = (props) => {
             }))
         : [];
 
-    // List apartmentsResidents
+    // List assigned parking spaces
 
     const assignedParkingSpacesList = assignedParkingSpaces?.data && Array.isArray(assignedParkingSpaces?.data?.assignedParking)
         ? assignedParkingSpaces.data.assignedParking
@@ -524,7 +524,7 @@ export const ApartmentDetails = (props) => {
 
                     loadingApartment ? <Spinner /> :
                         <ContainerModule
-
+                            to='/admin/apartments/'
                             A1={`Apartamento ${apartmentName}`}
                             A5={`Bloque: ${towerName} `}
                             A6={`Area: ${area} m²`}
@@ -640,7 +640,7 @@ export const ApartmentDetails = (props) => {
                                             name={"Plaza " + parking.parkingSpace.parkingName}
 
                                             // Details
-                                            to={`/admin/parkingSpaces`}
+                                            to={`/admin/parkingSpaces/${parking.parkingSpace.parkingName}`}
 
                                             // Funtions
                                             // onClick={() => {

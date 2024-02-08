@@ -2,10 +2,13 @@ import React, { useState } from 'react'
 import { Dropdown } from '../Dropdown/Dropdown'
 import "./ContainerModule.css"
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 export const ContainerModule = ({
 
     icon = "home",
+    to = '/admin/',
+
     A1 = "",
     A2 = "",
 
@@ -28,30 +31,35 @@ export const ContainerModule = ({
         <div className="card shadow container-module card-header-details">
             <div className="card-body">
                 <div className="row align-items-center header justify-content-between">
-                    <div className='info'>
-                        <div className=" col-md-2 text-center" >
-                            <div className="circle circle-lg bg-white">
-                                <span className={`fe fe-${icon} fe-24 text-grey mb-4`}></span>
+                    <Link to={to}>
+                        <div className='info'>
+
+                            <div className=" col-md-2 text-center" >
+                                <div className="circle circle-lg bg-light ">
+                                    <span className={`fe fe-${icon} fe-24 text-grey`}></span>
+                                </div>
+                            </div>
+
+                            <div className="col ml-4">
+                                <strong className="">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active") ? "success" : "danger"} ml-2`}></span>
+
+                                {
+                                    A4 ? <><br /><span className="badge badge-light text-secondary">{A4}</span></> : null
+                                }
+                                {
+                                    A5 ? <><br /><span className="badge badge-white text-secondary">{A5}</span></> : null
+                                }
+                                {
+                                    A6 ? <><br /><span className="badge badge-white text-secondary">{A6}</span></> : null
+                                }
+                                {
+                                    A3 ? <><br /><span className="badge badge-white text-secondary">{A3}</span></> : null
+                                }
+
                             </div>
                         </div>
-                        <div className="col ml-4">
-                            <strong className="mb-1">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active") ? "success" : "danger"} ml-2`}></span>
+                    </Link>
 
-                            {
-                                A4 ? <><br /><span className="badge badge-light text-secondary">{A4}</span></> : null
-                            }
-                            {
-                                A5 ? <><br /><span className="badge badge-white text-secondary">{A5}</span></> : null
-                            }
-                            {
-                                A6 ? <><br /><span className="badge badge-white text-secondary">{A6}</span></> : null
-                            }
-                            {
-                                A3 ? <><br /><span className="badge badge-white text-secondary">{A3}</span></> : null
-                            }
-
-                        </div>
-                    </div>
 
                     <div className="file-action text-right m-4">
 

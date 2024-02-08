@@ -242,9 +242,11 @@ export const OwnerDetail = () => {
         {
 
           loadingOwner ? <Spinner /> :
+
             <ContainerModule
 
               icon='user'
+              to='/admin/owners/'
 
               A1={`Propietario ${name}`}
               A2={`${lastName}`}

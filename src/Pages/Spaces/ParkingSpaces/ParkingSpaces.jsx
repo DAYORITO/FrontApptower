@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useFetch, useFetchget } from "../../../Hooks/useFetch";
-import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons";
+import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { Thead } from '../../../Components/Thead/Thead';
@@ -10,7 +10,7 @@ import { Actions } from "../../../Components/Actions/Actions";
 import { Spinner } from "../../../Components/Spinner/Spinner";
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
-import { filter, postRequest } from "../../../Helpers/Helpers";
+import { filter, filterPerSelect, postRequest } from "../../../Helpers/Helpers";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { createPortal } from "react-dom";
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo";
@@ -29,19 +29,25 @@ export const ParkingSpaces = () => {
   // Get Data
 
   const { data: parkingSpaces, get: getParkingSpace, loading } = useFetch(url)
+  const { data: apartments, get: getApartments } = useFetch(url)
+
 
   useEffect(() => {
 
     getParkingSpace('parkingSpaces')
+    getApartments('apartments')
+
 
   }, [])
 
-  console.log(parkingSpaces)
+
+  const { id } = useParams()
 
   // Funtionality to search
 
+  const [searchForSelect, setSearchForSelect] = useState("");
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(id ? id : '');
 
   let parkingList = filter(search, parkingSpaces?.data?.parkingSpaces, "parkingName")
 
@@ -55,13 +61,39 @@ export const ParkingSpaces = () => {
 
   }
 
+  const searchParkingType = () => {
+
+    let filteredParking = parkingList;
+
+    filteredParking = filter(search, filteredParking, "parkingName");
+
+    filteredParking = filterPerSelect(searchForSelect, filteredParking, "parkingType");
+
+    // filteredParking = filteredParking.sort((a, b) => a.idApartment - b.idApartment);
+
+    parkingList = filteredParking;
+  };
+
+  const searcherForSelect = (e) => {
+
+    console.log(e.target.value)
+
+    parkingList = filterPerSelect(searchForSelect, parkingSpaces?.data?.parkingSpaces, "parkingType")
+
+    setSearchForSelect(e.target.value)
+    searchParkingType()
+
+  }
+
   const [modalParking, setModalParkin] = useState(false);
 
-  const { id } = useParams()
   const [idParkingSpace, setIdParkingSpace] = useState("");
   const [parkingName, setParkingName] = useState('');
   const [parkingType, setParkingType] = useState("");
   const [status, setStatus] = useState('');
+
+  const [idApartment, setIdApartment] = useState("");
+
 
   const openModal = (data) => {
 
@@ -93,6 +125,61 @@ export const ParkingSpaces = () => {
 
   };
 
+  searchParkingType()
+
+
+  const [modalAsignedApartment, setModalAsignedApartment] = useState(false);
+
+  // Parking spaces
+
+
+
+  const openModalAsignedApartment = (data) => {
+
+    console.log(data)
+    setIdParkingSpace(data.idParkingSpace)
+    setModalAsignedApartment(true)
+
+  }
+
+  // List apartments
+
+  const apartmentList = apartments?.data && apartments?.data?.apartments
+
+    ? apartments.data.apartments
+      .map(apartment => ({
+        value: apartment.idApartment,
+        label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
+      }))
+    : [];
+
+  const parkingSpacesList = parkingSpaces.data && parkingSpaces.data.parkingSpaces
+    ? parkingSpaces.data.parkingSpaces
+      .filter(parking => parking.parkingType === 'Private')
+      .map(parking => ({
+        value: parking.idParkingSpace,
+        label: `${parking.parkingName} - ${parking.parkingType}`
+      }))
+    : [];
+
+
+  // create assignedparkingspace 
+
+  const createAssignedParking = async (event) => {
+
+    const data = {
+
+      idApartment,
+      idParkingSpace
+
+    };
+
+    await postRequest(event, 'assignedParkingSpaces', 'POST', {}, data, url);
+
+    getParkingSpace(`parkingSpaces`)
+    setModalAsignedApartment(false)
+
+  };
 
 
   return (
@@ -100,6 +187,7 @@ export const ParkingSpaces = () => {
       <ContainerTable
         title='Parqueaderos'
         dropdown={<DropdownExcel />}
+        search2={<SearchSelect options={parkingTypes} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} />}
         buttonToGo={<ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>}
 
@@ -120,17 +208,42 @@ export const ParkingSpaces = () => {
                   A2={parking.parkingName}
                   A3={parking.parkingType == "Public" ? "Publico" : "Privado "}
                   A4={`${parking.status == "Active" && parking.parkingType == "Public" ? "Disponible" : "Ocupado"}`}
+                  A9={parking.parkingType !== "Public" ? null : 'Vehiculo ocupando'}
+                  A10={parking.parkingType !== "Public" ? null : parking.vehicleAssigned ? parking.vehicleAssigned : 'No hay vehiculo'}
+
+                  A12={parking.parkingType == "Public" ? null : 'Apartamento'}
+                  A14={parking.parkingType == "Public" ? null : parking.apartmentAssigned.apartmentInfo ? parking.apartmentAssigned.apartmentInfo.apartmentName : 'No tiene apartamento designado'}
 
                   status={parking.status}
                   icon='map-pin'
-                  to={`/admin/parkingSpaces/details/${parking.idParkingSpace}`}
 
+                  onClick={() => openModal(parking)}
 
                 >
+                  {/* {
+                    parking.apartmentAssigned ? null : 
+                  } */}
+                  {
+                    parking.parkingType !== "Public" && parking.apartmentAssigned.apartmentInfo ? (
+                      <Actions
+                        accion="Ver apartamento"
+                        icon="home"
+                        href={`/admin/apartments/details/${parking.apartmentAssigned.apartmentInfo.idApartment}`}
+                      />
+                    ) : parking.parkingType == "Public" ? (
+                      <>
+                        <Actions
+                          accion="Asignar vehiculo"
+                          icon="map-pin"
+                          href={`/admin/guest_income/create/${parking.idParkingSpace}`}
+                        />
+                      </>
+                    ) : <Actions accion="Asignar apartamento" onClick={() => openModalAsignedApartment(parking)} icon="home" />
 
-                  <Actions accion='Asignar vehiculo' icon="map-pin" href={`/admin/guest_income/create/${parking.idParkingSpace}`}></Actions>
+                  }
+
+
                   <Actions accion='Editar parqueadero' onClick={() => openModal(parking)}></Actions>
-                  <Actions accion='Ver detalle' icon='eye' href={`/admin/parkingSpaces/details/${parking.idParkingSpace}`} ></Actions>
 
 
                 </Row>
@@ -141,7 +254,7 @@ export const ParkingSpaces = () => {
             }
           </Tbody>
         </TablePerson>
-      </ContainerTable>
+      </ContainerTable >
 
       {modalParking &&
         createPortal(
@@ -173,7 +286,35 @@ export const ParkingSpaces = () => {
             </ModalContainer>
           </>,
           document.getElementById("modalRender")
-        )}
+        )
+      }
+
+      {modalAsignedApartment &&
+        createPortal(
+          <>
+            <ModalContainer showModal={setModalAsignedApartment}>
+              <Modal
+                onClick={createAssignedParking}
+                showModal={setModalAsignedApartment}
+                title={`Asignar apartamento`}
+
+              >
+
+                <InputsSelect id={"select"} options={parkingSpacesList} name={"Apartamento"}
+                  value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}
+                ></InputsSelect>
+
+                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                  value={idApartment} onChange={e => setIdApartment(e.target.value)}
+                ></InputsSelect>
+
+
+              </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )
+      }
     </>
   );
 }
