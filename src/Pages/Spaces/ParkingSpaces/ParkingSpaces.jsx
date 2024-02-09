@@ -208,8 +208,8 @@ export const ParkingSpaces = () => {
                   A2={parking.parkingName}
                   A3={parking.parkingType == "Public" ? "Publico" : "Privado "}
                   A4={`${parking.status == "Active" && parking.parkingType == "Public" ? "Disponible" : "Ocupado"}`}
-                  A9={parking.parkingType !== "Public" ? null : 'Vehiculo ocupando'}
-                  A10={parking.parkingType !== "Public" ? null : parking.vehicleAssigned ? parking.vehicleAssigned : 'No hay vehiculo'}
+                  A9={parking.parkingType !== "Public" ? null : 'Nota de ingreso activo'}
+                  A10={parking.parkingType !== "Public" ? null : parking.vehicleAssigned ? parking.vehicleAssigned.observations : 'No hay nota'}
 
                   A12={parking.parkingType == "Public" ? null : 'Apartamento'}
                   A14={parking.parkingType == "Public" ? null : parking.apartmentAssigned.apartmentInfo ? parking.apartmentAssigned.apartmentInfo.apartmentName : 'No tiene apartamento designado'}
