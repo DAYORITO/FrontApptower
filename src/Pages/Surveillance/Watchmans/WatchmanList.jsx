@@ -394,6 +394,8 @@ export const Watchman = () => {
                                             handleModal(watchman);
                                         }} />
                                     )}
+
+                                    <Actions accion='Asignar Turno' href={`/admin/watchman/shift/${watchman.idwatchman}`} />
                                 </Row>
                             );
                         })}

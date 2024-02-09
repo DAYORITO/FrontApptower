@@ -258,10 +258,26 @@ export const UsersEdit = () => {
         }
     ];
 
-    const opcionesRols = roles.map(rol => ({
-        value: rol.idrole.toString(),
-        label: rol.namerole
-    }));
+    const rolDesactivado = roles.find(rol => rol.idrole === editedUser.idrole && rol.state !== "Activo");
+
+    let opcionesRols = roles
+        .filter(rol => rol.state === "Activo")
+        .map(rol => ({
+            value: rol.idrole.toString(),
+            label: rol.namerole
+        }));
+
+    if (rolDesactivado) {
+        opcionesRols = [
+            ...opcionesRols,
+            {
+                value: rolDesactivado.idrole.toString(),
+                label: `${rolDesactivado.namerole} (Rol Inactivo)`
+            }
+        ];
+    }
+
+
 
     useEffect(() => {
         if (editedUser && editedUser?.idrole) {
@@ -350,8 +366,11 @@ export const UsersEdit = () => {
                     id="select"
                     options={opcionesRols}
                     name="Rol"
-                    value={editedUser?.idrole || ''}
-                    onChange={(e) => {
+                    value={
+                        editedUser?.idrole
+                            ? (opcionesRols.find(rol => rol.value === editedUser.idrole.toString()) || {}).value
+                            : ''
+                    } onChange={(e) => {
                         const selectedRoleId = e.target.value;
                         const selectedRole = roles.find(rol => rol.idrole === Number(selectedRoleId));
                         const newNamerole = selectedRole ? selectedRole.namerole : '';
