@@ -208,7 +208,7 @@ const App = () => {
 
 
 
-                                <Route path='users/create' element={
+                                <Route path='users/create/:id?' element={
                                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear') ?
                                         <UsersCreate /> : <NotFound />
                                 } />
