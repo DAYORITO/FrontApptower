@@ -1,6 +1,9 @@
 // import { MdClose } from 'react-icons/md';
 
+import { io } from "socket.io-client";
+import { RowNotificactions } from "../RowNotificacions/RowNotificactions";
 import "./ModalTwo.css";
+import { useEffect } from "react";
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -60,6 +63,43 @@ export const Modal = ({ title, children, showModal, onClick, onClickForDelete, b
         </div>
       </div>
     </div>
+  );
+};
+
+export const ModalNotifications = ({ children, showModal }) => {
+
+  return (
+    <div onClick={(e) => e.stopPropagation()} className="notifications-container">
+      <div
+        id="verticalModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="verticalModalTitle"
+      >
+        <div class="modal-header">
+          <h5 class="modal-title" id="defaultModalLabel">Notificaciones</h5>
+          <button onClick={() => showModal(false)} type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="list-group list-group-flush my-n3">
+
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button onClick={() => showModal(false)} type="button" class="btn btn-secondary btn-block " data-dismiss="modal">Clear All</button>
+        </div>
+      </div>
+    </div>
+
+
   );
 };
 

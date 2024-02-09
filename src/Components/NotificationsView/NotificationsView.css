@@ -1,0 +1,8 @@
+.notifications {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 2 !important;
+    background-color: aqua !important;
+  }
+  

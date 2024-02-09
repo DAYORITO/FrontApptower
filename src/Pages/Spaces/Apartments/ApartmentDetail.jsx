@@ -8,7 +8,7 @@ import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
 import { useFetch } from "../../../Hooks/useFetch"
-import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
+import { Dropdownanchor } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
 import { Acordions } from "../../../Components/Acordions/Acordions"
@@ -17,12 +17,11 @@ import { NotificationsAlert } from "../../../Components/NotificationsAlert/Notif
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
 
 import { createPortal } from "react-dom"
-import { Link } from "react-router-dom"
 import { useParams } from "react-router"
 import { format } from 'date-fns';
 
 
-import { filterFines, filterGuestIncomes, putRequest, postRequest, showConfirmationDialog, filter } from '../../../Helpers/Helpers'
+import { putRequest, postRequest, showConfirmationDialog, filter } from '../../../Helpers/Helpers'
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 
 
@@ -56,13 +55,13 @@ export const ApartmentDetails = (props) => {
 
     // Apartments relations
 
-    const { data: apartment, put: putApartment, get: getApartment } = useFetch(url)
+    const { data: apartment, put: putApartment, get: getApartment, loading: loadingApartment } = useFetch(url)
     const { data: apartmentResidents, put: putApartmentResidents, get: getApartmentResidents, del: delApartmentResidents, loading: loadingApartmentResidents } = useFetch(url)
     const { data: apartmentOwners, put: putApartmentOwner, get: getApartmentOwners, del: delApartmentOwners, loading: loadingApartmentOwners } = useFetch(url)
     const { data: assignedParkingSpaces, put: putAssignedParkingSpaces, get: getAssignedParkingSpaces, del: delAssignedParkingSpaces, loading: loadingAssignedParkingSpaces } = useFetch(url)
     const { data: guestIncomes, get: getGuestIncomes, loading: loadingGuestIncomes } = useFetch(url)
     const { data: fines, get: getFines, loading: loadingFines } = useFetch(url)
-    const { data: vehicles, get: getVehicles } = useFetch(url)
+    const { data: vehicles, get: getVehicles, loading: loadingVehicles } = useFetch(url)
 
     console.log('fines', fines)
 
@@ -107,20 +106,19 @@ export const ApartmentDetails = (props) => {
 
     const [search, setSearch] = useState('');
 
-    let guestIncomesbyApartment = filter(search, guestIncomes, 'asociatedVisitor');
+    let guestIncomesbyApartment = filter(search, guestIncomes?.data?.guestIncome, 'asociatedVisitor');
 
     // Seacher fines
 
     const [searchFine, setSearchFine] = useState('');
 
-    let fineByApartment = filter(searchFine, fines, 'fineType');
+    let fineByApartment = filter(searchFine, fines?.data?.fines, 'fineType');
 
 
     useEffect(() => {
 
         // Apartment information
 
-        console.log(apartment?.data?.spartment)
         setIdApartment(apartment?.data?.spartment?.idApartment);
         setIdTower(apartment?.data?.spartment?.idTower);
         setTowerName(apartment?.data?.spartment?.Tower?.towerName)
@@ -197,14 +195,12 @@ export const ApartmentDetails = (props) => {
 
     const handleModalEditApartmentOwner = (data) => {
 
-
-        setIdApartmentOwner(data)
+        console.log(data, "datica")
+        setIdApartmentOwner(data.idApartmentOwner)
         setIdOwner(data.idOwner)
         setOwnershipStartDate(format(new Date(data.OwnershipStartDate), 'yyyy-MM-dd'))
         setOwnershipEndDate(format(new Date(data.OwnershipEndDate), 'yyyy-MM-dd'))
         setStatusApartmentOwner(data.status)
-
-        console.log(OwnershipStartDate)
 
         setShowApartmentOwnermODAL(true)
 
@@ -279,7 +275,7 @@ export const ApartmentDetails = (props) => {
             }))
         : [];
 
-    // List apartmentsResidents
+    // List assigned parking spaces
 
     const assignedParkingSpacesList = assignedParkingSpaces?.data && Array.isArray(assignedParkingSpaces?.data?.assignedParking)
         ? assignedParkingSpaces.data.assignedParking
@@ -305,7 +301,7 @@ export const ApartmentDetails = (props) => {
         ? owners?.data?.owners
             .map(owner => ({
                 value: owner.idOwner,
-                label: ` ${owner.name} ${owner.lastName} - ${owner.docNumber}`
+                label: ` ${owner.user.name} ${owner.user.lastName} - ${owner.user.document}`
             }))
         : [];
 
@@ -387,7 +383,7 @@ export const ApartmentDetails = (props) => {
         const data = {
 
             idApartment: idApartment,
-            tower: tower,
+            tower: idTower,
             apartmentName: apartmentName,
             area: area,
             status: status
@@ -405,7 +401,7 @@ export const ApartmentDetails = (props) => {
 
     // Edit apartmentowner
 
-    const handleUpdateApartmentOwner = (event) => {
+    const handleUpdateApartmentOwner = async (event) => {
 
         const data = {
 
@@ -417,9 +413,13 @@ export const ApartmentDetails = (props) => {
 
         }
 
+        console.log(idApartmentOwner, "idÑaña")
+
         console.log("edit data", data)
 
-        putRequest(event, 'apartmentOwners', `Modificaste al propietario del apto ${apartmentName}`, data, setShowApartmentOwnermODAL, putApartmentOwner, getApartmentOwners);
+        await postRequest(event, 'apartmentOwners', 'PUT', {}, data, url);
+        setShowApartmentOwnermODAL(false)
+        getApartmentOwners(`apartmentOwners/${id}`)
 
     };
 
@@ -514,23 +514,29 @@ export const ApartmentDetails = (props) => {
         setToggleState(index)
     };
 
+    console.log(guestIncomesbyApartment)
 
     return (
         <>
             <Details>
 
+                {
 
-                <ContainerModule
+                    loadingApartment ? <Spinner /> :
+                        <ContainerModule
+                            to='/admin/apartments/'
+                            A1={`Apartamento ${apartmentName}`}
+                            A5={`Bloque: ${towerName} `}
+                            A6={`Area: ${area} m²`}
 
-                    A1={`Apartamento ${apartmentName}`}
-                    A3={`${towerName} `}
-                    A4={`Area: ${area} m²`}
-                    status={status}
-                    onClickEdit={setShowModalEditApartment}
-                >
+                            status={status}
+                            onClickEdit={setShowModalEditApartment}
+                        />
+
+                }
 
 
-                </ContainerModule>
+
                 <InfoDetails>
 
                     <Acordions>
@@ -551,6 +557,7 @@ export const ApartmentDetails = (props) => {
                                                 name={owner.owner.user.name + " " + owner.owner.user.lastName}
                                                 // Details
                                                 to={`/admin/owners/details/${owner.idOwner}`}
+                                                status={owner.status}
                                                 // // Funtions
                                                 // onClick={() => {
                                                 //     console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
@@ -592,7 +599,7 @@ export const ApartmentDetails = (props) => {
                                             // Details
 
                                             to={`/admin/residents/details/${resident.idResident}`}
-
+                                            status={resident.status}
                                             // Functions
 
                                             // onClick={() => {
@@ -633,7 +640,7 @@ export const ApartmentDetails = (props) => {
                                             name={"Plaza " + parking.parkingSpace.parkingName}
 
                                             // Details
-                                            to={`/admin/parkingSpaces`}
+                                            to={`/admin/parkingSpaces/${parking.parkingSpace.parkingName}`}
 
                                             // Funtions
                                             // onClick={() => {
@@ -654,25 +661,30 @@ export const ApartmentDetails = (props) => {
 
 
 
-                        <DropdownInfo name={`${vehiclesList.length} Vehiculos `} to1={`/admin/vehicle/create`}>
-                            {vehiclesList.length > 0 ? (
-                                vehiclesList.map((vehicle, index) => (
-                                    <Dropdownanchor
-                                        // Information
-                                        key={index}
-                                        name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
+                        <DropdownInfo
+                            name={`${vehiclesList.length} Vehiculos `}
+                            action1={`Agregar nuevo vehiculo`}
+                            toAction1={`/admin/vehicle/create`}>
 
-                                        // Details
-                                        to={`/admin/vehicle/details/${vehicle.idvehicle}`}
+                            {loadingVehicles ? <SmalSpinner /> :
+                                vehiclesList.length > 0 ? (
+                                    vehiclesList.map((vehicle, index) => (
+                                        <Dropdownanchor
+                                            // Information
+                                            key={index}
+                                            name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
 
-                                    // Funtions
+                                            // Details
+                                            to={`/admin/vehicle/details/${vehicle.idvehicle}`}
+                                            status={vehicle.state}
+                                        // Funtions
 
-                                    >
-                                    </Dropdownanchor>
-                                ))
-                            ) : (
-                                <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
-                            )}
+                                        >
+                                        </Dropdownanchor>
+                                    ))
+                                ) : (
+                                    <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
+                                )}
                         </DropdownInfo>
 
                     </Acordions>
@@ -795,7 +807,7 @@ export const ApartmentDetails = (props) => {
                                 ></InputsSelect>
 
                                 <Inputs type={"hidden"}
-                                    value={idApartment} onChange={e => setIdApartmentOwner(e.target.value)}></Inputs>
+                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}></Inputs>
 
                             </Modal>
                         </ModalContainer>
@@ -911,7 +923,7 @@ export const ApartmentDetails = (props) => {
                                     value={residentEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs>
 
                                 <InputsSelect id={"select"} options={statusList} name={"Estado"}
-                                    value={statusApartmentResident} onChange={e => setStatusApartmentOwner(e.target.value)}></InputsSelect>
+                                    value={statusApartmentResident} onChange={e => setStateApartmentResident(e.target.value)}></InputsSelect>
 
                                 <Inputs type={"hidden"}
                                     value={idApartmentResident} onChange={e => setIdApartmentResident(e.target.value)}></Inputs>

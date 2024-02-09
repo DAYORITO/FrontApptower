@@ -27,11 +27,9 @@ import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
-import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetail";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
-import { ParkingSpacesDetails } from "./Pages/Spaces/ParkingSpaces/ParkingSpaceDetails";
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
@@ -45,7 +43,7 @@ import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
 import { EnterpriceSecurity } from "./Pages/Surveillance/Watchmans/EnterpriceSecurity";
 import { EnterpriceSecurityCreate } from "./Pages/Surveillance/Watchmans/EnterpriceSecurityCreate";
-// import Dashboard from "./Pages/Dashboard/Dashboard";
+import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
@@ -62,6 +60,7 @@ import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
 import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
+import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetails";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -70,9 +69,7 @@ const App = () => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);
     const token = Cookies.get('token');
     const [userData, setUserData] = useState({});
-    console.log('Yo spy el userData App.jx:', userData);
     const [userRole, setUserRole] = useState('');
-    console.log('Yo spy el rol App.jx:', userRole);
 
     useEffect(() => {
         if (token) {
@@ -94,8 +91,6 @@ const App = () => {
             }
 
             const data = await response.json();
-            console.log(data, 'data');
-            console.log('Allowed Permissions hi:', data.privileges);
 
             if (data && data.privileges && Array.isArray(data.privileges)) {
                 const allowed = {};
@@ -195,10 +190,10 @@ const App = () => {
                             <Route path='/admin/*' element={<Layout />}>
 
                                 <Route path='notfound' element={<NotFound />} />
-                                {/* <Route path='dashboard' element={
+                                <Route path='dashboard' element={
                                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Listar') ?
                                         <Dashboard /> : <NotFound />
-                                } /> */}
+                                } />
 
                                 {/* Users */}
                                 <Route path='users' element={
@@ -406,10 +401,12 @@ const App = () => {
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
                                         <ParkingSpaces /> : <NotFound />
                                 } />
-                                <Route path='parkingSpaces/details' element={
+                                 {/* Parking Spaces */}
+                                 <Route path='parkingSpaces/:id' element={
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
-                                        <ParkingSpacesDetails /> : <NotFound />
+                                        <ParkingSpaces /> : <NotFound />
                                 } />
+                                
                                 <Route path='parkingSpaces/create' element={
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear') ?
                                         <ParkingSpacesCreate /> : <NotFound />
@@ -423,15 +420,16 @@ const App = () => {
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Listar') ?
                                         <Residents /> : <NotFound />
                                 } />
-                                <Route path='residents/details:id' element={
+                                {/* <Route path='residents/details:id' element={
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Listar') ?
                                         <ResidentDetail /> : <NotFound />
-                                } />
+                                } /> */}
                                 <Route path='residents/create' element={
                                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear') ?
                                         <ResidentCreate /> : <NotFound />
                                 } />
 
+                                <Route path='residents/details/:id' element={<ResidentDetail />} />
 
                                 <Route path='residents/create/:id' element={<ResidentCreate />} />
 

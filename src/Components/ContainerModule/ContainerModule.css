@@ -16,6 +16,12 @@
     width: 100%;
 }
 
+.container-module a {
+    
+    color: grey !important; 
+
+}
+
 .container-module .card-body {
 
     width: 90% !important;

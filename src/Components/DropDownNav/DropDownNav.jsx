@@ -52,7 +52,7 @@ export const ListNav = ({ href, module, icon = "fe fe-home", id = 'process', onC
 }) => {
   return (
     <li className="nav-item">
-      <Link className="nav-link" to={href || ''} onClick={onClick}>
+      <Link className="nav-link" to={href} onClick={onClick}>
         <div>
           <i className={icon} id='fas'></i>
           {A1 != 0 ? <p className="badge text-white bg-danger mb-4">{A1}</p> : null}
