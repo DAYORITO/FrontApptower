@@ -11,6 +11,7 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import { useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
 import Select2 from '../../../Components/Inputs/Select2'
 import { is, tr } from 'date-fns/locale';
+import { useParams } from 'react-router-dom';
 
 
 export const UsersCreate = () => {
@@ -28,6 +29,7 @@ export const UsersCreate = () => {
     const [showForm, setShowForm] = useState(false);
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
     const [enterprice, setEnterprice] = useState(null);
+    const { id } = useParams();
 
 
     console.log(pdf, 'aqui estoy file')
@@ -53,6 +55,17 @@ export const UsersCreate = () => {
         }
     }, [roles]);
 
+    useEffect(() => {
+        if (id && roles && roles.rols) {
+            const selectedRole = roles.rols.find(rol => rol.idrole === Number(id));
+            if (selectedRole) {
+                setIdRole(selectedRole.idrole);
+                setRole(selectedRole.namerole);
+                setShowForm(true);
+            }
+        }
+    }, [id, roles]);
+
 
 
     const navigate = useNavigate();
@@ -68,14 +81,17 @@ export const UsersCreate = () => {
         }
     ];
 
-    const opcionesRols = roles.rols
-        ? roles.rols
-            .filter(rol => rol.state === "Activo")
-            .map(rol => ({
-                value: rol.idrole,
-                label: rol.namerole
-            }))
-        : [];
+    const rol = roles && roles.rols ? roles.rols.find(rol => rol.idrole === id) : undefined;
+
+    const opcionesRols = rol ? [{
+        value: id,
+        label: rol.namerole
+    }] : roles && roles.rols ? roles.rols
+        .filter(rol => rol.state === "Activo")
+        .map(rol => ({
+            value: rol.idrole,
+            label: rol.namerole
+        })) : [];
 
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
@@ -266,7 +282,7 @@ export const UsersCreate = () => {
                 <InputsSelect
                     id="select"
                     options={opcionesRols}
-                    value={idrole}
+                    value={idrole ? idrole : id}
                     name="Rol"
                     onChange={(e) => {
                         setIdRole(e.target.value);

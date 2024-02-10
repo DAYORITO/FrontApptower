@@ -194,7 +194,7 @@ export const RolsCreate = () => {
                     {permisos.map((permiso, index) => (
                         console.log(permiso, 'permiso'),
                         <div className='accordion-item' key={index}>
-                            <Accordion title={permiso.label} >
+                            <Accordion title={permiso.label}  >
                                 {permiso.options.map((opcion, optionIndex) => (
                                     console.log(opcion, 'opcion'),
                                     <Checkboxs

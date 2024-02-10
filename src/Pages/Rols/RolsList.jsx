@@ -98,7 +98,11 @@ export const Rols = () => {
                                 status={rols.state}
                             >
                                 <Actions accion='Editar' href={`/admin/rols/editNew/${rols.idrole}`} />
-                                <Actions accion='Crear Usuario'  />
+                                {rols.state === "Activo" ?
+                                    <>
+                                        <Actions accion='Crear Usuario' href={`/admin/users/create/${rols.idrole}`} />
+                                    </> : null
+                                }
                             </Row>
                         ))}
                     </Tbody>

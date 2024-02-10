@@ -32,9 +32,23 @@ export const EnterpriceSecurity = () => {
     const [address, setAddress] = useState("");
 
 
-
     const { data, load, error } = useFetchget('enterpricesecurity')
     const { error: putError, load: putLoad, } = useFetchput('enterpricesecurity', editedEnterprice);
+
+
+
+    const getEnterpriceData = async () => {
+        const { data, load, error } = await useFetchget('enterpricesecurity');
+        if (data && data.enterpriseSecurity) {
+            setEnterpriceData(data.enterpriseSecurity);
+        }
+    };
+
+    useEffect(() => {
+        // Llamar a la función al montar el componente
+        getEnterpriceData();
+    }, []);
+
 
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
@@ -53,9 +67,8 @@ export const EnterpriceSecurity = () => {
 
 
 
-
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/document/${editedEnterprice?.NIT}`)
+        fetch(`http://localhost:3000/api/enterpricesecurity/NIT/${editedEnterprice?.NIT ? editedEnterprice?.NIT : NIT}`)
             .then(response => response.json())
             .then(data => {
                 setIsDocumentTaken(data && data.message ? true : false);
@@ -63,11 +76,11 @@ export const EnterpriceSecurity = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, [editedEnterprice?.NIT]);
+    }, [editedEnterprice?.NIT ? editedEnterprice?.NIT : NIT]);
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/email/${editedEnterprice?.email}`)
+        fetch(`http://localhost:3000/api/enterpricesecurity/email/${editedEnterprice?.email ? editedEnterprice?.email : email}`)
             .then(response => response.json())
             .then(data => {
                 setIsEmailTaken(data && data.message ? true : false);
@@ -75,7 +88,7 @@ export const EnterpriceSecurity = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, [editedEnterprice?.email]);
+    }, [editedEnterprice?.email ? editedEnterprice?.email : email]);
 
 
     const handleModal = (enterpriseSecurity) => {
@@ -235,6 +248,24 @@ export const EnterpriceSecurity = () => {
             return;
         }
 
+        if (isDocumentTaken) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Este documento se encuentra registrado',
+                icon: 'error',
+            });
+            return;
+        }
+
+        if (isEmailTaken) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Este correo se encuentra registrado',
+                icon: 'error',
+            });
+            return;
+        }
+
         const url = 'enterpricesecurity';
         const data = {
             nameEnterprice,
@@ -250,12 +281,14 @@ export const EnterpriceSecurity = () => {
             if (response) {
                 console.log('Response:', response);
 
+                setEnterpriceData(prevEnterpriceData => [...prevEnterpriceData, response]);
+
+
                 Swal.fire({
                     title: 'Éxito',
                     text: 'Empresa creada exitosamente',
                     icon: 'success',
                 });
-
 
                 seteditedEnterprice(null);
                 setShowModalCreate(false);
@@ -296,6 +329,9 @@ export const EnterpriceSecurity = () => {
         if (currentPage > 0)
             setCurrentPage(currentPage - 10)
     }
+
+
+
 
     return (
         <>
@@ -361,7 +397,7 @@ export const EnterpriceSecurity = () => {
                                 A2={''}
                                 description={enterprise.address}
                                 A7={enterprise.phone}
-                                A8={enterprise.email}
+                                A17={enterprise.email}
 
 
 
@@ -430,10 +466,14 @@ export const EnterpriceSecurity = () => {
                                 showModal={setShowModalCreate}
                                 title={"Nueva Empresa"}
                             >
-                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} validate={shouldValidate} required={true}
+                                    inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
+                                    errorMessage={isDocumentTaken ? "El documento ya existe" : null} ></Inputs>
                                 <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => setNameEnterprice(e.target.value)} validate={shouldValidate} required={true}></Inputs>
                                 <Inputs name="Dirección" type='text' value={address} onChange={e => setAddress(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-                                <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                    inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
+                                    errorMessage={isEmailTaken ? "El correo ya existe" : null}></Inputs>
                                 <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
 
                             </Modal>

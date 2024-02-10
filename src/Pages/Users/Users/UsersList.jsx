@@ -203,7 +203,7 @@ export const Users = () => {
                                 description={
                                     roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
                                 }
-                                A8={user.email}
+                                A17={user.email}
                                 A7={user.phone ? user.phone : 'Desconocido'}
                                 status={user.status}
                             >
