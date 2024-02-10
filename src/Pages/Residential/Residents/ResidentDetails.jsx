@@ -51,6 +51,8 @@ export const ResidentDetail = () => {
     const [residentCreateAt, setResidentCreateAt] = useState("")
     const [residentUpdatedAt, setResidentUpdatedAt] = useState("")
 
+    const [userImg, setUserImg] = useState("")
+
     const [residentPdf, setResidentPdf] = useState("")
     const [docType, setDocType] = useState("")
     const [residentType, setResidentType] = useState("")
@@ -88,6 +90,7 @@ export const ResidentDetail = () => {
         setResidentCreateAt(resident?.data?.resident?.createAt)
         setResidentUpdatedAt(resident?.data?.resident?.updateAt)
 
+        setUserImg(resident?.data?.resident?.user?.userImg)
         setResidentPdf(resident?.data?.resident?.user?.pdf)
         setResidentType(resident?.data?.resident?.residentType)
         setDocType(resident?.data?.resident?.user?.docType)
@@ -174,7 +177,7 @@ export const ResidentDetail = () => {
         const data = {
 
             idApartment: parseInt(idApartment),
-            idResident: idResident,
+            idResident: parseInt(idResident),
             residentStartDate: residentStartDate,
             // status: "active"
 
@@ -182,7 +185,7 @@ export const ResidentDetail = () => {
 
         console.log(data)
 
-        await postRequest(event, 'apartmentresidents', 'POST', {}, data, url)
+        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url)
 
         setModalAssigApartmentToresident(false)
         getResident(`residents/${id}`)
@@ -237,7 +240,27 @@ export const ResidentDetail = () => {
 
     // };
 
-    console.log(residentType)
+    const [modalEditImg, setModalEditImg] = useState(false)
+
+    const openModalEditImg = () => {
+
+        console.log('Hablalo puto')
+        setModalEditImg(true)
+
+    }
+
+    const [modalChangePassword, setModalChangePassword] = useState(false)
+
+    const openModalChangePassword = () => {
+
+        setIdUser(idUser)
+
+        setModalChangePassword(true)
+
+    }
+
+
+
     return (
         <>
             <Details>
@@ -246,7 +269,8 @@ export const ResidentDetail = () => {
 
                     loadingResident ? <Spinner /> :
                         <ContainerModule
-
+                            onClick={() => openModalEditImg()}
+                            img={userImg}
                             to='/admin/residents/'
                             icon='user'
 
@@ -257,7 +281,7 @@ export const ResidentDetail = () => {
                             A6={`Telefono: ${phone}`}
                             A7={pdf}
                             status={statusResident}
-                            onClickEdit={openModalEdit}
+                            onClick2={openModalChangePassword}
                         // onClickEdit={setShowModalEditApartment}
                         />
 
@@ -271,6 +295,8 @@ export const ResidentDetail = () => {
 
                         <DropdownInfo
                             name={`Informacion personal`}
+                            action1={'Editar informacion personal'}
+                            onClickAction1={openModalEdit}
                         >
 
                             <ul className='list-unstyled'>
@@ -357,7 +383,7 @@ export const ResidentDetail = () => {
                             <Modal
                                 // onClick={handleUpdateApartmentresident}
                                 showModal={setModalPersonalInforesident}
-                                title={"Editar informacion personal"}
+                                title={"Editar informacion "}
 
                             >
                                 <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />
@@ -390,6 +416,50 @@ export const ResidentDetail = () => {
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {modalEditImg &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setModalEditImg}>
+                            <Modal
+                                // onClick={handleUpdateApartmentresident}
+                                showModal={setModalEditImg}
+                                title={"Cambiar imagen de perfil"}
+
+                            >
+                                <Uploader formatos={['.jpg']} name="img" label="Foto de perfil" onChange={e => setUserImg(e.target.files[0])} />
+
+
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {modalChangePassword &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setModalChangePassword}>
+                            <Modal
+                                // onClick={handleUpdateApartmentresident}
+                                showModal={setModalChangePassword}
+                                title={"Cambiar contraseña"}
+
+                            >
+                                <Inputs name="Nueva contraseña" type={"password"}
+                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+
+                                <Inputs name="Confirmar contraseña" type={"password"}
+                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+
+                                <Inputs type={"hidden"}
+                                    value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
+
                             </Modal>
                         </ModalContainer>
                     </>,

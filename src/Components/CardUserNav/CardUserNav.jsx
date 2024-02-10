@@ -12,7 +12,7 @@ export const CardUserNav = ({ rol, name, lastName, userImg }) => {
             <Link to={"users/profileList"}>
                 <div className='myNav-user-card'>
                     <div className='myNav-user-card-img'>
-                        <img src={userImg != null ? userImg : LogoApptower} id='userImg' alt='User Logo' />
+                        <img src={userImg != null ? userImg : LogoApptower} className='userImg' alt='User Logo' />
                     </div>
                     <div className='myNav-user-card-text'>
                         <h4 className='h6'>{rol}</h4>
