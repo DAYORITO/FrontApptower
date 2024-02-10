@@ -176,7 +176,7 @@ export const UsersCreate = () => {
                 phone,
                 pdf,
                 birthday: dateOfbirth ? dateOfbirth : birthday,
-                sex: sex,
+                sex: sex ? sex : 'M',
                 status: 'Activo',
                 idEnterpriseSecurity: enterprice,
                 residentType: residentType,

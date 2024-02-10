@@ -245,10 +245,7 @@ export const WatchmanCreate = () => {
         }
     };
 
-
-
-
-
+    console.log(opcionesRols, 'opcionesRols')
     return (
         <>
 
@@ -267,7 +264,7 @@ export const WatchmanCreate = () => {
                     }}
                 ></InputsSelect>
 
-                {showForm && (
+                {opcionesRols.length > 0 && showForm ? (
                     <>
                         <FormColumn>
                             <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
@@ -307,7 +304,7 @@ export const WatchmanCreate = () => {
                     </>
 
 
-                )}
+                ) : null}
             </FormContainer >
         </>
     )

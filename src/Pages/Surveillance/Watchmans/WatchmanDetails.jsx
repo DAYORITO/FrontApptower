@@ -1,237 +1,401 @@
 import React, { useEffect, useState } from 'react'
+
 import { Details } from "../../../Components/Details/details"
+import Inputs from '../../../Components/Inputs/Inputs'
+import InputsSelect from "../../../Components/Inputs/InputsSelect"
+import { docTypes, sexs, statusList } from "../../../Hooks/consts.hooks"
 import { TablePerson } from '../../../Components/Tables/Tables'
 import { TableDetails } from "../../../Components/TableDetails/TableDetails"
 import { NavDetails } from "../../../Components/NavDetails/NavDetails"
 import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails"
 import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
-import { SearchButton } from "../../../Components/Buttons/Buttons"
-import { useFetchgetById } from "../../../Hooks/useFetch"
+import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
+import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
+import { useFetch, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
+import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
+import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
+import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
+import { Acordions } from "../../../Components/Acordions/Acordions"
+import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
+import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
+import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
+
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
-import './Watchman.css'
-import { Thead } from '../../../Components/Thead/Thead'
-import { Table, ThInfo } from '../../../Components/Table/Table'
+import { format } from 'date-fns';
+import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
+import { createPortal } from 'react-dom'
+import { Uploader } from '../../../Components/Uploader/Uploader'
+import { postRequest } from '../../../Helpers/Helpers'
+
+export const WatchmanDetails = () => {
+
+    // API URL
+
+    const url = "http://localhost:3000/api/"
+    // const url = "https://apptowerbackend.onrender.com/api/"
 
 
-export const WatchmanDetails = (props) => {
+    // resident information
 
+    const { id } = useParams();
 
+    const [idResident, setIdResident] = useState(id)
+    const [idUser, setIdUser] = useState("")
+    const [idApartment, setIdApartment] = useState("")
 
-    // 1. Start Get apartment information by id
+    const [residentStartDate, setResidentStartDate] = useState("")
 
-    const { idwatchman } = useParams();
-    console.log(idwatchman, "idwatchman")
-    const { data: watchman, error, load } = useFetchgetById('watchman', idwatchman);
+    const [statusResident, setStatusResident] = useState("")
+    const [residentCreateAt, setResidentCreateAt] = useState("")
+    const [residentUpdatedAt, setResidentUpdatedAt] = useState("")
 
+    const [residentPdf, setResidentPdf] = useState("")
+    const [docType, setDocType] = useState("")
+    const [residentType, setResidentType] = useState("")
+    const [pdf, setPdf] = useState("")
+    const [docNumber, setDocNumber] = useState("")
+    const [name, setName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [birthday, setBirthday] = useState("")
+    const [sex, setSex] = useState("")
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [userStatus, setUserStatus] = useState("")
 
+    const [apartments, setApartments] = useState([])
 
-
-    console.log()
-    const [idWatchman, setIdwatchman] = useState("");
-    const [name, setName] = useState('');
-    const [lastname, setwatchmanLastname] = useState('');
-    const [documentType, setDocumentType] = useState('');
-    const [document, setDocument] = useState('');
-    const [status, setStatus] = useState('');
-    const [dateOfbirth, setDateOfbirth] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-
-
-
-
-
-    function calculateAge(dateOfBirth) {
-        const dob = new Date(dateOfBirth);
-        const today = new Date();
-        let age = today.getFullYear() - dob.getFullYear();
-        const m = today.getMonth() - dob.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-            age--;
-        }
-        return age;
-    }
 
     const [age, setAge] = useState(null);
 
+
+
+    // Resident relations
+
+    const { data: resident, get: getResident, loading: loadingResident } = useFetch(url)
+    const { data: residents, get: getResidents, loading } = useFetch(url)
+    const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
+
+    console.log(resident.data)
     useEffect(() => {
-        if (watchman && watchman.watchman) {
-            setDateOfbirth(watchman.watchman.dateOfbirth);
-            setAge(calculateAge(watchman.watchman.dateOfbirth));
+
+        // resident information
+
+        // setIdResident(resident?.data?.resident?.idResident)
+        setIdUser(resident?.data?.resident?.iduser)
+        setStatusResident(resident?.data?.resident?.status)
+        setResidentCreateAt(resident?.data?.resident?.createAt)
+        setResidentUpdatedAt(resident?.data?.resident?.updateAt)
+
+        setResidentPdf(resident?.data?.resident?.user?.pdf)
+        setResidentType(resident?.data?.resident?.residentType)
+        setDocType(resident?.data?.resident?.user?.docType)
+        setPdf(resident?.data?.resident?.user?.pdf)
+        setDocNumber(resident?.data?.resident?.user?.document)
+        setName(resident?.data?.resident?.user?.name)
+        setLastName(resident?.data?.resident?.user?.lastName)
+        setBirthday(resident?.data?.resident?.user?.birthday)
+        setSex(resident?.data?.resident?.user?.sex)
+        setEmail(resident?.data?.resident?.user?.email)
+        setPhone(resident?.data?.resident?.user?.phone)
+        setUserStatus(resident?.data?.resident?.user?.status)
+
+        getResidents("residents")
+        getApartments("apartments")
+
+        setApartments(resident?.data?.apartments)
+
+        if (resident?.data?.resident?.user?.birthday) {
+            const birthDate = new Date(resident.data.resident.user.birthday);
+            const currentDate = new Date();
+            const difference = currentDate - birthDate;
+            const ageInMilliseconds = new Date(difference);
+            const calculatedAge = Math.abs(ageInMilliseconds.getUTCFullYear() - 1970);
+
+            setAge(calculatedAge);
+        }
+
+    }, [resident?.data?.resident])
+
+
+    useEffect(() => {
+
+        try {
+
+            getResident(`residents/${id}`)
+
+
+        } catch (error) {
+
+            console.error('Error al obtener datos del apartamento', error);
 
         }
-    }, [watchman]);
 
 
 
-    const [guardshifts, setGuardshifts] = useState([]);
+    }, [])
 
-    const fetchGuardshifsforwatchman = async () => {
-        // const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idwatchman}`);
 
-        const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idwatchman}`);
-        const data = await response.json();
-        setGuardshifts(data.shifts, 'Data watchman');
-        console.log(data.shifts, "guardshifts")
+    // Edit personal information resident
+
+    const [modalPersonalInforesident, setModalPersonalInforesident] = useState(false);
+
+    const openModalEdit = (data) => {
+
+        console.log(data)
+        setModalPersonalInforesident(true)
+
+        setIdUser(data.iduser)
+        setDocType(data.user.docType)
+        setDocNumber(data.user.document)
+        setName(data.user.name)
+        setLastName(data.user.lastName)
+        setBirthday(format(new Date(data.user.birthday), 'yyyy-MM-dd'))
+        setSex(data.user.sex)
+        setEmail(data.user.email)
+        setPhone(data.user.phone)
+
     }
 
+    // Assigned apartment to resident
 
+    const [modalAssigApartmentToresident, setModalAssigApartmentToresident] = useState(false);
 
-    useEffect(() => {
-        fetchGuardshifsforwatchman();
+    const openModalAssingApartmentToresident = () => {
+
+        setIdResident(id)
+        setModalAssigApartmentToresident(true)
+
     }
-        , []);
 
-    useEffect(() => {
+    const CreateApartmentresident = async (event) => {
 
-        if (watchman && watchman.watchman) {
-            setIdwatchman(watchman.watchman.idwatchman);
-            setName(watchman.watchman.namewatchman);
-            setwatchmanLastname(watchman.watchman.lastnamewatchman);
-            setDocumentType(watchman.watchman.documentType);
-            setDocument(watchman.watchman.document);
-            setStatus(watchman.watchman.state);
-            setDateOfbirth(watchman.watchman.dateOfbirth);
-            setEmail(watchman.watchman.email);
-            setPhone(watchman.watchman.phone);
+        const data = {
 
-
+            idApartment: parseInt(idApartment),
+            idResident: idResident,
+            residentStartDate: residentStartDate,
+            // status: "active"
 
         }
-    }, [watchman])
 
+        console.log(data)
 
+        await postRequest(event, 'apartmentresidents', 'POST', {}, data, url)
 
-    const [toggleState, setToggleState] = useState(1)
+        setModalAssigApartmentToresident(false)
+        getResident(`residents/${id}`)
 
-    const toggleTab = (index) => {
-        setToggleState(index)
     };
 
 
+    // List residents
+
+    const residentsList = residents && residents?.data?.residents
+        ? residents?.data?.residents
+            .map(resident => ({
+                value: resident.idResident,
+                label: ` ${resident.user.name} ${resident.user.lastName} - ${resident.user.document}`
+            }))
+        : [];
+
+    // List apartments
+
+    const apartmentList = apartmentss?.data && apartmentss?.data?.apartments
+
+        ? apartmentss.data.apartments
+            .map(apartment => ({
+                value: apartment.idApartment,
+                label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
+            }))
+        : [];
+
+    // Edit residents
+
+    // const handleUpdateApartmentResident = async (event) => {
 
 
 
+    //   const data = {
 
-    const [searchDate, setSearchDate] = useState(null);
-
-    const [filteredShifts, setFilteredShifts] = useState([]);
-
-    const handleSearch = (event) => {
-        const date = event.target.value;
-        setSearchDate(date);
-    };
-
-
-    useEffect(() => {
-        if (searchDate) {
-            const filtered = guardshifts.filter(shift => {
-                const shiftDate = new Date(shift.start);
-                const searchDateObj = new Date(searchDate);
-                searchDateObj.setUTCHours(0, 0, 0, 0);
-
-                return shiftDate.getUTCFullYear() === searchDateObj.getUTCFullYear() &&
-                    shiftDate.getUTCMonth() === searchDateObj.getUTCMonth() &&
-                    shiftDate.getUTCDate() === searchDateObj.getUTCDate();
-            });
-            setFilteredShifts(filtered);
-        } else {
-            setFilteredShifts(guardshifts);
-        }
-    }, [searchDate, guardshifts]);
+    //     idApartmentResident: idApartmentResident,
+    //     idResident: idResident,
+    //     idApartment: idApartment,
+    //     residentStartDate: residentStartDate,
+    //     residentEndDate: residentEndDate,
+    //     status: statusApartmentResident
 
 
+    //   }
 
+    //   console.log("edit data", data)
+
+    //   await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url);
+    //   setShowApartmentResidentEditModal(false)
+
+
+    // };
+
+    console.log(residentType)
     return (
         <>
             <Details>
 
+                {
+
+                    loadingResident ? <Spinner /> :
+                        <ContainerModule
+
+                            to='/admin/residents/'
+                            icon='user'
+
+                            A1={`${residentType == 'owner' ? 'Propietario' : 'Arrendatario'} ${name}`}
+                            A2={`${lastName}`}
+                            // A3={`${docType} ${document}`}
+                            A5={`Correo electronico: ${email}`}
+                            A6={`Telefono: ${phone}`}
+                            A7={pdf}
+                            status={statusResident}
+                            onClickEdit={openModalEdit}
+                        // onClickEdit={setShowModalEditApartment}
+                        />
+
+                }
+
+
+
                 <InfoDetails>
 
-                    {load ? (
-                        <p>Cargando información...</p>
-                    ) : (
-                        <div className='container-icons-custom472'>
-                            <div className="circlecon-unique">
-                                <span className='fe fe-shield text-muted fe-32 custom-icons'></span>
-                                {['Active', 'Activo'].includes(status)
-                                    ? <span className="dot dot-md bg-success mr-1"></span>
-                                    : <span className="dot dot-md bg-danger mr-1"></span>}
-                            </div>
-                            <div className='info-vs-custom'>
-                                <h2 className="custom-heading">Vigilante</h2>
-                                {name != null & name != null ? name + ' ' + lastname : null} <br />
-                                {documentType != null ? <span className="badge badge-light text-secondary">{documentType}</span> : null}
-                                {document != null ? <em class="text-muted ml-2">{document}</em> : null}
+                    <Acordions>
 
-                                <br />
-                                <div className='container-i'>
-                                    <br /><p className="custom-paragraph text-muted ml-2 "><strong>Correo: </strong> {email ? email : ''} </p>
-                                    <p className="custom-paragraph text-muted ml-2"><strong>Teléfono: </strong>{phone ? phone : ''}</p>
-                                    <p className="custom-paragraph text-muted ml-2 "><strong>Edad: </strong> {age ? age : ''}</p>
+                        <DropdownInfo
+                            name={`Informacion personal`}
+                        >
 
-                                </div>
-
-                                <Link to="/admin/watchman/" className="btn btn-sm btn-secondary bnt">Regresar</Link>
-                            </div>
-
-                        </div>
-
-                    )}
+                            <ul className='list-unstyled'>
+                                <li>Nombre: {name}</li>
+                                <li>Apellidos: {lastName}</li>
+                                <li>Tipo de documento: {docType}</li>
+                                <li>Numero de documento: {docNumber}</li>
+                                <li>edad: {age} años</li>
+                                <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li>
+                                {/* <li>{email}</li>
+              <li>{phone}</li> */}
 
 
+                            </ul>
 
+                        </DropdownInfo>
+
+                        <DropdownInfo
+                            name={`Apartamento`}
+                            action1={'Asignar apartamento'}
+                            onClickAction1={openModalAssingApartmentToresident}
+                        >
+
+                            {
+                                loadingResident ? <SmalSpinner /> : (
+                                    apartments && apartments.length > 0 ? (
+                                        apartments.map((apartment, index) => (
+                                            <Dropdownanchor
+                                                key={index}
+                                                name={`Apartamento ${apartment.apartment.apartmentName}`}
+                                                to={`/admin/apartments/details/${apartment.apartment.idApartment}`}
+                                                status={apartment.status}
+                                            />
+                                        ))
+                                    ) : (
+                                        <NotificationsAlert msg={`Debes asignarle una propiedad`} />
+                                    )
+                                )
+                            }
+
+                        </DropdownInfo>
+
+
+                    </Acordions>
 
                 </InfoDetails>
 
-                <ListsDetails>
-                    <NavDetails>
-
-                        <NavListDetails index={1} name={"Turnos"} toggleState={toggleState} onClick={() => toggleTab(1)} />
-                        {/* <NavListDetails index={2} name={"Ingresos"} toggleState={toggleState} onClick={() => toggleTab(1)} /> */}
-
-                    </NavDetails>
-
-                    <input type="date" name="" className='dateShifts' onChange={handleSearch} />
-
-
-
-
-                    <TableDetails index={1} toggleState={toggleState} >
-
-                        <TablePerson>
-
-
-
-                            <Thead>
-                                <ThInfo />
-                                <ThInfo name='Fecha' />
-                                <ThInfo name='Hora inicio' />
-                                <ThInfo name='Hora fin' />
-                            </Thead>
-
-                            {filteredShifts.sort((a, b) => new Date(a.start) - new Date(b.start)).slice(-1).map(shift => {
-                                const startDate = new Date(shift.start);
-                                const endDate = new Date(shift.end);
-
-                                const date = startDate.toLocaleDateString(undefined, { timeZone: 'UTC' });
-                                const startTime = startDate.toLocaleTimeString();
-                                const endTime = endDate.toLocaleTimeString();
-
-                                return (
-                                    <Table key={idWatchman} opc1={date} opc2={startTime} opc3={endTime} status={status} />
-                                );
-                            })}
-
-
-                        </TablePerson>
-                    </TableDetails>
-
-
-                </ListsDetails>
             </Details >
+
+            {modalAssigApartmentToresident &&
+                createPortal(
+                    <>
+                        <ModalContainer showModal={setModalAssigApartmentToresident}>
+                            <Modal
+                                onClick={CreateApartmentresident}
+                                showModal={setModalAssigApartmentToresident}
+                                title={`Asignar propiedad`}
+
+                            >
+
+                                <InputsSelect id={"select"} options={residentsList} name={"Propietario"}
+                                    value={idResident} onChange={e => setIdResidnet(e.target.value)}
+                                ></InputsSelect>
+
+                                <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}
+                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}
+                                ></InputsSelect>
+
+                                <Inputs name="Fecha desde cuando es propietario" type={"date"}
+                                    value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
+
+
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )
+            }
+
+            {modalPersonalInforesident &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setModalPersonalInforesident}>
+                            <Modal
+                                // onClick={handleUpdateApartmentresident}
+                                showModal={setModalPersonalInforesident}
+                                title={"Editar informacion personal"}
+
+                            >
+                                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />
+
+                                <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
+                                    value={docType} onChange={e => setDocType(e.target.value)}
+                                ></InputsSelect>
+
+                                <Inputs name="Numero de documento" type={"text"}
+                                    value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
+
+                                <Inputs name="Nombres" type={"text"}
+                                    value={name} onChange={e => setName(e.target.value)}></Inputs>
+
+                                <Inputs name="Apellidor" type={"text"}
+                                    value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
+
+                                <Inputs name="Fecha de cumpleaños" type={"date"}
+                                    value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+
+                                <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+                                    value={sex} onChange={e => setSex(e.target.value)}
+                                ></InputsSelect>
+
+                                <Inputs name="Correo electronico" type={"text"}
+                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+
+                                <Inputs name="Numero de telefono" type={"text"}
+                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+
+                                <Inputs type={"hidden"}
+                                    value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
         </>
     )
 }
