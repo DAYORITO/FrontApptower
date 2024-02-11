@@ -205,7 +205,7 @@ export const Owners = () => {
 
                                     }
 
-                                    <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(owner)}></Actions>
+                                    {/* <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(owner)}></Actions> */}
                                     {/* <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions> */}
                                     {
                                         owner.user.pdf ? <Actions accion='Documento' icon='file' href={owner.user.pdf} ></Actions> : null

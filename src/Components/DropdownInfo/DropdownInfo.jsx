@@ -36,25 +36,31 @@ export const DropdownInfo = ({
 
                 </a>
                 <div className={`dropdown ${isDropdownOpen ? 'show' : ''}`}>
-                    <button className="btn btn-sm dropdown-toggle more-vertical" type="button" onClick={toggleDropdown}>
-                        <span className="sr-only"></span>
-                    </button>
-                    <div className={`dropdown-menu dropdown-menu-right  ${isDropdownOpen ? 'show' : ''}`}>
-                        {
-                            action1 ? <Link onClick={onClickAction1} className="dropdown-item" to={toAction1}>
-                                {action1}
-                            </Link> : null
-                        }
+                    {action1 &&
+                        <>
+                            <button className="btn btn-sm dropdown-toggle more-vertical" type="button" onClick={toggleDropdown}>
+                                <span className="sr-only"></span>
+                            </button>
 
-                        {
+                            <div className={`dropdown-menu dropdown-menu-right  ${isDropdownOpen ? 'show' : ''}`}>
+                                {
+                                    action1 ? <Link onClick={onClickAction1} className="dropdown-item" to={toAction1}>
+                                        {action1}
+                                    </Link> : null
+                                }
 
-                            action2 ? <Link onClick={onClickAction2} className="dropdown-item" to={toAction2}>
-                                {action2}
-                            </Link> : null
-                        }
+                                {
+
+                                    action2 ? <Link onClick={onClickAction2} className="dropdown-item" to={toAction2}>
+                                        {action2}
+                                    </Link> : null
+                                }
 
 
-                    </div>
+                            </div>
+                        </>
+
+                    }
                 </div>
             </div>
             <div className={`collapse ${isAccordionOpen ? 'show' : ''}`}>

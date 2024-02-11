@@ -2,6 +2,8 @@ import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
 function InputsSelect({ id, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle }) {
+
+
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
   const [internalErrorMessage, setInternalErrorMessage] = useState(null);
   const [labelText, setLabelText] = useState(name);

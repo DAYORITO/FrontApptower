@@ -54,6 +54,7 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
+import { ResidentDetails } from "./Pages/Residential/Residents/ResidentDetails";
 
 
 
@@ -61,7 +62,7 @@ import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
 import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
-import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetails";
+// import { UserDetail } from "./Pages/Users/Users/userDetails";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -432,7 +433,8 @@ const App = () => {
                                         <ResidentCreate /> : <NotFound />
                                 } />
 
-                                <Route path='residents/details/:id' element={<ResidentDetail />} />
+                                <Route path='resident/details/:id' element={<ResidentDetails />} />
+
 
                                 <Route path='residents/create/:id' element={<ResidentCreate />} />
 

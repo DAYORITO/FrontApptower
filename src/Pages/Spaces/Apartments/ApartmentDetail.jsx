@@ -378,7 +378,7 @@ export const ApartmentDetails = (props) => {
 
     // Edit apartment
 
-    const handleUpdateResident = (event) => {
+    const handleUpdateResident = async (event) => {
 
         const data = {
 
@@ -392,7 +392,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        postRequest(event, 'apartments', 'PUT', {}, data, url);
+        await postRequest(event, 'apartments', 'PUT', {}, data, url);
 
         setShowModalEditApartment(false)
 
@@ -529,8 +529,9 @@ export const ApartmentDetails = (props) => {
                             A5={`Bloque: ${towerName} `}
                             A6={`Area: ${area} m²`}
 
+                            onClick2={setShowModalEditApartment}
+                            actionOnClick2='Editar apartamento'
                             status={status}
-                            onClickEdit={setShowModalEditApartment}
                         />
 
                 }
