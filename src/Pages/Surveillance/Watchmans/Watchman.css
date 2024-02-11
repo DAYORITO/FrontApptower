@@ -21,6 +21,11 @@
     }
 }
 
+#tableguards {
+    width: 85%;
+    margin-left: -50px;
+}
+
 #datebutton {
     display: flex;
     justify-content: flex-end;
@@ -74,12 +79,15 @@
 }
 
 .dateShifts {
-    width: 32%;
-    border: #969696 solid 1px;
+    width: 16%;
+    border: 1px solid #969696;
     border-radius: 5px;
-    padding: -5px;
-    margin-left: 92%;
+    padding: 7px;
+    margin-left: 80%;
+    transition: border-color 0.3s ease;
+}
 
-
-
+.dateShifts:focus {
+    border-color: #2564ad;
+    outline: none;
 }

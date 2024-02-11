@@ -27,6 +27,7 @@ import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
+import { UsersDetails } from "./Pages/Users/Users/UsersDetails";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
@@ -53,6 +54,7 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
+import { ResidentDetails } from "./Pages/Residential/Residents/ResidentDetails";
 
 
 
@@ -60,7 +62,7 @@ import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
 import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
-import { UserDetail } from "./Pages/Users/Users/userDetails";
+// import { UserDetail } from "./Pages/Users/Users/userDetails";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -208,6 +210,8 @@ const App = () => {
                                         <UsersCreate /> : <NotFound />
                                 } />
 
+                                <Route path='users/details/:id' element={<UsersDetails />} />
+
                                 {/* <Route path='users/edit' element={
                                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') ?
                                         <UsersEdit /> : <NotFound />
@@ -243,7 +247,7 @@ const App = () => {
                                         <WatchmanCreate /> : <NotFound />
                                 } />
 
-                                <Route path='watchman/details/:idwatchman' element={
+                                <Route path='watchman/details/:id' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
                                         <WatchmanDetails /> : <NotFound />
                                 } />
@@ -401,12 +405,12 @@ const App = () => {
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
                                         <ParkingSpaces /> : <NotFound />
                                 } />
-                                 {/* Parking Spaces */}
-                                 <Route path='parkingSpaces/:id' element={
+                                {/* Parking Spaces */}
+                                <Route path='parkingSpaces/:id' element={
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
                                         <ParkingSpaces /> : <NotFound />
                                 } />
-                                
+
                                 <Route path='parkingSpaces/create' element={
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear') ?
                                         <ParkingSpacesCreate /> : <NotFound />
@@ -429,7 +433,8 @@ const App = () => {
                                         <ResidentCreate /> : <NotFound />
                                 } />
 
-                                <Route path='user/details/:id' element={<UserDetail />} />
+                                <Route path='resident/details/:id' element={<ResidentDetails />} />
+
 
                                 <Route path='residents/create/:id' element={<ResidentCreate />} />
 

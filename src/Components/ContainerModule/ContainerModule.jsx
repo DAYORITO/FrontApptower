@@ -54,7 +54,7 @@ export const ContainerModule = ({
                         <Link to={to}>
 
                             <div className="col ml-4">
-                                <strong className="">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active") ? "success" : "danger"} ml-2`}></span>
+                                <strong className="">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active" || status == "Activo") ? "success" : "danger"} ml-2`}></span>
 
                                 {
                                     A4 ? <><br /><span className="badge badge-light text-secondary">{A4}</span></> : null

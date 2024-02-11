@@ -314,3 +314,45 @@ export const useFetchput = (endpoint, data) => {
 }
 
 
+//Fetch Information User
+
+
+export const useFetchUserInformation = (token) => {
+    const [userData, setUserData] = useState(null);
+    const [userDocument, setUserDocument] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const fetchUserInformation = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user information');
+            }
+
+            const data = await response.json();
+            setUserData(data);
+            setUserDocument(data.user.document);
+
+        } catch (error) {
+            console.error('Error fetching user information:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            fetchUserInformation();
+        }
+    }, [token]);
+
+    return { data: userData, get: fetchUserInformation, loading };
+};
+
+

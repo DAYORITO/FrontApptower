@@ -7,7 +7,7 @@
 
 .contents {
     text-align: center;
-    color: #555;
+    color: #dddddd;
     max-width: 50%;
 }
 
@@ -28,12 +28,12 @@
     border-radius: 5px;
     text-decoration: none;
     color: #fff;
-    background-color: #002d5e;
+    background-color: #ffffff;
     font-size: 18px;
 }
 
 .linkl:hover {
-    background-color: #004b96;
+    background-color: #81b3e4;
     color: #fff;
     text-decoration: none;
 }

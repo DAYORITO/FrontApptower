@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
-import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
+import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
 import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
@@ -11,6 +11,7 @@ import { Actions } from '../../../Components/Actions/Actions'
 
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie';
+import { filterPerSelect } from '../../../Helpers/Helpers'
 
 
 export const Users = () => {
@@ -82,6 +83,7 @@ export const Users = () => {
 
 
     const [roles, setRoles] = useState([]);
+    console.log(roles, 'roles');
 
     useEffect(() => {
         const fetchRolesData = async () => {
@@ -106,26 +108,52 @@ export const Users = () => {
     }, [data]);
 
 
+
     const [search, setSearch] = useState('');
     const searcher = (e) => {
-
         setSearch(e.target.value)
-        console.log(e.target.value)
-    }
-    let filterData = [];
-
-    if (!search) {
-        filterData = usersData;
-    } else {
-        filterData = usersData.filter((dato) =>
-            (dato.name && dato.name.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.lastname && dato.lastname.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.document && dato.document.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
-        );
     }
 
+    const roleOptions = [
+        { value: "allUsers", label: "Todos los usuarios" },
+        ...roles.filter(role => role.state === 'Activo').map(role => ({
+            value: role.idrole.toString(),
+            label: role.namerole
+        }))
+    ];
+
+
+    const [searchForSelect, setSearchForSelect] = useState(null);
+
+
+    const searcherForSelect = (event) => {
+        const newValue = event.target.value === "allUsers" ? null : event.target.value;
+        setSearchForSelect(newValue);
+    }
+
+    const [filterData, setFilterData] = useState([]);
+
+    useEffect(() => {
+        let filteredUsers = usersData;
+
+        if (search) {
+            filteredUsers = filteredUsers.filter((dato) =>
+                (dato.name && dato.name.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.lastname && dato.lastname.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.document && dato.document.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
+                (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
+            );
+        }
+
+        if (searchForSelect !== null) {
+            filteredUsers = filteredUsers.filter((dato) =>
+                dato.idrole.toString() === searchForSelect
+            );
+        }
+
+        setFilterData(filteredUsers);
+    }, [search, searchForSelect, usersData]);
 
 
 
@@ -156,6 +184,7 @@ export const Users = () => {
                 title='Usuarios'
                 dropdown={<DropdownExcel />}
                 search={<SearchButton value={search} onChange={searcher} />}
+                search2={<SearchSelect options={roleOptions} value={searchForSelect} onChange={searcherForSelect} ></SearchSelect>}
                 buttonToGo={
                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Crear')
                         ? <ButtonGoTo value='Crear Usuario' href='create' />
@@ -192,27 +221,37 @@ export const Users = () => {
                     </Thead>
                     <Tbody>
 
-                        {filteredDataUsers().map(user => (
-                            <Row
-                                key={user.iduser}
-                                img={user.userImg}
-                                A3={user.docType}
-                                A4={user.document}
-                                A1={user.name}
-                                A2={user.lastName}
-                                description={
-                                    roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
-                                }
-                                A17={user.email}
-                                A7={user.phone ? user.phone : 'Desconocido'}
-                                status={user.status}
-                            >
-                                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
-                                    <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
-                                )}
+                        {filteredDataUsers().map(user => {
+                            const userRole = roles.find(role => role.idrole === user.idrole);
+                            const redirectTo = userRole && (
+                                userRole.namerole.toLowerCase() === 'vigilante' ||
+                                userRole.namerole.toLowerCase() === 'vigilancia' ||
+                                userRole.namerole.toLowerCase() === 'seguridad'
+                            ) ? `/admin/watchman/details/${user.iduser}` :
+                                userRole && userRole.namerole.toLowerCase() === 'residente' ?
+                                    `/admin/resident/details/${user.iduser}` :
+                                    `/admin/users/details/${user.iduser}`;
 
-                            </Row>
-                        ))}
+                            return (
+                                <Row
+                                    key={user.iduser}
+                                    img={user.userImg}
+                                    A3={user.docType}
+                                    A4={user.document}
+                                    A1={user.name}
+                                    A2={user.lastName}
+                                    description={userRole?.namerole || 'Desconocido'}
+                                    A17={user.email}
+                                    A7={user.phone ? user.phone : 'Desconocido'}
+                                    status={user.status}
+                                    to={redirectTo}
+                                >
+                                    {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
+                                        <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
+                                    )}
+                                </Row>
+                            );
+                        })}
 
                     </Tbody>
                 </TablePerson>

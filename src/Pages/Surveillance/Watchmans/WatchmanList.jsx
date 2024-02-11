@@ -386,7 +386,7 @@ export const Watchman = () => {
                                     A7={watchman.user && watchman.user.phone ? watchman.user.phone : 'Desconocido'}
                                     A17={watchman.user ? watchman.user.email : 'Desconocido'}
                                     status={watchman.state}
-                                    to={`details/${watchman.idwatchman}`}
+                                    to={`details/${watchman.iduser}`}
                                 >
                                     {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
                                         <Actions accion='Editar' onClick={(e) => {

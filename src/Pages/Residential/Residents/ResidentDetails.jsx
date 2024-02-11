@@ -12,7 +12,7 @@ import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
-import { useFetch, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
+import { useFetch, useFetchUserInformation, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -20,6 +20,7 @@ import { Acordions } from "../../../Components/Acordions/Acordions"
 import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
 import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
+import Cookies from 'js-cookie';
 
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
@@ -28,8 +29,9 @@ import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest } from '../../../Helpers/Helpers'
+const token = Cookies.get('token');
 
-export const UserDetail = () => {
+export const ResidentDetails = () => {
 
     // API URL
 
@@ -79,13 +81,16 @@ export const UserDetail = () => {
 
 
 
+
+
+
     // Resident relations
 
     const { data: resident, get: getResident, loading: loadingResident } = useFetch(url)
     const { data: residents, get: getResidents, loading } = useFetch(url)
     const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
-
-
+    const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+    const EqualUser = user?.user?.document === docNumber;
     useEffect(() => {
 
         // resident information
@@ -322,9 +327,9 @@ export const UserDetail = () => {
 
                     loadingResident ? <Spinner /> :
                         <ContainerModule
-                            onClick={() => openModalEditImg()}
+                            onClick={EqualUser ? openModalEditImg : null}
                             img={userImg}
-                            to='/admin/residents/'
+                            to={EqualUser ? null : '/admin/residents/'}
                             icon='user'
 
                             A1={`${residentType == 'owner' ? 'Propietario' : 'Arrendatario'} ${name}`}
@@ -332,9 +337,9 @@ export const UserDetail = () => {
                             // A3={`${docType} ${document}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
-                            A7={pdf}
+                            // A7={pdf}
                             status={statusResident}
-                            onClick2={openModalChangePassword}
+                            onClick2={EqualUser ? openModalChangePassword : null}
                         // onClickEdit={setShowModalEditApartment}
                         />
 
@@ -385,7 +390,7 @@ export const UserDetail = () => {
                                             />
                                         ))
                                     ) : (
-                                        <NotificationsAlert msg={`Debes asignarle una propiedad`} />
+                                        <NotificationsAlert msg={`Sin Apartamento`} />
                                     )
                                 )
                             }
@@ -403,7 +408,7 @@ export const UserDetail = () => {
                                     bookings && bookings.length > 0 ? (
                                         bookings.map((booking, index) => (
                                             <RowNotificactions
-                                                
+
                                                 status={booking.status}
                                             />
                                         ))
@@ -492,13 +497,14 @@ export const UserDetail = () => {
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
-                            </Modal>
-                        </ModalContainer>
+                            </Modal >
+                        </ModalContainer >
                     </>,
                     document.getElementById("modalRender")
                 )}
 
-            {modalEditImg &&
+            {
+                modalEditImg &&
                 createPortal(
                     <>
                         <ModalContainer ShowModal={setModalEditImg}>
@@ -517,9 +523,11 @@ export const UserDetail = () => {
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
+                )
+            }
 
-            {modalChangePassword &&
+            {
+                modalChangePassword &&
                 createPortal(
                     <>
                         <ModalContainer ShowModal={setModalChangePassword}>
@@ -542,7 +550,8 @@ export const UserDetail = () => {
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
+                )
+            }
 
         </>
     )
