@@ -83,6 +83,7 @@ export const Users = () => {
 
 
     const [roles, setRoles] = useState([]);
+    console.log(roles, 'roles');
 
     useEffect(() => {
         const fetchRolesData = async () => {
@@ -105,6 +106,7 @@ export const Users = () => {
             setUsersData(data.user);
         }
     }, [data]);
+
 
 
     const [search, setSearch] = useState('');
@@ -219,27 +221,37 @@ export const Users = () => {
                     </Thead>
                     <Tbody>
 
-                        {filteredDataUsers().map(user => (
-                            <Row
-                                key={user.iduser}
-                                img={user.userImg}
-                                A3={user.docType}
-                                A4={user.document}
-                                A1={user.name}
-                                A2={user.lastName}
-                                description={
-                                    roles.find(rol => rol.idrole === user.idrole)?.namerole || 'Desconocido'
-                                }
-                                A17={user.email}
-                                A7={user.phone ? user.phone : 'Desconocido'}
-                                status={user.status}
-                            >
-                                {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
-                                    <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
-                                )}
+                        {filteredDataUsers().map(user => {
+                            const userRole = roles.find(role => role.idrole === user.idrole);
+                            const redirectTo = userRole && (
+                                userRole.namerole.toLowerCase() === 'vigilante' ||
+                                userRole.namerole.toLowerCase() === 'vigilancia' ||
+                                userRole.namerole.toLowerCase() === 'seguridad'
+                            ) ? `/admin/watchman/details/${user.iduser}` :
+                                userRole && userRole.namerole.toLowerCase() === 'residente' ?
+                                    `/admin/resident/details/${user.iduser}` :
+                                    `/admin/users/details/${user.iduser}`;
 
-                            </Row>
-                        ))}
+                            return (
+                                <Row
+                                    key={user.iduser}
+                                    img={user.userImg}
+                                    A3={user.docType}
+                                    A4={user.document}
+                                    A1={user.name}
+                                    A2={user.lastName}
+                                    description={userRole?.namerole || 'Desconocido'}
+                                    A17={user.email}
+                                    A7={user.phone ? user.phone : 'Desconocido'}
+                                    status={user.status}
+                                    to={redirectTo}
+                                >
+                                    {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
+                                        <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
+                                    )}
+                                </Row>
+                            );
+                        })}
 
                     </Tbody>
                 </TablePerson>

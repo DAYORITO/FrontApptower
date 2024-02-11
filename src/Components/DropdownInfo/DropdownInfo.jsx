@@ -13,10 +13,11 @@ export const DropdownInfo = ({
     action2,
     toAction2,
     onClickAction2,
-    children
+    children,
+    initiallyOpen = true
 
 }) => {
-    const [isAccordionOpen, setAccordionOpen] = useState(true);
+    const [isAccordionOpen, setAccordionOpen] = useState(initiallyOpen);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleAccordion = () => {

@@ -12,7 +12,7 @@ import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
-import { useFetch, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
+import { useFetch, useFetchUserInformation, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -20,6 +20,7 @@ import { Acordions } from "../../../Components/Acordions/Acordions"
 import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
 import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
+import Cookies from 'js-cookie';
 
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
@@ -28,6 +29,7 @@ import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest } from '../../../Helpers/Helpers'
+const token = Cookies.get('token');
 
 export const ResidentDetail = () => {
 
@@ -51,6 +53,8 @@ export const ResidentDetail = () => {
     const [residentCreateAt, setResidentCreateAt] = useState("")
     const [residentUpdatedAt, setResidentUpdatedAt] = useState("")
 
+    const [userImg, setUserImg] = useState("")
+
     const [residentPdf, setResidentPdf] = useState("")
     const [docType, setDocType] = useState("")
     const [residentType, setResidentType] = useState("")
@@ -71,12 +75,20 @@ export const ResidentDetail = () => {
 
 
 
+
+
+
     // Resident relations
 
     const { data: resident, get: getResident, loading: loadingResident } = useFetch(url)
     const { data: residents, get: getResidents, loading } = useFetch(url)
     const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
+    const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
+    const EqualUser = user?.user?.document === docNumber;
+
+    // console.log(user.user?.document)
+    console.log(user, 'user')
     console.log(resident.data)
     useEffect(() => {
 
@@ -88,6 +100,7 @@ export const ResidentDetail = () => {
         setResidentCreateAt(resident?.data?.resident?.createAt)
         setResidentUpdatedAt(resident?.data?.resident?.updateAt)
 
+        setUserImg(resident?.data?.resident?.user?.userImg)
         setResidentPdf(resident?.data?.resident?.user?.pdf)
         setResidentType(resident?.data?.resident?.residentType)
         setDocType(resident?.data?.resident?.user?.docType)
@@ -174,7 +187,7 @@ export const ResidentDetail = () => {
         const data = {
 
             idApartment: parseInt(idApartment),
-            idResident: idResident,
+            idResident: parseInt(idResident),
             residentStartDate: residentStartDate,
             // status: "active"
 
@@ -182,7 +195,7 @@ export const ResidentDetail = () => {
 
         console.log(data)
 
-        await postRequest(event, 'apartmentresidents', 'POST', {}, data, url)
+        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url)
 
         setModalAssigApartmentToresident(false)
         getResident(`residents/${id}`)
@@ -237,7 +250,27 @@ export const ResidentDetail = () => {
 
     // };
 
-    console.log(residentType)
+    const [modalEditImg, setModalEditImg] = useState(false)
+
+    const openModalEditImg = () => {
+
+        console.log('Hola')
+        setModalEditImg(true)
+
+    }
+
+    const [modalChangePassword, setModalChangePassword] = useState(false)
+
+    const openModalChangePassword = () => {
+
+        setIdUser(idUser)
+
+        setModalChangePassword(true)
+
+    }
+
+
+
     return (
         <>
             <Details>
@@ -246,8 +279,9 @@ export const ResidentDetail = () => {
 
                     loadingResident ? <Spinner /> :
                         <ContainerModule
-
-                            to='/admin/residents/'
+                            onClick={EqualUser ? openModalEditImg : null}
+                            img={userImg}
+                            to={EqualUser ? null : '/admin/residents/'}
                             icon='user'
 
                             A1={`${residentType == 'owner' ? 'Propietario' : 'Arrendatario'} ${name}`}
@@ -255,9 +289,9 @@ export const ResidentDetail = () => {
                             // A3={`${docType} ${document}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
-                            A7={pdf}
+                            // A7={pdf}
                             status={statusResident}
-                            onClickEdit={openModalEdit}
+                            onClick2={EqualUser ? openModalChangePassword : null}
                         // onClickEdit={setShowModalEditApartment}
                         />
 
@@ -271,6 +305,8 @@ export const ResidentDetail = () => {
 
                         <DropdownInfo
                             name={`Informacion personal`}
+                            action1={'Editar informacion personal'}
+                            onClickAction1={openModalEdit}
                         >
 
                             <ul className='list-unstyled'>
@@ -290,7 +326,7 @@ export const ResidentDetail = () => {
 
                         <DropdownInfo
                             name={`Apartamento`}
-                            action1={'Asignar apartamento'}
+                            action1={!EqualUser ? 'Asignar apartamento' : null}
                             onClickAction1={openModalAssingApartmentToresident}
                         >
 
@@ -306,7 +342,7 @@ export const ResidentDetail = () => {
                                             />
                                         ))
                                     ) : (
-                                        <NotificationsAlert msg={`Debes asignarle una propiedad`} />
+                                        <NotificationsAlert msg={`Sin Apartamento`} />
                                     )
                                 )
                             }
@@ -357,10 +393,10 @@ export const ResidentDetail = () => {
                             <Modal
                                 // onClick={handleUpdateApartmentresident}
                                 showModal={setModalPersonalInforesident}
-                                title={"Editar informacion personal"}
+                                title={"Editar informacion "}
 
                             >
-                                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />
+                                {EqualUser ? null : <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />}
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                                     value={docType} onChange={e => setDocType(e.target.value)}
@@ -390,6 +426,50 @@ export const ResidentDetail = () => {
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {modalEditImg &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setModalEditImg}>
+                            <Modal
+                                // onClick={handleUpdateApartmentresident}
+                                showModal={setModalEditImg}
+                                title={"Cambiar imagen de perfil"}
+
+                            >
+                                <Uploader formatos={['.jpg']} name="img" label="Foto de perfil" onChange={e => setUserImg(e.target.files[0])} />
+
+
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {modalChangePassword &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setModalChangePassword}>
+                            <Modal
+                                // onClick={handleUpdateApartmentresident}
+                                showModal={setModalChangePassword}
+                                title={"Cambiar contraseña"}
+
+                            >
+                                <Inputs name="Nueva contraseña" type={"password"}
+                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+
+                                <Inputs name="Confirmar contraseña" type={"password"}
+                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+
+                                <Inputs type={"hidden"}
+                                    value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
+
                             </Modal>
                         </ModalContainer>
                     </>,

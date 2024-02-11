@@ -165,8 +165,6 @@ export const Aside = () => {
 
     const socket = io("http://localhost:3000/socket.io/socket.io.js");
 
-    console.log(socket)
-
     socket.on('connect', () => {
       console.log('Conexión establecida con el servidor');
     });

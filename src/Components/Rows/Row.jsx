@@ -94,7 +94,7 @@ export const Row = ({
 
             {description != null ? <td class="text-secondary">{description}</td> : null}
             {A7 != null ? <td class="text-secondary">{A7}</td> : null}
-            {A17 != null ? <td class="text-secondary">{A17}</td> : null}
+            {A17 != null ? <td class="text-secondary">{A17}</td> : null} 
 
 
             {A9 != null ?

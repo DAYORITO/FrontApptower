@@ -276,7 +276,8 @@ export const WatchmanCreate = () => {
                             /> <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
 
                             <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-
+                            {/* <InputsSelect id={"select"} options={opciones} name={"Sexo"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
+                           */}
                         </FormColumn>
 
                         <FormColumn>

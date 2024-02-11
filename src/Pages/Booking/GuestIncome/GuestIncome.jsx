@@ -231,12 +231,12 @@ function GuestIncome() {
                         </Row> */}
                         {filteredDataguestIncome().map(Income => (
                             <Row
-                                docType="Apto visitado"
-                                docNumber={Income.asociatedApartment.apartmentName}
-                                name={Income.asociatedVisitor.name}
-                                lastName={Income.asociatedVisitor.lastname}
-                                op2={Income.departureDate == null ? 'No registrada' : formatDate(Income.departureDate)}
-                                op1={formatDate(Income.startingDate)}
+                                A3="Apto visitado"
+                                A4={Income.asociatedApartment.apartmentName}
+                                A1={Income.asociatedVisitor.name}
+                                A2={Income.asociatedVisitor.lastname}
+                                A7={Income.departureDate == null ? 'No registrada' : formatDate(Income.departureDate)}
+                                A6={formatDate(Income.startingDate)}
                             >
                                 {Income.departureDate == null ?
                                     <Actions accion='Registrar salida' onClick={() => {

@@ -199,14 +199,14 @@ function Fines() {
                             <Row
                                 key={fine.idFines}
                                 A1={fine.fineType}
-                                A3="APTO"
+                                A3="APTO"   
                                 A4={fine.apartment.apartmentName}
                                 icon='dollar-sign'
                                 // status='Pendiente'
                                 A7={fine.incidentDate}
-                                // A8={fine.paymentDate}
+                                A6={fine.paymentDate}
                                 A9={"$" + fine.amount}
-                                A6={fine.state}
+                                A12={fine.state}
                             >
                                 <Actions accion='Agregar Comprobante' />
                                 <Actions accion='Aprobar pago' onClick={() => {

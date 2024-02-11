@@ -27,6 +27,7 @@ import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
 import { WatchmanCreate } from "./Pages/Surveillance/Watchmans/WatchmanCreate";
 import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
+import { UsersDetails } from "./Pages/Users/Users/UsersDetails";
 import { Booking } from "./Pages/Booking/Booking/booking";
 import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
@@ -208,6 +209,8 @@ const App = () => {
                                         <UsersCreate /> : <NotFound />
                                 } />
 
+                                <Route path='users/details/:id' element={<UsersDetails />} />
+
                                 {/* <Route path='users/edit' element={
                                     allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') ?
                                         <UsersEdit /> : <NotFound />
@@ -243,7 +246,7 @@ const App = () => {
                                         <WatchmanCreate /> : <NotFound />
                                 } />
 
-                                <Route path='watchman/details/:idwatchman' element={
+                                <Route path='watchman/details/:id' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
                                         <WatchmanDetails /> : <NotFound />
                                 } />
@@ -401,12 +404,12 @@ const App = () => {
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
                                         <ParkingSpaces /> : <NotFound />
                                 } />
-                                 {/* Parking Spaces */}
-                                 <Route path='parkingSpaces/:id' element={
+                                {/* Parking Spaces */}
+                                <Route path='parkingSpaces/:id' element={
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Listar') ?
                                         <ParkingSpaces /> : <NotFound />
                                 } />
-                                
+
                                 <Route path='parkingSpaces/create' element={
                                     allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear') ?
                                         <ParkingSpacesCreate /> : <NotFound />

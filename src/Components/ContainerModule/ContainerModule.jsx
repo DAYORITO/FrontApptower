@@ -8,6 +8,7 @@ export const ContainerModule = ({
 
     icon = "home",
     to = '/admin/',
+    img,
 
     A1 = "",
     A2 = "",
@@ -18,7 +19,9 @@ export const ContainerModule = ({
     A6,
     A7,
 
-    onClickEdit,
+    onClick,
+
+    onClick2,
     status
 
 
@@ -27,21 +30,30 @@ export const ContainerModule = ({
     let A1A2 = `${A1} ${A2}`.toUpperCase()
     const navigate = useNavigate()
 
+    const [hovered, setHovered] = useState(false);
+
+
     return (
         <div className="card shadow container-module card-header-details">
             <div className="card-body">
                 <div className="row align-items-center header justify-content-between">
-                    <Link to={to}>
-                        <div className='info'>
+                    <div className='info'>
 
-                            <div className=" col-md-2 text-center" >
-                                <div className="circle circle-lg bg-light ">
-                                    <span className={`fe fe-${icon} fe-24 text-grey`}></span>
-                                </div>
+                        <div className="col-md-2 text-center">
+                            <div className="circle circle-lg bg-light"
+                                onClick={onClick}
+                                onMouseEnter={() => setHovered(true)}
+                                onMouseLeave={() => setHovered(false)}
+                                style={{ position: 'relative' }} /* Añade posición relativa para que el absoluto funcione */
+                            >
+                                {img ? <img className='userImg' src={img} /> : <span className={`fe fe-${icon} fe-24 text-grey`}></span>}
+                                {hovered && <i className="fe fe-edit-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white' }}></i>}
                             </div>
+                        </div>
+                        <Link to={to}>
 
                             <div className="col ml-4">
-                                <strong className="">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active") ? "success" : "danger"} ml-2`}></span>
+                                <strong className="">{A1A2}</strong><span className={`dot dot-lg bg-${(status == "Active" || status == "Activo") ? "success" : "danger"} ml-2`}></span>
 
                                 {
                                     A4 ? <><br /><span className="badge badge-light text-secondary">{A4}</span></> : null
@@ -57,18 +69,19 @@ export const ContainerModule = ({
                                 }
 
                             </div>
-                        </div>
-                    </Link>
+                        </Link>
+
+                    </div>
 
 
                     <div className="file-action text-right m-4">
 
 
-                        <button onClick={onClickEdit} className={`btn btn-light mr-2`}>Editar</button>
+                        {onClick2 && <button onClick={onClick2} className={`btn btn-light mr-2`}>Cambiar clave</button>}
                         {A7 ?
                             <>
                                 <a href={A7}><button className={`btn btn-light mr-2`}> <i className='fe fe-printer mr-2'></i>Descargar documento</button></a>
-                                {/* <button onClick={onClickEdit} className={`btn btn-light mr-2`}>Editar</button> */}
+                                {/* <button onClick={onClick2} className={`btn btn-light mr-2`}>Editar</button> */}
                             </>
                             : null}
                         <button onClick={() => navigate(-1)} className={`btn btn-light`}>Regresar</button>

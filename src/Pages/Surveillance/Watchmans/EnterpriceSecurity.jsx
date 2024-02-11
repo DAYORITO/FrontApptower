@@ -397,7 +397,7 @@ export const EnterpriceSecurity = () => {
                                 A2={''}
                                 description={enterprise.address}
                                 A7={enterprise.phone}
-                                A8={enterprise.email}
+                                A17={enterprise.email}
 
 
 

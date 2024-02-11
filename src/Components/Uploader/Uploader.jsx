@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label, formatos = ".pdf", name, onChange, validate, fileUrl }) => {
+export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onChange, validate, fileUrl }) => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState(null);
     const [fileError, setFileError] = useState(null);

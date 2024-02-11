@@ -17,6 +17,7 @@ import { get } from "jquery";
 import FormColumn from "../../Components/Forms/FormColumn";
 import { useParams } from "react-router";
 import { tr } from "date-fns/locale";
+import Cookies from 'js-cookie';
 
 function FinesCreate() {
   const { id } = useParams();
@@ -33,6 +34,41 @@ function FinesCreate() {
 
   const { data, load, error } = useFetchget("apartments");
   console.log(data);
+
+  //Se crean los estados para los datos del usuario
+  const [userData, setUserData] = useState({});
+
+  //
+  const token = Cookies.get('token');
+  console.log("Datos piopio",userData)
+
+  //Funcion para obtener el documento del usuario
+  const fetchUserInformation = async (token) => {
+    try {
+        const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user information');
+        }
+
+        const data = await response.json();
+        setUserData(data);
+        SetUserDocument(data.user.document);
+
+    } catch (error) {
+        console.error('Error fetching user information:', error);
+    }
+};
+  useEffect(() => {
+    if (token) {
+        fetchUserInformation(token);
+    }
+  }, [token]);
+
 
   useEffect(() => {
     // Cuando la carga está en progreso (load es true), activamos el modal de carga
@@ -86,8 +122,8 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const url = 'https://apptowerbackend.onrender.com/api/fines';
-    // const url = "http://localhost:3000/api/fines";
+    // const url = 'https://apptowerbackend.onrender.com/api/fines';
+    const url = "http://localhost:3000/api/fines";
     const data = {
       fineType: fineType,
       idApartment: idApartment,
@@ -97,6 +133,7 @@ function FinesCreate() {
       details: description,
       state: "Por pagar",
       evidenceFiles: evidence,
+      idUser: parseInt(userData?.user.iduser),
     };
 
     console.log("Data:", data);
@@ -192,6 +229,8 @@ function FinesCreate() {
               setAmount(e.target.value);
               console.log(amount);
             }}
+            validate={true}
+            required={true}
           ></Inputs>
           <InputTextArea
             name="Descripción"
