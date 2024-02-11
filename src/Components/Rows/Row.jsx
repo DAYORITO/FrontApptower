@@ -51,7 +51,8 @@ export const Row = ({
 
                     <div class="circle circle-sm">
 
-                        {img ? <img src={img != null ? img : LogoApptower} id='userImg' alt='User Logo' /> :
+                        {img ? <img src={img} className='userImg' alt='User Logo' /> :
+
                             <>
                                 <span class={`fe fe-${icon} fe-24 text-muted`}></span>
                                 {A16 != 0 ? <span className="badge text-white bg-danger mb-4">{A16}</span> : null}
@@ -94,7 +95,7 @@ export const Row = ({
 
             {description != null ? <td class="text-secondary">{description}</td> : null}
             {A7 != null ? <td class="text-secondary">{A7}</td> : null}
-            {A17 != null ? <td class="text-secondary">{A17}</td> : null} 
+            {A17 != null ? <td class="text-secondary">{A17}</td> : null}
 
 
             {A9 != null ?

@@ -29,7 +29,7 @@ import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest } from '../../../Helpers/Helpers'
 
-export const ResidentDetail = () => {
+export const UserDetail = () => {
 
     // API URL
 
@@ -57,6 +57,8 @@ export const ResidentDetail = () => {
     const [docType, setDocType] = useState("")
     const [residentType, setResidentType] = useState("")
     const [pdf, setPdf] = useState("")
+    const [newPdf, setNewPdf] = useState("")
+
     const [docNumber, setDocNumber] = useState("")
     const [name, setName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -64,9 +66,13 @@ export const ResidentDetail = () => {
     const [sex, setSex] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
+    const [password, setPassword] = useState("")
+    const [configPassword, setConfigPassword] = useState("")
+
     const [userStatus, setUserStatus] = useState("")
 
     const [apartments, setApartments] = useState([])
+    const [bookings, setBookings] = useState([])
 
 
     const [age, setAge] = useState(null);
@@ -79,7 +85,7 @@ export const ResidentDetail = () => {
     const { data: residents, get: getResidents, loading } = useFetch(url)
     const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
 
-    console.log(resident.data)
+
     useEffect(() => {
 
         // resident information
@@ -91,7 +97,7 @@ export const ResidentDetail = () => {
         setResidentUpdatedAt(resident?.data?.resident?.updateAt)
 
         setUserImg(resident?.data?.resident?.user?.userImg)
-        setResidentPdf(resident?.data?.resident?.user?.pdf)
+        setPdf(resident?.data?.resident?.user?.pdf)
         setResidentType(resident?.data?.resident?.residentType)
         setDocType(resident?.data?.resident?.user?.docType)
         setPdf(resident?.data?.resident?.user?.pdf)
@@ -108,6 +114,7 @@ export const ResidentDetail = () => {
         getApartments("apartments")
 
         setApartments(resident?.data?.apartments)
+        setBookings(resident?.data?.bookings)
 
         if (resident?.data?.resident?.user?.birthday) {
             const birthDate = new Date(resident.data.resident.user.birthday);
@@ -148,8 +155,7 @@ export const ResidentDetail = () => {
 
         console.log(data)
         setModalPersonalInforesident(true)
-
-        setIdUser(data.iduser)
+        setIdUser(data.resident.iduser)
         setDocType(data.user.docType)
         setDocNumber(data.user.document)
         setName(data.user.name)
@@ -158,6 +164,31 @@ export const ResidentDetail = () => {
         setSex(data.user.sex)
         setEmail(data.user.email)
         setPhone(data.user.phone)
+
+    }
+
+    const updatePersonalInfo = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            pdf: pdf,
+            newFile: newPdf,
+            docType: docType,
+            document: docNumber,
+            name: name,
+            lastName: lastName,
+            birthday: birthday,
+            sex: sex,
+            email: email,
+            phone: phone,
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url);
+        getResident(`residents/${id}`)
+        setModalPersonalInforesident(false)
 
     }
 
@@ -245,7 +276,25 @@ export const ResidentDetail = () => {
     const openModalEditImg = () => {
 
         console.log('Hablalo puto')
+        setIdUser(idUser)
         setModalEditImg(true)
+
+    }
+    const updateUserImg = async (event) => {
+
+        console.log(idUser)
+        const data = {
+
+            iduser: idUser,
+            userImg: userImg
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/img', 'PUT', {}, data, url);
+        getResident(`residents/${id}`)
+        setModalEditImg(false)
 
     }
 
@@ -254,10 +303,14 @@ export const ResidentDetail = () => {
     const openModalChangePassword = () => {
 
         setIdUser(idUser)
+        setPassword("")
 
         setModalChangePassword(true)
 
     }
+
+
+
 
 
 
@@ -316,7 +369,7 @@ export const ResidentDetail = () => {
 
                         <DropdownInfo
                             name={`Apartamento`}
-                            action1={'Asignar apartamento'}
+                            action1={apartments?.length == 0 ? 'Asignar apartamento' : null}
                             onClickAction1={openModalAssingApartmentToresident}
                         >
 
@@ -339,7 +392,28 @@ export const ResidentDetail = () => {
 
                         </DropdownInfo>
 
+                        <DropdownInfo
+                            name={`Reservas`}
+                            action1={'Hacer nueva reserva'}
+                            toAction1={`/admin/booking/create/${idApartment}`}
+                        >
 
+                            {
+                                loadingResident ? <SmalSpinner /> : (
+                                    bookings && bookings.length > 0 ? (
+                                        bookings.map((booking, index) => (
+                                            <RowNotificactions
+                                                
+                                                status={booking.status}
+                                            />
+                                        ))
+                                    ) : (
+                                        <NotificationsAlert to={`/admin/booking/create/${idApartment}`} msg={` para hacer una nueva reserva`} />
+                                    )
+                                )
+                            }
+
+                        </DropdownInfo>
                     </Acordions>
 
                 </InfoDetails>
@@ -376,17 +450,19 @@ export const ResidentDetail = () => {
                 )
             }
 
+
+
             {modalPersonalInforesident &&
                 createPortal(
                     <>
                         <ModalContainer ShowModal={setModalPersonalInforesident}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updatePersonalInfo}
                                 showModal={setModalPersonalInforesident}
                                 title={"Editar informacion "}
 
                             >
-                                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />
+                                <Uploader name="img" formatos={['pdf']} label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                                     value={docType} onChange={e => setDocType(e.target.value)}
@@ -427,13 +503,15 @@ export const ResidentDetail = () => {
                     <>
                         <ModalContainer ShowModal={setModalEditImg}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserImg}
                                 showModal={setModalEditImg}
                                 title={"Cambiar imagen de perfil"}
 
                             >
                                 <Uploader formatos={['.jpg']} name="img" label="Foto de perfil" onChange={e => setUserImg(e.target.files[0])} />
 
+                                <Inputs type={"hidden"}
+                                    value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>
 
                             </Modal>
                         </ModalContainer>
@@ -452,10 +530,10 @@ export const ResidentDetail = () => {
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+                                    value={password} onChange={e => setPassword(e.target.value)}></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                    value={configPassword} onChange={e => setConfigPassword(e.target.value)}></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

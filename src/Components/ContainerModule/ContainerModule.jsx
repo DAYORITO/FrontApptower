@@ -22,6 +22,7 @@ export const ContainerModule = ({
     onClick,
 
     onClick2,
+    actionOnClick2 = 'Cambiar clave',
     status
 
 
@@ -77,7 +78,7 @@ export const ContainerModule = ({
                     <div className="file-action text-right m-4">
 
 
-                        {onClick2 && <button onClick={onClick2} className={`btn btn-light mr-2`}>Cambiar clave</button>}
+                        {onClick2 && <button onClick={onClick2} className={`btn btn-light mr-2`}>{actionOnClick2}</button>}
                         {A7 ?
                             <>
                                 <a href={A7}><button className={`btn btn-light mr-2`}> <i className='fe fe-printer mr-2'></i>Descargar documento</button></a>

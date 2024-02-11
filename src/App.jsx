@@ -60,7 +60,7 @@ import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
 import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
-import { ResidentDetail } from "./Pages/Residential/Residents/ResidentDetails";
+import { UserDetail } from "./Pages/Users/Users/userDetails";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -429,7 +429,7 @@ const App = () => {
                                         <ResidentCreate /> : <NotFound />
                                 } />
 
-                                <Route path='residents/details/:id' element={<ResidentDetail />} />
+                                <Route path='user/details/:id' element={<UserDetail />} />
 
                                 <Route path='residents/create/:id' element={<ResidentCreate />} />
 

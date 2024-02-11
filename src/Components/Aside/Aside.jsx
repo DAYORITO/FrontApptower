@@ -169,7 +169,7 @@ export const Aside = () => {
       console.log('Conexión establecida con el servidor');
     });
 
-    
+    console.log(userData?.user?.userImg)
 
     return (
         <>
@@ -193,7 +193,7 @@ export const Aside = () => {
                     name={userData.user?.name ? userData.user.name : ''}
                     lastName={userData.user?.lastName ? userData.user.lastName : ''}
                     rol={userRole ? userRole : ''}
-                    userImg={userData.user?.userImg}
+                    userImg={userData?.user?.userImg}
                 />
 
 

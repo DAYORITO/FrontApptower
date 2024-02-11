@@ -340,7 +340,7 @@ export const Residents = () => {
 
                                     status={resident.status}
 
-                                    to={`/admin/residents/details/${resident.idResident}`}
+                                    to={`/admin/user/details/${resident.iduser}`}
 
                                 >
                                     {resident.apartments.length == 0 ?
