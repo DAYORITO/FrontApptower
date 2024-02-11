@@ -41,7 +41,7 @@ export const UserDetail = () => {
 
     const { id } = useParams();
 
-    const [idResident, setIdResident] = useState(id)
+    const [idResident, setIdResident] = useState('')
     const [idUser, setIdUser] = useState("")
     const [idApartment, setIdApartment] = useState("")
 
@@ -90,7 +90,7 @@ export const UserDetail = () => {
 
         // resident information
 
-        // setIdResident(resident?.data?.resident?.idResident)
+        setIdResident(resident?.data?.resident?.idResident)
         setIdUser(resident?.data?.resident?.iduser)
         setStatusResident(resident?.data?.resident?.status)
         setResidentCreateAt(resident?.data?.resident?.createAt)
@@ -198,7 +198,7 @@ export const UserDetail = () => {
 
     const openModalAssingApartmentToresident = () => {
 
-        setIdResident(id)
+        setIdResident()
         setModalAssigApartmentToresident(true)
 
     }
@@ -358,7 +358,7 @@ export const UserDetail = () => {
                                 <li>Tipo de documento: {docType}</li>
                                 <li>Numero de documento: {docNumber}</li>
                                 <li>edad: {age} años</li>
-                                <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li>
+                                <li>Genero: {sex == 'M' ? 'Masculino' : 'Femenino'}</li>
                                 {/* <li>{email}</li>
               <li>{phone}</li> */}
 
@@ -432,7 +432,7 @@ export const UserDetail = () => {
                             >
 
                                 <InputsSelect id={"select"} options={residentsList} name={"Propietario"}
-                                    value={idResident} onChange={e => setIdResidnet(e.target.value)}
+                                    value={idResident} onChange={e => setIdResident(e.target.value)}
                                 ></InputsSelect>
 
                                 <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}

@@ -42,7 +42,7 @@ export const ApartmentDetails = (props) => {
     const [towerName, setTowerName] = useState('');
     const [status, setStatus] = useState('');
     const [idApartment, setIdApartment] = useState("");
-    const [apartmentName, setapartmentName] = useState('');
+    const [apartmentName, setApartmentName] = useState('');
 
     // Apartment residents
 
@@ -62,8 +62,6 @@ export const ApartmentDetails = (props) => {
     const { data: guestIncomes, get: getGuestIncomes, loading: loadingGuestIncomes } = useFetch(url)
     const { data: fines, get: getFines, loading: loadingFines } = useFetch(url)
     const { data: vehicles, get: getVehicles, loading: loadingVehicles } = useFetch(url)
-
-    console.log('fines', fines)
 
 
     // Parking spaces
@@ -122,7 +120,7 @@ export const ApartmentDetails = (props) => {
         setIdApartment(apartment?.data?.spartment?.idApartment);
         setIdTower(apartment?.data?.spartment?.idTower);
         setTowerName(apartment?.data?.spartment?.Tower?.towerName)
-        setapartmentName(apartment?.data?.spartment?.apartmentName);
+        setApartmentName(apartment?.data?.spartment?.apartmentName);
         setArea(apartment?.data?.spartment?.area);
         setStatus(apartment?.data?.spartment?.status);
 
@@ -269,7 +267,7 @@ export const ApartmentDetails = (props) => {
 
     const apartmentResidentsList = apartmentResidents?.data && Array.isArray(apartmentResidents?.data?.apartmentResidents)
         ? apartmentResidents.data.apartmentResidents
-            .filter(resident => resident.status === 'Active')
+            // .filter(resident => resident.status === 'Active')
             .map(resident => ({
                 ...resident,
             }))
@@ -427,8 +425,6 @@ export const ApartmentDetails = (props) => {
 
     const handleUpdateApartmentResident = async (event) => {
 
-
-
         const data = {
 
             idApartmentResident: idApartmentResident,
@@ -444,6 +440,8 @@ export const ApartmentDetails = (props) => {
         console.log("edit data", data)
 
         await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url);
+        getApartmentResidents(`aparmentResidents/${id}`)
+
         setShowApartmentResidentEditModal(false)
 
 
@@ -599,7 +597,7 @@ export const ApartmentDetails = (props) => {
 
                                             // Details
 
-                                            to={`/admin/residents/details/${resident.idResident}`}
+                                            to={`/admin/user/details/${resident.resident.iduser}` }
                                             status={resident.status}
                                             // Functions
 
@@ -918,10 +916,10 @@ export const ApartmentDetails = (props) => {
                                     value={idResident} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
                                 <Inputs name="Fecha de inicio de residencia" type={"date"} readonly
-                                    value={residentStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
+                                    value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
 
                                 <Inputs name="Fecha finalizacion de residencia" type={"date"}
-                                    value={residentEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs>
+                                    value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs>
 
                                 <InputsSelect id={"select"} options={statusList} name={"Estado"}
                                     value={statusApartmentResident} onChange={e => setStateApartmentResident(e.target.value)}></InputsSelect>
