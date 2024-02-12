@@ -508,6 +508,10 @@ function GuestIncomeCreate() {
                     color="black"
                   ></l-cardio>
                 </div>
+                <div className='d-flex justify-content-center'>
+                  
+                  <p className='mt-2 text-muted'>Cargando datos...</p>
+                </div>
 
 
               </Modaload>

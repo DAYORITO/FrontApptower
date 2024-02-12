@@ -35,7 +35,7 @@ function GuestIncome() {
     const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });
     const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({ guestIncomeParking: [] });
 
-    const [showModaload, setShowModaload] = useState(false);
+    const [showModaload, setShowModaload] = useState(true);
     const { data, load, error } = useFetchget('guestIncome')
     const { data: data2, load: load2, error: error2 } = useFetchget('guestincomeparking')
     console.log(data2)
@@ -58,13 +58,14 @@ function GuestIncome() {
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (load || load2) {
-            setShowModaload(true);
-        } else {
-            // Cuando la carga se completa (load es false), desactivamos el modal de carga
+        if (data?.guestIncome?.length > 0 && data2?.guestincomeparking?.length > 0) {
             setShowModaload(false);
+        } else {
+            
+            // Cuando la carga se completa (load es false), desactivamos el modal de carga
+            
         }
-    }, [load, load2]);
+    }, [data, data2]);
 
 
 

@@ -23,20 +23,20 @@ import { useApiUpdate } from '../../Hooks/FetchputDan';
 function Fines() {
     //Se crea un estado para actualizar los datos al momento de cualquier accion
     const [fines, setFines] = useState({ fines: [] })
-    const [showModaload, setShowModaload] = useState(false);
+    const [showModaload, setShowModaload] = useState(true);
     cardio.register()
 
     const { data, load, error } = useFetchget('fines')
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (load) {
-            setShowModaload(true);
+        if (data?.fines?.length > 0) {
+            setShowModaload(false);
         } else {
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
-            setShowModaload(false);
+           
         }
-    }, [load]);
+    }, [data]);
 
     console.log(data.fines)
     //se usa el effect para actualizar los datos del get

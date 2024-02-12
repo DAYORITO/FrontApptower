@@ -39,15 +39,6 @@ function Visitors() {
 
   const { data, load, error } = useFetchget('visitors')
 
-  useEffect(() => {
-    // Cuando la carga está en progreso (load es true), activamos el modal de carga
-    if (load) {
-      setShowModaload(true);
-    } else {
-      // Cuando la carga se completa (load es false), desactivamos el modal de carga
-      setShowModaload(false);
-    }
-  }, [load]);
   //se usa el effect para actualizar los datos del get
   useEffect(() => {
     if (data && data.visitors) {
@@ -516,6 +507,10 @@ function Visitors() {
                     speed="2"
                     color="black"
                   ></l-cardio>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <p> </p>
+                  <p className="mt-2 text-muted">Cargando datos...</p>
                 </div>
               </Modaload>
             </ModalContainerload>
