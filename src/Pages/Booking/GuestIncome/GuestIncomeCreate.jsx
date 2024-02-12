@@ -27,7 +27,7 @@ function GuestIncomeCreate() {
   //mostrar modales
   const { id } = useParams()
   const [showModalvisitor, setShowModalvisitor] = useState(false);
-  const [showModaload, setShowModaload] = useState(false);
+  const [showModaload, setShowModaload] = useState(true);
   //estados para valores de los select
   const [TowerData, setTowerData] = useState([]);
   const [phone, setPhone] = useState('Seleccione un apartamento');
@@ -48,9 +48,11 @@ function GuestIncomeCreate() {
   const [visitor, setVisitor] = useState(null)
 
   //Se crean los estados para el modal de visitantes
+  const [getNameVisitor, setNameVisitor] = useState([])
   const [documentType, setDocumentType] = useState("");
   const [documentvisitor, setDocumentVisitor] = useState("");
   const [name, setName] = useState("");
+
   const [lastname, setLastName] = useState("");
   const [genre, setGenre] = useState("");
   
@@ -68,15 +70,28 @@ function GuestIncomeCreate() {
   const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
-  useEffect(() => {
-    if (load || load2 || load3 || load4 || load1) {
-      setShowModaload(true);
-    } else {
-      setShowModaload(false);
-    }
-  }, [load, load2, load3, load4, load1])
+  // useEffect(() => {
+  //   if (load || load2 || load3 || load4 || load1) {
+  //     setShowModaload(true);
+  //   } else {
+  //     setShowModaload(false);
+  //   }
+  // }, [load, load2, load3, load4, load1])
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
+
+  useEffect(()=>{
+    if(dataVisitors?.visitors?.length >0 && data?.apartments?.length > 0  && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+      console.log("Entre aqui:",dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
+      setShowModaload(false);
+    }
+    console.log("Entre a data visitors:",dataVisitors?.visitors?.length >0)
+    console.log("Entre a data:",data?.apartments?.length > 0)
+    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
+    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
+    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
+
+  },[dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers])
   const handleChange = (e) => {
     if (e.target.value === 'si') {
       setCheck1(true)
@@ -202,6 +217,7 @@ function GuestIncomeCreate() {
 
   useEffect(() => {
     if (dataVisitors.visitors)
+      setNameVisitor(dataVisitors.visitors);
       setVisitorsData(getVisitors(dataVisitors))
   }, [dataVisitors]);
 
@@ -265,8 +281,8 @@ function GuestIncomeCreate() {
     setVisitor(parseInt(selectedValue))
     console.log('este es mi visitante ' + visitor)
 
-    if (dataVisitors && dataVisitors.visitors) {
-      const visitor = dataVisitors.visitors.find(
+    if (dataVisitors && getNameVisitor) {
+      const visitor = getNameVisitor.find(
         (visitor) => visitor.idVisitor === parseInt(selectedValue)
       );
 
@@ -374,6 +390,7 @@ function GuestIncomeCreate() {
       "access": true
     });
     if (response) {
+      console.log("Creo el usuario:", response);
 
       // Manejar la respuesta exitosa
       const newVisitor = {
@@ -383,6 +400,7 @@ function GuestIncomeCreate() {
       // Actualizar el estado local agregando el nuevo visitante
       setVisitorsData((prevData) => [newVisitor, ...prevData]);
       setShowModaload(false);
+      
       console.log('Respuesta exitosa:', response);
       Swal.fire({
         title: 'Éxito',
@@ -444,7 +462,7 @@ function GuestIncomeCreate() {
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%' }}>
           <div className='mr-1' style={{ width: '100%' }}>
-            <Select2 name={'Visitante'} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={getVisitors(dataVisitors)}></Select2>
+            <Select2 name={'Visitante'} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
           </div>
           <div style={{ width: '100%' }}>
             <Inputs name='Nombre' readonly={true} value={visitorname} ></Inputs>

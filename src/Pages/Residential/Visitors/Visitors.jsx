@@ -10,7 +10,7 @@ import { Th } from "../../../Components/Th/Th";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { Row } from "../../../Components/Rows/Row";
 import { Actions } from "../../../Components/Actions/Actions";
-import { useFetchget, useFetchpost } from "../../../Hooks/useFetch";
+import { useFetchForFile, useFetchget, useFetchpost } from "../../../Hooks/useFetch";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -29,12 +29,12 @@ import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissio
 function Visitors() {
 
 
-  const token = Cookies.get('token');
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
+  // const token = Cookies.get('token');
+  // const [allowedPermissions, setAllowedPermissions] = useState([]);
 
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [visitorsData, setVisitorsData] = useState({ visitors: [] });
-  const [showModaload, setShowModaload] = useState(false);
+  const [showModaload, setShowModaload] = useState(true);
   cardio.register()
 
   const { data, load, error } = useFetchget('visitors')
@@ -48,8 +48,6 @@ function Visitors() {
       setShowModaload(false);
     }
   }, [load]);
-
-  console.log(data.visitors)
   //se usa el effect para actualizar los datos del get
   useEffect(() => {
     if (data && data.visitors) {
@@ -84,27 +82,23 @@ function Visitors() {
     { value: "no", label: "No" },
   ];
 
-  const { data: dataapartments, load2, error2 } = useFetchget("apartments");
-  const {
-    data: dataResidentApartment,
-    load4,
-    error4,
-  } = useFetchget("aparmentResidents");
-  const {
-    data: dataParkingSpaces,
-    load3,
-    error3,
-  } = useFetchget("parkingSpaces");
+  //Peticiones a la api
+  const { data: dataApartment} = useFetchget('apartments')
+  const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
+  const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
+  const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
 
-  useEffect(() => {
-    // Cuando la carga está en progreso (load es true), activamos el modal de carga
-    if (load || load2 || load3 || load4) {
-      setShowModaload(true);
-    } else {
-      // Cuando la carga se completa (load es false), desactivamos el modal de carga
+  useEffect(()=>{
+    if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+      console.log("Entre aqui:", dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers)
       setShowModaload(false);
     }
-  }, [load, load2, load3, load4]);
+    console.log("Entre a data:",dataApartment?.apartments?.length > 0)
+    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
+    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
+    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
+
+  },[dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
 
   const handleChange = (e) => {
     if (e.target.value === "si") {
@@ -114,27 +108,61 @@ function Visitors() {
     }
   };
 
-  const towers = TowerData.map((towerData) => ({
-    value: towerData.tower,
-    label: `Tower ${towerData.tower}`,
-  }));
-  console.log("holatower" + towers);
-  //Obtiene los apartamentos de TowerData
-  const organizeApartmentsByTower = (dataapartments) => {
+  // const [idTower, setIdTower] = useState(null);
+  // const [nameTower, setNameTower] = useState('');
+
+  // const getTower = (id) => {
+  //   const tower = data?.apartments?.find(tower => tower.idApartment === id);
+  //   if (tower) {
+  //     setIdTower(tower.idTower);
+  //     return tower.idTower;
+  //   }
+  //   return "";
+  // };
+
+  // const getDataTowers = (idTower) => {
+  //   const tower = dataTowers?.towers?.find(tower => tower.idTower === idTower);
+  //   if (tower) {
+  //     setNameTower(tower.towerName);
+  //     return tower.towerName;
+  //   }
+  //   return "";
+  // };
+
+  // useEffect(() => {
+  //   if (apartment) {
+  //     const towerId = getTower(apartment);
+  //     getDataTowers(towerId);
+  //   }
+  // }, [apartment]);
+
+  // const getApartmentName = (id) => {
+  //   const apartment = data?.apartments?.find(apartment => apartment.idApartment === id);
+  //   return apartment ? apartment.apartmentName : "";
+  // };
+
+  const towers = TowerData.map((towerData) => {
+    const matchingTower = dataTowers.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
+    return {
+      value: towerData.tower,
+      label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
+    };
+  });
+  console.log("Estas son las towers",towers)
+
+  const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
     // Organizar los apartamentos por torre
-    dataapartments?.apartments?.forEach((apartment) => {
-      const { idApartment, apartmentName, tower } = apartment;
+    dataApartment?.apartments?.forEach((apartment) => {
+      const { idApartment, apartmentName, idTower } = apartment;
       // Si no existe la torre, se crea un array vacío
-      if (!apartmentsByTower[tower]) {
-        apartmentsByTower[tower] = [];
+      if (!apartmentsByTower[idTower]) {
+        apartmentsByTower[idTower] = [];
       }
       // Se agrega el apartamento al array correspondiente a la torre
-      apartmentsByTower[tower].push({
-        value: idApartment,
-        label: apartmentName,
-      });
+      apartmentsByTower[idTower].push({ value: idApartment, label: apartmentName });
     });
+    console.log("Apartamentos por torreprimero:", apartmentsByTower);
 
     const resultArray = [];
 
@@ -144,13 +172,14 @@ function Visitors() {
         const apartments = apartmentsByTower[tower];
 
         // Agregar el primer elemento con value y label vacíos
-        apartments.unshift({ value: "", label: "" });
+        apartments.unshift({ value: '', label: '' });
         resultArray.push({
           tower,
-          apartments: apartmentsByTower[tower],
+          apartments: apartmentsByTower[tower]
         });
       }
     }
+    console.log("Apartamentos por torre:", resultArray);
 
     return resultArray;
   };
@@ -158,27 +187,24 @@ function Visitors() {
   const getparkingSpots = (dataParkingSpaces) => {
     return (
       dataParkingSpaces?.parkingSpaces
-        ?.filter(
-          (park) => park.parkingType === "Public" && park.status === "Active"
-        )
+        ?.filter((park) => park.parkingType === "Public" && park.status === "Active")
         .map((park) => ({
           value: park.idParkingSpace,
-          label: park.parkingName,
+          label: park.parkingName
         })) || []
     );
   };
 
   useEffect(() => {
-    if (dataParkingSpaces.parkingSpaces)
-      setparkingSpots(getparkingSpots(dataParkingSpaces));
-  }, [dataParkingSpaces]);
+    if (dataApartment.apartments)
+      setTowerData(organizeApartmentsByTower(dataApartment))
+  }, [dataApartment])
+
 
   useEffect(() => {
-    if (dataapartments.apartments)
-      setTowerData(organizeApartmentsByTower(dataapartments));
-  }, [dataapartments]);
-
-  console.log(data.visitors);
+    if (dataParkingSpaces.parkingSpaces)
+      setparkingSpots(getparkingSpots(dataParkingSpaces))
+  }, [dataParkingSpaces])
   //se usa el effect para actualizar los datos del get
   useEffect(() => {
     if (data && data.visitors) {
@@ -186,11 +212,68 @@ function Visitors() {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (token) {
-      fetchUserPrivilegeAndPermission(token);
+  //Evento para cambia los datos del select de apartamentos
+  const handleTowerChange = (selectedTower) => {
+    setPhone('Seleccione un apartamento');
+    setSelectedTower(selectedTower);
+    console.log(selectedTower)
+
+    // Encuentra los apartamentos correspondientes a la torre seleccionada
+    const selectedTowerData = TowerData.find((towerData) => towerData.tower === selectedTower);
+    if (apartment) {
+      setSelectedApartments(apartment)
     }
-  }, [token]);
+    setSelectedApartments(selectedTowerData ? selectedTowerData.apartments : []);
+    console.log('hola', selectedTowerData)
+
+  };
+  const handlePhoneSetted = (selectedValue) => {
+    selectedValue = selectedValue ? selectedValue : apartment;
+    console.log("Selected Value:", selectedValue);
+    setApartment(parseInt(selectedValue))
+    console.log('este es mi apartamento ' + apartment)
+
+    if (dataResidentApartment && dataResidentApartment.apartmentResidents) {
+      const resident = dataResidentApartment.apartmentResidents.find(
+        (resident) => resident.idApartment === parseInt(selectedValue)
+      );
+
+
+      if (resident && resident.resident && resident.resident.status === "Active") {
+        console.log(resident.resident.status)
+        const user = resident.resident.user;
+        if (user && user.phone) {
+          setPhone(`${user.phone} - ${user.name} ${user.lastName}`);
+          console.log("Phone Number:", user.phone);
+        } else {
+          console.log("No phone number registered for this resident.");
+          setPhone("No se cuenta con un numero.");
+        }
+      } else {
+        console.log("No active resident found for the selected apartment.");
+        setPhone("Nadie habita");
+      }
+    } else {
+      console.log("No data or apartmentResidents property found.");
+      setPhone("No se encontro el apartamento");
+    }
+  };
+
+  useEffect(() => {
+    if (dataApartment && dataApartment.apartments) {
+      const apartment = dataApartment.apartments.find((apartment) => apartment.idApartment === Number(id));
+      if (apartment) {
+        setApartment(apartment.idApartment);
+        console.log(apartment.idApartment, "apartment.idApartment");
+      }
+    }
+  }, [dataApartment]);
+
+  // useEffect(() => {
+  //   if (token) {
+  //     fetchUserPrivilegeAndPermission(token);
+  //   }
+  // }, [token]);
 
 
   //Consulta privilegios 
@@ -228,6 +311,105 @@ function Visitors() {
     }
   };
 
+  const handleEditClick = async (data) => {
+    setShowModaload(true);
+    const response = await useFetchForFile(
+      "http://localhost:3000/api/visitors/",
+      data,
+      "PUT"
+    );
+    if (response) {
+      setShowModaload(false);
+      console.log(response);
+      console.log(visitorsData);
+      Swal.fire({
+        icon: "success",
+        title: "Acceso modificado",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      const updatedVisitor = visitorsData.map((visitor) => {
+        if (visitor.idVisitor === data.idVisitor) {
+            visitor.access = data.access;
+        }
+        return visitor;
+    });
+    setVisitorsData(updatedVisitor);
+    console.log(updatedVisitor);
+    console.log(visitorsData);
+
+    } else {
+      setShowModaload(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error al modificar el acceso",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setShowModaload(true);
+
+    try {
+        // Crear el guestIncome
+        const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+            "startingDate": new Date(),
+            "departureDate": null,
+            "idApartment": apartment,
+            "personAllowsAccess": personAllowsAccesss,
+            "observations": observationss ? observationss : "Sin observaciones",
+            "idVisitor": visitor,
+        });
+
+        if (guestIncomeError) {
+            throw new Error('Error al crear el ingreso de huésped');
+        }
+
+        if (guestIncomeResponse && check1) {
+            // Crear el guestIncomeParking
+            const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+                "idParkingSpace": parkingGuestIncome,
+                "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
+            });
+
+            if (guestIncomeParkingError) {
+                throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
+            }
+
+            // Desactivar el espacio de estacionamiento
+            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+                "idParkingSpace": parkingGuestIncome,
+                "status": 'Inactive'
+            }, 'PUT');
+
+            if (parkingError) {
+                throw new Error('Error al desactivar el espacio de estacionamiento');
+            }
+        }
+
+        // Éxito
+        setShowModaload(false);
+        console.log('Respuesta exitosa:', guestIncomeResponse);
+        Swal.fire({
+            title: 'Éxito',
+            text: 'Ingreso creado exitosamente',
+            icon: 'success',
+        }).then(() => {
+            setShowmodal(false);
+        });
+    } catch (error) {
+        setShowModaload(false);
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Error desconocido',
+            icon: 'error',
+        });
+        console.error('Error:', error);
+    }
+}
 
   const totalPages = data.visitors ? Math.ceil(data.visitors.length / 8) : 0;
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -284,18 +466,17 @@ function Visitors() {
           <Tbody>
             {filteredDatavisitor().map(visitor => (
               <Row
-                docType={visitor.documentType}
-                docNumber={visitor.documentNumber}
-                name={visitor.name}
-                lastName={visitor.lastname}
-                op1={
+                A3={visitor.documentType}
+                A4={visitor.documentNumber}
+                A1={`${visitor.name} ${visitor.lastname || ""} `}
+                A6={
                   visitor.access === true
                     ? "Permitido"
                     : visitor.access === false
                       ? "Denegado"
                       : "Desconocido"
                 }
-                op2={visitor.genre}
+                A7={visitor.genre}
               >
                 {visitor.access === true ? (
                   <Actions accion="Agregar ingreso"
@@ -346,25 +527,12 @@ function Visitors() {
           <>
             <ModalContainer ShowModal={setShowmodal}>
               <Modal title={"Crear Ingreso"} showModal={setShowmodal} onClick={handleSubmit}>
-                <InputsSelect
-                  name={"Torre"}
-                  onChange={(e) => {
-                    handleTowerChange(e.target.value);
-                  }}
-                  options={towers}
-                ></InputsSelect>
+              <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
                 <div className="mb-4">
-                  <Select2
-                    name={"Apartamento"}
-                    onChange={(selectedValue) => {
-                      handlePhoneSetted(selectedValue),
-                        setApartment(selectedValue);
-                    }}
-                    options={selectedApartments}
-                  ></Select2>
+                <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
                 </div>
 
-                <Inputs name="Telefono" readonly={true} value={phone}></Inputs>
+                <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
 
                 <div
                   className="d-flex justify-content-around"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
-import { useFetchget } from '../../Hooks/useFetch';
+import { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
 import { createPortal } from 'react-dom';
 import { Uploader } from '../../Components/Uploader/Uploader';
 import { cardio } from 'ldrs';
@@ -52,14 +52,14 @@ function Fines() {
         console.log(dataToUpdate)
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        let response = await useApiUpdate(dataToUpdate, 'fines')
+        let response = await useFetchForFile('http://localhost:3000/api/fines',dataToUpdate, 'PUT')
             .then((responseData) => {
                 setShowModaload(false);
 
                 console.log(responseData)
                 Swal.fire({
                     icon: 'success',
-                    title: 'Acceso actualizado',
+                    title: 'Archivo actualizado',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -67,7 +67,7 @@ function Fines() {
                 const updatedfine = fines.map((fine) => {
                     if (fine.idFines === dataToUpdate.idFines) {
                         if (dataToUpdate.evidenceFiles) {
-                            fine.evidenceFiles = dataToUpdate.evidenceFiles;
+                            fine.paymentproof = dataToUpdate.paymentproof;
                         }
                         fine.status = dataToUpdate.status;
                     }
@@ -229,11 +229,16 @@ function Fines() {
                                   })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
-                            >
-                                <Actions accion='Agregar Comprobante' />
+                            >   
+                                {fine.paymentproof === null && fine.state === 'Pendiente' ?
+                                <Actions accion='Agregar Comprobante' /> : ""}
+                                
+                                {fine.paymentproof != null || fine.state != 'Pagada'
+                                 ?
                                 <Actions accion='Aprobar pago' onClick={() => {
                                     handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
-                                }} />
+                                }} /> : ""}
+                                <Actions accion='Ver detalles' href={`/admin/fines/details/${fine.idFines}`} />
                             </Row>
                         ))}
 
