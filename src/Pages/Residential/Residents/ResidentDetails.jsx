@@ -337,7 +337,7 @@ export const ResidentDetails = () => {
                             // A3={`${docType} ${document}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
-                            // A7={pdf}
+                            A7={pdf}
                             status={statusResident}
                             onClick2={EqualUser ? openModalChangePassword : null}
                         // onClickEdit={setShowModalEditApartment}

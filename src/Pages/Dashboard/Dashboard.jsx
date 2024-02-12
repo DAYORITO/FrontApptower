@@ -9,7 +9,20 @@ import { RowNotificactions } from '../../Components/RowNotificacions/RowNotifica
 export const Dashboard = () => {
 
 
+    const socket = io("http://localhost:3000/");
 
+    socket.on('connect', () => {
+        setIsConect(true);
+    });
+
+    socket.on('disconnect', () => {
+        setIsConect(false);
+    });
+
+    socket.on('enviar-mensaje', () => {
+        console.log('mensaje recibido')
+    });
+    
     return (
 
         <Details>
