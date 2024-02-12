@@ -3,7 +3,7 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import { docTypes, sexs } from "../../../Hooks/consts.hooks"
 import FormButton from '../../../Components/Forms/FormButton'
 import Inputs from '../../../Components/Inputs/Inputs'
-import { useFetchget } from '../../../Hooks/useFetch'
+import { useFetchget, useFetchForFile } from '../../../Hooks/useFetch'
 import { useState, useEffect } from 'react'
 import Select2 from '../../../Components/Inputs/Select2'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
@@ -31,7 +31,7 @@ function GuestIncomeCreate() {
   //estados para valores de los select
   const [TowerData, setTowerData] = useState([]);
   const [phone, setPhone] = useState('Seleccione un apartamento');
-  const [visitorsData, setVisitorsData] = useState({ visitors: [] });
+  const [visitorsData, setVisitorsData] = useState([]);
   const [parkingSpots, setparkingSpots] = useState({ parkingSpaces: [] });
   const [selectedTower, setSelectedTower] = useState(null);
   const [selectedApartments, setSelectedApartments] = useState([]);
@@ -203,7 +203,7 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (dataVisitors.visitors)
       setVisitorsData(getVisitors(dataVisitors))
-  }, [dataVisitors])
+  }, [dataVisitors]);
 
 
   useEffect(() => {
@@ -301,57 +301,65 @@ function GuestIncomeCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModaload(true);
-    const { response, error } = await useFetchpost('guestIncome', {
-      "startingDate": new Date(),
-      "departureDate": null,
-      "idApartment": apartment,
-      "personAllowsAccess": personAllowsAccesss,
-      "observations": observationss ? observationss : "Sin observaciones",
-      "idVisitor": visitor,
-    });
-    if (response) {
-      if (response && check1) {
-        const { response: response2, error: error2 } = await useFetchpost('guestincomeparking', {
-          "idParkingSpace": parkingGuestIncome,
-          "idGuest_income": response.guestIncome.idGuest_income
+
+    try {
+        // Crear el guestIncome
+        const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+            "startingDate": new Date(),
+            "departureDate": null,
+            "idApartment": apartment,
+            "personAllowsAccess": personAllowsAccesss,
+            "observations": observationss ? observationss : "Sin observaciones",
+            "idVisitor": visitor,
         });
-        if (response2) {
-          // Manejar la respuesta exitosa
-          console.log('Respuesta exitosa:', response2);
-          useApiUpdate({ "idParkingSpace": parkingGuestIncome, "status": 'Inactive' }, 'parkingSpaces')
-            .then((responseData) => {
-              setShowModaload(false);
-              console.log(responseData)
-            })
-        }
-        if (error2) {
-          console.error('Error:', error2);
+
+        if (guestIncomeError) {
+            throw new Error('Error al crear el ingreso de huésped');
         }
 
-      }
-      setShowModaload(false);
-      // Manejar la respuesta exitosa
-      console.log('Respuesta exitosa:', response);
-      Swal.fire({
-        title: 'Éxito',
-        text: 'Ingreso creado exitosamente',
-        icon: 'success',
-      }).then(() => {
+        if (guestIncomeResponse && check1) {
+            // Crear el guestIncomeParking
+            const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+                "idParkingSpace": parkingGuestIncome,
+                "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
+            });
 
-        navigate(-1);
-      });
-    }
+            if (guestIncomeParkingError) {
+                throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
+            }
 
-    if (error) {
-      setShowModaload(false);
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al crear ingreso',
-        icon: 'error',
-      });
-      console.error('Error:', error);
+            // Desactivar el espacio de estacionamiento
+            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+                "idParkingSpace": parkingGuestIncome,
+                "status": 'Inactive'
+            }, 'PUT');
+
+            if (parkingError) {
+                throw new Error('Error al desactivar el espacio de estacionamiento');
+            }
+        }
+
+        // Éxito
+        setShowModaload(false);
+        console.log('Respuesta exitosa:', guestIncomeResponse);
+        Swal.fire({
+            title: 'Éxito',
+            text: 'Ingreso creado exitosamente',
+            icon: 'success',
+        }).then(() => {
+            navigate(-1);
+        });
+    } catch (error) {
+        setShowModaload(false);
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Error desconocido',
+            icon: 'error',
+        });
+        console.error('Error:', error);
     }
-  }
+}
+
 
   const handleSubmitVisitor = async (e) => {
     e.preventDefault();

@@ -1,13 +1,25 @@
-export const useApiUpdate = (dataToUpdate, endpoint) => {
+export const useApiUpdate = async (dataToUpdate, endpoint, files) => {
   // const url = `https://apptowerbackend.onrender.com/api/`;
   const url = "http://localhost:3000/api/";
+
+  const formData = new FormData();
+  for (const key in dataToUpdate) {
+    formData.append(key, dataToUpdate[key]);
+  }
+
+  // Agregar archivos adjuntos
+  if (files) {
+    for (const file of files) {
+      formData.append(file.name, file);
+    }
+  }
 
   return fetch(url + endpoint, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
     },
-    body: JSON.stringify(dataToUpdate),
+    body: formData,
   }).then(async (response) => {
     if (!response.ok) {
       const error = await response.json();

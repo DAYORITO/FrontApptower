@@ -49,9 +49,10 @@ function Fines() {
     //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
     const handleEditClick = async (dataToUpdate) => {
         setShowModaload(true);
+        console.log(dataToUpdate)
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        useApiUpdate(dataToUpdate, 'visitors')
+        let response = await useApiUpdate(dataToUpdate, 'fines')
             .then((responseData) => {
                 setShowModaload(false);
 
@@ -63,13 +64,16 @@ function Fines() {
                     timer: 1500
                 })
                 //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-                const updatedVisitors = visitorsData.map((visitor) => {
-                    if (visitor.idVisitor === dataToUpdate.idVisitor) {
-                        visitor.access = dataToUpdate.access;
+                const updatedfine = fines.map((fine) => {
+                    if (fine.idFines === dataToUpdate.idFines) {
+                        if (dataToUpdate.evidenceFiles) {
+                            fine.evidenceFiles = dataToUpdate.evidenceFiles;
+                        }
+                        fine.status = dataToUpdate.status;
                     }
-                    return visitor;
+                    return fine;
                 });
-                setVisitorsData(updatedVisitors);
+                setFines(updatedfine);
 
             })
             .catch((error) => {
@@ -79,7 +83,9 @@ function Fines() {
                     title: 'Oops...',
                     text: 'Algo salió mal!',
                 });
+                setShowModaload(false);
             });
+            console.log("Respuesta del servidor ", response)
     };
 
 
@@ -203,14 +209,30 @@ function Fines() {
                                 A4={fine.apartment.apartmentName}
                                 icon='dollar-sign'
                                 // status='Pendiente'
-                                A7={fine.incidentDate}
-                                A6={fine.paymentDate}
+                                A7 = {(() => {
+                                    let incidentDate = new Date(fine.incidentDate).toLocaleDateString('es-ES', {
+                                      weekday: 'long',
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric',
+                                    });
+                                    return incidentDate;
+                                  })()}
+                                A6={(() => {
+                                    let paymentDate = new Date(fine.paymentDate).toLocaleDateString('es-ES', {
+                                      weekday: 'long',
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric',
+                                    });
+                                    return paymentDate;
+                                  })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
                             >
                                 <Actions accion='Agregar Comprobante' />
                                 <Actions accion='Aprobar pago' onClick={() => {
-                                    handleEditClick({ idVisitor: visitor.idVisitor, access: !visitor.access });
+                                    handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
                                 }} />
                             </Row>
                         ))}
