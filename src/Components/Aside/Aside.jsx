@@ -12,10 +12,11 @@ import LogoApptower from '../../assets/Logo-Apptower.png';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
 import { io } from 'socket.io-client';
+import { useFetchUserInformation } from '../../Hooks/useFetch';
 
 
 export const Aside = () => {
-    
+
     const { user, login, logout } = useAuth();
     const token = Cookies.get('token');
     const [allowedPermissions, setAllowedPermissions] = useState([]);
@@ -82,6 +83,8 @@ export const Aside = () => {
             console.error('Error fetching user information:', error);
         }
     };
+
+    // const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
 
 
@@ -166,7 +169,7 @@ export const Aside = () => {
     const socket = io("http://localhost:3000/socket.io/socket.io.js");
 
     socket.on('connect', () => {
-      console.log('Conexión establecida con el servidor');
+        console.log('Conexión establecida con el servidor');
     });
 
     console.log(userData?.user?.userImg)
@@ -195,6 +198,7 @@ export const Aside = () => {
                     rol={userRole ? userRole : ''}
                     userImg={userData?.user?.userImg}
                 />
+
 
 
                 <div className='myNav-links'>
@@ -291,10 +295,10 @@ export const Aside = () => {
                                 ) : null}
 
 
-                                {/* {allowedPermissions.includes('Multas') && (
+                                {allowedPermissions.includes('Multas') && (
                                     <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
-                                )} */}
-                                <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
+                                )}
+                                {/* <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' /> */}
 
                                 {allowedPermissions.includes('Usuarios') && (
                                     <ListNav module={'Usuarios'} href='users/' icon='fe fe-user' />

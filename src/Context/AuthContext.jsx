@@ -12,11 +12,12 @@ export const AuthProvider = ({ children }) => {
 
 
     const fetchUserData = (token) => {
-        return fetch('https://apptowerbackend.onrender.com/api/login/access', {
+        return fetch('http://localhost:3000/api/login/access', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            credentials: 'include',
         })
             .then(response => {
                 if (!response.ok) {
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (usuario, password) => {
 
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/login', {
+            const response = await fetch('http://localhost:3000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,6 +109,7 @@ export const AuthProvider = ({ children }) => {
                     timer: 1500
                 });
             }
+
         });
     }
     return (

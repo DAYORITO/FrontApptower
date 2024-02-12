@@ -86,7 +86,7 @@ const App = () => {
             const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch user privileges');
@@ -459,7 +459,17 @@ const App = () => {
 
 
                                 {/* Fines */}
-                                <Route path='fines/' element={<Fines />} />
+                                <Route path='fines' element={
+                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
+                                        <Fines /> : <NotFound />
+                                } />
+
+                                <Route path='fines/create' element={
+                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear') ?
+                                        <FinesCreate /> : <NotFound />
+                                } />
+
+                                {/* <Route path='fines/' element={<Fines />} /> */}
                                 {/* <Route path='fines/create' element={<FinesCreate />} /> */}
 
 

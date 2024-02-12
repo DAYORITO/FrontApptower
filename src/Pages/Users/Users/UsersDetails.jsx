@@ -68,6 +68,8 @@ export const UsersDetails = () => {
     const { data: userInfo, get: getUserInfo, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = userInfo?.user?.document === docNumber;
 
+    console.log('User info:', userInfo);
+
 
     useEffect(() => {
 
@@ -183,6 +185,7 @@ export const UsersDetails = () => {
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
+                            showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
 
