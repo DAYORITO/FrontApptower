@@ -533,7 +533,7 @@ export const UsersEdit = () => {
                                         name='pdf'
                                         label='Documento de Identidad'
                                         formatos='.pdf'
-                                        onChange={e => setEditedUser(e.target.files[0])}
+                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
                                         validate={shouldValidate}
                                         fileUrl={editedUser?.pdf}
                                     />

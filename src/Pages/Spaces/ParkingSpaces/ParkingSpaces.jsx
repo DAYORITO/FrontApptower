@@ -190,7 +190,6 @@ export const ParkingSpaces = () => {
         search2={<SearchSelect options={parkingTypes} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} />}
         buttonToGo={<ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>}
-
       >
         <TablePerson>
 

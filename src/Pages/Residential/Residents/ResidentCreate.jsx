@@ -32,6 +32,7 @@ export const ResidentCreate = (props) => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [idRol, setIdRol] = useState(2)
 
   // const [status, setStatus] = useState("");
 
@@ -42,12 +43,28 @@ export const ResidentCreate = (props) => {
   const navigate = useNavigate();
 
   const { data: apartments, get: getApartment } = useFetch(url)
+  const { data: rols, get: getRols } = useFetch(url)
 
   useEffect(() => {
 
     getApartment("apartments")
+    getRols('rols')
 
   }, [])
+
+
+  // List
+
+  const rolList = rols && rols?.data?.rols
+    ? rols?.data?.rols
+      // .filter(rol => rol.namerol === 'Residente')
+      .map(rol => ({
+        value: rol.idrole,
+        label: `${rol.namerole}`
+      }))
+    : [];
+
+  console.log(rolList)
 
 
   const apartmentList = apartments && apartments?.data?.apartments
@@ -77,21 +94,18 @@ export const ResidentCreate = (props) => {
       phone: phone,
       password: password,
 
+      idrole: parseInt(idRol),
       idApartment: parseInt(idApartment),
       residentStartDate: residentStartDate
       // status: status,
 
     }
 
-    console.log(data)
-
     await postRequest(event, 'residents', 'POST', {}, data, url)
 
     navigate(-1)
 
   };
-
-  console.log(apartmentList)
 
 
 
@@ -167,7 +181,7 @@ export const ResidentCreate = (props) => {
                 value={residentStartDate}
                 onChange={e => setResidentStartDate(e.target.value)}
               ></Inputs>
-              
+
             </>
           )}
 
@@ -177,6 +191,9 @@ export const ResidentCreate = (props) => {
 
           <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
             onChange={e => setPdf(e.target.files[0])} />
+
+          <InputsSelect id={"select"} options={rolList} name={"Rol"}
+            value={idRol} onChange={e => setIdRol(e.target.value)}></InputsSelect>
 
         </FormColumn>
 

@@ -3,6 +3,9 @@ import './BigCard.css';
 import imageNotImg from "../../assets/imgDontFound.png"
 
 export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) => {
+
+    console.log(img, 'img')
+
     return (
 
 
@@ -15,7 +18,7 @@ export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) =>
 
                     <div class="card-body text-center" id='card-space'>
                         <div class="avatar avatar-lg mt-2">
-                            <img class="space-img" id='img' src={img == "" ? imageNotImg : img} alt="Descripción de la imagen"></img>
+                            <img class="space-img" id='img' src={img ? img :imageNotImg } alt="Descripción de la imagen"></img>
                         </div>
                         <div class="card-text">
                             <strong class="card-title">{title}</strong>

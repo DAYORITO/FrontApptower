@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label, formatos = ".pdf", name, onChange, validate, fileUrl }) => {
+export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onChange, validate, fileUrl }) => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState(null);
     const [fileError, setFileError] = useState(null);
@@ -18,11 +18,11 @@ export const Uploader = ({ label, formatos = ".pdf", name, onChange, validate, f
     }, [file, validate]);
 
     useEffect(() => {
-        if (fileUrl) {
+        if (fileUrl && typeof fileUrl === 'string') {
             fetch(fileUrl)
                 .then(response => response.blob())
                 .then(blob => {
-                    setFile(URL.createObjectURL(blob));
+                    setFile(fileUrl);
                     setFileName(fileUrl.split('/').pop());
                 });
         }
@@ -37,19 +37,8 @@ export const Uploader = ({ label, formatos = ".pdf", name, onChange, validate, f
             return;
         }
 
-
-        // if (e.target.files[0].type !== 'application/pdf') {
-        //     setFileError("Solo se permiten archivos PDF*");
-        //     return;
-        // }
-
         setFileName(e.target.files[0].name);
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setFile(new Blob([reader.result]));
-        };
-        reader.readAsArrayBuffer(e.target.files[0]);
+        setFile(e.target.files[0]); // Guarda el archivo seleccionado directamente en el estado
 
         if (onChange) {
             onChange(e);
