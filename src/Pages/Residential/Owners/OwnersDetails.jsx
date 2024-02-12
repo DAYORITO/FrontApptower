@@ -68,6 +68,7 @@ export const OwnerDetail = () => {
 
   const [age, setAge] = useState(null);
 
+  const [newPdf, setNewPdf] = useState("")
 
 
   // Owners relations
@@ -144,7 +145,7 @@ export const OwnerDetail = () => {
     console.log(data)
     setModalPersonalInfoOwner(true)
 
-    setIdUser(data.iduser)
+    setIdUser(data.owner.iduser)
     setDocType(data.user.docType)
     setDocNumber(data.user.document)
     setName(data.user.name)
@@ -153,6 +154,31 @@ export const OwnerDetail = () => {
     setSex(data.user.sex)
     setEmail(data.user.email)
     setPhone(data.user.phone)
+
+  }
+
+  const updatePersonalInfo = async (event) => {
+
+    const data = {
+
+      iduser: idUser,
+      pdf: pdf,
+      newFile: newPdf,
+      docType: docType,
+      document: docNumber,
+      name: name,
+      lastName: lastName,
+      birthday: birthday,
+      sex: sex,
+      email: email,
+      phone: phone,
+    }
+
+    console.log("edit data", data)
+
+    await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url);
+    getOwner(`owners/${id}`)
+    setModalPersonalInfoOwner(false)
 
   }
 
@@ -269,6 +295,8 @@ export const OwnerDetail = () => {
 
             <DropdownInfo
               name={`Informacion personal`}
+              action1={'Editar informacion personal'}
+              onClickAction1={openModalEdit}
             >
 
               <ul className='list-unstyled'>
@@ -353,12 +381,12 @@ export const OwnerDetail = () => {
           <>
             <ModalContainer ShowModal={setModalPersonalInfoOwner}>
               <Modal
-                // onClick={handleUpdateApartmentOwner}
+                onClick={updatePersonalInfo}
                 showModal={setModalPersonalInfoOwner}
                 title={"Editar informacion personal"}
 
               >
-                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />
+                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
 
                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                   value={docType} onChange={e => setDocType(e.target.value)}

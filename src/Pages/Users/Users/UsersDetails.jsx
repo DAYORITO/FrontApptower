@@ -21,7 +21,6 @@ import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotif
 import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
 import Cookies from 'js-cookie';
-import './Watchman.css'
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
 import { format } from 'date-fns';
@@ -33,7 +32,7 @@ import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
 const token = Cookies.get('token');
 
-export const WatchmanDetails = () => {
+export const UsersDetails = () => {
 
     // API URL
 
@@ -45,8 +44,7 @@ export const WatchmanDetails = () => {
 
     const { id } = useParams();
 
-    const [idWatchman, setidWatchman] = useState(id)
-    const [idUser, setIdUser] = useState("")
+    const [idUser, setIdUser] = useState(id)
     const [userImg, setUserImg] = useState("")
     const [docType, setDocType] = useState("")
     const [docNumber, setDocNumber] = useState("")
@@ -56,8 +54,8 @@ export const WatchmanDetails = () => {
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [userStatus, setUserStatus] = useState("")
-    const [enterprice, setEnterprice] = useState("")
-    const [age, setAge] = useState(null);
+    const [age, setAge] = useState(null)
+
     const [pdf, setPdf] = useState(null);
 
 
@@ -65,33 +63,33 @@ export const WatchmanDetails = () => {
 
     // Watchman relations
 
-    const { data: watchmans, get: getWatchmans, loading: loadingWatchmans } = useFetch(url)
-    const { data: watchman, get: getWatchman, loading: loadingWatchman } = useFetch(url)
-    const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+    const { data: userAll, get: getusers, loading: loadingWatchmans } = useFetch(url)
+    const { data: users, get: getuser, loading: loadingusers } = useFetch(url)
+    const { data: userInfo, get: getUserInfo, loading: loadingUser } = useFetchUserInformation(token);
+    const EqualUser = userInfo?.user?.document === docNumber;
+
 
     useEffect(() => {
 
-        // watchman information
-        setIdUser(watchman?.data?.watchman?.iduser)
-        setEnterprice(watchman?.data?.watchman?.idEnterpriseSecurity)
+        // users information
+        setIdUser(users?.data.user?.iduser)
 
-        setUserImg(watchman?.data?.watchman?.user?.userImg)
-        setPdf(watchman?.data?.watchman?.user?.pdf)
-        setDocType(watchman?.data?.watchman?.user?.docType)
-        setPdf(watchman?.data?.watchman?.user?.pdf)
-        setDocNumber(watchman?.data?.watchman?.user?.document)
-        setName(watchman?.data?.watchman?.user?.name)
-        setLastName(watchman?.data?.watchman?.user?.lastName)
-        setBirthday(watchman?.data?.watchman?.user?.birthday)
-        // setSex(watchman?.data?.watchman?.user?.sex)
-        setEmail(watchman?.data?.watchman?.user?.email)
-        setPhone(watchman?.data?.watchman?.user?.phone)
-        setUserStatus(watchman?.data?.watchman?.user.status)
+        setUserImg(users?.data.user?.userImg)
+        setPdf(users?.data.user?.pdf)
+        setDocType(users?.data.user?.docType)
+        setDocNumber(users?.data.user?.document)
+        setName(users?.data.user?.name)
+        setLastName(users?.data.user?.lastName)
+        setBirthday(users?.data.user?.birthday)
+        // setSex(users?.data?.users?.user?.sex)
+        setEmail(users?.data.user?.email)
+        setPhone(users?.data.user?.phone)
+        setUserStatus(users?.data.user?.status)
 
-        getWatchmans("watchman")
+        getusers("users")
 
-        if (watchman?.data?.watchman?.user?.birthday) {
-            const birthDate = new Date(watchman.data.watchman.user.birthday);
+        if (users?.data?.user?.birthday) {
+            const birthDate = new Date(users.data.user.birthday);
             const currentDate = new Date();
             const difference = currentDate - birthDate;
             const ageInMilliseconds = new Date(difference);
@@ -100,19 +98,19 @@ export const WatchmanDetails = () => {
             setAge(calculatedAge);
         }
 
-    }, [watchman?.data?.watchman])
+    }, [users?.data.user])
 
 
     useEffect(() => {
 
         try {
 
-            getWatchman(`watchman/${idWatchman}`)
+            getuser(`users/${idUser}`)
 
 
         } catch (error) {
 
-            console.error('Error al obtener datos del vigilante', error);
+            console.error('Error al obtener datos del usuarios', error);
 
         }
 
@@ -123,34 +121,25 @@ export const WatchmanDetails = () => {
 
     // Edit personal information watchman
 
-    const [modalPersonalInfoWatchman, setModalPersonalInfoWatchman] = useState(false);
+    const [modalPersonalInfoUsers, setModalPersonalInfoUsers] = useState(false);
 
     const openModalEdit = (data) => {
 
         console.log(data)
-        setModalPersonalInfoWatchman(true)
+        setModalPersonalInfoUsers(true)
 
         setIdUser(data.iduser)
-        setDocType(data.user.docType)
-        setDocNumber(data.user.document)
-        setName(data.user.name)
-        setLastName(data.user.lastName)
-        setBirthday(format(new Date(data.user.birthday), 'yyyy-MM-dd'))
+        setDocType(data.docType)
+        setDocNumber(data.document)
+        setName(data.name)
+        setLastName(data.lastName)
+        setBirthday(format(new Date(data.birthday), 'yyyy-MM-dd'))
         // setSex(data.user.sex)
-        setEmail(data.user.email)
-        setPhone(data.user.phone)
-        setUserStatus(data.user.status)
+        setEmail(data.email)
+        setPhone(data.phone)
+        setUserStatus(data.status)
 
     }
-
-    // // List watchman
-
-    // const watchmanList = Array.isArray(watchman?.data?.watchman)
-    //     ? watchman?.data?.watchman.map(watchman => ({
-    //         value: watchman.idwatchman,
-    //         label: `${watchman.user.name} ${watchman.user.lastName} - ${watchman.user.document}`
-    //     }))
-    //     : [];
 
 
 
@@ -173,71 +162,6 @@ export const WatchmanDetails = () => {
         setModalChangePassword(true)
 
     }
-
-
-    const [toggleState, setToggleState] = useState(1)
-
-    const toggleTab = (index) => {
-        setToggleState(index)
-    };
-
-
-
-    const [guardshifts, setGuardshifts] = useState([]); // Define guardshifts utilizando useState
-
-    const fetchGuardshifsforwatchman = async () => {
-        const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idWatchman}`);
-        const data = await response.json();
-        setGuardshifts(data.shifts); // Utiliza setGuardshifts para actualizar guardshifts con los datos recibidos
-        console.log(data.shifts, "guardshifts");
-    };
-
-
-
-    useEffect(() => {
-        fetchGuardshifsforwatchman();
-    }
-        , []);
-
-
-    const [searchDate, setSearchDate] = useState(null);
-
-    const [filteredShifts, setFilteredShifts] = useState([]);
-
-    const handleSearch = (event) => {
-        const date = event.target.value;
-        setSearchDate(date);
-    };
-
-
-    useEffect(() => {
-        if (searchDate) {
-            const filtered = guardshifts.filter(shift => {
-                const shiftDate = new Date(shift.start);
-                const searchDateObj = new Date(searchDate);
-                searchDateObj.setUTCHours(0, 0, 0, 0);
-
-                return shiftDate.getUTCFullYear() === searchDateObj.getUTCFullYear() &&
-                    shiftDate.getUTCMonth() === searchDateObj.getUTCMonth() &&
-                    shiftDate.getUTCDate() === searchDateObj.getUTCDate();
-            });
-            setFilteredShifts(filtered);
-        } else {
-            setFilteredShifts(guardshifts);
-        }
-    }, [searchDate, guardshifts]);
-
-
-
-
-    const EqualUser = user?.user?.document === docNumber;
-
-
-    const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
-
-    const FindNameEnterprice = dataEnterprice?.enterpriseSecurity?.find(enterprices => enterprices.idEnterpriseSecurity === enterprice);
-    const nameEnterpriseSecurity = FindNameEnterprice ? FindNameEnterprice.nameEnterprice : 'Empresa no encontrada';
-
     return (
         <>
             <Details>
@@ -245,14 +169,14 @@ export const WatchmanDetails = () => {
                 {
 
 
-                    loadingWatchman ? <Spinner /> :
+                    loadingUser ? <Spinner /> :
                         <ContainerModule
                             onClick={EqualUser ? openModalEditImg : null}
                             img={userImg}
-                            to={EqualUser ? null : '/admin/watchman/'}
+                            to={EqualUser ? null : '/admin/users/'}
                             icon='user'
 
-                            A1={`Vigilante ${name}`}
+                            A1={`${name}`}
                             A2={`${lastName}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
@@ -281,7 +205,6 @@ export const WatchmanDetails = () => {
                                 <li>Apellidos: {lastName}</li>
                                 <li>Tipo de documento: {docType}</li>
                                 <li>Numero de documento: {docNumber}</li>
-                                <li>Empresa Aliada: {nameEnterpriseSecurity}</li>
                                 <li>edad: {age} años</li>
                                 {/* <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li> */}
                                 {/* <li>{email}</li>
@@ -292,77 +215,23 @@ export const WatchmanDetails = () => {
 
                         </DropdownInfo>
 
-                        {/* Poner los turnos aquiiiiiiiiii */}
-
-                        <DropdownInfo
-                            name={'Turnos'}
-                            initiallyOpen={false}>
-
-
-
-                            <input
-                                type="date"
-                                name="searchDate"
-                                className='dateShifts'
-                                value={searchDate || ""}
-                                onChange={handleSearch}
-                            />
-
-                            <TablePerson id={'tableguards'} >
-
-
-                                <ThInfo />
-                                <ThInfo name='Fecha' />
-                                <ThInfo name='Hora inicio' />
-                                <ThInfo name='Hora fin' />
-
-                                {filteredShifts.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="4">No se encontraron turnos</td>
-                                    </tr>
-                                ) : (
-                                    filteredShifts.map(shift => {
-                                        const startDate = new Date(shift.start);
-                                        const endDate = new Date(shift.end);
-                                        const date = startDate.toLocaleDateString(undefined, { timeZone: 'UTC' });
-                                        const startTime = startDate.toLocaleTimeString();
-                                        const endTime = endDate.toLocaleTimeString();
-                                        return (
-                                            <Table
-                                                key={shift.id}
-                                                opc1={date}
-                                                opc2={startTime}
-                                                opc3={endTime}
-                                                status={userStatus}
-                                            />
-                                        );
-                                    })
-                                )}
-
-                            </TablePerson>
-
-
-
-
-                        </DropdownInfo>
-
                     </Acordions>
 
                 </InfoDetails>
 
             </Details >
 
-            {modalPersonalInfoWatchman &&
+            {modalPersonalInfoUsers &&
                 createPortal(
                     <>
-                        <ModalContainer ShowModal={setModalPersonalInfoWatchman}>
+                        <ModalContainer ShowModal={setModalPersonalInfoUsers}>
                             <Modal
                                 // onClick={handleUpdateApartmentresident}
-                                showModal={setModalPersonalInfoWatchman}
+                                showModal={setModalPersonalInfoUsers}
                                 title={"Editar informacion "}
 
                             >
-                                {EqualUser ? null : <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />}
+                                {EqualUser ? null : <Uploader name="img" formatos='.pdf' label="Documento de Identidad" onChange={e => setPdf(e.target.files[0])} />}
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                                     value={docType} onChange={e => setDocType(e.target.value)}

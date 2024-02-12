@@ -133,10 +133,9 @@ export const WatchmanShifts = () => {
     };
 
 
-
     useEffect(() => {
         if (userData?.user && userData.user?.document) {
-            fetch(`https://apptowerbackend.onrender.com/api/watchman/document/${userData.user.document}`)
+            fetch(`http://localhost:3000/api/watchman/document/${userData.user.document}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.watchman) {
@@ -152,6 +151,9 @@ export const WatchmanShifts = () => {
                 .catch(error => console.error('Error:', error));
         }
     }, [userData]);
+
+
+
 
 
     return (

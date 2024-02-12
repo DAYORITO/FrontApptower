@@ -8,12 +8,13 @@ export const RowNotificactions = ({
   msg = "Aqui va el mensaje",
   date = "Hoy",
   status = "Active",
-  icon = "message-circle"
+  icon = "message-circle",
+  onclick
 }) => {
   return (
 
-    <Link to={"details"}>
-      <div className="list-group-item notification">
+    <Link>
+      <div className="list-group-item notification" onClick={onclick}>
         <div className="row">
           <div className="col-auto">
             <div className="circle circle-sm mt-3">

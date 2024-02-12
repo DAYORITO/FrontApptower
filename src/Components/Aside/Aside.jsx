@@ -8,14 +8,12 @@ import { useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import LogoApptower from '../../assets/Logo-Apptower.png';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
-import { io } from 'socket.io-client';
 
 
 export const Aside = () => {
-    
+
     const { user, login, logout } = useAuth();
     const token = Cookies.get('token');
     const [allowedPermissions, setAllowedPermissions] = useState([]);
@@ -160,18 +158,31 @@ export const Aside = () => {
         isOpem(!isCloset);
     };
 
+    // // Sockets
 
+    // let [isConect, setIsConect] = useState(false);
 
+    // const socket = io("http://localhost:3000/");
 
-    const socket = io("http://localhost:3000/socket.io/socket.io.js");
+    // socket.on('connect', () => {
+    //     setIsConect(true);
+    // });
 
-    console.log(socket)
+    // socket.on('disconnect', () => {
+    //     setIsConect(false);
+    // });
 
-    socket.on('connect', () => {
-      console.log('Conexión establecida con el servidor');
-    });
+    // socket.on('enviar-mensaje', () => {
+    //     console.log('mensaje recibido')
+    // });
+
 
     
+    // const saluda = (unMensaje) =>
+    //     socket.emit('enviar-mensaje', unMensaje);
+    // ;
+
+    // console.log(isConect? 'Esta conectado': 'No esta conectado')
 
     return (
         <>
@@ -179,7 +190,10 @@ export const Aside = () => {
 
             </div>
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
-                onMouseEnter={isCloset ? null : toggleSidebar}>
+                onMouseEnter={isCloset ? null : toggleSidebar}
+                >
+
+
                 <div className='myNav-header'>
                     <button
                         type="button"
@@ -195,7 +209,7 @@ export const Aside = () => {
                     name={userData.user?.name ? userData.user.name : ''}
                     lastName={userData.user?.lastName ? userData.user.lastName : ''}
                     rol={userRole ? userRole : ''}
-                    userImg={userData.user?.userImg}
+                    userImg={userData?.user?.userImg}
                 />
 
 

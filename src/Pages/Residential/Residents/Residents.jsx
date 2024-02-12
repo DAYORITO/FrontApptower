@@ -340,7 +340,7 @@ export const Residents = () => {
 
                                     status={resident.status}
 
-                                    to={`/admin/residents/details/${resident.idResident}`}
+                                    to={`/admin/resident/details/${resident.iduser}`}
 
                                 >
                                     {resident.apartments.length == 0 ?
@@ -350,12 +350,12 @@ export const Residents = () => {
                                                 icon='home'
                                                 href={`/admin/apartments/details/${resident.apartments[0].idApartment}`}
                                             />
-                                            <Actions accion={`Modificar residencia apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions>
+                                            {/* <Actions accion={`Modificar residencia apartamento`} onClick={() => openModalAddChangeApartment(resident)}></Actions> */}
                                         </>
 
                                     }
 
-                                    <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(resident)}></Actions>
+                                    {/* <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(resident)}></Actions> */}
                                     <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions>
                                     {
                                         resident.user.pdf ? <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions> : null
