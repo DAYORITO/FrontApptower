@@ -285,6 +285,7 @@ export const ResidentDetails = () => {
         setModalEditImg(true)
 
     }
+    
     const updateUserImg = async (event) => {
 
         console.log(idUser)

@@ -68,6 +68,8 @@ export const UsersDetails = () => {
     const { data: userInfo, get: getUserInfo, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = userInfo?.user?.document === docNumber;
 
+
+
     console.log('User info:', userInfo);
 
 
@@ -152,6 +154,23 @@ export const UsersDetails = () => {
 
         console.log('Hola')
         setModalEditImg(true)
+
+    }
+
+    const updateUserImg = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            userImg: userImg
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/img', 'PUT', {}, data, url);
+        getResident(`residents/${id}`)
+        setModalEditImg(false)
 
     }
 
