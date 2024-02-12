@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
-import { useFetchget } from '../../Hooks/useFetch';
+import { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
 import { createPortal } from 'react-dom';
 import { Uploader } from '../../Components/Uploader/Uploader';
 import { cardio } from 'ldrs';
@@ -23,20 +23,20 @@ import { useApiUpdate } from '../../Hooks/FetchputDan';
 function Fines() {
     //Se crea un estado para actualizar los datos al momento de cualquier accion
     const [fines, setFines] = useState({ fines: [] })
-    const [showModaload, setShowModaload] = useState(false);
+    const [showModaload, setShowModaload] = useState(true);
     cardio.register()
 
     const { data, load, error } = useFetchget('fines')
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (load) {
-            setShowModaload(true);
+        if (data?.fines?.length > 0) {
+            setShowModaload(false);
         } else {
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
-            setShowModaload(false);
+           
         }
-    }, [load]);
+    }, [data]);
 
     console.log(data.fines)
     //se usa el effect para actualizar los datos del get
@@ -49,27 +49,31 @@ function Fines() {
     //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
     const handleEditClick = async (dataToUpdate) => {
         setShowModaload(true);
+        console.log(dataToUpdate)
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        useApiUpdate(dataToUpdate, 'visitors')
+        let response = await useFetchForFile('http://localhost:3000/api/fines',dataToUpdate, 'PUT')
             .then((responseData) => {
                 setShowModaload(false);
 
                 console.log(responseData)
                 Swal.fire({
                     icon: 'success',
-                    title: 'Acceso actualizado',
+                    title: 'Archivo actualizado',
                     showConfirmButton: false,
                     timer: 1500
                 })
                 //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-                const updatedVisitors = visitorsData.map((visitor) => {
-                    if (visitor.idVisitor === dataToUpdate.idVisitor) {
-                        visitor.access = dataToUpdate.access;
+                const updatedfine = fines.map((fine) => {
+                    if (fine.idFines === dataToUpdate.idFines) {
+                        if (dataToUpdate.evidenceFiles) {
+                            fine.paymentproof = dataToUpdate.paymentproof;
+                        }
+                        fine.status = dataToUpdate.status;
                     }
-                    return visitor;
+                    return fine;
                 });
-                setVisitorsData(updatedVisitors);
+                setFines(updatedfine);
 
             })
             .catch((error) => {
@@ -79,7 +83,9 @@ function Fines() {
                     title: 'Oops...',
                     text: 'Algo salió mal!',
                 });
+                setShowModaload(false);
             });
+            console.log("Respuesta del servidor ", response)
     };
 
 
@@ -203,15 +209,36 @@ function Fines() {
                                 A4={fine.apartment.apartmentName}
                                 icon='dollar-sign'
                                 // status='Pendiente'
-                                A7={fine.incidentDate}
-                                A6={fine.paymentDate}
+                                A7 = {(() => {
+                                    let incidentDate = new Date(fine.incidentDate).toLocaleDateString('es-ES', {
+                                      weekday: 'long',
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric',
+                                    });
+                                    return incidentDate;
+                                  })()}
+                                A6={(() => {
+                                    let paymentDate = new Date(fine.paymentDate).toLocaleDateString('es-ES', {
+                                      weekday: 'long',
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric',
+                                    });
+                                    return paymentDate;
+                                  })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
-                            >
-                                <Actions accion='Agregar Comprobante' />
+                            >   
+                                {fine.paymentproof === null && fine.state === 'Pendiente' ?
+                                <Actions accion='Agregar Comprobante' /> : ""}
+                                
+                                {fine.paymentproof != null || fine.state != 'Pagada'
+                                 ?
                                 <Actions accion='Aprobar pago' onClick={() => {
-                                    handleEditClick({ idVisitor: visitor.idVisitor, access: !visitor.access });
-                                }} />
+                                    handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
+                                }} /> : ""}
+                                <Actions accion='Ver detalles' href={`/admin/fines/details/${fine.idFines}`} />
                             </Row>
                         ))}
 

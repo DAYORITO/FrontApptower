@@ -3,7 +3,7 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import { docTypes, sexs } from "../../../Hooks/consts.hooks"
 import FormButton from '../../../Components/Forms/FormButton'
 import Inputs from '../../../Components/Inputs/Inputs'
-import { useFetchget } from '../../../Hooks/useFetch'
+import { useFetchget, useFetchForFile } from '../../../Hooks/useFetch'
 import { useState, useEffect } from 'react'
 import Select2 from '../../../Components/Inputs/Select2'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
@@ -27,11 +27,11 @@ function GuestIncomeCreate() {
   //mostrar modales
   const { id } = useParams()
   const [showModalvisitor, setShowModalvisitor] = useState(false);
-  const [showModaload, setShowModaload] = useState(false);
+  const [showModaload, setShowModaload] = useState(true);
   //estados para valores de los select
   const [TowerData, setTowerData] = useState([]);
   const [phone, setPhone] = useState('Seleccione un apartamento');
-  const [visitorsData, setVisitorsData] = useState({ visitors: [] });
+  const [visitorsData, setVisitorsData] = useState([]);
   const [parkingSpots, setparkingSpots] = useState({ parkingSpaces: [] });
   const [selectedTower, setSelectedTower] = useState(null);
   const [selectedApartments, setSelectedApartments] = useState([]);
@@ -48,9 +48,11 @@ function GuestIncomeCreate() {
   const [visitor, setVisitor] = useState(null)
 
   //Se crean los estados para el modal de visitantes
+  const [getNameVisitor, setNameVisitor] = useState([])
   const [documentType, setDocumentType] = useState("");
   const [documentvisitor, setDocumentVisitor] = useState("");
   const [name, setName] = useState("");
+
   const [lastname, setLastName] = useState("");
   const [genre, setGenre] = useState("");
   
@@ -68,15 +70,28 @@ function GuestIncomeCreate() {
   const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
-  useEffect(() => {
-    if (load || load2 || load3 || load4 || load1) {
-      setShowModaload(true);
-    } else {
-      setShowModaload(false);
-    }
-  }, [load, load2, load3, load4, load1])
+  // useEffect(() => {
+  //   if (load || load2 || load3 || load4 || load1) {
+  //     setShowModaload(true);
+  //   } else {
+  //     setShowModaload(false);
+  //   }
+  // }, [load, load2, load3, load4, load1])
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
+
+  useEffect(()=>{
+    if(dataVisitors?.visitors?.length >0 && data?.apartments?.length > 0  && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+      console.log("Entre aqui:",dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
+      setShowModaload(false);
+    }
+    console.log("Entre a data visitors:",dataVisitors?.visitors?.length >0)
+    console.log("Entre a data:",data?.apartments?.length > 0)
+    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
+    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
+    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
+
+  },[dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers])
   const handleChange = (e) => {
     if (e.target.value === 'si') {
       setCheck1(true)
@@ -202,8 +217,9 @@ function GuestIncomeCreate() {
 
   useEffect(() => {
     if (dataVisitors.visitors)
+      setNameVisitor(dataVisitors.visitors);
       setVisitorsData(getVisitors(dataVisitors))
-  }, [dataVisitors])
+  }, [dataVisitors]);
 
 
   useEffect(() => {
@@ -265,8 +281,8 @@ function GuestIncomeCreate() {
     setVisitor(parseInt(selectedValue))
     console.log('este es mi visitante ' + visitor)
 
-    if (dataVisitors && dataVisitors.visitors) {
-      const visitor = dataVisitors.visitors.find(
+    if (dataVisitors && getNameVisitor) {
+      const visitor = getNameVisitor.find(
         (visitor) => visitor.idVisitor === parseInt(selectedValue)
       );
 
@@ -301,57 +317,65 @@ function GuestIncomeCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModaload(true);
-    const { response, error } = await useFetchpost('guestIncome', {
-      "startingDate": new Date(),
-      "departureDate": null,
-      "idApartment": apartment,
-      "personAllowsAccess": personAllowsAccesss,
-      "observations": observationss ? observationss : "Sin observaciones",
-      "idVisitor": visitor,
-    });
-    if (response) {
-      if (response && check1) {
-        const { response: response2, error: error2 } = await useFetchpost('guestincomeparking', {
-          "idParkingSpace": parkingGuestIncome,
-          "idGuest_income": response.guestIncome.idGuest_income
+
+    try {
+        // Crear el guestIncome
+        const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+            "startingDate": new Date(),
+            "departureDate": null,
+            "idApartment": apartment,
+            "personAllowsAccess": personAllowsAccesss,
+            "observations": observationss ? observationss : "Sin observaciones",
+            "idVisitor": visitor,
         });
-        if (response2) {
-          // Manejar la respuesta exitosa
-          console.log('Respuesta exitosa:', response2);
-          useApiUpdate({ "idParkingSpace": parkingGuestIncome, "status": 'Inactive' }, 'parkingSpaces')
-            .then((responseData) => {
-              setShowModaload(false);
-              console.log(responseData)
-            })
-        }
-        if (error2) {
-          console.error('Error:', error2);
+
+        if (guestIncomeError) {
+            throw new Error('Error al crear el ingreso de huésped');
         }
 
-      }
-      setShowModaload(false);
-      // Manejar la respuesta exitosa
-      console.log('Respuesta exitosa:', response);
-      Swal.fire({
-        title: 'Éxito',
-        text: 'Ingreso creado exitosamente',
-        icon: 'success',
-      }).then(() => {
+        if (guestIncomeResponse && check1) {
+            // Crear el guestIncomeParking
+            const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+                "idParkingSpace": parkingGuestIncome,
+                "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
+            });
 
-        navigate(-1);
-      });
-    }
+            if (guestIncomeParkingError) {
+                throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
+            }
 
-    if (error) {
-      setShowModaload(false);
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al crear ingreso',
-        icon: 'error',
-      });
-      console.error('Error:', error);
+            // Desactivar el espacio de estacionamiento
+            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+                "idParkingSpace": parkingGuestIncome,
+                "status": 'Inactive'
+            }, 'PUT');
+
+            if (parkingError) {
+                throw new Error('Error al desactivar el espacio de estacionamiento');
+            }
+        }
+
+        // Éxito
+        setShowModaload(false);
+        console.log('Respuesta exitosa:', guestIncomeResponse);
+        Swal.fire({
+            title: 'Éxito',
+            text: 'Ingreso creado exitosamente',
+            icon: 'success',
+        }).then(() => {
+            navigate(-1);
+        });
+    } catch (error) {
+        setShowModaload(false);
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Error desconocido',
+            icon: 'error',
+        });
+        console.error('Error:', error);
     }
-  }
+}
+
 
   const handleSubmitVisitor = async (e) => {
     e.preventDefault();
@@ -366,6 +390,7 @@ function GuestIncomeCreate() {
       "access": true
     });
     if (response) {
+      console.log("Creo el usuario:", response);
 
       // Manejar la respuesta exitosa
       const newVisitor = {
@@ -375,6 +400,7 @@ function GuestIncomeCreate() {
       // Actualizar el estado local agregando el nuevo visitante
       setVisitorsData((prevData) => [newVisitor, ...prevData]);
       setShowModaload(false);
+      
       console.log('Respuesta exitosa:', response);
       Swal.fire({
         title: 'Éxito',
@@ -436,7 +462,7 @@ function GuestIncomeCreate() {
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%' }}>
           <div className='mr-1' style={{ width: '100%' }}>
-            <Select2 name={'Visitante'} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={getVisitors(dataVisitors)}></Select2>
+            <Select2 name={'Visitante'} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
           </div>
           <div style={{ width: '100%' }}>
             <Inputs name='Nombre' readonly={true} value={visitorname} ></Inputs>
@@ -481,6 +507,10 @@ function GuestIncomeCreate() {
                     speed="2"
                     color="black"
                   ></l-cardio>
+                </div>
+                <div className='d-flex justify-content-center'>
+                  
+                  <p className='mt-2 text-muted'>Cargando datos...</p>
                 </div>
 
 

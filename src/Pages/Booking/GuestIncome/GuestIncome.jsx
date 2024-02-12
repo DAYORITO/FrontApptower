@@ -8,6 +8,7 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useFetchget } from '../../../Hooks/useFetch'
+import { useFetchForFile } from '../../../Hooks/useFetch'
 import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
@@ -34,7 +35,7 @@ function GuestIncome() {
     const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });
     const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({ guestIncomeParking: [] });
 
-    const [showModaload, setShowModaload] = useState(false);
+    const [showModaload, setShowModaload] = useState(true);
     const { data, load, error } = useFetchget('guestIncome')
     const { data: data2, load: load2, error: error2 } = useFetchget('guestincomeparking')
     console.log(data2)
@@ -57,46 +58,59 @@ function GuestIncome() {
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (load || load2) {
-            setShowModaload(true);
-        } else {
-            // Cuando la carga se completa (load es false), desactivamos el modal de carga
+        if (data?.guestIncome?.length > 0 && data2?.guestincomeparking?.length > 0) {
             setShowModaload(false);
+        } else {
+            
+            // Cuando la carga se completa (load es false), desactivamos el modal de carga
+            
         }
-    }, [load, load2]);
+    }, [data, data2]);
 
 
 
     const handleEditClick = async (dataToUpdate) => {
         setShowModaload(true);
-
+    
         const verify = guestIncomeParkingData?.find((guestIncomeParking) => guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income);
-        console.log(verify)
-        if (verify !== null) {
-            useApiUpdate({ "idParkingSpace": verify.idParkingSpace, "status": 'Active' }, 'parkingSpaces')
-                .then((responseData) => {
-                    console.log(responseData)
-                })
+        console.log("Respuesta verify:", verify);
+        if (verify !== null && verify !== undefined) {
+            const parkingUpdateData = { "idParkingSpace": verify.idParkingSpace, "status": 'Active' };
+            const parkingUpdateUrl = 'http://localhost:3000/api/parkingSpaces';
+            
+            try {
+                const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
+                console.log(parkingResponse);
+            } catch (error) {
+                console.error('Error al actualizar el estado del espacio de estacionamiento:', error);
+                // Manejar el error si es necesario
+            }
         }
-
-        useApiUpdate(dataToUpdate, 'guestIncome')
-            .then((responseData) => {
-                setShowModaload(false);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Salida registrada con exito',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                const updatedGuestIncome = guestIncomeData.map((guestIncome) => {
-                    if (guestIncome.idGuest_income === dataToUpdate.idGuest_income) {
-                        guestIncome.departureDate = dataToUpdate.departureDate;
-                    }
-                    return guestIncome;
-                });
-                setGuestIncomeData(updatedGuestIncome);
-            })
+    
+        const guestIncomeUpdateUrl = 'http://localhost:3000/api/guestIncome';
+        try {
+            const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
+            setShowModaload(false);
+            Swal.fire({
+                icon: 'success',
+                title: 'Salida registrada con éxito',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            const updatedGuestIncome = guestIncomeData.map((guestIncome) => {
+                if (guestIncome.idGuest_income === dataToUpdate.idGuest_income) {
+                    guestIncome.departureDate = dataToUpdate.departureDate;
+                }
+                return guestIncome;
+            });
+            setGuestIncomeData(updatedGuestIncome);
+        } catch (error) {
+            setShowModaload(false);
+            console.error('Error al actualizar los datos del ingreso del huésped:', error);
+            // Manejar el error si es necesario
+        }
     }
+    
 
 
     const formatDate = (date) => {
@@ -240,7 +254,7 @@ function GuestIncome() {
                             >
                                 {Income.departureDate == null ?
                                     <Actions accion='Registrar salida' onClick={() => {
-                                        handleEditClick({ idGuest_income: Income.idGuest_income, departureDate: new Date() });
+                                        handleEditClick({ idGuest_income: Income.idGuest_income, departureDate: new Date().toISOString()});
                                     }}></Actions>
                                     : ''
                                 }

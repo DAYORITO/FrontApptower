@@ -43,7 +43,7 @@ export const ResidentDetails = () => {
 
     const { id } = useParams();
 
-    const [idResident, setIdResident] = useState(id)
+    const [idResident, setIdResident] = useState('')
     const [idUser, setIdUser] = useState("")
     const [idApartment, setIdApartment] = useState("")
 
@@ -95,7 +95,7 @@ export const ResidentDetails = () => {
 
         // resident information
 
-        // setIdResident(resident?.data?.resident?.idResident)
+        setIdResident(resident?.data?.resident?.idResident)
         setIdUser(resident?.data?.resident?.iduser)
         setStatusResident(resident?.data?.resident?.status)
         setResidentCreateAt(resident?.data?.resident?.createAt)
@@ -203,7 +203,7 @@ export const ResidentDetails = () => {
 
     const openModalAssingApartmentToresident = () => {
 
-        setIdResident(id)
+        setIdResident()
         setModalAssigApartmentToresident(true)
 
     }
@@ -337,7 +337,7 @@ export const ResidentDetails = () => {
                             // A3={`${docType} ${document}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
-                            // A7={pdf}
+                            A7={pdf}
                             status={statusResident}
                             onClick2={EqualUser ? openModalChangePassword : null}
                             showBackButton={EqualUser ? false : true}
@@ -364,7 +364,7 @@ export const ResidentDetails = () => {
                                 <li>Tipo de documento: {docType}</li>
                                 <li>Numero de documento: {docNumber}</li>
                                 <li>edad: {age} años</li>
-                                <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li>
+                                <li>Genero: {sex == 'M' ? 'Masculino' : 'Femenino'}</li>
                                 {/* <li>{email}</li>
               <li>{phone}</li> */}
 
@@ -438,7 +438,7 @@ export const ResidentDetails = () => {
                             >
 
                                 <InputsSelect id={"select"} options={residentsList} name={"Propietario"}
-                                    value={idResident} onChange={e => setIdResidnet(e.target.value)}
+                                    value={idResident} onChange={e => setIdResident(e.target.value)}
                                 ></InputsSelect>
 
                                 <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}
