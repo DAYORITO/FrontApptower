@@ -83,10 +83,11 @@ const App = () => {
     //Consulta privilegios 
     const fetchUserPrivilegeAndPermission = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+            const response = await fetch('http://localhost:3000/api/privilegefromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
+                credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch user privileges');
@@ -122,10 +123,11 @@ const App = () => {
 
     const fetchUserInformation = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            const response = await fetch('http://localhost:3000/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
+                credentials: 'include'
             });
 
             if (!response.ok) {

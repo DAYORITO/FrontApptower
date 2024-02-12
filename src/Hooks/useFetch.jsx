@@ -319,16 +319,17 @@ export const useFetchput = (endpoint, data) => {
 
 export const useFetchUserInformation = (token) => {
     const [userData, setUserData] = useState(null);
-    const [userDocument, setUserDocument] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const fetchUserInformation = async () => {
         try {
             setLoading(true);
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+            const response = await fetch('http://localhost:3000/api/informationUser', {
                 headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                    Authorization: `${token}`
+                },
+                credentials: 'include'
+
             });
 
             if (!response.ok) {
@@ -337,7 +338,6 @@ export const useFetchUserInformation = (token) => {
 
             const data = await response.json();
             setUserData(data);
-            setUserDocument(data.user.document);
 
         } catch (error) {
             console.error('Error fetching user information:', error);

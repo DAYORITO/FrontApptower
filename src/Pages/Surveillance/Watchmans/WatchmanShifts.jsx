@@ -117,7 +117,7 @@ export const WatchmanShifts = () => {
             const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                }, credentials: 'include'
             });
 
             if (!response.ok) {

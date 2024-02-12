@@ -38,13 +38,17 @@ export const Aside = () => {
         }
     }, [token]);
 
+    console.log(token, 'holaaa')
+    console.log(allowedPermissions, 'permisos hptassss')
+
 
     const fetchUserPermissions = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/permissionfromrole', {
+            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
+                credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch user permissions');
@@ -74,7 +78,7 @@ export const Aside = () => {
     //         }
 
     //         const data = await response.json();
-    //         setUserData(data);
+    //         setuserD(data);
     //         SetUserDocument(data.user.document);
 
     //     } catch (error) {
@@ -82,9 +86,9 @@ export const Aside = () => {
     //     }
     // };
 
-    const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+    const { data: userD, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
-    console.log(userData, 'holaaa')
+    console.log(userD, 'holaaa')
 
     const fechDataRols = async () => {
         try {
@@ -97,7 +101,7 @@ export const Aside = () => {
             const data = await response.json();
             const rols = data.rols;
             if (Array.isArray(rols)) {
-                const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
+                const userRole = rols.find(role => role.idrole === userD.user.idrole)?.namerole;
                 setUserRole(userRole);
             } else {
                 console.error('Error: roles data is not an array:', rols);
@@ -108,10 +112,10 @@ export const Aside = () => {
     };
 
     useEffect(() => {
-        if (userData?.user && userData?.user?.idrole) {
+        if (userD?.user && userD?.user?.idrole) {
             fechDataRols();
         }
-    }, [userData]);
+    }, [userD]);
 
     const { dataRoles, load, error } = useFetchget('rols')
 
@@ -205,10 +209,10 @@ export const Aside = () => {
                 </div>
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav
-                    name={userData?.user?.name ? userData?.user?.name : ''}
-                    lastName={userData?.user?.lastName ? userData?.user?.lastName : ''}
+                    name={userD?.user?.name ? userD?.user?.name : ''}
+                    lastName={userD?.user?.lastName ? userD?.user?.lastName : ''}
                     rol={userRole ? userRole : ''}
-                    userImg={userData?.user?.userImg}
+                    userImg={userD?.user?.userImg}
 
                 />
 
