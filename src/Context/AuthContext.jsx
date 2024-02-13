@@ -11,8 +11,9 @@ export const AuthProvider = ({ children }) => {
 
 
 
+
     const fetchUserData = (token) => {
-        return fetch('http://localhost:3000/api/login/access', {
+        return fetch('https://apptowerbackend.onrender.com/api/login/access', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (usuario, password) => {
 
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
+            const response = await fetch('https://apptowerbackend.onrender.com/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

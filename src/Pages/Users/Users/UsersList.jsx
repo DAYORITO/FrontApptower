@@ -32,10 +32,11 @@ export const Users = () => {
     //Consulta privilegios 
     const fetchUserPrivilegeAndPermission = async (token) => {
         try {
+            console.log('About to fetch user privileges');
             const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }, 
+                },
                 credentials: 'include'
             });
             if (!response.ok) {
@@ -61,7 +62,8 @@ export const Users = () => {
                 setAllowedPermissions(allowed);
             }
         } catch (error) {
-            console.error('Error fetching user permissions:', error);
+            console.error('Error fetching user permissions:', error.message);
+            console.error('Error details:', error);
         }
     };
 
@@ -247,9 +249,9 @@ export const Users = () => {
                                     status={user.status}
                                     to={redirectTo}
                                 >
-                                    {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') && (
+                                    {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') ? (
                                         <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
-                                    )}
+                                    ) : null}
                                 </Row>
                             );
                         })}

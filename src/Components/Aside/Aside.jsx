@@ -10,14 +10,13 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
-import { useFetchUserInformation, useFetchget } from '../../Hooks/useFetch';
+import { useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
 
 
 export const Aside = () => {
 
     const { user, login, logout } = useAuth();
     const token = Cookies.get('token');
-    const [allowedPermissions, setAllowedPermissions] = useState([]);
 
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
@@ -31,106 +30,23 @@ export const Aside = () => {
         setNotificationsModal(!notificationsModal)
     }
 
-    useEffect(() => {
-        if (token) {
-            fetchUserPermissions(token);
-            // fetchUserInformation(token);
-        }
-    }, [token]);
-
-    console.log(token, 'holaaa')
-    console.log(allowedPermissions, 'permisos hptassss')
+    const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
 
-    const fetchUserPermissions = async (token) => {
-        try {
-            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch user permissions');
-            }
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPermissions(token, idToPermissionName);
 
-            const data = await response.json();
-            if (data && data.permissions && Array.isArray(data.permissions)) {
-                const allowed = data.permissions.map(permission => idToPermissionName[permission]);
-                setAllowedPermissions(allowed);
-
-            }
-        } catch (error) {
-            console.error('Error fetching user permissions:', error);
-        }
-    };
-
-    // const fetchUserInformation = async (token) => {
-    //     try {
-    //         const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-
-    //         if (!response.ok) {
-    //             throw new Error('Failed to fetch user information');
-    //         }
-
-    //         const data = await response.json();
-    //         setuserD(data);
-    //         SetUserDocument(data.user.document);
-
-    //     } catch (error) {
-    //         console.error('Error fetching user information:', error);
-    //     }
-    // };
-
-    const { data: userD, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
-
-    console.log(userD, 'holaaa')
-
-    const fechDataRols = async () => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch roles');
-            }
-
-            const data = await response.json();
-            const rols = data.rols;
-            if (Array.isArray(rols)) {
-                const userRole = rols.find(role => role.idrole === userD.user.idrole)?.namerole;
-                setUserRole(userRole);
-            } else {
-                console.error('Error: roles data is not an array:', rols);
-            }
-        } catch (error) {
-            console.error('Error fetching roles:', error);
-        }
-    };
+    const [nameRole, setNameRole] = useState('');
+    const { data, load, error } = useFetchget('rols')
 
     useEffect(() => {
-        if (userD?.user && userD?.user?.idrole) {
-            fechDataRols();
+        if (data && userData && userData?.user) {
+            const userRole = data?.rols?.find(role => role.idrole === userData?.user?.idrole)?.namerole;
+            setNameRole(userRole);
         }
-    }, [userD]);
-
-    const { dataRoles, load, error } = useFetchget('rols')
-
-    console.log(dataRoles)
+    }, [data, userData]);
 
 
 
-    const redireccion = useNavigate();
-
-    // useEffect(() => {
-    //     if (token) {
-
-    //         fetchUserInformation(token);
-    //     }
-    // }, [token]);
 
 
 
@@ -167,26 +83,6 @@ export const Aside = () => {
         isOpem(!isCloset);
     };
 
-    // // Sockets
-
-    // let [isConect, setIsConect] = useState(false);
-
-    // const socket = io("http://localhost:3000/");
-
-    // socket.on('connect', () => {
-    //     setIsConect(true);
-    // });
-
-    // socket.on('disconnect', () => {
-    //     setIsConect(false);
-    // });
-
-    // socket.on('connect', () => {
-    //   console.log('Conexión establecida con el servidor');
-    // });
-
-    // console.log(isConect? 'Esta conectado': 'No esta conectado')
-
     return (
         <>
             <div>
@@ -195,8 +91,6 @@ export const Aside = () => {
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
                 onMouseEnter={isCloset ? null : toggleSidebar}
             >
-
-
                 <div className='myNav-header'>
                     <button
                         type="button"
@@ -209,10 +103,10 @@ export const Aside = () => {
                 </div>
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav
-                    name={userD?.user?.name ? userD?.user?.name : ''}
-                    lastName={userD?.user?.lastName ? userD?.user?.lastName : ''}
-                    rol={userRole ? userRole : ''}
-                    userImg={userD?.user?.userImg}
+                    name={userData?.user?.name ? userData?.user?.name : ''}
+                    lastName={userData?.user?.lastName ? userData?.user?.lastName : ''}
+                    rol={nameRole ? nameRole : ''}
+                    userImg={userData?.user?.userImg}
 
                 />
 
@@ -281,16 +175,16 @@ export const Aside = () => {
 
                                             {allowedPermissions.includes('Apartamentos') && (
 
-                                                (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador') ?
+                                                (nameRole === 'Administrador' || nameRole === 'Admin' || nameRole === 'Super Administrador') ?
                                                     < DropDownList subprocess={"Apartamentos"} href='apartments' />
-                                                    : (userRole === 'Residente' || userRole === 'Residentes') ?
+                                                    : (nameRole === 'Residente' || nameRole === 'Residentes') ?
                                                         < DropDownList subprocess={"Apartamentos"} href={rutadetailsapartment} />
                                                         : null
 
                                             )}
 
                                             {/* {allowedPermissions.includes('Apartamentos') && (
-                                                (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                                (nameRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
                                                     ? <ListNav module={'Apartamentos'} href='apartments' />
                                                     : (userRole === 'Residente' || userRole === 'Residentes')
                                                         ? <ListNav module={'Apartamentos'} href={rutadetailsapartment} />
@@ -322,9 +216,8 @@ export const Aside = () => {
                                 )}
 
                                 {allowedPermissions.includes('Vigilantes') && (
-                                    (userRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
+                                    nameRole && (nameRole.toLocaleLowerCase() === 'administrador')
                                         ? <DropDownNav module={"Seguridad"} icon='fe fe-shield fe-24'>
-
                                             <>
                                                 {allowedPermissions.includes('Vigilantes') && (
                                                     <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
@@ -333,9 +226,8 @@ export const Aside = () => {
                                                     <DropDownList subprocess={"Empresas Aliadas"} href='watchman/enterprice'></DropDownList>
                                                 )}
                                             </>
-
                                         </DropDownNav>
-                                        : (userRole === 'Vigilante' || userRole === 'Vigilantes' || userRole === 'Seguridad')
+                                        : nameRole && (nameRole.toLocaleLowerCase() === 'vigilante' || nameRole.toLocaleLowerCase() === 'vigilancia' || nameRole.toLocaleLowerCase() === 'seguridad')
                                             ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
                                             : null
                                 )}
