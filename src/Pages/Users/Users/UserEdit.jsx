@@ -19,11 +19,8 @@ import { is } from 'date-fns/locale';
 export const UsersEdit = () => {
 
     const { iduser } = useParams();
-    console.log(iduser, 'iduser')
-
 
     const [editedUser, setEditedUser] = useState({});
-    console.log(editedUser, 'editedUser holii')
     const [usersData, setUsersData] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [namerole, setNamerole] = useState('');
@@ -175,7 +172,6 @@ export const UsersEdit = () => {
                         text: 'Usuario modificado exitosamente',
                         icon: 'success',
                     }).then(() => navigate('/admin/users'));
-                    // setEditedUser(null);
                 } else {
                     const errorResponse = await response.json();
                     console.error('Error al guardar los cambios:', response.status, errorResponse);
@@ -194,16 +190,7 @@ export const UsersEdit = () => {
 
     const [birthdateResident, setBirthdateResident] = useState(null);
     const [idResidents, setIdResidents] = useState(null);
-    console.log('idResidents:', idResidents);
     const [sexResidents, setSexResidents] = useState(null);
-
-
-
-    console.log('Birthdate:', birthdateResident);
-    console.log('sexResidents:', sexResidents);
-
-    const [birthdate, setBirthdate] = useState(null);
-    console.log('Birthdate:', birthdate);
 
     if (editedUser.idrole === 2) {
         fetch(`https://apptowerbackend.onrender.com/api/residents/document/${editedUser.document}`)
@@ -230,10 +217,6 @@ export const UsersEdit = () => {
                 }
             })
     }
-
-
-
-
 
 
     const opciones = [
@@ -297,11 +280,6 @@ export const UsersEdit = () => {
             }))
         : [];
 
-    useEffect(() => {
-        console.log(birthdate);
-    }, [birthdate]);
-
-    console.log(apartmentList)
 
 
     // Traer empresas de seguridad
@@ -393,12 +371,12 @@ export const UsersEdit = () => {
                                 <FormColumn>
                                     <Uploader
                                         name='pdf'
-                                        label='Documento de identidad'
+                                        label='Documento de Identidad'
                                         formatos='.pdf'
+                                        fileUrl={editedUser?.pdf}
                                         onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
                                         validate={shouldValidate}
                                     />
-                                    {/* <a href={urlDelPdf} target="_blank" rel="noopener noreferrer">Ver PDF registrado</a> */}
 
 
                                     <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
@@ -576,7 +554,7 @@ export const UsersEdit = () => {
                                     validate={shouldValidate}
                                     fileUrl={editedUser?.pdf}
                                 />
-                                {/* <a href={urlDelPdf} target="_blank" rel="noopener noreferrer">Ver PDF registrado</a> */}
+
 
                                 <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} validate={shouldValidate} required={true} />
                                 <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}

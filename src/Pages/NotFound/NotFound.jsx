@@ -7,8 +7,8 @@ export const NotFound = () => {
             <div className="contents">
                 <h1 className="titlen">404</h1>
                 <h1 className="subTitles">¡UPS!</h1>
-                <h6>No se pudo encontrar la página.</h6>
-               
+                <h6 className='h6l'>No se pudo encontrar la página.</h6>
+
             </div>
         </div>
     );
