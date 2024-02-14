@@ -116,7 +116,7 @@ export const Aside = () => {
                     <div className='myNav-links-content'  >
                         {allowedPermissions && (
                             <>
-                                {allowedPermissions.includes('Dashboard') || allowedPermissions.includes('Usuarios') && (
+                                {allowedPermissions.includes('Usuarios') && nameRole.toLocaleLowerCase().includes('administrador') && (
                                     <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24'
                                     />
                                 )}
@@ -183,6 +183,10 @@ export const Aside = () => {
 
                                             )}
 
+                                            {allowedPermissions.includes('Apartamentos') && (
+                                                <DropDownList subprocess={"Bloques"} href='towers'></DropDownList>
+                                            )}
+
                                             {/* {allowedPermissions.includes('Apartamentos') && (
                                                 (nameRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
                                                     ? <ListNav module={'Apartamentos'} href='apartments' />
@@ -197,9 +201,7 @@ export const Aside = () => {
                                             {allowedPermissions.includes('Zona Comunes') && (
                                                 <DropDownList subprocess={"Zonas comunes"} href='spaces'></DropDownList>
                                             )}
-                                            {allowedPermissions.includes('Zona Comunes') && (
-                                                <DropDownList subprocess={"Bloques"} href='towers'></DropDownList>
-                                            )}
+
 
                                         </DropDownNav>
                                     </>
@@ -242,7 +244,7 @@ export const Aside = () => {
                     </div>
 
                     <div className='myNav-links-end'>
-                        {allowedPermissions && (allowedPermissions.includes('Usuarios') || allowedPermissions.includes('Roles')) && (
+                        {allowedPermissions && (allowedPermissions.includes('Usuarios') && nameRole.toLocaleLowerCase().includes("administrador")) && (
                             <ListNav module={'Configuración'} href='rols/' icon='fe fe-settings fe-24' />
                         )}
                         <ListNav module={'Salir'} onClick={e => {

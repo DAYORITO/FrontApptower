@@ -7,7 +7,7 @@ import { ContainerTable } from "../../../Components/ContainerTable/ContainerTabl
 import { TablePerson } from "../../../Components/Tables/Tables"
 import { useEffect, useState } from "react"
 
-import { useFetch } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
 
 
 import { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
@@ -22,12 +22,14 @@ import { Uploader } from "../../../Components/Uploader/Uploader"
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { Spinner } from "../../../Components/Spinner/Spinner"
+import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols"
 
+import Cookies from 'js-cookie'
 
 
 
 export const Towers = () => {
-
+    const token = Cookies.get('token');
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/"
@@ -56,6 +58,8 @@ export const Towers = () => {
     // Get Data
 
     const { data: towers, get: getTowers, loading } = useFetch(url)
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
 
     useEffect(() => {
 
@@ -106,7 +110,12 @@ export const Towers = () => {
         <>
             <ContainerTable
                 title='Bloques residenciales'
-                buttonToGo={<ButtonGoTo value='Nuevo bloque' href='create' />}
+                buttonToGo={
+                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
+                        ? <ButtonGoTo value='Nuevo bloque' href='create' />
+                        : null
+                }
+
                 search={<SearchButton value={search} onChange={searcher} placeholder='Buscar bloque' />} >
 
 
@@ -128,7 +137,10 @@ export const Towers = () => {
 
                                 >
                                     <Actions href={`/admin/apartments/create/${tower.idTower}`} accion='Agregar apartamentos' icon="home" />
-                                    <Actions onClick={() => handleModal(tower)} accion='Editar bloque' icon="edit" />
+
+                                    {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? (
+                                        <Actions onClick={() => handleModal(tower)} accion='Editar bloque' icon="edit" />
+                                    ) : null}
 
                                 </BigCard>
                             ))}

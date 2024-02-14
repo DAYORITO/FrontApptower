@@ -37,7 +37,7 @@ import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
 import { AuthProvider } from "./Context/AuthContext";
 import { ProtectedRoutes } from "./ProtectedRoutes";
-import { NotFound } from "./Pages/NotFound/NotFound";
+import { NotFound } from "./Pages/PagesAdicional/NotFound";
 import { Towers } from "./Pages/Spaces/Towers/Towers";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
@@ -55,6 +55,8 @@ import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 import { ResidentDetails } from "./Pages/Residential/Residents/ResidentDetails";
+import { LoadingPage } from "./Pages/PagesAdicional/Loading";
+
 
 
 
@@ -72,7 +74,6 @@ const App = () => {
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
 
-
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
 
@@ -87,6 +88,7 @@ const App = () => {
             setNameRole(userRole);
         }
     }, [data, userData]);
+
 
 
     return (
@@ -163,7 +165,6 @@ const App = () => {
                                 } />
 
                                 <Route path='watchman/details/:id' element={<WatchmanDetails />} />
-
 
                                 <Route path='watchman/enterprice' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')

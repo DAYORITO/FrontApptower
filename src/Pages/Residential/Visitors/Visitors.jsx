@@ -10,7 +10,7 @@ import { Th } from "../../../Components/Th/Th";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { Row } from "../../../Components/Rows/Row";
 import { Actions } from "../../../Components/Actions/Actions";
-import { useFetchForFile, useFetchget, useFetchpost } from "../../../Hooks/useFetch";
+import useFetchUserPrivileges, { useFetchForFile, useFetchget, useFetchpost } from "../../../Hooks/useFetch";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -27,7 +27,7 @@ import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 function Visitors() {
-
+  const token = Cookies.get('token');
 
   // const token = Cookies.get('token');
   // const [allowedPermissions, setAllowedPermissions] = useState([]);
@@ -74,22 +74,24 @@ function Visitors() {
   ];
 
   //Peticiones a la api
-  const { data: dataApartment} = useFetchget('apartments')
+  const { data: dataApartment } = useFetchget('apartments')
   const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
-  useEffect(()=>{
-    if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+
+  useEffect(() => {
+    if (dataApartment?.apartments?.length > 0 && dataResidentApartment?.apartmentResidents?.length > 0 && dataParkingSpaces?.parkingSpaces?.length > 0 && dataTowers?.towers?.length > 0) {
       console.log("Entre aqui:", dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers)
       setShowModaload(false);
     }
-    console.log("Entre a data:",dataApartment?.apartments?.length > 0)
-    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
-    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
-    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
+    console.log("Entre a data:", dataApartment?.apartments?.length > 0)
+    console.log("Entre a dataResidentApartment:", dataResidentApartment?.apartmentResidents?.length > 0)
+    console.log("Entre a dataParkingSpaces:", dataParkingSpaces?.parkingSpaces?.length > 0)
+    console.log("Entre a dataTowers:", dataTowers?.towers?.length > 0)
 
-  },[dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
+  }, [dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
 
   const handleChange = (e) => {
     if (e.target.value === "si") {
@@ -139,7 +141,7 @@ function Visitors() {
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
     };
   });
-  console.log("Estas son las towers",towers)
+  console.log("Estas son las towers", towers)
 
   const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
@@ -260,47 +262,8 @@ function Visitors() {
     }
   }, [dataApartment]);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     fetchUserPrivilegeAndPermission(token);
-  //   }
-  // }, [token]);
 
 
-  //Consulta privilegios 
-  const fetchUserPrivilegeAndPermission = async (token) => {
-    try {
-      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user privileges');
-      }
-
-      const data = await response.json();
-      console.log(data, 'data');
-      console.log('Allowed Permissions hi:', data.privileges);
-
-      if (data && data.privileges && Array.isArray(data.privileges)) {
-        const allowed = {};
-        data.privileges.forEach(({ idpermission, idprivilege }) => {
-          const permissionName = idToPermissionName[idpermission];
-          const privilegeName = idToPrivilegesName[idprivilege];
-
-          if (!allowed[permissionName]) {
-            allowed[permissionName] = [];
-          }
-          allowed[permissionName].push(privilegeName);
-        });
-
-        setAllowedPermissions(allowed);
-      }
-    } catch (error) {
-      console.error('Error fetching user permissions:', error);
-    }
-  };
 
   const handleEditClick = async (data) => {
     setShowModaload(true);
@@ -321,13 +284,13 @@ function Visitors() {
       });
       const updatedVisitor = visitorsData.map((visitor) => {
         if (visitor.idVisitor === data.idVisitor) {
-            visitor.access = data.access;
+          visitor.access = data.access;
         }
         return visitor;
-    });
-    setVisitorsData(updatedVisitor);
-    console.log(updatedVisitor);
-    console.log(visitorsData);
+      });
+      setVisitorsData(updatedVisitor);
+      console.log(updatedVisitor);
+      console.log(visitorsData);
 
     } else {
       setShowModaload(false);
@@ -345,62 +308,62 @@ function Visitors() {
     setShowModaload(true);
 
     try {
-        // Crear el guestIncome
-        const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
-            "startingDate": new Date(),
-            "departureDate": null,
-            "idApartment": apartment,
-            "personAllowsAccess": personAllowsAccesss,
-            "observations": observationss ? observationss : "Sin observaciones",
-            "idVisitor": visitor,
+      // Crear el guestIncome
+      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+        "startingDate": new Date(),
+        "departureDate": null,
+        "idApartment": apartment,
+        "personAllowsAccess": personAllowsAccesss,
+        "observations": observationss ? observationss : "Sin observaciones",
+        "idVisitor": visitor,
+      });
+
+      if (guestIncomeError) {
+        throw new Error('Error al crear el ingreso de huésped');
+      }
+
+      if (guestIncomeResponse && check1) {
+        // Crear el guestIncomeParking
+        const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+          "idParkingSpace": parkingGuestIncome,
+          "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
         });
 
-        if (guestIncomeError) {
-            throw new Error('Error al crear el ingreso de huésped');
+        if (guestIncomeParkingError) {
+          throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
         }
 
-        if (guestIncomeResponse && check1) {
-            // Crear el guestIncomeParking
-            const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
-                "idParkingSpace": parkingGuestIncome,
-                "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
-            });
+        // Desactivar el espacio de estacionamiento
+        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+          "idParkingSpace": parkingGuestIncome,
+          "status": 'Inactive'
+        }, 'PUT');
 
-            if (guestIncomeParkingError) {
-                throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
-            }
-
-            // Desactivar el espacio de estacionamiento
-            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
-                "idParkingSpace": parkingGuestIncome,
-                "status": 'Inactive'
-            }, 'PUT');
-
-            if (parkingError) {
-                throw new Error('Error al desactivar el espacio de estacionamiento');
-            }
+        if (parkingError) {
+          throw new Error('Error al desactivar el espacio de estacionamiento');
         }
+      }
 
-        // Éxito
-        setShowModaload(false);
-        console.log('Respuesta exitosa:', guestIncomeResponse);
-        Swal.fire({
-            title: 'Éxito',
-            text: 'Ingreso creado exitosamente',
-            icon: 'success',
-        }).then(() => {
-            setShowmodal(false);
-        });
+      // Éxito
+      setShowModaload(false);
+      console.log('Respuesta exitosa:', guestIncomeResponse);
+      Swal.fire({
+        title: 'Éxito',
+        text: 'Ingreso creado exitosamente',
+        icon: 'success',
+      }).then(() => {
+        setShowmodal(false);
+      });
     } catch (error) {
-        setShowModaload(false);
-        Swal.fire({
-            title: 'Error',
-            text: error.message || 'Error desconocido',
-            icon: 'error',
-        });
-        console.error('Error:', error);
+      setShowModaload(false);
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Error desconocido',
+        icon: 'error',
+      });
+      console.error('Error:', error);
     }
-}
+  }
 
   const totalPages = data.visitors ? Math.ceil(data.visitors.length / 8) : 0;
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -425,7 +388,9 @@ function Visitors() {
         dropdown={<DropdownExcel />}
         search={<SearchButton />}
         buttonToGo={
-          <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
+          allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear')
+            ? <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
+            : null
         }
         showPaginator={
           <nav aria-label="Table Paging" className="mb- text-muted my-4">
@@ -522,9 +487,9 @@ function Visitors() {
           <>
             <ModalContainer ShowModal={setShowmodal}>
               <Modal title={"Crear Ingreso"} showModal={setShowmodal} onClick={handleSubmit}>
-              <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+                <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
                 <div className="mb-4">
-                <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+                  <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
                 </div>
 
                 <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>

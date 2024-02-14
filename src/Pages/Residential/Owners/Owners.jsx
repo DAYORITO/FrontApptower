@@ -7,7 +7,7 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
-import { useFetch } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
 import { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
@@ -19,12 +19,14 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import { useParams } from 'react-router'
 import { docTypes, residentsTypes, sexs, statusList } from '../../../Hooks/consts.hooks'
 import { Uploader } from '../../../Components/Uploader/Uploader'
+import Cookies from 'js-cookie'
 
 import { format } from 'date-fns'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 
 export const Owners = () => {
-
+    const token = Cookies.get('token');
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/
@@ -32,6 +34,8 @@ export const Owners = () => {
     const { data: owners, get: getOwners, loading } = useFetch(url)
     const { data: apartments, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { del: delApartmentResidents } = useFetch(url)
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
 
 
 
@@ -156,7 +160,11 @@ export const Owners = () => {
                 title='Propietarios'
                 dropdown={<DropdownExcel />}
                 search={<SearchButton value={search} onChange={searcher} />}
-                buttonToGo={<ButtonGoTo value='Nuevo propietario' href={'/admin/owners/create'} />}
+                buttonToGo={
+                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear')
+                        ? <ButtonGoTo value='Nuevo propietario' href={'/admin/owners/create'} />
+                        : null
+                }
             >
                 <TablePerson>
 

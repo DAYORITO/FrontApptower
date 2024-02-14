@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             document.cookie = `token=${data.token}; path=/`;
-            console.log('Token set in cookie:', data.token);
 
             fetchUserData(data.token);
 
@@ -73,21 +72,24 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = Cookies.get('token');
-        console.log('Token:', token);
 
         if (token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isLoggedIn) {
             setIsLoading(true);
-            fetchUserData(token).finally(() => {
-                const isLoggedIn = Cookies.get('isLoggedIn') === 'true';
-                setIsLoggedIn(isLoggedIn);
+            fetchUserData(Cookies.get('token')).finally(() => {
                 setIsLoading(false);
             });
         } else {
-            setIsLoggedIn(false);
             setUser(null);
-            setIsLoading(false);
         }
-    }, []);
+    }, [isLoggedIn]);
 
     const logout = () => {
         Swal.fire({

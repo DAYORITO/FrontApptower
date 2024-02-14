@@ -4,7 +4,7 @@ import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
-import { useFetch, useFetchget } from '../../../Hooks/useFetch';
+import useFetchUserPrivileges, { useFetch, useFetchget } from '../../../Hooks/useFetch';
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
 import { filter, postRequest } from "../../../Helpers/Helpers";
 import { Spinner } from "../../../Components/Spinner/Spinner";
@@ -15,13 +15,18 @@ import { Uploader } from "../../../Components/Uploader/Uploader";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { spacesTypes, statusList } from "../../../Hooks/consts.hooks";
 import Inputs from "../../../Components/Inputs/Inputs";
+import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
+import Cookies from 'js-cookie'
 
 export const Spaces = () => {
+  const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
 
   useEffect(() => {
 
@@ -104,7 +109,11 @@ export const Spaces = () => {
     <>
       <ContainerTable
         title='Zonas Comunes'
-        buttonToGo={<ButtonGoTo value='Nueva Zona Común' href='create' />}
+        buttonToGo={
+          allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Crear')
+            ? <ButtonGoTo value='Nueva Zona Común' href='create' />
+            : null
+        }
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />
 
         }
@@ -125,7 +134,10 @@ export const Spaces = () => {
                   status={space.status}
                   to={`/admin/booking/create`}
                 >
-                  <Actions accion='Editar' onClick={() => openModal(space)} />
+                  {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') ? (
+                    <Actions accion='Editar' onClick={() => openModal(space)} />
+                  ) : null}
+
                   <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
                 </BigCard>
               ))}
