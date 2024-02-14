@@ -31,11 +31,6 @@ export const UsersCreate = () => {
     const [enterprice, setEnterprice] = useState(null);
     const { id } = useParams();
 
-
-    console.log(pdf, 'aqui estoy file')
-
-
-
     //campos adicionales de residentes y vigilantes
     const [sex, setSex] = useState("");
     const [birthday, setBirthday] = useState("");
@@ -47,13 +42,6 @@ export const UsersCreate = () => {
 
     const { data: roles } = useFetchget('rols');
 
-    useEffect(() => {
-        if (error) {
-            console.error('Error al obtener los roles:', error);
-        } else if (roles) {
-            console.log('Roles obtenidos:', roles);
-        }
-    }, [roles]);
 
     useEffect(() => {
         if (id && roles && roles.rols) {
@@ -65,7 +53,6 @@ export const UsersCreate = () => {
             }
         }
     }, [id, roles]);
-
 
 
     const navigate = useNavigate();
@@ -243,8 +230,6 @@ export const UsersCreate = () => {
             }))
         : [];
 
-    console.log(apartmentList)
-
 
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
 
@@ -379,7 +364,7 @@ export const UsersCreate = () => {
 
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
 
                                 </FormColumn>
 

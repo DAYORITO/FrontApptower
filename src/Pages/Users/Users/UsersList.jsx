@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
@@ -18,98 +18,16 @@ export const Users = () => {
 
     const [usersData, setUsersData] = useState([]);
 
-    //privileges
-    const [allowedPermissions, setAllowedPermissions] = useState([]);
     const token = Cookies.get('token');
-
-    useEffect(() => {
-        if (token) {
-            fetchUserPrivilegeAndPermission(token);
-        }
-    }, [token]);
-
-
-    //Consulta privilegios 
-    const fetchUserPrivilegeAndPermission = async (token) => {
-        try {
-            console.log('About to fetch user privileges');
-            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch user privileges');
-            }
-
-            const data = await response.json();
-            console.log(data, 'data');
-            console.log('Allowed Permissions hi:', data.privileges);
-
-            if (data && data.privileges && Array.isArray(data.privileges)) {
-                const allowed = {};
-                data.privileges.forEach(({ idpermission, idprivilege }) => {
-                    const permissionName = idToPermissionName[idpermission];
-                    const privilegeName = idToPrivilegesName[idprivilege];
-
-                    if (!allowed[permissionName]) {
-                        allowed[permissionName] = [];
-                    }
-                    allowed[permissionName].push(privilegeName);
-                });
-
-                setAllowedPermissions(allowed);
-            }
-        } catch (error) {
-            console.error('Error fetching user permissions:', error.message);
-            console.error('Error details:', error);
-        }
-    };
-
-
-
-    const fetchRoles = async () => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/rols');
-            if (!response.ok) {
-                throw new Error('Error al obtener los roles');
-            }
-            const data = await response.json();
-            const rolesData = data.rols || [];
-            return rolesData;
-        } catch (error) {
-            console.error('Error al obtener los roles:', error);
-            return [];
-        }
-    };
-
-
-    const [roles, setRoles] = useState([]);
-    console.log(roles, 'roles');
-
-    useEffect(() => {
-        const fetchRolesData = async () => {
-            const rolesData = await fetchRoles();
-            setRoles(rolesData);
-        };
-        fetchRolesData();
-    }, []);
-
-
-
-
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+    const { data: { rols: dataRols }, load2, error2 } = useFetchget('rols')
     const { data, load, error } = useFetchget('users')
-    console.log(data.user)
-
-
 
     useEffect(() => {
         if (data && data.user) {
             setUsersData(data.user);
         }
     }, [data]);
-
 
 
     const [search, setSearch] = useState('');
@@ -119,7 +37,7 @@ export const Users = () => {
 
     const roleOptions = [
         { value: "allUsers", label: "Todos los usuarios" },
-        ...roles.filter(role => role.state === 'Activo').map(role => ({
+        ...(dataRols || []).filter(role => role.state === 'Activo').map(role => ({
             value: role.idrole.toString(),
             label: role.namerole
         }))
@@ -225,7 +143,7 @@ export const Users = () => {
                     <Tbody>
 
                         {filteredDataUsers().map(user => {
-                            const userRole = roles.find(role => role.idrole === user.idrole);
+                            const userRole = (dataRols || []).find(role => role.idrole === user.idrole);
                             const redirectTo = userRole && (
                                 userRole.namerole.toLowerCase() === 'vigilante' ||
                                 userRole.namerole.toLowerCase() === 'vigilancia' ||

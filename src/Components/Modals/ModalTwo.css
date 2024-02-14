@@ -92,9 +92,3 @@
 }
 
 .notifications-container #verticalModalTitle {}
-
-#verticalModal .modal-body {
-    width: 100vh;
-    overflow-y: auto;
-    max-height: 76vh;
-}
