@@ -3,6 +3,7 @@ import {
   ButtonGoTo,
   DropdownExcel,
   SearchButton,
+  SearchSelect,
 } from "../../../Components/Buttons/Buttons";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { Thead } from "../../../Components/Thead/Thead";
@@ -32,8 +33,12 @@ function Visitors() {
   // const token = Cookies.get('token');
   // const [allowedPermissions, setAllowedPermissions] = useState([]);
 
+  const filterOptions = [{label: 'Nombre', value: 'name'}, {label: 'Documento', value: 'documentNumber'}, {label: 'Acceso', value: 'access'}];
+  const [selectedFilterParam, setSelectedFilterParam] = useState('name');
+  const accessOptions = [{label: 'Permitido', value: true}, {label: 'Denegado', value: false}];
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [visitorsData, setVisitorsData] = useState({ visitors: [] });
+  const [visitorsDataOriginal, setVisitorDataOriginal] = useState({ visitors: [] });
   const [showModaload, setShowModaload] = useState(true);
   cardio.register()
 
@@ -81,15 +86,16 @@ function Visitors() {
   const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
 
-  useEffect(() => {
-    if (dataApartment?.apartments?.length > 0 && dataResidentApartment?.apartmentResidents?.length > 0 && dataParkingSpaces?.parkingSpaces?.length > 0 && dataTowers?.towers?.length > 0) {
-      console.log("Entre aqui:", dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers)
+  useEffect(()=>{
+    if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+      setVisitorsData(sortByCreatedAtDescending(data.visitors));
+      setVisitorDataOriginal(sortByCreatedAtDescending(data.visitors));
       setShowModaload(false);
     }
-    console.log("Entre a data:", dataApartment?.apartments?.length > 0)
-    console.log("Entre a dataResidentApartment:", dataResidentApartment?.apartmentResidents?.length > 0)
-    console.log("Entre a dataParkingSpaces:", dataParkingSpaces?.parkingSpaces?.length > 0)
-    console.log("Entre a dataTowers:", dataTowers?.towers?.length > 0)
+    console.log("Entre a data:",dataApartment?.apartments?.length > 0)
+    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
+    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
+    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
 
   }, [dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
 
@@ -100,6 +106,19 @@ function Visitors() {
       setCheck1(false);
     }
   };
+  function sortByCreatedAtDescending(data) {
+    // Copia el array para no modificar el original
+    const sortedData = [...data];
+  
+    // Ordena el array por fecha de creación de forma descendente
+    sortedData.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateB - dateA;
+    });
+  
+    return sortedData;
+  }
 
   // const [idTower, setIdTower] = useState(null);
   // const [nameTower, setNameTower] = useState('');
@@ -141,7 +160,7 @@ function Visitors() {
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
     };
   });
-  console.log("Estas son las towers", towers)
+  console.log("Estas son las towers",towers)
 
   const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
@@ -155,7 +174,6 @@ function Visitors() {
       // Se agrega el apartamento al array correspondiente a la torre
       apartmentsByTower[idTower].push({ value: idApartment, label: apartmentName });
     });
-    console.log("Apartamentos por torreprimero:", apartmentsByTower);
 
     const resultArray = [];
 
@@ -172,7 +190,6 @@ function Visitors() {
         });
       }
     }
-    console.log("Apartamentos por torre:", resultArray);
 
     return resultArray;
   };
@@ -268,7 +285,7 @@ function Visitors() {
   const handleEditClick = async (data) => {
     setShowModaload(true);
     const response = await useFetchForFile(
-      "http://localhost:3000/api/visitors/",
+      "https://apptowerbackend.onrender.com/api/visitors/",
       data,
       "PUT"
     );
@@ -333,11 +350,11 @@ function Visitors() {
           throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
         }
 
-        // Desactivar el espacio de estacionamiento
-        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
-          "idParkingSpace": parkingGuestIncome,
-          "status": 'Inactive'
-        }, 'PUT');
+            // Desactivar el espacio de estacionamiento
+            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+                "idParkingSpace": parkingGuestIncome,
+                "status": 'Inactive'
+            }, 'PUT');
 
         if (parkingError) {
           throw new Error('Error al desactivar el espacio de estacionamiento');
@@ -372,13 +389,37 @@ function Visitors() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const filteredDatavisitor = () => {
-    if (data && data.visitors) {
-      return data.visitors.slice(currentPage, currentPage + 8);
+    if (data && data.visitors && visitorsData.length > 0) {
+      return visitorsData?.slice(currentPage, currentPage + 8);
     } else {
       return [];
     }
   };
+  const [selectedFilterValue, setSelectedFilterValue] = useState('true');
 
+  const searcher = (e) => {
+    console.log("Searcher value",e.target.value);
+    setSelectedFilterValue(e.target.value);
+    const filtered = visitorsDataOriginal.filter((visitor) => {
+      if (selectedFilterParam ==='access') {
+        console.log("Estoy en el access")
+        console.log("Visitor Access", visitor.access);
+        return visitor.access.toString() === e.target.value;
+      }
+      if (selectedFilterParam === 'name') {
+        let fullname= visitor.name + " " + visitor.lastname;
+        return fullname.trim().toLowerCase().includes(e.target.value.trim().toLowerCase()) || visitor.lastname.toLowerCase().includes(e.target.value.toLowerCase());
+      }
+      if (selectedFilterParam === 'documentNumber') {
+        return visitor.documentNumber.toLowerCase().includes(e.target.value.toLowerCase());
+      }
+    });
+    setVisitorsData(filtered);
+  }
+
+  function handleChangeFilter (e){
+    searcher(e);
+  }
 
 
   return (
@@ -386,7 +427,14 @@ function Visitors() {
       <ContainerTable
         title="Visitantes"
         dropdown={<DropdownExcel />}
-        search={<SearchButton />}
+        search2={<SearchSelect options={filterOptions} onChange={(e)=>{
+          setSelectedFilterParam(e.target.value);
+          console.log(selectedFilterParam);
+          setSelectedFilterValue('');
+          setSelectedFilterValue('');
+          setVisitorsData(visitorsDataOriginal);
+        }}></SearchSelect>}
+        search={selectedFilterParam == "access" ? <SearchSelect options={accessOptions} label="Buscar visitante" onChange={handleChangeFilter} />:<SearchButton value={selectedFilterValue} label="Buscar visitante" onChange={handleChangeFilter} />}
         buttonToGo={
           allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear')
             ? <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
