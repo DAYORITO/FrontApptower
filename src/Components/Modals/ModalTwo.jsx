@@ -86,9 +86,13 @@ export const ModalNotifications = ({ children, showModal }) => {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" >
           <div class="list-group list-group-flush my-n3">
 
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
             <RowNotificactions />
             <RowNotificactions />
             <RowNotificactions />

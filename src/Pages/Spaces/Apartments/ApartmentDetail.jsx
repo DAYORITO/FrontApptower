@@ -450,7 +450,7 @@ export const ApartmentDetails = (props) => {
 
     // Edit assignedparkingspace
 
-    const handleUpdateAssignedParking = (event) => {
+    const handleUpdateAssignedParking = async (event) => {
 
         const data = {
 
@@ -462,8 +462,10 @@ export const ApartmentDetails = (props) => {
 
         // console.log("edit data", data)
 
-        putRequest(event, 'assignedParkingSpaces', `Re asignaste el parqueadero`, data, setShowParkingSpacesModal, putAssignedParkingSpaces, getAssignedParkingSpaces);
+        await postRequest(event, 'assignedParkingSpaces', `PUT`, {}, data, url);
+        getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
 
+        setShowParkingSpacesModal(false)
     };
 
     // Delete apartmentresident
@@ -597,7 +599,7 @@ export const ApartmentDetails = (props) => {
 
                                             // Details
 
-                                            to={`/admin/user/details/${resident.resident.iduser}` }
+                                            to={`/admin/user/details/${resident.resident.iduser}`}
                                             status={resident.status}
                                             // Functions
 

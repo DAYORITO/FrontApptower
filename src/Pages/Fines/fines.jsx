@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
-import { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
+import useFetchUserPrivileges, { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
 import { createPortal } from 'react-dom';
 import { Uploader } from '../../Components/Uploader/Uploader';
 import { cardio } from 'ldrs';
@@ -26,6 +26,8 @@ function Fines() {
     const [fines, setFines] = useState({ fines: [] })
     const [showModaload, setShowModaload] = useState(true);
     cardio.register()
+    const token = Cookies.get('token');
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
     const [showModal, setShowModal] = useState(false);
     const [evidenceFiles, setEvidenceFiles] = useState([]);
 
@@ -39,7 +41,7 @@ function Fines() {
         } else {
         setTimeout(() => {setShowModaload(false)}, 10000);
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
-           
+
         }
     }, [data]);
 
@@ -178,7 +180,11 @@ function Fines() {
             <ContainerTable title='Multas'
                 dropdown={<DropdownExcel />}
                 search={<SearchButton />}
-                buttonToGo={<ButtonGoTo value='Crear Multa' href='/admin/fines/create' />}
+                buttonToGo={
+                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear')
+                        ? <ButtonGoTo value='Crear Multa' href='/admin/fines/create' />
+                        : null
+                }
                 showPaginator={
                     <nav aria-label="Table Paging" className="mb- text-muted my-4">
                         <ul className="pagination justify-content-center mb-0">
@@ -215,34 +221,34 @@ function Fines() {
                             <Row
                                 key={fine.idFines}
                                 A1={fine.fineType}
-                                A3="APTO"   
+                                A3="APTO"
                                 A4={fine.apartment.apartmentName}
                                 icon='dollar-sign'
                                 // status='Pendiente'
-                                A7 = {(() => {
+                                A7={(() => {
                                     let incidentDate = new Date(fine.incidentDate).toLocaleDateString('es-ES', {
-                                      weekday: 'long',
-                                      day: 'numeric',
-                                      month: 'short',
-                                      year: 'numeric',
+                                        weekday: 'long',
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
                                     });
                                     return incidentDate;
-                                  })()}
+                                })()}
                                 A6={(() => {
                                     let paymentDate = new Date(fine.paymentDate).toLocaleDateString('es-ES', {
-                                      weekday: 'long',
-                                      day: 'numeric',
-                                      month: 'short',
-                                      year: 'numeric',
+                                        weekday: 'long',
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
                                     });
                                     return paymentDate;
-                                  })()}
+                                })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
-                            >   
+                            >
                                 {fine.paymentproof === null && fine.state === 'Pendiente' ?
-                                <Actions accion='Agregar Comprobante' /> : ""}
-                                
+                                    <Actions accion='Agregar Comprobante' /> : ""}
+
                                 {fine.paymentproof != null || fine.state != 'Pagada'
                                  ?
                                 <Actions accion='Aprobar pago' onClick={() => {

@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
+import React from "react"
 import "./RowsStyle.css"
 import LogoApptower from '../../assets/Logo-Apptower.png';
 
@@ -127,21 +128,17 @@ export const Row = ({
 
 
 
-            <td>
-
-                <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="text-muted sr-only">Action</span>
-                </button>
-
-                <div class="dropdown-menu m-2">
-
-                    {/* Children must be Actions Components */}
-
-                    {children}
-
-                </div>
-
-            </td>
+            {React.Children.count(children) > 0 && (
+                <td>
+                    <button type="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="text-muted sr-only">Action</span>
+                    </button>
+                    <div class="dropdown-menu m-2">
+                        {/* Children must be Actions Components */}
+                        {children}
+                    </div>
+                </td>
+            )}
         </tr>
     )
 }

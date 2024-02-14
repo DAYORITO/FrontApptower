@@ -11,15 +11,21 @@
     max-width: 50%;
 }
 
+.h6l {
+    color: #c2e7ff;
+}
+
 .titlen {
     font-size: 120px;
     font-weight: bold;
     margin-bottom: 5px;
+    color: #c2e7ff;
 }
 
 .subTitles {
     font-weight: bold;
     margin-bottom: 20px;
+    color: #c2e7ff;
 }
 
 .linkl {
