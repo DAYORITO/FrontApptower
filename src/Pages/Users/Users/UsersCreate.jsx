@@ -176,7 +176,7 @@ export const UsersCreate = () => {
                 phone,
                 pdf,
                 birthday: dateOfbirth ? dateOfbirth : birthday,
-                sex: sex ? sex : 'M',
+                sex: sex ? sex : 'No proporcionado',
                 status: 'Activo',
                 idEnterpriseSecurity: enterprice,
                 residentType: residentType,
@@ -411,6 +411,8 @@ export const UsersCreate = () => {
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+
                                 </FormColumn>
 
                                 <FormColumn>

@@ -285,6 +285,7 @@ export const ResidentDetails = () => {
         setModalEditImg(true)
 
     }
+    
     const updateUserImg = async (event) => {
 
         console.log(idUser)
@@ -340,6 +341,7 @@ export const ResidentDetails = () => {
                             A7={pdf}
                             status={statusResident}
                             onClick2={EqualUser ? openModalChangePassword : null}
+                            showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
 

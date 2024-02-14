@@ -69,6 +69,10 @@ export const UsersDetails = () => {
     const EqualUser = userInfo?.user?.document === docNumber;
 
 
+
+    console.log('User info:', userInfo);
+
+
     useEffect(() => {
 
         // users information
@@ -153,6 +157,23 @@ export const UsersDetails = () => {
 
     }
 
+    const updateUserImg = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            userImg: userImg
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/img', 'PUT', {}, data, url);
+        getResident(`residents/${id}`)
+        setModalEditImg(false)
+
+    }
+
     const [modalChangePassword, setModalChangePassword] = useState(false)
 
     const openModalChangePassword = () => {
@@ -183,6 +204,7 @@ export const UsersDetails = () => {
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
+                            showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
 

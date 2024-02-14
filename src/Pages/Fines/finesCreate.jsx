@@ -48,7 +48,7 @@ function FinesCreate() {
         const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            }, credentials: 'include'
         });
 
         if (!response.ok) {
@@ -122,8 +122,8 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const url = 'https://apptowerbackend.onrender.com/api/fines';
-    const url = "http://localhost:3000/api/fines";
+    const url = 'https://apptowerbackend.onrender.com/api/fines';
+    // const url = "http://localhost:3000/api/fines";
     const data = {
       fineType: fineType,
       idApartment: idApartment,
@@ -131,7 +131,7 @@ function FinesCreate() {
       paymentDate: limitDate,
       amount: amount,
       details: description,
-      state: "Por pagar",
+      state: "Pendiente",
       evidenceFiles: evidence,
       idUser: parseInt(userData?.user.iduser),
     };

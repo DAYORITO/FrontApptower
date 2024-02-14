@@ -5,6 +5,8 @@ import { Row } from '../../Components/Rows/Row'
 
 import './dashboard.css';
 import { RowNotificactions } from '../../Components/RowNotificacions/RowNotificactions';
+import { Acordions } from '../../Components/Acordions/Acordions';
+import { DropdownInfo } from '../../Components/DropdownInfo/DropdownInfo';
 
 export const Dashboard = () => {
 
@@ -22,13 +24,16 @@ export const Dashboard = () => {
     socket.on('enviar-mensaje', () => {
         console.log('mensaje recibido')
     });
-    
+
     return (
 
         <Details>
 
             <ContainerDashboard>
 
+                {/* <div className="col-md-12 mb-4">
+                    <h3>Accesos directos</h3>
+                </div> */}
                 <ContentInfoDashboard
                     module='Ingresos activos'
                     icon='arrow-up-right'
@@ -62,7 +67,39 @@ export const Dashboard = () => {
                     icon='message-circle'
                 />
 
+                <Acordions>
+                    <DropdownInfo name={'Ultimas reservas'}>
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
 
+                    </DropdownInfo>
+
+                </Acordions>
+                <Acordions>
+                    <DropdownInfo name={'Ultimos usuarios registrados'}>
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+
+                    </DropdownInfo>
+
+                </Acordions>
+                <Acordions>
+                    <DropdownInfo name={'Reservas'}>
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+                        <RowNotificactions />
+
+                    </DropdownInfo>
+
+                </Acordions>
 
 
 
@@ -129,11 +166,12 @@ export const Dashboard = () => {
                     </div>
                 </div> */}
 
+                {/* <h4 className='m-4'>Reservas</h4>
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="card shadow eq-card timeline">
                         <div class="card-header">
-                            <strong class="card-title">Ultimas reservas</strong>
+                            <h3 class="h6 mb-0 text-secondary">Ultimas reservas</h3>
                             <a class="float-right small text-muted" href="#!">Ver todo</a>
                         </div>
                         <div class="card-body" data-simplebar >
@@ -141,8 +179,10 @@ export const Dashboard = () => {
                             <RowNotificactions />
                             <RowNotificactions />
                             <RowNotificactions />
+                            <RowNotificactions />
+                            <RowNotificactions /> */}
 
-                            {/* <div class="pb-3 timeline-item item-primary">
+                {/* <div class="pb-3 timeline-item item-primary">
                                 <div class="pl-5">
                                     <div class="mb-1 small"><strong>@Brown Asher</strong><span class="text-muted mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
                                     <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
@@ -160,15 +200,18 @@ export const Dashboard = () => {
                                     </p>
                                 </div>
                             </div> */}
-                        </div>
+                {/* </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card shadow mb-4">
+
+                <h4 className='m-4'>Ultimos usuarios</h4>
+
+                <div class="col-md-12">
+                    <div class="card shadow mb-12">
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h3 class="h6 mb-0">Ultimos usuarios registrados</h3>
+                                    <h3 class="h6 mb-0 text-secondary">Ultimos usuarios registrados</h3>
                                 </div>
                                 <div class="col-auto">
                                     <a class="small text-muted" href="#!">View all</a>
@@ -178,7 +221,13 @@ export const Dashboard = () => {
                         <div class="card-body my-n2">
 
                             <RowNotificactions icon='user' />
-                            {/* <div class="row align-items-center my-2">
+                            <RowNotificactions icon='user' />
+                            <RowNotificactions icon='user' />
+                            <RowNotificactions icon='user' /> */}
+
+
+
+                {/* <div class="row align-items-center my-2">
                                 <div class="col">
                                     <strong>Paris</strong>
                                     <div class="my-0 text-muted small">France</div>
@@ -248,9 +297,9 @@ export const Dashboard = () => {
                                     </div>
                                 </div>
                             </div> */}
-                        </div>
+                {/* </div>
                     </div>
-                </div>
+                </div> */}
             </ContainerDashboard>
 
 

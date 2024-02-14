@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
+import { useFetchUserInformation, useFetchget } from '../../Hooks/useFetch';
 
 
 export const Aside = () => {
@@ -17,7 +18,7 @@ export const Aside = () => {
     const { user, login, logout } = useAuth();
     const token = Cookies.get('token');
     const [allowedPermissions, setAllowedPermissions] = useState([]);
-    const [userData, setUserData] = useState({});
+
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
     const [idResidents, setIdResidents] = useState('');
@@ -33,17 +34,21 @@ export const Aside = () => {
     useEffect(() => {
         if (token) {
             fetchUserPermissions(token);
-            fetchUserInformation(token);
+            // fetchUserInformation(token);
         }
     }, [token]);
+
+    console.log(token, 'holaaa')
+    console.log(allowedPermissions, 'permisos hptassss')
 
 
     const fetchUserPermissions = async (token) => {
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/permissionfromrole', {
+            const response = await fetch('http://localhost:3000/api/permissionfromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
+                credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch user permissions');
@@ -60,28 +65,30 @@ export const Aside = () => {
         }
     };
 
-    const fetchUserInformation = async (token) => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+    // const fetchUserInformation = async (token) => {
+    //     try {
+    //         const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch user information');
-            }
+    //         if (!response.ok) {
+    //             throw new Error('Failed to fetch user information');
+    //         }
 
-            const data = await response.json();
-            setUserData(data);
-            SetUserDocument(data.user.document);
+    //         const data = await response.json();
+    //         setuserD(data);
+    //         SetUserDocument(data.user.document);
 
-        } catch (error) {
-            console.error('Error fetching user information:', error);
-        }
-    };
+    //     } catch (error) {
+    //         console.error('Error fetching user information:', error);
+    //     }
+    // };
 
+    const { data: userD, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
+    console.log(userD, 'holaaa')
 
     const fechDataRols = async () => {
         try {
@@ -94,7 +101,7 @@ export const Aside = () => {
             const data = await response.json();
             const rols = data.rols;
             if (Array.isArray(rols)) {
-                const userRole = rols.find(role => role.idrole === userData.user.idrole)?.namerole;
+                const userRole = rols.find(role => role.idrole === userD.user.idrole)?.namerole;
                 setUserRole(userRole);
             } else {
                 console.error('Error: roles data is not an array:', rols);
@@ -105,23 +112,25 @@ export const Aside = () => {
     };
 
     useEffect(() => {
-        if (userData.user && userData.user.idrole) {
+        if (userD?.user && userD?.user?.idrole) {
             fechDataRols();
         }
-    }, [userData]);
+    }, [userD]);
 
+    const { dataRoles, load, error } = useFetchget('rols')
 
+    console.log(dataRoles)
 
 
 
     const redireccion = useNavigate();
 
-    useEffect(() => {
-        if (token) {
+    // useEffect(() => {
+    //     if (token) {
 
-            fetchUserInformation(token);
-        }
-    }, [token]);
+    //         fetchUserInformation(token);
+    //     }
+    // }, [token]);
 
 
 
@@ -172,15 +181,9 @@ export const Aside = () => {
     //     setIsConect(false);
     // });
 
-    // socket.on('enviar-mensaje', () => {
-    //     console.log('mensaje recibido')
+    // socket.on('connect', () => {
+    //   console.log('Conexión establecida con el servidor');
     // });
-
-
-    
-    // const saluda = (unMensaje) =>
-    //     socket.emit('enviar-mensaje', unMensaje);
-    // ;
 
     // console.log(isConect? 'Esta conectado': 'No esta conectado')
 
@@ -191,7 +194,7 @@ export const Aside = () => {
             </div>
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
                 onMouseEnter={isCloset ? null : toggleSidebar}
-                >
+            >
 
 
                 <div className='myNav-header'>
@@ -206,11 +209,13 @@ export const Aside = () => {
                 </div>
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav
-                    name={userData.user?.name ? userData.user.name : ''}
-                    lastName={userData.user?.lastName ? userData.user.lastName : ''}
+                    name={userD?.user?.name ? userD?.user?.name : ''}
+                    lastName={userD?.user?.lastName ? userD?.user?.lastName : ''}
                     rol={userRole ? userRole : ''}
-                    userImg={userData?.user?.userImg}
+                    userImg={userD?.user?.userImg}
+
                 />
+
 
 
                 <div className='myNav-links'>
@@ -307,10 +312,10 @@ export const Aside = () => {
                                 ) : null}
 
 
-                                {/* {allowedPermissions.includes('Multas') && (
+                                {allowedPermissions.includes('Multas') && (
                                     <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
-                                )} */}
-                                <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
+                                )}
+                                {/* <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' /> */}
 
                                 {allowedPermissions.includes('Usuarios') && (
                                     <ListNav module={'Usuarios'} href='users/' icon='fe fe-user' />

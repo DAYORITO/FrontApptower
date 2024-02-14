@@ -259,6 +259,7 @@ export const WatchmanDetails = () => {
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
+                            showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
 

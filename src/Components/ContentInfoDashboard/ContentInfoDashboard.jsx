@@ -20,7 +20,7 @@ export const ContentInfoDashboard = ({
                                 </span>
                             </div>
                             <div class="col pr-0">
-                                <p class="small text-muted mb-0">{module}</p>
+                                <p class="small text-dark mb-0">{module}</p>
                                 <span class="h3 mb-0">{count}</span>
                                 {/* <span class="small text-success">+16.5%</span> */}
                             </div>

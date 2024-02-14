@@ -4,7 +4,7 @@ import ImageIcono from '../../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../../Components/Inputs/selectLogIn';
-import { useFetchget, useFetchpost } from '../../../Hooks/useFetch';
+import { useFetchUserInformation, useFetchget, useFetchpost } from '../../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../../Context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -20,94 +20,8 @@ const LoginForm = ({ setShowLoginForm }) => {
     const { user, login, logout } = useAuth();
     const [username, setUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
-    console.log('Login:', login);
     const token = Cookies.get('token');
-    console.log('username:', username);
-    console.log('loginPassword:', loginPassword);
     const navigate = useNavigate();
-    const [userData, setUserData] = useState({});
-    const [userRole, setUserRole] = useState('');
-    const [userDocument, SetUserDocument] = useState('');
-    const [idResidents, setIdResidents] = useState('');
-    console.log('idresidente', idResidents)
-    console.log(userRole, 'userRole aqui en login');
-    const [idApartment, setIdapartaments] = useState('');
-    console.log(idApartment, 'idapartement')
-
-    const [userIdRole, setUserIdRole] = useState(null);
-
-    useEffect(() => {
-        if (token) {
-            fetchUserInformation(token);
-
-        }
-    }, [token]);
-
-    const fetchUserInformation = async (token) => {
-        try {
-            const response = await fetch('http://localhost:3000/api/informationUser', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user information');
-            }
-
-            const data = await response.json();
-            setUserData(data.user);
-
-        } catch (error) {
-            console.error('Error fetching user information:', error);
-        }
-    };
-
-    console.log('userData aqui en login Aleja hoy:', userData);
-
-
-    const { data: dataRols, load: loadRols, error: errorRols } = useFetchget('rols');
-
-    useEffect(() => {
-        if (userIdRole && Array.isArray(dataRols)) {
-            const userRole = dataRols.find(role => role.idrole === userIdRole)?.namerole;
-            console.log('User Role:', userRole);
-            setUserRole(userRole);
-        } else {
-            console.error('Error: roles data is not an array:', dataRols);
-        }
-    }, [userIdRole, dataRols]);
-
-
-
-    useEffect(() => {
-        if (userDocument) {
-            fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.residente) {
-                        setIdResidents(data.residente.idResident);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    }, [userDocument]);
-
-    useEffect(() => {
-        if (idResidents) {
-            fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.apartmentResidents) {
-                        setIdapartaments(data.apartmentResidents.idApartment)
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    }, [idResidents]);
-
-    console.log('userData aqui en login Holaaaaa:', userData);
-
 
 
 
@@ -125,69 +39,52 @@ const LoginForm = ({ setShowLoginForm }) => {
 
         try {
             const token = await login(username, loginPassword);
-            console.log('Token:', token);
 
             if (token) {
-                const response = await fetch('https://apptowerbackend.onrender.com/api/login/access', {
-                    // const response = await fetch('https://apptowerbackend.onrender.com/api/login/access', {
+                // Cookies.set('token', token);
+                const response = await fetch('http://localhost:3000/api/login/access', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
+                    credentials: 'include',
                 });
 
                 if (!response.ok) {
-
-                    Swal.fire('Error de inicio de sesión 2', 'El usuario o la contraseña son incorrectos.', 'error');
-
+                    Swal.fire('Error de inicio de sesión.', 'El usuario o la contraseña son incorrectos.', 'error');
                 }
 
                 const responseData = await response.json();
-                console.log('Response data hola:', responseData);
-
-                console.log(responseData.role, 'role');
 
                 if (responseData.message === 'Acceso denegado') {
                     Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
-
                 } else {
+                    if (responseData.role) {
+                        const role = responseData.role.toLowerCase();
 
-                    if (responseData.role.toLowerCase() === 'vigilante' || responseData.role.toLowerCase() === 'seguridad' || responseData.role.toLowerCase() === 'vigilantes') {
+                        if (role.includes('vigilante') || role.includes('seguridad') || role.includes('vigilantes')) {
+                            // navigate('/admin/watchman/shifts');
+                            navigate(`admin/watchman/details/${responseData.user}`);
 
-                        navigate('/admin/watchman/shifts');
-                        window.location.reload();
+                        } else if (role.includes('administrador')) {
+                            navigate('/admin/dashboard');
+
+                        } else if (role.includes('residente')) {
+                            navigate(`/admin/resident/details/${responseData.user}`);
 
 
-                    } else if (responseData.role === 'Administrador' || responseData.role.toLowerCase() === 'admin' || responseData.role.toLowerCase() === 'super administrador') {
-                        navigate('/admin/residents');
-                        window.location.reload();
+                        } else {
+                            navigate(`admin/users/details/${responseData.user}`);
 
-                    }
-                    else if (responseData.role.toLowerCase() === 'residente' || responseData.role.toLowerCase() === 'residentes') {
-                        if (idApartment) {
-                            navigate(`/admin/apartments/details/${idApartment}`);
-                            window.location.reload();
                         }
-                        else {
-                            navigate('/admin/spaces');
-                            window.location.reload();
-                        }
-
+                    } else {
+                        console.error('Error: role is undefined');
                     }
-                    else {
-                        navigate('/admin/users/profileList');
-                        window.location.reload();
-                    }
-
                 }
-
             }
         } catch (error) {
-            console.log('password ', loginPassword)
-            console.log('username ', username)
-            console.error('Error de inicio de sesión Aleja:', error.message);
-            Swal.fire('Error de inicio de sesión 1', error.message, 'error');
+            console.error('Error:', error);
         }
     }
 

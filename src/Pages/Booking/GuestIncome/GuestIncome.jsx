@@ -9,7 +9,7 @@ import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useFetchget } from '../../../Hooks/useFetch'
 import { useFetchForFile } from '../../../Hooks/useFetch'
-import { useApiUpdate } from '../../../Hooks/FetchputDan'
+
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
 import { createPortal } from "react-dom";
@@ -61,7 +61,9 @@ function GuestIncome() {
         if (data?.guestIncome?.length > 0 && data2?.guestincomeparking?.length > 0) {
             setShowModaload(false);
         } else {
-            
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 10000)
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
             
         }
@@ -76,7 +78,7 @@ function GuestIncome() {
         console.log("Respuesta verify:", verify);
         if (verify !== null && verify !== undefined) {
             const parkingUpdateData = { "idParkingSpace": verify.idParkingSpace, "status": 'Active' };
-            const parkingUpdateUrl = 'http://localhost:3000/api/parkingSpaces';
+            const parkingUpdateUrl = 'https://apptowerbackend.onrender.com/api/parkingSpaces';
             
             try {
                 const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
@@ -87,7 +89,7 @@ function GuestIncome() {
             }
         }
     
-        const guestIncomeUpdateUrl = 'http://localhost:3000/api/guestIncome';
+        const guestIncomeUpdateUrl = 'https://apptowerbackend.onrender.com/api/guestIncome';
         try {
             const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
             setShowModaload(false);
@@ -136,7 +138,8 @@ function GuestIncome() {
             const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
+                 credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch user privileges');

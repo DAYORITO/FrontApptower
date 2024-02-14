@@ -16,6 +16,7 @@ import { Actions } from '../../Components/Actions/Actions';
 import { Modal, ModalContainer } from '../../Components/Modals/ModalTwo';
 import { set } from 'date-fns';
 import { useApiUpdate } from '../../Hooks/FetchputDan';
+import ImageContainer from '../../Components/ImgContainer/imageContainer';
 
 
 
@@ -25,14 +26,18 @@ function Fines() {
     const [fines, setFines] = useState({ fines: [] })
     const [showModaload, setShowModaload] = useState(true);
     cardio.register()
+    const [showModal, setShowModal] = useState(false);
+    const [evidenceFiles, setEvidenceFiles] = useState([]);
 
     const { data, load, error } = useFetchget('fines')
+    console.log("Respuesta api",data)
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
         if (data?.fines?.length > 0) {
             setShowModaload(false);
         } else {
+        setTimeout(() => {setShowModaload(false)}, 10000);
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
            
         }
@@ -52,40 +57,45 @@ function Fines() {
         console.log(dataToUpdate)
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        let response = await useFetchForFile('http://localhost:3000/api/fines',dataToUpdate, 'PUT')
-            .then((responseData) => {
+        let response = await useFetchForFile('https://apptowerbackend.onrender.com/api/fines',dataToUpdate, 'PUT')
+            // .then((responseData) => {
+                
+            console.log(response)
+            if(response.response != null){
                 setShowModaload(false);
-
-                console.log(responseData)
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Archivo actualizado',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-                const updatedfine = fines.map((fine) => {
-                    if (fine.idFines === dataToUpdate.idFines) {
-                        if (dataToUpdate.evidenceFiles) {
-                            fine.paymentproof = dataToUpdate.paymentproof;
+                console.log("Respuesta response",response)
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Archivo actualizado',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
+                    const updatedfine = fines.map((fine) => {
+                        if (fine.idFines === dataToUpdate.idFines) {
+                            if (dataToUpdate.paymentproof) {
+                                fine.paymentproof = dataToUpdate.paymentproof;
+                            }
+                            console.log("Encontrado! ", fine, "id",fine.idFines)
+                            fine.state = dataToUpdate.state;
                         }
-                        fine.status = dataToUpdate.status;
-                    }
-                    return fine;
-                });
-                setFines(updatedfine);
+                        
+                        return fine;
+                        
+                    });
+                    console.log("regiostro actualizado: ", updatedfine)
+                    setFines(updatedfine);
+                }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Algo salió mal!',
+                        });
+                        setShowModaload(false);
 
-            })
-            .catch((error) => {
-                console.error('Error updating access:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Algo salió mal!',
-                });
-                setShowModaload(false);
-            });
-            console.log("Respuesta del servidor ", response)
+                }
+                
+            
     };
 
 
@@ -96,7 +106,7 @@ function Fines() {
     const [currentPage, setCurrentPage] = useState(0);
 
     const filteredDatafines = () => {
-        if (data && data.fines) {
+        if (data && data.fines && fines) {
             return data.fines.slice(currentPage, currentPage + 8);
         } else {
             return [];
@@ -238,7 +248,15 @@ function Fines() {
                                 <Actions accion='Aprobar pago' onClick={() => {
                                     handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
                                 }} /> : ""}
-                                <Actions accion='Ver detalles' href={`/admin/fines/details/${fine.idFines}`} />
+
+                                <Actions accion='Ver detalles' 
+                                // href={`/admin/fines/details/${fine.idFines}`}
+                                onClick={() => {
+                                    setEvidenceFiles(fine.evidenceFiles);
+                                    setShowModal(true);
+                                }
+                                }
+                                 />
                             </Row>
                         ))}
 
@@ -246,6 +264,25 @@ function Fines() {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
+            {showModal &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setShowModal}>
+                            <Modal
+                                showModal={setShowModal}
+                                onClick={() => setShowModal(false)}
+                                title='Evidencias'
+                                onClickClose={() => setEvidenceFiles([])}
+                                showSave={false}
+                            >
+                            <ImageContainer urls={evidenceFiles} />
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )
+                                
+            }
             // {showModaload &&
                 createPortal(
                     <>

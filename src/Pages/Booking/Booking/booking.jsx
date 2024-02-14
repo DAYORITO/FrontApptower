@@ -53,7 +53,8 @@ export const Booking = () => {
       const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        }, 
+        credentials: 'include'
       });
       if (!response.ok) {
         throw new Error('Failed to fetch user privileges');
