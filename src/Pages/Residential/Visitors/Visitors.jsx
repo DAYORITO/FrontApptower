@@ -83,11 +83,13 @@ function Visitors() {
     if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
       console.log("Entre aqui:", dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers)
       setShowModaload(false);
-    }
+    }else{
     console.log("Entre a data:",dataApartment?.apartments?.length > 0)
     console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
     console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
     console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
+    }
+    
 
   },[dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
 
@@ -305,7 +307,7 @@ function Visitors() {
   const handleEditClick = async (data) => {
     setShowModaload(true);
     const response = await useFetchForFile(
-      "http://localhost:3000/api/visitors/",
+      "https://apptowerbackend.onrender.com/api/visitors/",
       data,
       "PUT"
     );
@@ -371,7 +373,7 @@ function Visitors() {
             }
 
             // Desactivar el espacio de estacionamiento
-            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`https://apptowerbackend.onrender.com/api/parkingSpaces`, {
                 "idParkingSpace": parkingGuestIncome,
                 "status": 'Inactive'
             }, 'PUT');
