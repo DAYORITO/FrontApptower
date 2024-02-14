@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
@@ -16,82 +16,42 @@ import Swal from 'sweetalert2';
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie';
 import Select2 from '../../../Components/Inputs/Select2';
+import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal'
+import { dotSpinner } from 'ldrs'
+
 
 
 export const Watchman = () => {
     const [showModal, setShowModal] = useState(false);
     const [editedWatchman, setEditedWatchman] = useState(null);
     const [watchmanData, setWatchmanData] = useState([]);
-    const [allowedPermissions, setAllowedPermissions] = useState([]);
     const token = Cookies.get('token');
     const [enterprice, setEnterprice] = useState(null)
 
-    console.log(allowedPermissions, 'allowedPermissions Aleja')
-    // console.log(allowedPermissions['Vigilantes'], 'allowedPermissions Vigilante');
-    // console.log(allowedPermissions['Vigilantes']?.includes('Crear'), 'allowedPermissions Vigilante Crear');
-
-
-
+    dotSpinner.register()
+    const [showModaload, setShowModaload] = useState(true);
     const { data, load, error } = useFetchget('watchman')
     const { error: putError, load: putLoad, } = useFetchput('watchman', editedWatchman);
-    console.log(data.watchman)
-
 
     useEffect(() => {
-        if (token) {
-            fetchUserPrivilegeAndPermission(token);
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (data?.watchman?.length > 0) {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 700);
+        } else {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 2000);
+
         }
-    }, [token]);
+    }, [data]);
 
 
     //Consulta privilegios 
-    const fetchUserPrivilegeAndPermission = async (token) => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                 credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch user privileges');
-            }
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
-            const data = await response.json();
-            console.log(data, 'data');
-            console.log('Allowed Permissions hi:', data.privileges);
-
-            if (data && data.privileges && Array.isArray(data.privileges)) {
-                const allowed = {};
-                data.privileges.forEach(({ idpermission, idprivilege }) => {
-                    const permissionName = idToPermissionName[idpermission];
-                    const privilegeName = idToPrivilegesName[idprivilege];
-
-                    if (!allowed[permissionName]) {
-                        allowed[permissionName] = [];
-                    }
-                    allowed[permissionName].push(privilegeName);
-                });
-
-                setAllowedPermissions(allowed);
-            }
-        } catch (error) {
-            console.error('Error fetching user permissions:', error);
-        }
-    };
-
-
-
-
-    const [companies, setCompanies] = useState([]);
     const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
-
-
-    useEffect(() => {
-        if (enterpriseSecurity) {
-            setCompanies(enterpriseSecurity);
-        }
-    }, [enterpriseSecurity]);
 
     useEffect(() => {
         if (data && data.watchman) {
@@ -124,6 +84,9 @@ export const Watchman = () => {
     const originalDocument = useRef('');
     const originalEmail = useRef('');
 
+
+
+
     useEffect(() => {
         if (editedWatchman?.user?.document && originalDocument.current === '') {
             originalDocument.current = editedWatchman?.user?.document;
@@ -136,8 +99,10 @@ export const Watchman = () => {
         }
     }, [editedWatchman?.user?.email]);
 
+
+
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/document/${editedWatchman?.user?.document}`)
+        fetch(`https://apptowerbackend.onrender.com/api/users/document/${editedWatchman?.user?.document}`)
             .then(response => response.json())
             .then(data => {
                 setIsDocumentTaken(data && data.message ? true : false);
@@ -149,7 +114,7 @@ export const Watchman = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/email/${editedWatchman?.user?.email}`)
+        fetch(`https://apptowerbackend.onrender.com/api/users/email/${editedWatchman?.user?.email}`)
             .then(response => response.json())
             .then(data => {
                 setIsEmailTaken(data && data.message ? true : false);
@@ -158,6 +123,8 @@ export const Watchman = () => {
                 console.error('Error:', error);
             });
     }, [editedWatchman?.user?.email]);
+
+
 
     const [shouldValidate, setShouldValidate] = useState(false);
 
@@ -202,7 +169,7 @@ export const Watchman = () => {
                 }
 
 
-                const response = await fetch('http://localhost:3000/api/watchman', {
+                const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -460,6 +427,32 @@ export const Watchman = () => {
 
                             </Modal>
                         </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                    <p> </p>
+                                    <p className="mt-2 text-muted">Cargando datos...</p>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
                     </>,
                     document.getElementById("modalRender")
                 )}

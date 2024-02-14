@@ -8,15 +8,23 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-
+import { cardio } from 'ldrs';
+import { createPortal } from 'react-dom';
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie';
 import { filterPerSelect } from '../../../Helpers/Helpers'
+import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal'
+import { dotSpinner } from 'ldrs'
+
+
+
 
 
 export const Users = () => {
 
     const [usersData, setUsersData] = useState([]);
+    dotSpinner.register()
+    const [showModaload, setShowModaload] = useState(true);
 
     const token = Cookies.get('token');
     const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
@@ -26,6 +34,20 @@ export const Users = () => {
     useEffect(() => {
         if (data && data.user) {
             setUsersData(data.user);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (data?.user?.length > 0) {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 700);
+        } else {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 2000);
+
         }
     }, [data]);
 
@@ -177,6 +199,33 @@ export const Users = () => {
                     </Tbody>
                 </TablePerson>
             </ContainerTable >
+
+            {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                    <p> </p>
+                                    <p className="mt-2 text-muted">Cargando datos...</p>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
 
 
 

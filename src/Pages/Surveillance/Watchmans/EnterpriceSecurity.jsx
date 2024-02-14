@@ -13,8 +13,9 @@ import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import Inputs from "../../../Components/Inputs/Inputs";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
-// import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
-// import Cookies from 'js-cookie';
+import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal'
+import { dotSpinner } from 'ldrs'
+
 
 
 export const EnterpriceSecurity = () => {
@@ -22,8 +23,7 @@ export const EnterpriceSecurity = () => {
     const [showModalCreate, setShowModalCreate] = useState(false);
     const [editedEnterprice, seteditedEnterprice] = useState(null);
     const [EnterpriceData, setEnterpriceData] = useState([]);
-    // const [allowedPermissions, setAllowedPermissions] = useState([]);
-    // const token = Cookies.get('token');
+
 
     const [nameEnterprice, setNameEnterprice] = useState("");
     const [email, setEmail] = useState("");
@@ -31,10 +31,26 @@ export const EnterpriceSecurity = () => {
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
 
+    dotSpinner.register()
+    const [showModaload, setShowModaload] = useState(true);
+
 
     const { data, load, error } = useFetchget('enterpricesecurity')
     const { error: putError, load: putLoad, } = useFetchput('enterpricesecurity', editedEnterprice);
 
+    useEffect(() => {
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (data?.enterpricesecurity?.length > 0) {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 700);
+        } else {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 2000);
+
+        }
+    }, [data]);
 
 
     const getEnterpriceData = async () => {
@@ -478,6 +494,32 @@ export const EnterpriceSecurity = () => {
 
                             </Modal>
                         </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                    <p> </p>
+                                    <p className="mt-2 text-muted">Cargando datos...</p>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
                     </>,
                     document.getElementById("modalRender")
                 )}
