@@ -3,6 +3,7 @@ import {
   ButtonGoTo,
   DropdownExcel,
   SearchButton,
+  SearchSelect,
 } from "../../../Components/Buttons/Buttons";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { Thead } from "../../../Components/Thead/Thead";
@@ -10,7 +11,7 @@ import { Th } from "../../../Components/Th/Th";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { Row } from "../../../Components/Rows/Row";
 import { Actions } from "../../../Components/Actions/Actions";
-import { useFetchForFile, useFetchget, useFetchpost } from "../../../Hooks/useFetch";
+import useFetchUserPrivileges, { useFetchForFile, useFetchget, useFetchpost } from "../../../Hooks/useFetch";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -27,13 +28,17 @@ import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
 function Visitors() {
-
+  const token = Cookies.get('token');
 
   // const token = Cookies.get('token');
   // const [allowedPermissions, setAllowedPermissions] = useState([]);
 
+  const filterOptions = [{label: 'Nombre', value: 'name'}, {label: 'Documento', value: 'documentNumber'}, {label: 'Acceso', value: 'access'}];
+  const [selectedFilterParam, setSelectedFilterParam] = useState('name');
+  const accessOptions = [{label: 'Permitido', value: true}, {label: 'Denegado', value: false}];
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [visitorsData, setVisitorsData] = useState({ visitors: [] });
+  const [visitorsDataOriginal, setVisitorDataOriginal] = useState({ visitors: [] });
   const [showModaload, setShowModaload] = useState(true);
   cardio.register()
 
@@ -74,14 +79,17 @@ function Visitors() {
   ];
 
   //Peticiones a la api
-  const { data: dataApartment} = useFetchget('apartments')
+  const { data: dataApartment } = useFetchget('apartments')
   const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
 
   useEffect(()=>{
     if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
-      console.log("Entre aqui:", dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers)
+      setVisitorsData(sortByCreatedAtDescending(data.visitors));
+      setVisitorDataOriginal(sortByCreatedAtDescending(data.visitors));
       setShowModaload(false);
     }
     console.log("Entre a data:",dataApartment?.apartments?.length > 0)
@@ -89,7 +97,7 @@ function Visitors() {
     console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
     console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
 
-  },[dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
+  }, [dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
 
   const handleChange = (e) => {
     if (e.target.value === "si") {
@@ -98,6 +106,19 @@ function Visitors() {
       setCheck1(false);
     }
   };
+  function sortByCreatedAtDescending(data) {
+    // Copia el array para no modificar el original
+    const sortedData = [...data];
+  
+    // Ordena el array por fecha de creación de forma descendente
+    sortedData.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateB - dateA;
+    });
+  
+    return sortedData;
+  }
 
   // const [idTower, setIdTower] = useState(null);
   // const [nameTower, setNameTower] = useState('');
@@ -153,7 +174,6 @@ function Visitors() {
       // Se agrega el apartamento al array correspondiente a la torre
       apartmentsByTower[idTower].push({ value: idApartment, label: apartmentName });
     });
-    console.log("Apartamentos por torreprimero:", apartmentsByTower);
 
     const resultArray = [];
 
@@ -170,7 +190,6 @@ function Visitors() {
         });
       }
     }
-    console.log("Apartamentos por torre:", resultArray);
 
     return resultArray;
   };
@@ -260,52 +279,13 @@ function Visitors() {
     }
   }, [dataApartment]);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     fetchUserPrivilegeAndPermission(token);
-  //   }
-  // }, [token]);
 
 
-  //Consulta privilegios 
-  const fetchUserPrivilegeAndPermission = async (token) => {
-    try {
-      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user privileges');
-      }
-
-      const data = await response.json();
-      console.log(data, 'data');
-      console.log('Allowed Permissions hi:', data.privileges);
-
-      if (data && data.privileges && Array.isArray(data.privileges)) {
-        const allowed = {};
-        data.privileges.forEach(({ idpermission, idprivilege }) => {
-          const permissionName = idToPermissionName[idpermission];
-          const privilegeName = idToPrivilegesName[idprivilege];
-
-          if (!allowed[permissionName]) {
-            allowed[permissionName] = [];
-          }
-          allowed[permissionName].push(privilegeName);
-        });
-
-        setAllowedPermissions(allowed);
-      }
-    } catch (error) {
-      console.error('Error fetching user permissions:', error);
-    }
-  };
 
   const handleEditClick = async (data) => {
     setShowModaload(true);
     const response = await useFetchForFile(
-      "http://localhost:3000/api/visitors/",
+      "https://apptowerbackend.onrender.com/api/visitors/",
       data,
       "PUT"
     );
@@ -321,13 +301,13 @@ function Visitors() {
       });
       const updatedVisitor = visitorsData.map((visitor) => {
         if (visitor.idVisitor === data.idVisitor) {
-            visitor.access = data.access;
+          visitor.access = data.access;
         }
         return visitor;
-    });
-    setVisitorsData(updatedVisitor);
-    console.log(updatedVisitor);
-    console.log(visitorsData);
+      });
+      setVisitorsData(updatedVisitor);
+      console.log(updatedVisitor);
+      console.log(visitorsData);
 
     } else {
       setShowModaload(false);
@@ -345,30 +325,30 @@ function Visitors() {
     setShowModaload(true);
 
     try {
-        // Crear el guestIncome
-        const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
-            "startingDate": new Date(),
-            "departureDate": null,
-            "idApartment": apartment,
-            "personAllowsAccess": personAllowsAccesss,
-            "observations": observationss ? observationss : "Sin observaciones",
-            "idVisitor": visitor,
+      // Crear el guestIncome
+      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+        "startingDate": new Date(),
+        "departureDate": null,
+        "idApartment": apartment,
+        "personAllowsAccess": personAllowsAccesss,
+        "observations": observationss ? observationss : "Sin observaciones",
+        "idVisitor": visitor,
+      });
+
+      if (guestIncomeError) {
+        throw new Error('Error al crear el ingreso de huésped');
+      }
+
+      if (guestIncomeResponse && check1) {
+        // Crear el guestIncomeParking
+        const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+          "idParkingSpace": parkingGuestIncome,
+          "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
         });
 
-        if (guestIncomeError) {
-            throw new Error('Error al crear el ingreso de huésped');
+        if (guestIncomeParkingError) {
+          throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
         }
-
-        if (guestIncomeResponse && check1) {
-            // Crear el guestIncomeParking
-            const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
-                "idParkingSpace": parkingGuestIncome,
-                "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
-            });
-
-            if (guestIncomeParkingError) {
-                throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
-            }
 
             // Desactivar el espacio de estacionamiento
             const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
@@ -376,31 +356,31 @@ function Visitors() {
                 "status": 'Inactive'
             }, 'PUT');
 
-            if (parkingError) {
-                throw new Error('Error al desactivar el espacio de estacionamiento');
-            }
+        if (parkingError) {
+          throw new Error('Error al desactivar el espacio de estacionamiento');
         }
+      }
 
-        // Éxito
-        setShowModaload(false);
-        console.log('Respuesta exitosa:', guestIncomeResponse);
-        Swal.fire({
-            title: 'Éxito',
-            text: 'Ingreso creado exitosamente',
-            icon: 'success',
-        }).then(() => {
-            setShowmodal(false);
-        });
+      // Éxito
+      setShowModaload(false);
+      console.log('Respuesta exitosa:', guestIncomeResponse);
+      Swal.fire({
+        title: 'Éxito',
+        text: 'Ingreso creado exitosamente',
+        icon: 'success',
+      }).then(() => {
+        setShowmodal(false);
+      });
     } catch (error) {
-        setShowModaload(false);
-        Swal.fire({
-            title: 'Error',
-            text: error.message || 'Error desconocido',
-            icon: 'error',
-        });
-        console.error('Error:', error);
+      setShowModaload(false);
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Error desconocido',
+        icon: 'error',
+      });
+      console.error('Error:', error);
     }
-}
+  }
 
   const totalPages = data.visitors ? Math.ceil(data.visitors.length / 8) : 0;
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -409,13 +389,37 @@ function Visitors() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const filteredDatavisitor = () => {
-    if (data && data.visitors) {
-      return data.visitors.slice(currentPage, currentPage + 8);
+    if (data && data.visitors && visitorsData.length > 0) {
+      return visitorsData?.slice(currentPage, currentPage + 8);
     } else {
       return [];
     }
   };
+  const [selectedFilterValue, setSelectedFilterValue] = useState('true');
 
+  const searcher = (e) => {
+    console.log("Searcher value",e.target.value);
+    setSelectedFilterValue(e.target.value);
+    const filtered = visitorsDataOriginal.filter((visitor) => {
+      if (selectedFilterParam ==='access') {
+        console.log("Estoy en el access")
+        console.log("Visitor Access", visitor.access);
+        return visitor.access.toString() === e.target.value;
+      }
+      if (selectedFilterParam === 'name') {
+        let fullname= visitor.name + " " + visitor.lastname;
+        return fullname.trim().toLowerCase().includes(e.target.value.trim().toLowerCase()) || visitor.lastname.toLowerCase().includes(e.target.value.toLowerCase());
+      }
+      if (selectedFilterParam === 'documentNumber') {
+        return visitor.documentNumber.toLowerCase().includes(e.target.value.toLowerCase());
+      }
+    });
+    setVisitorsData(filtered);
+  }
+
+  function handleChangeFilter (e){
+    searcher(e);
+  }
 
 
   return (
@@ -423,9 +427,18 @@ function Visitors() {
       <ContainerTable
         title="Visitantes"
         dropdown={<DropdownExcel />}
-        search={<SearchButton />}
+        search2={<SearchSelect options={filterOptions} onChange={(e)=>{
+          setSelectedFilterParam(e.target.value);
+          console.log(selectedFilterParam);
+          setSelectedFilterValue('');
+          setSelectedFilterValue('');
+          setVisitorsData(visitorsDataOriginal);
+        }}></SearchSelect>}
+        search={selectedFilterParam == "access" ? <SearchSelect options={accessOptions} label="Buscar visitante" onChange={handleChangeFilter} />:<SearchButton value={selectedFilterValue} label="Buscar visitante" onChange={handleChangeFilter} />}
         buttonToGo={
-          <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
+          allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear')
+            ? <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
+            : null
         }
         showPaginator={
           <nav aria-label="Table Paging" className="mb- text-muted my-4">
@@ -522,9 +535,9 @@ function Visitors() {
           <>
             <ModalContainer ShowModal={setShowmodal}>
               <Modal title={"Crear Ingreso"} showModal={setShowmodal} onClick={handleSubmit}>
-              <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+                <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
                 <div className="mb-4">
-                <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+                  <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
                 </div>
 
                 <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>

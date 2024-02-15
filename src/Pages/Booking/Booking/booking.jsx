@@ -53,7 +53,7 @@ export const Booking = () => {
       const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
         headers: {
           Authorization: `Bearer ${token}`
-        }, 
+        },
         credentials: 'include'
       });
       if (!response.ok) {
@@ -170,9 +170,11 @@ export const Booking = () => {
                   op3={format(parseISO(booking.bookingdate), 'PPpp')}
                   op4={format(parseISO(booking.finalDate), 'PPpp')}
                 >
-                  {allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Editar') && (
+
+                  {allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Editar') ? (
                     <Actions accion='Editar' />
-                  )}
+                  ) : null}
+
                 </Row>
 
               ))

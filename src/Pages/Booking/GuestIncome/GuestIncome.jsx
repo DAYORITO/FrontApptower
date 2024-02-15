@@ -7,15 +7,14 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useFetchget } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetchUserPermissions, useFetchget } from '../../../Hooks/useFetch'
 import { useFetchForFile } from '../../../Hooks/useFetch'
-import { useApiUpdate } from '../../../Hooks/FetchputDan'
+
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react'
 import { createPortal } from "react-dom";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { cardio } from 'ldrs'
-import { useAuth } from '../../../Context/AuthContext'
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 
@@ -25,7 +24,6 @@ import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissio
 
 function GuestIncome() {
     const token = Cookies.get('token');
-    const [allowedPermissions, setAllowedPermissions] = useState([]);
     // const {permisos} = useAuth()
     // if(!permisos.incudes("Ver Ingreso")){
     //     navigate
@@ -38,6 +36,8 @@ function GuestIncome() {
     const [showModaload, setShowModaload] = useState(true);
     const { data, load, error } = useFetchget('guestIncome')
     const { data: data2, load: load2, error: error2 } = useFetchget('guestincomeparking')
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
     console.log(data2)
 
     console.log(data)
@@ -61,9 +61,11 @@ function GuestIncome() {
         if (data?.guestIncome?.length > 0 && data2?.guestincomeparking?.length > 0) {
             setShowModaload(false);
         } else {
-            
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 10000)
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
-            
+
         }
     }, [data, data2]);
 
@@ -71,12 +73,12 @@ function GuestIncome() {
 
     const handleEditClick = async (dataToUpdate) => {
         setShowModaload(true);
-    
+
         const verify = guestIncomeParkingData?.find((guestIncomeParking) => guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income);
         console.log("Respuesta verify:", verify);
         if (verify !== null && verify !== undefined) {
             const parkingUpdateData = { "idParkingSpace": verify.idParkingSpace, "status": 'Active' };
-            const parkingUpdateUrl = 'http://localhost:3000/api/parkingSpaces';
+            const parkingUpdateUrl = 'https://apptowerbackend.onrender.com/api/parkingSpaces';
             
             try {
                 const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
@@ -87,7 +89,7 @@ function GuestIncome() {
             }
         }
     
-        const guestIncomeUpdateUrl = 'http://localhost:3000/api/guestIncome';
+        const guestIncomeUpdateUrl = 'https://apptowerbackend.onrender.com/api/guestIncome';
         try {
             const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
             setShowModaload(false);
@@ -110,7 +112,7 @@ function GuestIncome() {
             // Manejar el error si es necesario
         }
     }
-    
+
 
 
     const formatDate = (date) => {
@@ -119,52 +121,6 @@ function GuestIncome() {
         });
     };
 
-
-
-
-
-    useEffect(() => {
-        if (token) {
-            fetchUserPrivilegeAndPermission(token);
-        }
-    }, [token]);
-
-
-    //Consulta privilegios 
-    const fetchUserPrivilegeAndPermission = async (token) => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                 credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch user privileges');
-            }
-
-            const data = await response.json();
-            console.log(data, 'data');
-            console.log('Allowed Permissions hi:', data.privileges);
-
-            if (data && data.privileges && Array.isArray(data.privileges)) {
-                const allowed = {};
-                data.privileges.forEach(({ idpermission, idprivilege }) => {
-                    const permissionName = idToPermissionName[idpermission];
-                    const privilegeName = idToPrivilegesName[idprivilege];
-
-                    if (!allowed[permissionName]) {
-                        allowed[permissionName] = [];
-                    }
-                    allowed[permissionName].push(privilegeName);
-                });
-
-                setAllowedPermissions(allowed);
-            }
-        } catch (error) {
-            console.error('Error fetching user permissions:', error);
-        }
-    };
 
 
 
@@ -199,6 +155,7 @@ function GuestIncome() {
                 title='Ingresos'
                 dropdown={<DropdownExcel />}
                 search={<SearchButton />}
+
                 buttonToGo={
                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear')
                         ? <ButtonGoTo value='Crear Ingreso' href='create' />
@@ -255,7 +212,7 @@ function GuestIncome() {
                             >
                                 {Income.departureDate == null ?
                                     <Actions accion='Registrar salida' onClick={() => {
-                                        handleEditClick({ idGuest_income: Income.idGuest_income, departureDate: new Date().toISOString()});
+                                        handleEditClick({ idGuest_income: Income.idGuest_income, departureDate: new Date().toISOString() });
                                     }}></Actions>
                                     : ''
                                 }

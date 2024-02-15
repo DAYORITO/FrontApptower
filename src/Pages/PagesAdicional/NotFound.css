@@ -1,0 +1,84 @@
+.wrapper-notfound {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.contents {
+    text-align: center;
+    color: #dddddd;
+    max-width: 50%;
+}
+
+.h6l {
+    color: #032c47;
+}
+
+.titlen {
+    font-size: 120px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #032c47;
+}
+
+.subTitles {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #032c47;
+}
+
+.vertical .main-content:has(.wrapper-notfound) {
+    margin-left: 0 !important;
+    padding: 0 !important;
+}
+
+.linkl {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #ffffff;
+    font-size: 18px;
+}
+
+.linkl:hover {
+    background-color: #81b3e4;
+    color: #fff;
+    text-decoration: none;
+}
+
+
+
+.titleLoading {
+    font-size: 45px;
+}
+
+.spinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    margin: -22px;
+}
+
+.spinnerLoader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #032c47;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

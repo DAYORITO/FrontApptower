@@ -110,7 +110,11 @@ export const Row = ({
             {A12 != null ?
                 <td class="text-secondary">
                     <span className="badge badge-white text-secondary">{A13}</span>
-                    <em class="badge badge-white text-muted">{A12}</em>
+                    {A12 === "Pendiente" ? <em class="badge badge-white text-danger">{A12}</em>
+                    : A12 === "Pagada" ? <em class="badge badge-white text-success">{A12}</em>
+                    : A12 === "Por revisar" ? <em class="badge badge-white text-warning">{A12}</em>
+                    :<em class="badge badge-white text-muted">{A12}</em>}
+                    
                     <br />
                     <span className="badge badge-white text-secondary">{A14}</span><em class="badge badge-white text-muted">{A15}</em>
                 </td> : null}

@@ -28,7 +28,7 @@ const DropdownExcel = () => {
 }
 
 
-const SearchButton = ({ value, onChange, type = 'text', id, placeholder = "Buscar" }) => {
+const SearchButton = ({ value, onChange, type = 'text', id, options, placeholder = "Buscar" }) => {
     return (
         <div className="form-inline" id={id} >
             <div className="form-row" >
@@ -37,7 +37,11 @@ const SearchButton = ({ value, onChange, type = 'text', id, placeholder = "Busca
                         <span className="fe fe-24 fe-search" style={{ color: 'gray' }}></span>
                     </button> */}
                     <label htmlFor="search" className="sr-only">Buscar</label>
+                    
+                    {options?.length > 0 ? <SearchSelect options={options} value={value} onChange={onChange} /> :
                     <input type={type} value={value} onChange={onChange} placeholder={placeholder} className="form-control" />
+                    }
+                    
 
                 </div>
             </div>
