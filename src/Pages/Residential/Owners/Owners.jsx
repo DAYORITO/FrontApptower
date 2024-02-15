@@ -9,7 +9,7 @@ import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
 import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -23,6 +23,7 @@ import Cookies from 'js-cookie'
 
 import { format } from 'date-fns'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import { Paginator } from '../../../Components/Paginator/Paginator'
 
 
 export const Owners = () => {
@@ -149,6 +150,7 @@ export const Owners = () => {
     }
 
 
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: ownersInfo } = usePaginator(ownerList, 4);
 
 
 
@@ -165,7 +167,17 @@ export const Owners = () => {
                         ? <ButtonGoTo value='Nuevo propietario' href={'/admin/owners/create'} />
                         : null
                 }
+                showPaginator={
+                    <Paginator
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        nextPage={nextPage}
+                        previousPage={previousPage}
+                    />}
             >
+
+
+
                 <TablePerson>
 
                     {/* <Thead>
@@ -183,7 +195,7 @@ export const Owners = () => {
 
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-                            ownerList?.map(owner => (
+                            ownersInfo()?.map(owner => (
 
                                 <Row
                                     A1={owner.user.name}

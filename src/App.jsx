@@ -63,7 +63,6 @@ import { LoadingPage } from "./Pages/PagesAdicional/Loading";
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
-import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
 import useFetchUserPrivileges, { useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
 // import { UserDetail } from "./Pages/Users/Users/userDetails";
 
@@ -263,11 +262,6 @@ const App = () => {
                                 <Route path='towers' element={
                                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
                                         <Towers /> : <NotFound />
-                                } />
-
-                                <Route path='towers/create' element={
-                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
-                                        <TowerCreate /> : <NotFound />
                                 } />
 
 

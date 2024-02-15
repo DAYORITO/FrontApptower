@@ -7,7 +7,7 @@ import { Thead } from '../../../Components/Thead/Thead'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { useEffect, useState } from 'react'
-import { filter, filterPerSelect, postRequest } from '../../../Helpers/Helpers'
+import usePaginator, { filter, filterPerSelect, postRequest } from '../../../Helpers/Helpers'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
 import { createPortal } from 'react-dom'
@@ -18,6 +18,7 @@ import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { Spinner } from '../../../Components/Spinner/Spinner'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie'
+import { Paginator } from '../../../Components/Paginator/Paginator'
 
 
 
@@ -154,6 +155,9 @@ export const Apartments = () => {
 
   searchApartments()
 
+  // Paginator
+  
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: apartmentInfo } = usePaginator(apartmentList, 5);
 
 
 
@@ -169,6 +173,13 @@ export const Apartments = () => {
             ? <ButtonGoTo value='Agregar apartamentos' href={`/admin/apartments/create/${tower}`}  ></ButtonGoTo>
             : null
         }
+        showPaginator={
+          <Paginator
+            totalPages={totalPages}
+            currentPage={currentPage}
+            nextPage={nextPage}
+            previousPage={previousPage}
+          />}
       >
 
         <TablePerson>
@@ -182,7 +193,7 @@ export const Apartments = () => {
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-              apartmentList?.map(apartment => (
+              apartmentInfo()?.map(apartment => (
 
                 <Row
                   A1='Apartamento'

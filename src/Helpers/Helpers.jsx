@@ -1,5 +1,40 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
+import { useState } from "react"
+
+// Use paginator
+
+const usePaginator = (data, itemsPerPage = 10) => {
+
+  const [currentPage, setCurrentPage] = useState(0) ;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const filteredData = () => {
+    const startIndex = currentPage * itemsPerPage;
+    return data.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const previousPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  };
+
+  return {
+    totalPages,
+    currentPage,
+    nextPage,
+    previousPage,
+    filteredData,
+  };
+};
+
+export default usePaginator;
+
+
 
 
 // Filter apartment 
