@@ -172,7 +172,7 @@ export const Towers = () => {
 
                                 >
                                     <Actions href={`/admin/apartments/create/${tower.idTower}`} accion='Agregar apartamentos' icon="home" />
-                                    <Actions onClick={() => handleModal(tower)} accion='Editar bloque' icon="edit" />
+                                    <Actions onClick={() => openTowerModalForm(tower)} accion='Editar bloque' icon="edit" />
 
                                 </BigCard>
                             ))}
