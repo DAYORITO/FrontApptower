@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { spacesTypes } from '../../../Hooks/consts.hooks'
 import { postRequest } from '../../../Helpers/Helpers'
+import FormColumn from '../../../Components/Forms/FormColumn'
 
 
 // import InputsSelect from '../../../Components/Inputs/InputsSelect'
@@ -50,21 +51,32 @@ export const SpacesCreate = () => {
     <>
 
       <FormContainer name='Crear zona comun'
-        buttons={<FormButton name='Crear espacio'
+        buttons={<FormButton name='Crear zona comun'
           backButton='Regresar' to='/admin/spaces/' onClick={createSpace} />}>
         {/* <FormColumn> */}
 
-        <Uploader name="img" onChange={e => setImage(e.target.files[0])} />
+        <FormColumn>
 
-        <InputsSelect name={"Tipo de espacio"} options={spacesTypes}
-          value={spaceType} onChange={e => setSpaceType(e.target.value)}> </InputsSelect>
+          <Uploader label={'Foto de zona comun'} name="img" onChange={e => setImage(e.target.files[0])} />
 
-        <Inputs name="Nombre espacio" placeholder="Ejemplo: 101"
-          value={spaceName} onChange={e => setSpaceName(e.target.value)}></Inputs>
-        <Inputs name="Area" type="number"
-          value={area} onChange={e => setArea(e.target.value)}></Inputs>
-        <Inputs name="Capacidad" type="number"
-          value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
+        </FormColumn>
+        <FormColumn>
+          <h6 className='mb-4 text-muted'>Informacion zona comun</h6>
+
+          <InputsSelect name={"Tipo de espacio"} options={spacesTypes}
+            value={spaceType} onChange={e => setSpaceType(e.target.value)}> </InputsSelect>
+
+          <Inputs name="Nombre espacio" placeholder="Ejemplo: 101"
+            value={spaceName} onChange={e => setSpaceName(e.target.value)}></Inputs>
+
+          <Inputs name="Area" type="number"
+            value={area} onChange={e => setArea(e.target.value)}></Inputs>
+
+          <Inputs name="Capacidad" type="number"
+            value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
+            
+        </FormColumn>
+
         {/* <Inputs name="Estado"
           value={status} onChange={e => setStatus(e.target.value)}></Inputs> */}
       </FormContainer>

@@ -89,7 +89,7 @@ export const ParkingSpaces = () => {
 
   const [idParkingSpace, setIdParkingSpace] = useState("");
   const [parkingName, setParkingName] = useState('');
-  const [parkingType, setParkingType] = useState("");
+  const [parkingType, setParkingType] = useState('Public');
   const [status, setStatus] = useState('');
 
   const [idApartment, setIdApartment] = useState("");

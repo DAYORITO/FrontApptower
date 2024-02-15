@@ -281,7 +281,10 @@ const App = () => {
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
                                         <OwnerDetail /> : <NotFound />
                                 } />
-
+                                <Route path='owners/create' element={
+                                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?
+                                        <OwnersCreate /> : <NotFound />
+                                } />
 
                                 <Route path='owners/create/:id' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?

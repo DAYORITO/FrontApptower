@@ -91,6 +91,9 @@ export const ResidentDetails = () => {
     const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = user?.user?.document === docNumber;
+
+    console.log(EqualUser)
+    
     useEffect(() => {
 
         // resident information

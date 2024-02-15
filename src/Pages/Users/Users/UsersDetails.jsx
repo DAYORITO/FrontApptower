@@ -169,7 +169,7 @@ export const UsersDetails = () => {
         console.log("edit data", data)
 
         await postRequest(event, 'users/img', 'PUT', {}, data, url);
-        getResident(`residents/${id}`)
+        getuser(`users/${id}`)
         setModalEditImg(false)
 
     }
@@ -294,7 +294,7 @@ export const UsersDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalEditImg}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserImg}
                                 showModal={setModalEditImg}
                                 title={"Cambiar imagen de perfil"}
 
