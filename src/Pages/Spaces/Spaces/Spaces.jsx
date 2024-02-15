@@ -6,7 +6,7 @@ import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
 import useFetchUserPrivileges, { useFetch, useFetchget } from '../../../Hooks/useFetch';
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
-import { filter, postRequest } from "../../../Helpers/Helpers";
+import usePaginator, { filter, postRequest } from "../../../Helpers/Helpers";
 import { Spinner } from "../../../Components/Spinner/Spinner";
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from "react-dom";
@@ -17,6 +17,7 @@ import { spacesTypes, statusList } from "../../../Hooks/consts.hooks";
 import Inputs from "../../../Components/Inputs/Inputs";
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
 import Cookies from 'js-cookie'
+import { Paginator } from "../../../Components/Paginator/Paginator";
 
 export const Spaces = () => {
   const token = Cookies.get('token');
@@ -104,6 +105,11 @@ export const Spaces = () => {
 
   };
 
+  // Paginator
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: spacesInfo } = usePaginator(spacesList, 4);
+
+
 
   return (
     <>
@@ -114,9 +120,14 @@ export const Spaces = () => {
             ? <ButtonGoTo value='Nueva Zona Común' href='create' />
             : null
         }
-        search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />
-
-        }
+        search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />}
+        showPaginator={
+          <Paginator
+            totalPages={totalPages}
+            currentPage={currentPage}
+            nextPage={nextPage}
+            previousPage={previousPage}
+          />}
       >
         <TablePerson>
           <ContainerCard>
@@ -125,7 +136,7 @@ export const Spaces = () => {
             {loading ? <Spinner /> : spacesList.length == 0 ?
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
-              spacesList?.map((space) => (
+              spacesInfo().map((space) => (
                 <BigCard
                   key={space.idSpace}
                   title={space.spaceName}

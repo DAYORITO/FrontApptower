@@ -10,7 +10,7 @@ import { Actions } from "../../../Components/Actions/Actions";
 import { Spinner } from "../../../Components/Spinner/Spinner";
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
-import { filter, filterPerSelect, postRequest } from "../../../Helpers/Helpers";
+import usePaginator, { filter, filterPerSelect, postRequest } from "../../../Helpers/Helpers";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { createPortal } from "react-dom";
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo";
@@ -20,6 +20,7 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Inputs from "../../../Components/Inputs/Inputs";
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
+import { Paginator } from "../../../Components/Paginator/Paginator";
 
 
 export const ParkingSpaces = () => {
@@ -186,6 +187,11 @@ export const ParkingSpaces = () => {
 
   };
 
+  // Paginator
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: parkingInfo } = usePaginator(parkingList, 5);
+
+
 
   return (
     <>
@@ -199,6 +205,13 @@ export const ParkingSpaces = () => {
             ? <ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>
             : null
         }
+        showPaginator={
+          <Paginator
+            totalPages={totalPages}
+            currentPage={currentPage}
+            nextPage={nextPage}
+            previousPage={previousPage}
+          />}
 
       >
         <TablePerson>
@@ -210,7 +223,7 @@ export const ParkingSpaces = () => {
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-              parkingList?.map(parking => (
+              parkingInfo()?.map(parking => (
 
                 <Row
                   A1='Parqueadero'

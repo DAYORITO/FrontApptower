@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
 
 
-import { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
+import usePaginator, { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo"
 import { createPortal } from "react-dom"
 
@@ -25,6 +25,7 @@ import { Spinner } from "../../../Components/Spinner/Spinner"
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols"
 
 import Cookies from 'js-cookie'
+import { Paginator } from "../../../Components/Paginator/Paginator"
 
 
 
@@ -141,6 +142,12 @@ export const Towers = () => {
     };
 
 
+    //paginator
+
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: towerInfo } = usePaginator(towerList, 8);
+
+
+
     return (
         <>
             <ContainerTable
@@ -151,7 +158,15 @@ export const Towers = () => {
                         : null
                 }
 
-                search={<SearchButton value={search} onChange={searcher} placeholder='Buscar bloque' />} >
+                search={<SearchButton value={search} onChange={searcher} placeholder='Buscar bloque' />}
+                showPaginator={
+                    <Paginator
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        nextPage={nextPage}
+                        previousPage={previousPage}
+                    />}
+            >
 
 
                 <TablePerson>
@@ -162,7 +177,7 @@ export const Towers = () => {
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
 
-                            towerList?.map(tower => (
+                            towerInfo()?.map(tower => (
                                 <BigCard
                                     title={tower.towerName}
                                     img={tower.towerImg}
