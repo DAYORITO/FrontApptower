@@ -5,6 +5,7 @@ import { useFetchUserInformation } from "./Hooks/useFetch";
 import Cookies from 'js-cookie';
 import { LoadingPage } from "./Pages/PagesAdicional/Loading";
 
+
 export const ProtectedRoutes = () => {
     const { isLoggedIn } = useAuth();
     const token = Cookies.get('token');

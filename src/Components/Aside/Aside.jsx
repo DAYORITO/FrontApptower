@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
 import { useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
-
+import { Spinner } from '../Spinner/Spinner';
 
 export const Aside = () => {
 
@@ -45,10 +45,10 @@ export const Aside = () => {
         }
     }, [data, userData]);
 
+    useEffect(() => {
 
-
-
-
+        fetchPermissions();
+    }, [allowedPermissions]);
 
 
 
@@ -77,10 +77,10 @@ export const Aside = () => {
 
     const rutadetailsapartment = `apartments/details/${idApartment}`
 
-    const [isCloset, isOpem] = useState(false);
+    const [isCloset, setIsCloset] = useState(false);
 
     const toggleSidebar = () => {
-        isOpem(!isCloset);
+        setIsCloset(!isCloset);
     };
 
     return (
@@ -89,8 +89,11 @@ export const Aside = () => {
 
             </div>
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
+
                 onMouseEnter={isCloset ? null : toggleSidebar}
             >
+
+
                 <div className='myNav-header'>
                     <button
                         type="button"
@@ -111,7 +114,6 @@ export const Aside = () => {
                 />
 
 
-
                 <div className='myNav-links'>
                     <div className='myNav-links-content'  >
                         {allowedPermissions && (
@@ -121,15 +123,15 @@ export const Aside = () => {
                                     />
                                 )}
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} icon='fe fe-message-circle fe-24' />
+                                    <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
                                 )}
                                 {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
-                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24'
+                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}
                                     >
 
                                         <>
                                             {allowedPermissions.includes('Ingresos') && (
-                                                <DropDownList subprocess={"Ingresos"} href='guest_income/'></DropDownList>
+                                                <DropDownList subprocess={"Ingresos"} href='guest_income/' ></DropDownList>
                                             )}
                                             {allowedPermissions.includes('Reservas') && (
                                                 <DropDownList subprocess={"Reservas"} href='booking'></DropDownList>
@@ -146,7 +148,7 @@ export const Aside = () => {
                                             allowedPermissions.includes('Residentes') ||
                                             allowedPermissions.includes('Visitantes') ||
                                             allowedPermissions.includes('Vehiculos') ? (
-                                            <DropDownNav module={"Residencial"} icon='fe fe-users fe-24'>
+                                            <DropDownNav module={"Residencial"} icon='fe fe-users fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
 
                                                 <>
                                                     {allowedPermissions.includes('Propietarios') && (
@@ -171,7 +173,7 @@ export const Aside = () => {
 
                                 {allowedPermissions && (allowedPermissions.includes('Apartamentos') || allowedPermissions.includes('Parqueaderos') || allowedPermissions.includes('Zonas comunes')) ? (
                                     <>
-                                        <DropDownNav module={"Espacios"}>
+                                        <DropDownNav module={"Espacios"} isNavClosed={isCloset ? 'expended' : 'collapsed'}>
 
                                             {allowedPermissions.includes('Apartamentos') && (
 
@@ -184,7 +186,7 @@ export const Aside = () => {
                                             )}
 
                                             {allowedPermissions.includes('Apartamentos') && (
-                                                <DropDownList subprocess={"Bloques"} href='towers'></DropDownList>
+                                                <DropDownList subprocess={"Bloques"} href='towers' ></DropDownList>
                                             )}
 
                                             {/* {allowedPermissions.includes('Apartamentos') && (
@@ -219,7 +221,7 @@ export const Aside = () => {
 
                                 {allowedPermissions.includes('Vigilantes') && (
                                     nameRole && (nameRole.toLocaleLowerCase() === 'administrador')
-                                        ? <DropDownNav module={"Seguridad"} icon='fe fe-shield fe-24'>
+                                        ? <DropDownNav module={"Seguridad"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
                                             <>
                                                 {allowedPermissions.includes('Vigilantes') && (
                                                     <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
