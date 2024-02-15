@@ -41,16 +41,34 @@ export const Towers = () => {
     const [towerName, setTowerName] = useState('');
     const [status, setStatus] = useState('');
 
-    const [showModal, setShowModal] = useState(false);
+    const [isEditTower, setIsEditTower] = useState(true);
+    const [towerFormModal, setTowerFormModal] = useState(false);
 
-    const handleModal = (data) => {
+    const openTowerModalForm = (data) => {
 
-        setIdTower(data.idTower)
-        setTowerImg(data.towerImg)
-        setTowerName(data.towerName)
-        setStatus(data.status)
+        console.log(data)
 
-        setShowModal(true)
+        if (data == null) {
+
+            setIsEditTower(false)
+            setIdTower('')
+            setTowerImg('')
+            setTowerName('')
+            setStatus('')
+
+
+        } else {
+
+            setIsEditTower(true)
+            setIdTower(data.idTower)
+            setTowerImg(data.towerImg)
+            setTowerName(data.towerName)
+            setStatus(data.status)
+
+        }
+
+
+        setTowerFormModal(true)
 
     }
 
@@ -99,8 +117,25 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'towers', 'PUT', setShowModal, data, url)
+        await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url)
 
+        getTowers('towers')
+
+    };
+
+    const createTower = async (event) => {
+
+        const data = {
+
+            towerName: towerName,
+            towerImg: towerImg,
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'towers', 'POST', {}, data, url)
+        setTowerFormModal(false)
         getTowers('towers')
 
     };
@@ -112,7 +147,7 @@ export const Towers = () => {
                 title='Bloques residenciales'
                 buttonToGo={
                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
-                        ? <ButtonGoTo value='Nuevo bloque' href='create' />
+                        ? <ButtonGoTo value='Nuevo bloque' onClick={() => openTowerModalForm(null)} />
                         : null
                 }
 
@@ -137,10 +172,7 @@ export const Towers = () => {
 
                                 >
                                     <Actions href={`/admin/apartments/create/${tower.idTower}`} accion='Agregar apartamentos' icon="home" />
-
-                                    {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? (
-                                        <Actions onClick={() => handleModal(tower)} accion='Editar bloque' icon="edit" />
-                                    ) : null}
+                                    <Actions onClick={() => openTowerModalForm(tower)} accion='Editar bloque' icon="edit" />
 
                                 </BigCard>
                             ))}
@@ -152,14 +184,14 @@ export const Towers = () => {
 
             </ContainerTable >
 
-            {showModal &&
+            {towerFormModal &&
                 createPortal(
                     <>
-                        <ModalContainer ShowModal={setShowModal}>
+                        <ModalContainer showModal={setTowerFormModal}>
                             <Modal
-                                onClick={updateTower}
-                                showModal={setShowModal}
-                                title={`Editar ${towerName}`}
+                                onClick={isEditTower ? updateTower : createTower}
+                                showModal={setTowerFormModal}
+                                title={isEditTower ? `Editar ${towerName}` : 'Agregar torre'}
                             >
 
                                 <Uploader name="img" label="Foto del bloque" onChange={e => setTowerImg(e.target.files[0])} />
@@ -167,18 +199,28 @@ export const Towers = () => {
                                 <Inputs name="Nombre del bloque" type={"text"}
                                     value={towerName} onChange={e => setTowerName(e.target.value)}></Inputs>
 
-                                <InputsSelect id={"select"} options={statusList} name={"Estado"}
-                                    value={status} onChange={e => setStatus(e.target.value)}
-                                ></InputsSelect>
+                                {
 
-                                <Inputs type={"hidden"}
-                                    value={idTower} onChange={e => setIdTower(e.target.value)}></Inputs>
+                                    isEditTower ?
+                                        <>
+                                            <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                                value={status} onChange={e => setStatus(e.target.value)}
+                                            ></InputsSelect>
+
+                                            <Inputs type={"hidden"}
+                                                value={idTower} onChange={e => setIdTower(e.target.value)}></Inputs>
+                                        </>
+                                        : null
+                                }
+
 
                             </Modal>
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
                 )}
+
+
         </>
 
 
