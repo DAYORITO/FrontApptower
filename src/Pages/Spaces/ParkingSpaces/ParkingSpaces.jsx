@@ -205,13 +205,7 @@ export const ParkingSpaces = () => {
             ? <ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>
             : null
         }
-        showPaginator={
-          <Paginator
-            totalPages={totalPages}
-            currentPage={currentPage}
-            nextPage={nextPage}
-            previousPage={previousPage}
-          />}
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
 
       >
         <TablePerson>
@@ -219,7 +213,7 @@ export const ParkingSpaces = () => {
           <Tbody>
 
 
-            {loading ? <Spinner /> : parkingList.length == 0 ?
+            {loading ? <Spinner /> : parkingList.length == 0 || currentPage >= totalPages ?
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 

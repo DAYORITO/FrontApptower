@@ -90,35 +90,7 @@ export const filterPerSelect = (search, myData, searcher) => {
 
 
 
-export const filterGuestIncomes = (search, guestIncomes) => {
 
-  let guestIncomesbyApartment = [];
-
-  if (!search) {
-    guestIncomesbyApartment = guestIncomes.data.guestIncome;
-  } else {
-    guestIncomesbyApartment = guestIncomes.data.guestIncome.filter((dato) =>
-      dato.asociatedVisitor.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  return guestIncomesbyApartment;
-};
-
-export const filterFines = (search, fines) => {
-
-  let fineByApartment = [];
-
-  if (!search) {
-    fineByApartment = fines.data.fines;
-  } else {
-    fineByApartment = fines.data.fines.filter((dato) =>
-      dato.fineType.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  return fineByApartment;
-};
 
 
 export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {

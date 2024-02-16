@@ -159,20 +159,15 @@ export const Towers = () => {
                 }
 
                 search={<SearchButton value={search} onChange={searcher} placeholder='Buscar bloque' />}
-                showPaginator={
-                    <Paginator
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        nextPage={nextPage}
-                        previousPage={previousPage}
-                    />}
+                showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
             >
 
 
                 <TablePerson>
                     <ContainerCard>
 
-                        {loading ? <Spinner /> : towerList.length == 0 ?
+                        {loading ? <Spinner /> : towerList.length == 0 || currentPage >= totalPages ?
 
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 

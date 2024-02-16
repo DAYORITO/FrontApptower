@@ -310,15 +310,9 @@ export const Residents = () => {
                 buttonToGo={
                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear')
                         ? <ButtonGoTo value='Nuevo residente' href={'/admin/residents/create'} />
-                        : null
-                }
-                showPaginator={
-                    <Paginator
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        nextPage={nextPage}
-                        previousPage={previousPage}
-                    />}
+                        : null}
+                showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
             >
                 <TablePerson>
 
@@ -333,7 +327,7 @@ export const Residents = () => {
                     <Tbody>
 
 
-                        {loading ? <Spinner /> : residentList.length == 0 ?
+                        {loading ? <Spinner /> : residentList.length == 0 || currentPage >= totalPages ?
 
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 

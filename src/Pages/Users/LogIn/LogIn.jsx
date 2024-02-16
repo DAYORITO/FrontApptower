@@ -4,18 +4,17 @@ import ImageIcono from '../../../assets/Logo-Apptower.png';
 import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../../Components/Inputs/selectLogIn';
-import { useFetchUserInformation, useFetchget, useFetchpost } from '../../../Hooks/useFetch';
+import { useFetchpost } from '../../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../../Context/AuthContext';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
-import { createPortal } from 'react-dom';
 
 
 
 const LoginForm = ({ setShowLoginForm }) => {
+
     const [showModaload, setShowModaload] = useState(false);
     const { user, login, logout } = useAuth();
     const [username, setUsername] = useState('');
@@ -51,6 +50,8 @@ const LoginForm = ({ setShowLoginForm }) => {
                     credentials: 'include',
                 });
 
+                console.log(token, 'token')
+
                 if (!response.ok) {
                     Swal.fire('Error de inicio de sesión.', 'El usuario o la contraseña son incorrectos.', 'error');
                 }
@@ -66,20 +67,20 @@ const LoginForm = ({ setShowLoginForm }) => {
                         if (role.includes('vigilante') || role.includes('seguridad') || role.includes('vigilantes')) {
                             // navigate('/admin/watchman/shifts');
                             navigate(`admin/watchman/details/${responseData.user}`);
-                            window.location.reload();
+                            // window.location.reload();
 
                         } else if (role.includes('administrador')) {
                             navigate('/admin/dashboard');
-                            window.location.reload();
+                            // window.location.reload();
 
                         } else if (role.includes('residente')) {
                             navigate(`/admin/resident/details/${responseData.user}`);
-                            window.location.reload();
+                            // window.location.reload();
 
 
                         } else {
                             navigate(`admin/users/details/${responseData.user}`);
-                            window.location.reload();
+                            // window.location.reload();
 
                         }
                     } else {

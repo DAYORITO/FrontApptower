@@ -4,13 +4,13 @@ import './AsideNotifications.css';
 
 import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
-import { useAuth } from '../../Context/AuthContext';
+import { connectSocket, useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
-import { useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
+import { useFetch, useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
 import { Spinner } from '../Spinner/Spinner';
 
 export const Aside = () => {
@@ -51,28 +51,58 @@ export const Aside = () => {
     }, [allowedPermissions]);
 
 
+    const url = "https://apptowerbackend.onrender.com/api/"
 
-    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.residente) {
-                setIdResidents(data.residente.idResident);
-
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    const { data: resident, get: getResidentByDocument, loading } = useFetch(url)
+    const { data: apartmentResidents, get: getApartmentResidents } = useFetch(url)
 
 
-    fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.apartmentResidents) {
-                setIdapartaments(data.apartmentResidents.idApartment)
+    useEffect(() => {
+
+        getResidentByDocument(`residents/document/${userDocument}`)
+        getApartmentResidents(`aparmentResidents/resident/${idResidents}`)
 
 
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    }, [])
+
+    useEffect(() => {
+
+        setIdResidents(resident.data.residente && resident.residente.idResident);
+        setIdapartaments(apartmentResidents.data.apartmentResidents && apartmentResidents.apartmentResidents.idApartment)
+
+    }, [resident, apartmentResidents])
+
+
+
+
+    // useEffect(() => {
+
+    //     fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.residente) {
+    //                 setIdResidents(data.residente.idResident);
+
+    //             }
+    //         })
+    //         .catch(error => console.error('Error:', error));
+
+
+    //     fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.apartmentResidents) {
+    //                 setIdapartaments(data.apartmentResidents.idApartment)
+
+
+    //             }
+    //         })
+    //         .catch(error => console.error('Error:', error));
+
+
+    // }, [])
+
+
 
 
     const rutadetailsapartment = `apartments/details/${idApartment}`
@@ -83,11 +113,17 @@ export const Aside = () => {
         setIsCloset(!isCloset);
     };
 
+
+
+
+
+
+
+
+
     return (
         <>
-            <div>
 
-            </div>
             <nav className={`myNav ${isCloset ? 'expanded' : 'collapsed'}`}
 
                 onMouseEnter={isCloset ? null : toggleSidebar}
