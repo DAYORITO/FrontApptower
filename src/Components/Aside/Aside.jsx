@@ -38,8 +38,8 @@ export const Aside = () => {
         }
     }, [token]);
 
-    console.log(token, 'holaaa')
-    console.log(allowedPermissions, 'permisos hptassss')
+    // console.log(token, 'holaaa')
+    // console.log(allowedPermissions, 'permisos hptassss')
 
 
     const fetchUserPermissions = async (token) => {
@@ -61,7 +61,7 @@ export const Aside = () => {
 
             }
         } catch (error) {
-            console.error('Error fetching user permissions:', error);
+            // console.error('Error fetching user permissions:', error);
         }
     };
 
@@ -88,7 +88,7 @@ export const Aside = () => {
 
     const { data: userD, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
-    console.log(userD, 'holaaa')
+    // console.log(userD, 'holaaa')
 
     const fechDataRols = async () => {
         try {
@@ -104,10 +104,10 @@ export const Aside = () => {
                 const userRole = rols.find(role => role.idrole === userD.user.idrole)?.namerole;
                 setUserRole(userRole);
             } else {
-                console.error('Error: roles data is not an array:', rols);
+                // console.error('Error: roles data is not an array:', rols);
             }
         } catch (error) {
-            console.error('Error fetching roles:', error);
+            // console.error('Error fetching roles:', error);
         }
     };
 
@@ -119,7 +119,7 @@ export const Aside = () => {
 
     const { dataRoles, load, error } = useFetchget('rols')
 
-    console.log(dataRoles)
+    // console.log(dataRoles)
 
 
 

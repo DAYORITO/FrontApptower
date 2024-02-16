@@ -3,7 +3,7 @@ import FormButton from "../../../Components/Forms/FormButton"
 import Inputs from "../../../Components/Inputs/Inputs"
 import InputsSelect from "../../../Components/Inputs/InputsSelect"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import Swal from "sweetalert2"
 import { useFetchForFile } from '../../../Hooks/useFetch'
 
@@ -11,6 +11,7 @@ import { useFetchForFile } from '../../../Hooks/useFetch'
 
 export const VehicleCreate = () => {
     const navigate = useNavigate();
+    const { id } = useParams()
 
     const handdleSubmit = async (e) => {
         e.preventDefault();
@@ -22,7 +23,7 @@ export const VehicleCreate = () => {
         }
         const { response, error } = await useFetchForFile(url, data);
 
-        
+
         if (response) {
             Swal.fire({
                 title: 'Éxito',
@@ -43,7 +44,7 @@ export const VehicleCreate = () => {
         }
     }
 
-    const [Apartment, setApartment] = useState('');
+    const [Apartment, setApartment] = useState(id === null ? "" : id);
     const [plate, setPlate] = useState('');
     const [description, setDescription] = useState('');
     const [selectedApartment, setSelectedApartment] = useState('');
@@ -67,7 +68,7 @@ export const VehicleCreate = () => {
     return (
         <>
             <FormContainer name='Crear vehiculo' buttons={<FormButton name='Crear vehiculo' backButton='Regresar' to='/admin/booking' onClick={handdleSubmit} ></FormButton>}>
-                <InputsSelect id={"select"} options={AparmetList} name={"Numero de Documento"} onChange={e => setSelectedApartment(e.target.value)}></InputsSelect>
+                <InputsSelect id={"select"} options={AparmetList} name={"Numero de Apartamento"} onChange={e => setSelectedApartment(e.target.value)}></InputsSelect>
                 <Inputs name={"Placa"} type="text" onChange={e => setPlate(e.target.value)}></Inputs>
                 <Inputs name={"Descripcion"} type="text" onChange={e => setDescription(e.target.value)}></Inputs>
             </FormContainer>
