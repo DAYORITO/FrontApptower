@@ -4,6 +4,41 @@ import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 
+export const connectSocket = async (user) => {
+
+    const socket = io('http://localhost:3000');
+    let menssage;
+    socket.on('connect', (menssage) => {
+        menssage = `Se conecto ${user.name}${user.lastName}`
+
+        socket.emit('response-connection', menssage)
+        console.log(menssage)
+
+        socket.on('response-servidor', menssage => {
+
+            console.log(menssage)
+        })
+
+    })
+
+    // socket.on('active-users', data => {
+
+    //     console.log(data, 'data' )
+    // })
+
+    socket.on('disconnect', menssage => {
+        menssage = `Se desconecto ${user.name} ${user.lastName}`
+        console.log(menssage)
+
+    })
+
+    socket.on('receive message', () => {
+
+
+    })
+
+}
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (usuario, password) => {
 
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/login', {
+            const response = await fetch('http://localhost:3000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,14 +100,21 @@ export const AuthProvider = ({ children }) => {
 
             document.cookie = `token=${data.token}; path=/`;
 
+            console.log(data)
+
             fetchUserData(data.token);
 
+            await connectSocket(data.user)
+
             return data.token;
+
         } catch (error) {
             console.error('Error de inicio de sesión:', error.message);
 
         }
     };
+
+
 
     useEffect(() => {
         const token = Cookies.get('token');
@@ -90,6 +132,8 @@ export const AuthProvider = ({ children }) => {
             fetchUserData(Cookies.get('token')).finally(() => {
                 setIsLoading(false);
             });
+
+
         } else {
             setUser(null);
         }
@@ -133,3 +177,5 @@ export const useAuth = () => {
     }
     return context;
 };
+
+

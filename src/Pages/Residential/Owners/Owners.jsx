@@ -167,13 +167,8 @@ export const Owners = () => {
                         ? <ButtonGoTo value='Nuevo propietario' href={'/admin/owners/create'} />
                         : null
                 }
-                showPaginator={
-                    <Paginator
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        nextPage={nextPage}
-                        previousPage={previousPage}
-                    />}
+                showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
             >
 
 
@@ -191,7 +186,7 @@ export const Owners = () => {
                     <Tbody>
 
 
-                        {loading ? <Spinner /> : ownerList.length == 0 ?
+                        {loading ? <Spinner /> : ownerList.length == 0 || currentPage >= totalPages ?
 
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 

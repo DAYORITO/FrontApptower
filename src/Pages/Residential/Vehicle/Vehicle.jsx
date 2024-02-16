@@ -20,6 +20,48 @@ export const Vehicle = () => {
   console.log(load)
   console.log(error)
 
+
+  useEffect(() => {
+    if (token) {
+      fetchUserPrivilegeAndPermission(token);
+    }
+  }, [token]);
+
+
+  //Consulta privilegios 
+  const fetchUserPrivilegeAndPermission = async (token) => {
+    try {
+      const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user privileges');
+      }
+
+      const data = await response.json();
+
+      if (data && data.privileges && Array.isArray(data.privileges)) {
+        const allowed = {};
+        data.privileges.forEach(({ idpermission, idprivilege }) => {
+          const permissionName = idToPermissionName[idpermission];
+          const privilegeName = idToPrivilegesName[idprivilege];
+
+          if (!allowed[permissionName]) {
+            allowed[permissionName] = [];
+          }
+          allowed[permissionName].push(privilegeName);
+        });
+
+        setAllowedPermissions(allowed);
+      }
+    } catch (error) {
+      console.error('Error fetching user permissions:', error);
+    }
+  };
+
   const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
 
@@ -36,7 +78,7 @@ export const Vehicle = () => {
       return [];
     }
   };
-
+  console.log(filteredDatavehicle());
   const nextPage = () => {
     setCurrentPage(currentPage + 8)
   }
@@ -55,10 +97,13 @@ export const Vehicle = () => {
         title='Vehiculos'
         dropdown={<DropdownExcel />}
         search={<SearchButton />}
+        // buttonToGo={
+        //   allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
+        //     ? <ButtonGoTo value='Crear Vehiculo' href='create' />
+        //     : null
+        // }
         buttonToGo={
-          allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
-            ? <ButtonGoTo value='Crear Vehiculo' href='create' />
-            : null
+          <ButtonGoTo value="Crear Vehiculo" href="/admin/vehicle/create" />
         }
         showPaginator={
           <nav aria-label="Table Paging" className="mb- text-muted my-4">
@@ -83,6 +128,7 @@ export const Vehicle = () => {
 
         <TablePerson>
           <Thead>
+            <Th name={''}></Th>
             <Th name={'placa'}></Th>
             <Th name={'detalle'}></Th>
             <Th name={'apartamento'}></Th>
@@ -96,15 +142,16 @@ export const Vehicle = () => {
             {
               error && <h1 className='d-flex'>Error: {error}</h1>
             }
+
             {
+
               filteredDatavehicle().map(vehicle => (
                 <Row
                   icon='truck'
-                  name={vehicle.licenseplate}
-                  lastName={''}
-                  status={vehicle.state}
-                  op2={vehicle.description}
-                  op3={vehicle.Apartment.apartmentName}
+                  A7={vehicle.licenseplate}
+                  description={vehicle.description}
+                  A17={vehicle.Apartment.apartmentName}
+                  
                 >
 
                   {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (

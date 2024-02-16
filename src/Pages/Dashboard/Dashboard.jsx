@@ -7,23 +7,21 @@ import './dashboard.css';
 import { RowNotificactions } from '../../Components/RowNotificacions/RowNotificactions';
 import { Acordions } from '../../Components/Acordions/Acordions';
 import { DropdownInfo } from '../../Components/DropdownInfo/DropdownInfo';
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 
 export const Dashboard = () => {
 
+    const [myData, setMyData] = useState([]);
 
-    const socket = io("http://localhost:3000/");
 
-    socket.on('connect', () => {
-        setIsConect(true);
-    });
+    const socket = io('http://localhost:3000');
 
-    socket.on('disconnect', () => {
-        setIsConect(false);
-    });
+    socket.on('active-users', (data) => {
+        setMyData(data.users)
+    })
 
-    socket.on('enviar-mensaje', () => {
-        console.log('mensaje recibido')
-    });
+
 
     return (
 
@@ -38,6 +36,7 @@ export const Dashboard = () => {
                     module='Ingresos activos'
                     icon='arrow-up-right'
                     to='/admin/guest_income'
+                    count={myData.length}
                 />
                 <ContentInfoDashboard
                     module='Multas inpuestas'
@@ -60,6 +59,7 @@ export const Dashboard = () => {
                     module='Turnos de hoy'
                     icon='shield'
                     to='/admin/guest_income'
+
 
                 />
                 <ContentInfoDashboard

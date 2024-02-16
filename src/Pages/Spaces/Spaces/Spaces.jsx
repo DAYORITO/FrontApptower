@@ -121,19 +121,14 @@ export const Spaces = () => {
             : null
         }
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />}
-        showPaginator={
-          <Paginator
-            totalPages={totalPages}
-            currentPage={currentPage}
-            nextPage={nextPage}
-            previousPage={previousPage}
-          />}
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
       >
         <TablePerson>
           <ContainerCard>
 
 
-            {loading ? <Spinner /> : spacesList.length == 0 ?
+            {loading ? <Spinner /> : spacesList.length == 0 || currentPage >= totalPages ?
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
               spacesInfo().map((space) => (
