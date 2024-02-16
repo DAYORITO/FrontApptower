@@ -2,76 +2,69 @@ import FormContainer from "../../../Components/Forms/FormContainer"
 import FormButton from "../../../Components/Forms/FormButton"
 import Inputs from "../../../Components/Inputs/Inputs"
 import InputsSelect from "../../../Components/Inputs/InputsSelect"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useFetch } from '../../../Hooks/useFetch'
 import { useNavigate, useParams } from "react-router"
-import Swal from "sweetalert2"
-import { useFetchForFile } from '../../../Hooks/useFetch'
+import { postRequest } from '../../../Helpers/Helpers'
 
 
 
-export const VehicleCreate = () => {
-    const navigate = useNavigate();
+export const VehicleCreate = (props) => {
+    const url = "http://localhost:3000/api/"
     const { id } = useParams()
 
-    const handdleSubmit = async (e) => {
-        e.preventDefault();
-        const url = 'https://apptowerbackend.onrender.com/api/vehicle';
-        const data = {
-            "idApartment": selectedApartment,
-            "licenseplate": plate,
-            "description": description,
-        }
-        const { response, error } = await useFetchForFile(url, data);
-
-
-        if (response) {
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Vehiculo creado exitosamente',
-                icon: 'success',
-            }).then(() => {
-                navigate(-1);
-            });
-        }
-
-        if (error) {
-            console.log('Hubo un error');
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al crear vehiculo',
-                icon: 'error',
-            });
-        }
-    }
-
-    const [Apartment, setApartment] = useState(id === null ? "" : id);
     const [plate, setPlate] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedApartment, setSelectedApartment] = useState('');
+
+    const [idApartment, setIdApartment] = useState(id != undefined ? id : "");
+
+    const navigate = useNavigate();
+
+    const { data: apartments, get: getApartment } = useFetch(url)
 
     useEffect(() => {
-        fetch('https://apptowerbackend.onrender.com/api/apartments')
-            .then(response => response.json())
-            .then(data => setApartment(data))
-            .catch(error => console.error('Error al cargar los apartamentos:', error));
+        getApartment("apartments")
     }, []);
 
-    const AparmetList = Apartment && Apartment.apartments ? Apartment.apartments
-        .filter(Apartment => Apartment.status === 'Active')
-        .map(Apartment => ({
-            value: Apartment.idApartment,
-            label: Apartment.apartmentName
-        }))
+    const AparmetList = apartments && apartments?.data?.apartments
+        ? apartments?.data?.apartments
+            .filter(apartment => apartment.status === 'Active')
+            .map(apartment => ({
+                value: apartment.idApartment,
+                label: `${apartment.apartmentName} ${apartment.Tower.towerName}`
+            }))
         : [];
-    console.log(Apartment)
+
+    const createVehicle = async (e) => {
+        const data = {
+            idApartment: parseInt(idApartment),
+            licenseplate: plate,
+            description: description
+        }
+
+        await postRequest(e, 'vehicle', 'POST', {}, data, url)
+
+        navigate(-1)
+
+    }
+
 
     return (
-        <>
-            <FormContainer name='Crear vehiculo' buttons={<FormButton name='Crear vehiculo' backButton='Regresar' to='/admin/booking' onClick={handdleSubmit} ></FormButton>}>
-                <InputsSelect id={"select"} options={AparmetList} name={"Numero de Apartamento"} onChange={e => setSelectedApartment(e.target.value)}></InputsSelect>
-                <Inputs name={"Placa"} type="text" onChange={e => setPlate(e.target.value)}></Inputs>
-                <Inputs name={"Descripcion"} type="text" onChange={e => setDescription(e.target.value)}></Inputs>
-            </FormContainer>
-        </>
+        <FormContainer name='Crear vehiculo'
+            buttons={
+                <FormButton
+                    name='Crear Vehiculo'
+                    backButton='Regresar'
+                    to='/admin/vehicle/'
+                    onClick={createVehicle}
+                />}>
+            <>
+
+                <InputsSelect id={"select"} options={AparmetList} name={"Numero de aparmento"} value={idApartment} onChange={e => setIdApartment(e.target.value)} disabled={id ? idApartment : ''}></InputsSelect>
+                <Inputs name={"Placa"} value={plate} type="text" onChange={e => setPlate(e.target.value)}></Inputs>
+                <Inputs name={"Descripcion"} value={description} type="text" onChange={e => setDescription(e.target.value)}></Inputs>
+            </>
+
+        </FormContainer>
     )
 }
