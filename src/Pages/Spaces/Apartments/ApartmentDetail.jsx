@@ -450,7 +450,7 @@ export const ApartmentDetails = (props) => {
 
     // Edit assignedparkingspace
 
-    const handleUpdateAssignedParking = (event) => {
+    const handleUpdateAssignedParking = async (event) => {
 
         const data = {
 
@@ -462,8 +462,10 @@ export const ApartmentDetails = (props) => {
 
         // console.log("edit data", data)
 
-        putRequest(event, 'assignedParkingSpaces', `Re asignaste el parqueadero`, data, setShowParkingSpacesModal, putAssignedParkingSpaces, getAssignedParkingSpaces);
+        await postRequest(event, 'assignedParkingSpaces', `PUT`, {}, data, url);
+        getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
 
+        setShowParkingSpacesModal(false)
     };
 
     // Delete apartmentresident
@@ -521,262 +523,267 @@ export const ApartmentDetails = (props) => {
                 {
 
                     loadingApartment ? <Spinner /> :
-                        <ContainerModule
-                            to='/admin/apartments/'
-                            A1={`Apartamento ${apartmentName}`}
-                            A5={`Bloque: ${towerName} `}
-                            A6={`Area: ${area} m²`}
 
-                            onClick2={setShowModalEditApartment}
-                            actionOnClick2='Editar apartamento'
-                            status={status}
-                        />
+                        <>
+                            <ContainerModule
+                                to='/admin/apartments/'
+                                A1={`Apartamento ${apartmentName}`}
+                                A5={`Bloque: ${towerName} `}
+                                A6={`Area: ${area} m²`}
+
+                                onClick2={setShowModalEditApartment}
+                                actionOnClick2='Editar apartamento'
+                                status={status}
+                            />
+                            <InfoDetails>
+
+                                <Acordions>
+
+                                    <DropdownInfo
+                                        name={`${apartmentOwnersList.length} Propietarios `}
+                                        action1={apartmentOwnersList.length > 0 ? null : "Asignar propietario"}
+                                        toAction1={`/admin/owners/create/${id}`}>
+
+                                        {
+                                            loadingApartmentOwners ? <SmalSpinner /> :
+                                                apartmentOwnersList.length > 0 ? (
+                                                    apartmentOwnersList.map((owner, index) => (
+                                                        <Dropdownanchor
+                                                            // Information
+                                                            key={index}
+                                                            icon={"user-check"}
+                                                            name={owner.owner.user.name + " " + owner.owner.user.lastName}
+                                                            // Details
+                                                            to={`/admin/owners/details/${owner.idOwner}`}
+                                                            status={owner.status}
+                                                            // // Funtions
+                                                            // onClick={() => {
+                                                            //     console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
+                                                            //     deleteApartmentOwner(owner.idApartmentOwner);
+                                                            // }}
+                                                            onClickModal={() => handleModalEditApartmentOwner(owner)}
+                                                        >
+                                                        </Dropdownanchor>
+                                                    ))
+                                                ) : (
+                                                    <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} />
+                                                )}
+                                    </DropdownInfo>
+
+
+                                    <DropdownInfo
+
+                                        name={`${apartmentResidentsList.length} Residentes `}
+                                        action1={"Agregar residente existente"}
+                                        onClickAction1={(e) => {
+                                            e.preventDefault();
+                                            handleApartmentResidentsModal();
+                                        }}
+
+                                        action2={"Agregar nuevo residente"}
+                                        toAction2={`/admin/residents/create/${id}`}
+                                    >
+                                        {loadingApartmentResidents ? <SmalSpinner /> :
+                                            apartmentResidentsList.length > 0 ? (
+                                                apartmentResidentsList.map((resident, index) => (
+                                                    <Dropdownanchor
+
+                                                        // Information
+
+                                                        key={index}
+                                                        icon={"user-check"}
+                                                        name={resident.resident.user.name + " " + resident.resident.user.lastName}
+
+                                                        // Details
+
+                                                        to={`/admin/user/details/${resident.resident.iduser}`}
+                                                        status={resident.status}
+                                                        // Functions
+
+                                                        // onClick={() => {
+                                                        //     console.log('Eliminar residente con ID:', { key: resident.idApartmentResident });
+                                                        //     deleteResidentApartment(resident.idApartmentResident);
+                                                        // }}
+
+                                                        onClickModal={() => handleModalEditApartmentResident(resident)}
+
+                                                    ></Dropdownanchor>
+                                                ))
+                                            ) : (
+                                                <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
+                                            )}
+                                    </DropdownInfo>
+
+                                    <DropdownInfo
+
+                                        name={`${assignedParkingSpacesList.length} Parqueaderos `}
+                                        action1={'Asignar parqueadero'}
+                                        onClickAction1={(e) => {
+                                            e.preventDefault();
+                                            handleParkingSpacesModal();
+                                        }} >
+
+
+
+                                        {loadingAssignedParkingSpaces ? <SmalSpinner /> :
+                                            assignedParkingSpacesList?.length > 0 ? (
+                                                assignedParkingSpacesList?.map((parking, index) => (
+
+                                                    <Dropdownanchor
+
+                                                        // Information
+
+                                                        key={index}
+                                                        icon={"user-check"}
+                                                        name={"Plaza " + parking.parkingSpace.parkingName}
+
+                                                        // Details
+                                                        to={`/admin/parkingSpaces/${parking.parkingSpace.parkingName}`}
+
+                                                        // Funtions
+                                                        // onClick={() => {
+                                                        //     console.log('id', { idAssignedParking: parking.idAssignedParking });
+                                                        //     deleteParkingSpace(parking.idAssignedParking)
+
+                                                        // }}
+
+                                                        onClickModal={() => handleEditParkingSpaceModal(parking)}
+
+                                                    ></Dropdownanchor>
+                                                ))
+                                            ) : (
+                                                <NotificationsAlert to={`/ admin / residents / create / ${id} `} msg={` para agregar un residente.`} />
+                                            )}
+
+                                    </DropdownInfo>
+
+
+
+                                    <DropdownInfo
+                                        name={`${vehiclesList.length} Vehiculos `}
+                                        action1={`Agregar nuevo vehiculo`}
+                                        toAction1={`/admin/vehicle/create/${idApartment}`}>
+
+                                        {loadingVehicles ? <SmalSpinner /> :
+                                            vehiclesList.length > 0 ? (
+                                                vehiclesList.map((vehicle, index) => (
+                                                    <Dropdownanchor
+                                                        // Information
+                                                        key={index}
+                                                        name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
+
+                                                        // Details
+                                                        to={`/admin/vehicle/details/${vehicle.idvehicle}`}
+                                                        status={vehicle.state}
+                                                    // Funtions
+
+                                                    >
+                                                    </Dropdownanchor>
+                                                ))
+                                            ) : (
+                                                <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
+                                            )}
+                                    </DropdownInfo>
+
+                                </Acordions>
+
+
+                                <Acordions>
+
+
+                                    <DropdownInfo
+                                        name={`${guestIncomesbyApartment.length} Ingresos `}
+                                        action1={'Agregar nuevo ingreso'}
+                                        toAction1={`/admin/guest_income/create/${id}`}>
+
+                                        <DetailsActions>
+                                            <SearchButton value={search} onChange={searcher} />
+                                            {/* <ButtonGoTo value="Nuevo ingreso" href={`/admin/guest_income/create/${id}`} /> */}
+                                        </DetailsActions>
+
+                                        {loadingGuestIncomes ? <SmalSpinner /> :
+                                            guestIncomesbyApartment && guestIncomesbyApartment.length > 0 ? (
+                                                guestIncomesbyApartment.map((income, index) => (
+
+                                                    <div className='mt-2'>
+                                                        <RowNotificactions
+
+                                                            // Information
+                                                            icon="arrow-up-right"
+                                                            name={`${income.asociatedVisitor.name} `}
+                                                            lastName={` ${income.asociatedVisitor.lastname} `}
+                                                            date={format(new Date(income.createdAt), 'yyyy-MM-dd')}
+                                                            msg={`Se dirije al apartamento ${apartmentName} ${income.observations} `}
+
+                                                            status="Active"
+
+                                                        ></RowNotificactions>
+                                                    </div>
+
+                                                ))
+                                            ) : (
+                                                <div className='mt-4 ml-2'>
+                                                    <NotificationsAlert to={`/admin/guest_income/create/${id}`} msg={` para agregar un ingreso.`} />
+
+                                                </div>
+                                            )}
+                                    </DropdownInfo>
+
+                                    <DropdownInfo
+                                        name={`${fineByApartment.length} Multas `}
+                                        action1={'Agregar nueva multa'}
+                                        toAction1={`/admin/fines/create/${id}`}>
+
+
+                                        <DetailsActions>
+                                            <SearchButton value={searchFine} onChange={searcherFines} />
+                                            {/* <ButtonGoTo value="Nueva multa" href={`/admin/fines/create/${id}`} /> */}
+                                        </DetailsActions>
+
+                                        {loadingFines ? <SmalSpinner /> :
+                                            fineByApartment && fineByApartment.length > 0 ? (
+                                                fineByApartment.map((fine, index) => (
+
+                                                    <div className='mt-2'>
+                                                        <RowNotificactions
+
+                                                            // Information
+                                                            icon="x-square"
+                                                            name={`${fine.fineType} `}
+                                                            lastName={``}
+                                                            date={format(new Date(fine.createdAt), 'yyyy-MM-dd')}
+                                                            msg={`${fine.details} `}
+
+                                                        // status="Active"
+
+                                                        ></RowNotificactions>
+                                                    </div>
+
+                                                ))
+                                            ) : (
+                                                <div className='mt-4 ml-2'>
+                                                    <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} />
+
+                                                </div>
+                                            )}
+                                    </DropdownInfo>
+
+
+
+
+                                </Acordions>
+
+
+
+                            </InfoDetails>
+                        </>
+
 
                 }
 
 
 
-                <InfoDetails>
 
-                    <Acordions>
-
-                        <DropdownInfo
-                            name={`${apartmentOwnersList.length} Propietarios `}
-                            action1={"Asignar propietario"}
-                            toAction1={`/admin/owners/create/${id}`}>
-
-                            {
-                                loadingApartmentOwners ? <SmalSpinner /> :
-                                    apartmentOwnersList.length > 0 ? (
-                                        apartmentOwnersList.map((owner, index) => (
-                                            <Dropdownanchor
-                                                // Information
-                                                key={index}
-                                                icon={"user-check"}
-                                                name={owner.owner.user.name + " " + owner.owner.user.lastName}
-                                                // Details
-                                                to={`/admin/owners/details/${owner.idOwner}`}
-                                                status={owner.status}
-                                                // // Funtions
-                                                // onClick={() => {
-                                                //     console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
-                                                //     deleteApartmentOwner(owner.idApartmentOwner);
-                                                // }}
-                                                onClickModal={() => handleModalEditApartmentOwner(owner)}
-                                            >
-                                            </Dropdownanchor>
-                                        ))
-                                    ) : (
-                                        <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} />
-                                    )}
-                        </DropdownInfo>
-
-
-                        <DropdownInfo
-
-                            name={`${apartmentResidentsList.length} Residentes `}
-                            action1={"Agregar residente existente"}
-                            onClickAction1={(e) => {
-                                e.preventDefault();
-                                handleApartmentResidentsModal();
-                            }}
-
-                            action2={"Agregar nuevo residente"}
-                            toAction2={`/admin/residents/create/${id}`}
-                        >
-                            {loadingApartmentResidents ? <SmalSpinner /> :
-                                apartmentResidentsList.length > 0 ? (
-                                    apartmentResidentsList.map((resident, index) => (
-                                        <Dropdownanchor
-
-                                            // Information
-
-                                            key={index}
-                                            icon={"user-check"}
-                                            name={resident.resident.user.name + " " + resident.resident.user.lastName}
-
-                                            // Details
-
-                                            to={`/admin/user/details/${resident.resident.iduser}` }
-                                            status={resident.status}
-                                            // Functions
-
-                                            // onClick={() => {
-                                            //     console.log('Eliminar residente con ID:', { key: resident.idApartmentResident });
-                                            //     deleteResidentApartment(resident.idApartmentResident);
-                                            // }}
-
-                                            onClickModal={() => handleModalEditApartmentResident(resident)}
-
-                                        ></Dropdownanchor>
-                                    ))
-                                ) : (
-                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
-                                )}
-                        </DropdownInfo>
-
-                        <DropdownInfo
-
-                            name={`${assignedParkingSpacesList.length} Parqueaderos `}
-                            action1={'Asignar parqueadero'}
-                            onClickAction1={(e) => {
-                                e.preventDefault();
-                                handleParkingSpacesModal();
-                            }} >
-
-
-
-                            {loadingAssignedParkingSpaces ? <SmalSpinner /> :
-                                assignedParkingSpacesList?.length > 0 ? (
-                                    assignedParkingSpacesList?.map((parking, index) => (
-
-                                        <Dropdownanchor
-
-                                            // Information
-
-                                            key={index}
-                                            icon={"user-check"}
-                                            name={"Plaza " + parking.parkingSpace.parkingName}
-
-                                            // Details
-                                            to={`/admin/parkingSpaces/${parking.parkingSpace.parkingName}`}
-
-                                            // Funtions
-                                            // onClick={() => {
-                                            //     console.log('id', { idAssignedParking: parking.idAssignedParking });
-                                            //     deleteParkingSpace(parking.idAssignedParking)
-
-                                            // }}
-
-                                            onClickModal={() => handleEditParkingSpaceModal(parking)}
-
-                                        ></Dropdownanchor>
-                                    ))
-                                ) : (
-                                    <NotificationsAlert to={`/ admin / residents / create / ${id} `} msg={` para agregar un residente.`} />
-                                )}
-
-                        </DropdownInfo>
-
-
-
-                        <DropdownInfo
-                            name={`${vehiclesList.length} Vehiculos `}
-                            action1={`Agregar nuevo vehiculo`}
-                            toAction1={`/admin/vehicle/create`}>
-
-                            {loadingVehicles ? <SmalSpinner /> :
-                                vehiclesList.length > 0 ? (
-                                    vehiclesList.map((vehicle, index) => (
-                                        <Dropdownanchor
-                                            // Information
-                                            key={index}
-                                            name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
-
-                                            // Details
-                                            to={`/admin/vehicle/details/${vehicle.idvehicle}`}
-                                            status={vehicle.state}
-                                        // Funtions
-
-                                        >
-                                        </Dropdownanchor>
-                                    ))
-                                ) : (
-                                    <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
-                                )}
-                        </DropdownInfo>
-
-                    </Acordions>
-
-
-                    <Acordions>
-
-
-                        <DropdownInfo
-                            name={`${guestIncomesbyApartment.length} Ingresos `}
-                            action1={'Agregar nuevo ingreso'}
-                            toAction1={`/admin/guest_income/create/${id}`}>
-
-                            <DetailsActions>
-                                <SearchButton value={search} onChange={searcher} />
-                                <ButtonGoTo value="Nuevo ingreso" href={`/admin/guest_income/create/${id}`} />
-                            </DetailsActions>
-
-                            {loadingGuestIncomes ? <SmalSpinner /> :
-                                guestIncomesbyApartment && guestIncomesbyApartment.length > 0 ? (
-                                    guestIncomesbyApartment.map((income, index) => (
-
-                                        <div className='mt-2'>
-                                            <RowNotificactions
-
-                                                // Information
-                                                icon="arrow-up-right"
-                                                name={`${income.asociatedVisitor.name} `}
-                                                lastName={` ${income.asociatedVisitor.lastname} `}
-                                                date={format(new Date(income.createdAt), 'yyyy-MM-dd')}
-                                                msg={`Se dirije al apartamento ${apartmentName} ${income.observations} `}
-
-                                                status="Active"
-
-                                            ></RowNotificactions>
-                                        </div>
-
-                                    ))
-                                ) : (
-                                    <div className='mt-4 ml-2'>
-                                        <NotificationsAlert to={`/admin/guest_income/create/${id}`} msg={` para agregar un ingreso.`} />
-
-                                    </div>
-                                )}
-                        </DropdownInfo>
-
-                        <DropdownInfo
-                            name={`${fineByApartment.length} Multas `}
-                            action1={'Agregar nueva multa'}
-                            toAction1={`/admin/fines/create/${id}`}>
-
-
-                            <DetailsActions>
-                                <SearchButton value={searchFine} onChange={searcherFines} />
-                                <ButtonGoTo value="Nueva multa" href={`/admin/fines/create/${id}`} />
-                            </DetailsActions>
-
-                            {loadingFines ? <SmalSpinner /> :
-                                fineByApartment && fineByApartment.length > 0 ? (
-                                    fineByApartment.map((fine, index) => (
-
-                                        <div className='mt-2'>
-                                            <RowNotificactions
-
-                                                // Information
-                                                icon="x-square"
-                                                name={`${fine.fineType} `}
-                                                lastName={``}
-                                                date={format(new Date(fine.createdAt), 'yyyy-MM-dd')}
-                                                msg={`${fine.details} `}
-
-                                            // status="Active"
-
-                                            ></RowNotificactions>
-                                        </div>
-
-                                    ))
-                                ) : (
-                                    <div className='mt-4 ml-2'>
-                                        <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} />
-
-                                    </div>
-                                )}
-                        </DropdownInfo>
-
-
-
-
-                    </Acordions>
-
-
-
-                </InfoDetails>
 
 
             </Details >
@@ -825,7 +832,7 @@ export const ApartmentDetails = (props) => {
 
 
                             >
-                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
                                 <InputsSelect id={"select"} options={residentsList} name={"Residente"}
@@ -852,7 +859,7 @@ export const ApartmentDetails = (props) => {
                                 title={editingParkingSpace ? "Editar parqueadero" : "Asignar parqueadero"}
                                 buttonDelete={editingParkingSpace ? true : false}
                             >
-                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
                                 <InputsSelect id={"select"} options={parkingSpacesList} name={"Parqueaderos"}
@@ -879,12 +886,13 @@ export const ApartmentDetails = (props) => {
                                 buttonDelete={true}
 
                             >
-                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
-                                <InputsSelect id={"select"} options={OwnersList} name={"Propietario"}
-                                    value={idOwner} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
-                                <Inputs name="Fecha de propiedad" type={"date"} readonly
+                                <InputsSelect disabled id={"select"} options={OwnersList} name={"Propietario"}
+                                    value={idOwner} onChange={e => setIdOwner(e.target.value)}></InputsSelect>
+
+                                <Inputs readonly name="Fecha de propiedad" type={"date"}
                                     value={OwnershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
 
                                 <Inputs name="Fecha finalizacion de propiedad" type={"date"}
@@ -910,10 +918,11 @@ export const ApartmentDetails = (props) => {
                                 buttonDelete={true}
 
                             >
-                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
-                                <InputsSelect id={"select"} options={residentsList} name={"Residentes"}
-                                    value={idResident} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+
+                                <InputsSelect disabled id={"select"} options={residentsList} name={"Residentes"}
+                                    value={idResident} onChange={e => setIdResident(e.target.value)}></InputsSelect>
 
                                 <Inputs name="Fecha de inicio de residencia" type={"date"} readonly
                                     value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>

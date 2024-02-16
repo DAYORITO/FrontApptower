@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router'
 import './DropDownNav.css'
 import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+
 
 
 export const DropDownNav = ({
@@ -8,8 +9,15 @@ export const DropDownNav = ({
   dropdownName = "#",
   id = 'id',
   icon = "fe fe-home fe-24",
+  isNavClosed,
   children }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (isNavClosed) {
+      setDropdownOpen(false);
+    }
+  }, [isNavClosed]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -69,8 +77,6 @@ export const ListNav = ({ href, module, icon = "fe fe-home", id = 'process', onC
 
 // 
 
-
-import React, { useState } from 'react'
 
 export const DropDownList = ({ subprocess, href = '/admin/' }) => {
   return (

@@ -13,7 +13,7 @@ export const ModalContainer = ({ children, showModal }) => {
   );
 };
 
-export const Modal = ({ title, children, showModal, onClick, onClickForDelete, buttonDelete = false }) => {
+export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false }) => {
   return (
     <div onClick={(e) => e.stopPropagation()} className="divModal__Container">
       <div
@@ -43,7 +43,7 @@ export const Modal = ({ title, children, showModal, onClick, onClickForDelete, b
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"
-                onClick={() => showModal(false)}
+                onClick={() =>{onClickClose, showModal(false)}}
               >
                 Cerrar
               </button>
@@ -53,9 +53,13 @@ export const Modal = ({ title, children, showModal, onClick, onClickForDelete, b
                     Desagregar
                   </button> : null
               }
-              <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
+              {
+                showSave ?
+                <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
                 Guardar Cambios
-              </button>
+              </button> : null
+              }
+              
 
 
             </div>
@@ -82,9 +86,13 @@ export const ModalNotifications = ({ children, showModal }) => {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" >
           <div class="list-group list-group-flush my-n3">
 
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
+            <RowNotificactions />
             <RowNotificactions />
             <RowNotificactions />
             <RowNotificactions />

@@ -164,6 +164,24 @@ export const WatchmanDetails = () => {
 
     }
 
+    const updateUserImg = async (event) => {
+
+        console.log(idUser)
+        const data = {
+
+            iduser: idUser,
+            userImg: userImg
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/img', 'PUT', {}, data, url);
+        setModalEditImg(false)
+        window.location.reload();
+
+    }
+
     const [modalChangePassword, setModalChangePassword] = useState(false)
 
     const openModalChangePassword = () => {
@@ -404,7 +422,7 @@ export const WatchmanDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalEditImg}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserImg}
                                 showModal={setModalEditImg}
                                 title={"Cambiar imagen de perfil"}
 

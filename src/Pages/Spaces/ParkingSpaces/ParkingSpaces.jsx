@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useFetch, useFetchget } from "../../../Hooks/useFetch";
+import useFetchUserPrivileges, { useFetch, useFetchget } from "../../../Hooks/useFetch";
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
@@ -18,9 +18,12 @@ import { parkingTypes, statusList } from "../../../Hooks/consts.hooks";
 import { useParams } from "react-router";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Inputs from "../../../Components/Inputs/Inputs";
+import Cookies from 'js-cookie'
+import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
 
 
 export const ParkingSpaces = () => {
+  const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
   // const url = "https://appparkingTypebackend.onrender.com/api/"
@@ -30,6 +33,8 @@ export const ParkingSpaces = () => {
 
   const { data: parkingSpaces, get: getParkingSpace, loading } = useFetch(url)
   const { data: apartments, get: getApartments } = useFetch(url)
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
 
 
   useEffect(() => {
@@ -89,7 +94,7 @@ export const ParkingSpaces = () => {
 
   const [idParkingSpace, setIdParkingSpace] = useState("");
   const [parkingName, setParkingName] = useState('');
-  const [parkingType, setParkingType] = useState("");
+  const [parkingType, setParkingType] = useState('Public');
   const [status, setStatus] = useState('');
 
   const [idApartment, setIdApartment] = useState("");
@@ -189,7 +194,12 @@ export const ParkingSpaces = () => {
         dropdown={<DropdownExcel />}
         search2={<SearchSelect options={parkingTypes} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} />}
-        buttonToGo={<ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>}
+        buttonToGo={
+          allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Crear')
+            ? <ButtonGoTo value='Agregar parqueaderos' href={`/admin/parkingSpaces/create`}  ></ButtonGoTo>
+            : null
+        }
+
       >
         <TablePerson>
 
@@ -241,8 +251,10 @@ export const ParkingSpaces = () => {
 
                   }
 
+                  {allowedPermissions['Parqueaderos'] && allowedPermissions['Parqueaderos'].includes('Editar') ? (
+                    <Actions accion='Editar parqueadero' onClick={() => openModal(parking)}></Actions>
+                  ) : null}
 
-                  <Actions accion='Editar parqueadero' onClick={() => openModal(parking)}></Actions>
 
 
                 </Row>

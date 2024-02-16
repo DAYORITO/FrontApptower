@@ -8,10 +8,30 @@ import { Th } from '../../Components/Th/Th'
 import { Tbody } from '../../Components/Tbody/Tbody'
 import { Row } from '../../Components/Rows/Row'
 import { Actions } from '../../Components/Actions/Actions'
+import { dotSpinner } from 'ldrs'
+import { createPortal } from "react-dom";
+import { ModalContainerload, Modaload } from '../../Components/Modals/Modal'
 
 export const Rols = () => {
     const [rolsData, setRolsData] = useState([]);
     const { data, load, error } = useFetchget('rols')
+
+    dotSpinner.register()
+    const [showModaload, setShowModaload] = useState(true);
+
+    useEffect(() => {
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (data?.rols?.length > 0) {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 700);
+        } else {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 2000);
+
+        }
+    }, [data]);
 
     useEffect(() => {
         if (data && data.rols) {
@@ -108,6 +128,32 @@ export const Rols = () => {
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
+
+            {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                    <p> </p>
+                                    <p className="mt-2 text-muted">Cargando datos...</p>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
         </>
 
     )

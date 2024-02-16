@@ -1,5 +1,5 @@
 
-import { useFetchget } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -14,7 +14,6 @@ import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissio
 import { useEffect, useState } from 'react'
 
 export const Vehicle = () => {
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
   const token = Cookies.get('token');
   const { data, load, error } = useFetchget('vehicle')
   console.log(data)
@@ -63,6 +62,7 @@ export const Vehicle = () => {
     }
   };
 
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
 
   const totalPages = data.vehicle ? Math.ceil(data.vehicle.length / 8) : 0;
@@ -153,9 +153,10 @@ export const Vehicle = () => {
                   A17={vehicle.Apartment.apartmentName}
                   
                 >
-                  {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') && (
+
+                  {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (
                     <Actions accion='Editar' />
-                  )}
+                  ) : null}
                 </Row>
 
               ))

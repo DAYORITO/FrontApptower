@@ -42,7 +42,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
             if (token) {
                 // Cookies.set('token', token);
-                const response = await fetch('http://localhost:3000/api/login/access', {
+                const response = await fetch('https://apptowerbackend.onrender.com/api/login/access', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -66,16 +66,20 @@ const LoginForm = ({ setShowLoginForm }) => {
                         if (role.includes('vigilante') || role.includes('seguridad') || role.includes('vigilantes')) {
                             // navigate('/admin/watchman/shifts');
                             navigate(`admin/watchman/details/${responseData.user}`);
+                            window.location.reload();
 
                         } else if (role.includes('administrador')) {
                             navigate('/admin/dashboard');
+                            window.location.reload();
 
                         } else if (role.includes('residente')) {
                             navigate(`/admin/resident/details/${responseData.user}`);
+                            window.location.reload();
 
 
                         } else {
                             navigate(`admin/users/details/${responseData.user}`);
+                            window.location.reload();
 
                         }
                     } else {

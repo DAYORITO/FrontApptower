@@ -1,4 +1,4 @@
-import { useFetch } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
 import { Actions } from "../../../Components/Actions/Actions"
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons"
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
@@ -7,7 +7,7 @@ import { Thead } from '../../../Components/Thead/Thead'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { useEffect, useState } from 'react'
-import { filter, filterPerSelect, postRequest} from '../../../Helpers/Helpers'
+import { filter, filterPerSelect, postRequest } from '../../../Helpers/Helpers'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
 import { createPortal } from 'react-dom'
@@ -16,12 +16,14 @@ import { statusList } from '../../../Hooks/consts.hooks'
 import { useParams } from 'react-router'
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { Spinner } from '../../../Components/Spinner/Spinner'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import Cookies from 'js-cookie'
 
 
 
 
 export const Apartments = () => {
-
+  const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
   // const url = "https://apptowerbackend.onrender.com/api/"
@@ -31,6 +33,7 @@ export const Apartments = () => {
 
   const { data, get: getApartments, put: putApartment, loading } = useFetch(url)
   const { data: towers, get: getTowers } = useFetch(url)
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
   useEffect(() => {
 
@@ -161,7 +164,11 @@ export const Apartments = () => {
         dropdown={<DropdownExcel />}
         search2={<SearchSelect options={towerList} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar apartamentos' />}
-        buttonToGo={<ButtonGoTo value='Agregar apartamentos' href={`/admin/apartments/create/${tower}`}  ></ButtonGoTo>}
+        buttonToGo={
+          allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
+            ? <ButtonGoTo value='Agregar apartamentos' href={`/admin/apartments/create/${tower}`}  ></ButtonGoTo>
+            : null
+        }
       >
 
         <TablePerson>
@@ -205,7 +212,11 @@ export const Apartments = () => {
                 >
 
                   <Actions accion='Ver detalle' icon='eye' href={`/admin/apartments/details/${apartment.idApartment}`} ></Actions>
-                  <Actions accion='Editar apartamento' onClick={() => handleModal(apartment)}></Actions>
+
+
+                  {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? (
+                    <Actions accion='Editar apartamento' onClick={() => handleModal(apartment)}></Actions>
+                  ) : null}
 
                 </Row>
 

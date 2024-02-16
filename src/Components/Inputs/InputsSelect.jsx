@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-function InputsSelect({ id, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle }) {
+function InputsSelect({ id, disabled = false, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle }) {
 
 
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
@@ -80,7 +80,7 @@ function InputsSelect({ id, options, name, onChange, value, errorMessage: extern
             className='selectComponent'
             ref={inputRef}
             onChange={onChange}
-
+            disabled={disabled}
           // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
             <option value='' selected disabled></option>
