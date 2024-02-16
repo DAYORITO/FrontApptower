@@ -62,12 +62,12 @@ export const WatchmanDetails = () => {
 
 
 
-
     // Watchman relations
 
     const { data: watchmans, get: getWatchmans, loading: loadingWatchmans } = useFetch(url)
     const { data: watchman, get: getWatchman, loading: loadingWatchman } = useFetch(url)
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+
 
     useEffect(() => {
 
@@ -178,9 +178,37 @@ export const WatchmanDetails = () => {
 
         await postRequest(event, 'users/img', 'PUT', {}, data, url);
         setModalEditImg(false)
-        window.location.reload();
+        getWatchman(`watchman/${idWatchman}`)
+        window.location.reload()
 
     }
+
+
+
+    const updatePersonalInfo = async (event) => {
+
+        const data = {
+
+            iduser: idWatchman,
+            docType: docType,
+            document: docNumber,
+            name: name,
+            lastName: lastName,
+            birthday: birthday,
+            email: email,
+            phone: phone,
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
+        getWatchman(`watchman/${idWatchman}`)
+        setModalPersonalInfoWatchman(false)
+
+    }
+
+
 
     const [modalChangePassword, setModalChangePassword] = useState(false)
 
@@ -313,7 +341,7 @@ export const WatchmanDetails = () => {
 
                         {/* Poner los turnos aquiiiiiiiiii */}
 
-                        <DropdownInfo
+                        {!EqualUser ? <DropdownInfo
                             name={'Turnos'}
                             initiallyOpen={false}>
 
@@ -363,7 +391,7 @@ export const WatchmanDetails = () => {
 
 
 
-                        </DropdownInfo>
+                        </DropdownInfo> : null}
 
                     </Acordions>
 
@@ -376,7 +404,7 @@ export const WatchmanDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalPersonalInfoWatchman}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updatePersonalInfo}
                                 showModal={setModalPersonalInfoWatchman}
                                 title={"Editar informacion "}
 

@@ -8,6 +8,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
+
 
 
 
@@ -25,6 +27,8 @@ export const AuthProvider = ({ children }) => {
                     throw new Error('Error al obtener el usuario');
                 }
                 return response.json();
+
+
             })
             .then(data => {
                 setIsLoggedIn(true);

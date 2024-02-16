@@ -51,29 +51,27 @@ export const Aside = () => {
     }, [allowedPermissions]);
 
 
+    useEffect(() => {
+        fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.residente) {
+                    setIdResidents(data.residente.idResident);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }, [userDocument]);
 
-    fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.residente) {
-                setIdResidents(data.residente.idResident);
-
-            }
-        })
-        .catch(error => console.error('Error:', error));
-
-
-    fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.apartmentResidents) {
-                setIdapartaments(data.apartmentResidents.idApartment)
-
-
-            }
-        })
-        .catch(error => console.error('Error:', error));
-
+    useEffect(() => {
+        fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.apartmentResidents) {
+                    setIdapartaments(data.apartmentResidents.idApartment)
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }, [idResidents]);
 
     const rutadetailsapartment = `apartments/details/${idApartment}`
 
@@ -110,6 +108,17 @@ export const Aside = () => {
                     lastName={userData?.user?.lastName ? userData?.user?.lastName : ''}
                     rol={nameRole ? nameRole : ''}
                     userImg={userData?.user?.userImg}
+
+                    to={
+                        nameRole.toLocaleLowerCase().includes('vigilante') ||
+                            nameRole.toLocaleLowerCase().includes('vigilancia') ||
+                            nameRole.toLocaleLowerCase().includes('seguridad')
+                            ? `watchman/details/${userData?.user?.iduser}`
+                            : nameRole.toLocaleLowerCase().includes('residente')
+                                ? `resident/details/${userData?.user?.iduser}`
+                                : `users/details/${userData?.user?.iduser}`
+                    }
+
 
                 />
 
@@ -221,7 +230,7 @@ export const Aside = () => {
 
                                 {allowedPermissions.includes('Vigilantes') && (
                                     nameRole && (nameRole.toLocaleLowerCase() === 'administrador')
-                                        ? <DropDownNav module={"Seguridad"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
+                                        ? <DropDownNav module={"Vigilancia"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
                                             <>
                                                 {allowedPermissions.includes('Vigilantes') && (
                                                     <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>

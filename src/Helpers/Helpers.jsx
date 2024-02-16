@@ -6,7 +6,7 @@ import { useState } from "react"
 
 const usePaginator = (data, itemsPerPage = 10) => {
 
-  const [currentPage, setCurrentPage] = useState(0) ;
+  const [currentPage, setCurrentPage] = useState(0);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -148,7 +148,7 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
 
 
 
-export const postRequest = async (event, endPoint, method = "POST", modal, data, url) => {
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
   try {
 
     event.preventDefault();
@@ -161,7 +161,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 
       Swal.fire({
         title: 'Éxito',
-        text: response,
+        text: message ? message : response,
         icon: 'success',
       }).then(() => {
 
@@ -184,7 +184,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 };
 
 
-export const putRequest = async (event, endpoint, successMessage, data, modal, put, get) => {
+export const putRequest = async (event, endpoint, successMessage, data, modal, put, get, message) => {
   try {
 
     event.preventDefault();
@@ -196,7 +196,7 @@ export const putRequest = async (event, endpoint, successMessage, data, modal, p
 
     Swal.fire({
       title: 'Éxito',
-      text: successMessage,
+      text: successMessage ? successMessage : message,
       icon: 'success',
     });
 
