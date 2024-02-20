@@ -4,37 +4,9 @@ import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 
-export const connectSocket = async (user) => {
+export const connectSocket = async () => {
 
     const socket = io('http://localhost:3000');
-    let menssage;
-    socket.on('connect', (menssage) => {
-        menssage = `Se conecto ${user.name}${user.lastName}`
-
-        socket.emit('response-connection', menssage)
-
-
-        socket.on('response-servidor', menssage => {
-
-
-        })
-
-    })
-
-    // socket.on('active-users', data => {
-
-    //     console.log(data, 'data' )
-    // })
-
-    socket.on('disconnect', menssage => {
-        menssage = `Se desconecto ${user.name} ${user.lastName}`
-
-    })
-
-    socket.on('receive message', () => {
-
-
-    })
 
 }
 
@@ -103,7 +75,7 @@ export const AuthProvider = ({ children }) => {
 
             fetchUserData(data.token);
 
-            await connectSocket(data.user)
+            await connectSocket()
 
             return data.token;
 

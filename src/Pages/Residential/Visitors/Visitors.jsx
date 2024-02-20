@@ -11,13 +11,13 @@ import { Th } from "../../../Components/Th/Th";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { Row } from "../../../Components/Rows/Row";
 import { Actions } from "../../../Components/Actions/Actions";
-import useFetchUserPrivileges, { useFetchForFile, useFetchget, useFetchpost } from "../../../Hooks/useFetch";
+import useFetchUserPrivileges, { useFetchForFile, useFetchget, useFetchpost, useFetch } from "../../../Hooks/useFetch";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useApiUpdate } from "../../../Hooks/FetchputDan";
 import Swal from "sweetalert2";
-import { cardio } from "ldrs";
+import { dotSpinner } from 'ldrs'
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo";
 import Inputs from "../../../Components/Inputs/Inputs";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
@@ -26,10 +26,11 @@ import InputTextArea from "../../../Components/Inputs/InputTextArea";
 import { set } from "date-fns";
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import { Spinner } from "../../../Components/Spinner/Spinner";
 
 function Visitors() {
   const token = Cookies.get('token');
-
+  const url = "https://apptowerbackend.onrender.com/api/";
   // const token = Cookies.get('token');
   // const [allowedPermissions, setAllowedPermissions] = useState([]);
 
@@ -39,17 +40,31 @@ function Visitors() {
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [visitorsData, setVisitorsData] = useState({ visitors: [] });
   const [visitorsDataOriginal, setVisitorDataOriginal] = useState({ visitors: [] });
-  const [showModaload, setShowModaload] = useState(true);
-  cardio.register()
+  const [showModaload, setShowModaload] = useState(false);
+  const [LoadingSpine, setLoadingSpine] = useState(false);
+  dotSpinner.register()
 
-  const { data, load, error } = useFetchget('visitors')
+  // const { data, load, error } = useFetchget('visitors')
+  const {data: fetchVisitors, loading: loadVisitors, get: getVisitors} = useFetch(url)
 
   //se usa el effect para actualizar los datos del get
+
   useEffect(() => {
-    if (data && data.visitors) {
-      setVisitorsData(data.visitors);
+    // if (data && data.visitors) {
+    //   setVisitorsData(data.visitors);
+    // }
+    getVisitors('visitors')
+  }, []);
+  useEffect(() => {
+    if(fetchVisitors?.data?.visitors){
+      setVisitorsData(fetchVisitors.data.visitors);
+      setVisitorDataOriginal(fetchVisitors.data.visitors);
+      console.log('Encontre visitantes', fetchVisitors?.data)
     }
-  }, [data]);
+    else{
+      console.log('No hay datos', fetchVisitors?.data)
+    }
+  },[fetchVisitors.data])
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [showModal, setShowmodal] = useState(false);
   const [TowerData, setTowerData] = useState([]);
@@ -60,7 +75,7 @@ function Visitors() {
   //mostrar el campo de parqueadero
   const [check1, setCheck1] = useState(false);
   //mostrar el nombre del visitante
-  const [visitorname, setVisitorname] = useState(" ");
+  const [visitorname, setVisitorname] = useState("");
 
   //Se crean los estados para los datos del formulario
   const [apartment, setApartment] = useState(null);
@@ -72,32 +87,44 @@ function Visitors() {
   //Se crean los estados para el modal de visitantes
   const [documentNumber, setDocumentNumber] = useState("");
   const [name, setName] = useState("");
-  cardio.register();
+  
   const opciones = [
     { value: "si", label: "Si" },
     { value: "no", label: "No" },
   ];
 
   //Peticiones a la api
-  const { data: dataApartment } = useFetchget('apartments')
-  const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
-  const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
-  const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
-
+  const { data: dataApartment, loading: loadApartments, get: getApartments} = useFetch(url)
+  const { data: dataResidentApartment, loading: loadResidentApartment, get: getResidentApartment} = useFetch(url)
+  const { data: dataParkingSpaces, loading: loadParkingSpaces, get: getParkingSpaces} = useFetch(url)
+  const { data: dataTowers, loading: loadTowers, get: getTowers} = useFetch(url)
+  // const { data: dataApartment} = useFetchget('apartments')
+  // const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
+  // const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
+  // const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
 
   useEffect(()=>{
-    if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
-      setVisitorsData(sortByCreatedAtDescending(data.visitors));
-      setVisitorDataOriginal(sortByCreatedAtDescending(data.visitors));
-      setShowModaload(false);
-    }
-    console.log("Entre a data:",dataApartment?.apartments?.length > 0)
-    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
-    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
-    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
+    // if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+    //   setVisitorsData(sortByCreatedAtDescending(data.visitors));
+    //   setVisitorDataOriginal(sortByCreatedAtDescending(data.visitors));
+    //   setShowModaload(false);
+    // }
+    getApartments('apartments')
+    getResidentApartment('aparmentResidents')
+    getParkingSpaces('parkingSpaces')
+    getTowers('towers')
+  },[])
 
-  }, [dataApartment, dataResidentApartment, dataParkingSpaces, dataTowers])
+  useEffect(() => {
+    if(loadApartments|| loadResidentApartment || loadParkingSpaces || loadTowers){
+      setLoadingSpine(true);
+      console.log(dataApartment, 'dataApartment')
+    }
+    else{
+      console.log(dataApartment, 'dataApartment')
+      setLoadingSpine(false);
+    }
+  },[loadApartments, loadResidentApartment, loadParkingSpaces, loadTowers])
 
   const handleChange = (e) => {
     if (e.target.value === "si") {
@@ -120,41 +147,9 @@ function Visitors() {
     return sortedData;
   }
 
-  // const [idTower, setIdTower] = useState(null);
-  // const [nameTower, setNameTower] = useState('');
-
-  // const getTower = (id) => {
-  //   const tower = data?.apartments?.find(tower => tower.idApartment === id);
-  //   if (tower) {
-  //     setIdTower(tower.idTower);
-  //     return tower.idTower;
-  //   }
-  //   return "";
-  // };
-
-  // const getDataTowers = (idTower) => {
-  //   const tower = dataTowers?.towers?.find(tower => tower.idTower === idTower);
-  //   if (tower) {
-  //     setNameTower(tower.towerName);
-  //     return tower.towerName;
-  //   }
-  //   return "";
-  // };
-
-  // useEffect(() => {
-  //   if (apartment) {
-  //     const towerId = getTower(apartment);
-  //     getDataTowers(towerId);
-  //   }
-  // }, [apartment]);
-
-  // const getApartmentName = (id) => {
-  //   const apartment = data?.apartments?.find(apartment => apartment.idApartment === id);
-  //   return apartment ? apartment.apartmentName : "";
-  // };
 
   const towers = TowerData.map((towerData) => {
-    const matchingTower = dataTowers.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
+    const matchingTower = dataTowers.data.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
     return {
       value: towerData.tower,
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
@@ -164,8 +159,8 @@ function Visitors() {
 
   const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
-    // Organizar los apartamentos por torre
-    dataApartment?.apartments?.forEach((apartment) => {
+    // Organizar los apartamentos por torres
+    dataApartment?.data?.apartments?.forEach((apartment) => {
       const { idApartment, apartmentName, idTower } = apartment;
       // Si no existe la torre, se crea un array vacío
       if (!apartmentsByTower[idTower]) {
@@ -206,21 +201,20 @@ function Visitors() {
   };
 
   useEffect(() => {
-    if (dataApartment.apartments)
+    if (dataApartment.data.apartments){
+      console.log(dataApartment.data.apartments, 'dataApartment1')
       setTowerData(organizeApartmentsByTower(dataApartment))
-  }, [dataApartment])
+      console.log(TowerData, 'towerData')}
+      else{
+        console.log('No hay datos de apartamentos2', dataApartment.data.apartments)
+      }
+    }, [dataApartment])
 
 
   useEffect(() => {
-    if (dataParkingSpaces.parkingSpaces)
-      setparkingSpots(getparkingSpots(dataParkingSpaces))
+    if (dataParkingSpaces.data.parkingSpaces)
+      setparkingSpots(getparkingSpots(dataParkingSpaces.data))
   }, [dataParkingSpaces])
-  //se usa el effect para actualizar los datos del get
-  useEffect(() => {
-    if (data && data.visitors) {
-      setVisitorsData(data.visitors);
-    }
-  }, [data]);
 
   //Evento para cambia los datos del select de apartamentos
   const handleTowerChange = (selectedTower) => {
@@ -270,8 +264,8 @@ function Visitors() {
   };
 
   useEffect(() => {
-    if (dataApartment && dataApartment.apartments) {
-      const apartment = dataApartment.apartments.find((apartment) => apartment.idApartment === Number(id));
+    if (dataApartment && dataApartment.data.apartments) {
+      const apartment = dataApartment.data.apartments.find((apartment) => apartment.idApartment === Number(id));
       if (apartment) {
         setApartment(apartment.idApartment);
         console.log(apartment.idApartment, "apartment.idApartment");
@@ -382,14 +376,14 @@ function Visitors() {
     }
   }
 
-  const totalPages = data.visitors ? Math.ceil(data.visitors.length / 8) : 0;
+  const totalPages = visitorsData ? Math.ceil(visitorsData.length / 8) : 0;
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
   const [currentPage, setCurrentPage] = useState(0);
 
   const filteredDatavisitor = () => {
-    if (data && data.visitors && visitorsData.length > 0) {
+    if (visitorsData.length > 0) {
       return visitorsData?.slice(currentPage, currentPage + 8);
     } else {
       return [];
@@ -407,8 +401,8 @@ function Visitors() {
         return visitor.access.toString() === e.target.value;
       }
       if (selectedFilterParam === 'name') {
-        let fullname= visitor.name + " " + visitor.lastname;
-        return fullname.trim().toLowerCase().includes(e.target.value.trim().toLowerCase()) || visitor.lastname.toLowerCase().includes(e.target.value.toLowerCase());
+        let fullname = `${visitor.name} ${visitor.lastname}`;
+        return fullname.toLowerCase().trim().includes(e.target.value.toLowerCase().trim());
       }
       if (selectedFilterParam === 'documentNumber') {
         return visitor.documentNumber.toLowerCase().includes(e.target.value.toLowerCase());
@@ -468,7 +462,7 @@ function Visitors() {
             <Th name={"Acciones"}></Th>
           </Thead>
           <Tbody>
-            {filteredDatavisitor().map(visitor => (
+            {LoadingSpine == true ? <Spinner/> : filteredDatavisitor().map(visitor => (
               <Row
                 A3={visitor.documentType}
                 A4={visitor.documentNumber}
@@ -514,12 +508,11 @@ function Visitors() {
             <ModalContainerload ShowModal={setShowModaload}>
               <Modaload showModal={setShowModaload}>
                 <div className="d-flex justify-content-center">
-                  <l-cardio
-                    size="50"
-                    stroke="4"
-                    speed="2"
-                    color="black"
-                  ></l-cardio>
+                <l-dot-spinner
+                size="50"
+                speed="2"
+                color="black"
+                ></l-dot-spinner>
                 </div>
                 <div className="d-flex justify-content-center">
                   <p> </p>

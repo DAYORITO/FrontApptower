@@ -257,7 +257,7 @@ const App = () => {
                                 } />
 
 
-                                <Route path='apartments/create/id?' element={
+                                <Route path='apartments/create/:id?' element={
                                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear') ?
                                         <ApartmentCreate /> : <NotFound />
                                 } />

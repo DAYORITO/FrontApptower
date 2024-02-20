@@ -130,10 +130,17 @@
 body {
   overflow: hidden;
 
+
+
+  /* background: linear-gradient(180deg,
+  rgba(21, 39, 51, 1) 0%,
+  rgba(42, 78, 82, 1) 35%,
+  rgba(63, 118, 123, 1) 100%); */
+
   background: linear-gradient(90deg,
-  rgba(2, 0, 36, 1) 0%, 
-  rgba(24, 24, 102, 1) 35%,
-  rgba(0, 112, 155, 1) 100%);
+      rgba(2, 0, 36, 1) 0%,
+      rgba(63, 118, 123) 35%,
+      rgba(0, 112, 155, 1) 100%);
 
 
   /* background: linear-gradient(135deg, white, rgba(64,198,186), rgba(1,81,133)); */
