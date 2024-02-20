@@ -1,6 +1,5 @@
 import './LogIn.css';
-import ImageIcono from '../../../assets/Logo-Apptower.png';
-import ImagenPerson from '../../../assets/Person.jpg';
+import ImageIcono from '../../../assets/Logodomus.png';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
@@ -17,7 +16,7 @@ export const RecoverPassword = () => {
         e.preventDefault();
 
         try {
-            const userCheck = await fetch('https://apptowerbackend.onrender.com/api/email', {
+            const userCheck = await fetch('http://localhost:3000/api/email', {
                 // const userCheck = await fetch('http://localhost:3000/api/email', {
                 method: 'POST',
                 headers: {
@@ -31,7 +30,7 @@ export const RecoverPassword = () => {
                 console.log(userData.message);
                 Cookies.set("email", email);
 
-                const sendCode = await fetch('https://apptowerbackend.onrender.com/api/email', {
+                const sendCode = await fetch('http://localhost:3000/api/email/verify', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -81,21 +80,23 @@ export const RecoverPassword = () => {
             <div className="container-form login">
                 <div className="informations">
                     <div className="info-childs">
-                        <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" />
+                        {/* <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" /> */}
                         <h2>Bienvenido</h2>
                         <p className='message'>Recupera tu contraseña de forma segura con un código de verificación enviado a tu correo</p>
                     </div>
                 </div>
                 <div className="form-informations">
                     <div className="form-information-childs">
-                        <img src={ImagenPerson} width="75" height="75" alt="" />
+                        <img src={ImageIcono} width="75" className='iconperson' height="75" alt="" />
 
                         <form className="form" onSubmit={handleEmailSubmit}>
                             {/* <p>Ingresa tu correo  </p> */}
                             <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} />
 
                             <button className='boton-login'>Enviar Codigo</button><br />
-                            <Link to="/" class="buttonStyle" id="sign-up">Regresar</Link>
+                            <div>
+                                <Link to="/" class="buttonStyle" id="sign-up">Regresar</Link>
+                            </div>
                         </form>
 
                     </div>

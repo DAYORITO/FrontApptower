@@ -16,7 +16,7 @@ export const ProtectedRoutes = () => {
         return <LogIn />;
     }
 
-    if (loadingUser) {
+    if (isLoggedIn === "true" && !userData && !loadingUser) {
         return <LoadingPage />;
     }
 

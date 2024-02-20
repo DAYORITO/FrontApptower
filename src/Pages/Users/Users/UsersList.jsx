@@ -91,7 +91,7 @@ export const Users = () => {
 
         if (searchForSelect !== null) {
             filteredUsers = filteredUsers.filter((dato) =>
-                dato.idrole.toString() === searchForSelect
+                dato.idrole && dato.idrole.toString() === searchForSelect
             );
         }
 

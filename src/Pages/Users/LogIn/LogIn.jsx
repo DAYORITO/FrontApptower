@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './LogIn.css';
-import ImageIcono from '../../../assets/Logo-Apptower.png';
+import ImageIcono from '../../../assets/Logodomus.png';
 import ImagenPerson from '../../../assets/Person.jpg';
 import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../../Components/Inputs/selectLogIn';
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
+import { dotSpinner } from 'ldrs'
 
 
 const LoginForm = ({ setShowLoginForm }) => {
@@ -21,6 +22,8 @@ const LoginForm = ({ setShowLoginForm }) => {
     const [loginPassword, setLoginPassword] = useState('');
     const token = Cookies.get('token');
     const navigate = useNavigate();
+    dotSpinner.register()
+
 
 
 
@@ -67,20 +70,20 @@ const LoginForm = ({ setShowLoginForm }) => {
                         if (role.includes('vigilante') || role.includes('seguridad') || role.includes('vigilantes')) {
                             // navigate('/admin/watchman/shifts');
                             navigate(`admin/watchman/details/${responseData.user}`);
-                            // window.location.reload();
+                            window.location.reload();
 
                         } else if (role.includes('administrador')) {
                             navigate('/admin/dashboard');
-                            // window.location.reload();
+                            window.location.reload();
 
                         } else if (role.includes('residente')) {
                             navigate(`/admin/resident/details/${responseData.user}`);
-                            // window.location.reload();
+                            window.location.reload();
 
 
                         } else {
                             navigate(`admin/users/details/${responseData.user}`);
-                            // window.location.reload();
+                            window.location.reload();
 
                         }
                     } else {
@@ -93,18 +96,32 @@ const LoginForm = ({ setShowLoginForm }) => {
         }
     }
 
+    useEffect(() => {
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (data?.user?.length > 0) {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 700);
+        } else {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 2000);
+
+        }
+    }, [data]);
+
     return (
         <div className="container-form login">
             <div className="informations">
                 <div className="info-childs">
-                    <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" />
+                    {/* <img src={ImageIcono} width="140" height="140" className='logo' alt="ApptowerApart" /> */}
                     <h2>Bienvenido</h2>
                     <p className='loginp'>Inicia sesión para interactuar con nuestra comunidad residencial.</p>
                 </div>
             </div>
             <div className="form-informations">
                 <div className="form-information-childs">
-                    <img src={ImagenPerson} width="75" height="75" alt="" className='iconperson' />
+                    <img src={ImageIcono} alt="" className='iconperson' />
                     <form className="form" onSubmit={handleLogin}>
                         <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} />
                         <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} />
@@ -116,12 +133,12 @@ const LoginForm = ({ setShowLoginForm }) => {
                         <button className='boton-login'>Iniciar Sesión</button><br />
 
 
-                        <Link className='buttonStyle' to='#' onClick={() => setShowLoginForm(false)}>
+                        {/* <Link className='buttonStyle' to='#' onClick={() => setShowLoginForm(false)}>
                             ¿No puedes acceder? Regístrate
-                        </Link>
+                        </Link> */}
 
                     </form>
-                    {/* {showModaload &&
+                    {showModaload &&
                         createPortal(
                             <>
                                 <ModalContainerload ShowModal={setShowModaload}>
@@ -129,12 +146,15 @@ const LoginForm = ({ setShowLoginForm }) => {
                                         showModal={setShowModaload}
                                     >
                                         <div className='d-flex justify-content-center'>
-                                            <l-hourglass
-                                                size="90"
-                                                bg-opacity="0.1"
-                                                speed="1.75"
-                                                color="#002266"
-                                            ></l-hourglass>
+                                            <l-dot-spinner
+                                                size="50"
+                                                speed="2"
+                                                color="black"
+                                            ></l-dot-spinner>
+                                        </div>
+                                        <div className="d-flex justify-content-center">
+                                            <p> </p>
+                                            <p className="mt-2 text-muted">Cargando datos...</p>
                                         </div>
 
 
@@ -142,7 +162,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                                 </ModalContainerload>
                             </>,
                             document.getElementById("modalRender")
-                        )} */}
+                        )}
                 </div>
             </div>
         </div>

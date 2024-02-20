@@ -31,6 +31,7 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest } from '../../../Helpers/Helpers'
 import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
+import Swal from 'sweetalert2'
 const token = Cookies.get('token');
 
 export const WatchmanDetails = () => {
@@ -59,6 +60,9 @@ export const WatchmanDetails = () => {
     const [enterprice, setEnterprice] = useState("")
     const [age, setAge] = useState(null);
     const [pdf, setPdf] = useState(null);
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+
 
 
 
@@ -217,6 +221,32 @@ export const WatchmanDetails = () => {
         setIdUser(idUser)
 
         setModalChangePassword(true)
+
+    }
+
+    const updateUserPassword = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            password: password
+
+        }
+
+        console.log("edit data", data)
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Las contraseñas no coinciden',
+            })
+            return
+        }
+
+        await postRequest(event, 'users/password', 'PUT', {}, data, url, 'Contraseña actualizada correctamente');
+        setModalChangePassword(false)
+        getWatchman(`watchman/${idWatchman}`)
 
     }
 
@@ -469,16 +499,16 @@ export const WatchmanDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalChangePassword}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserPassword}
                                 showModal={setModalChangePassword}
                                 title={"Cambiar contraseña"}
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+                                    onChange={e => setPassword(e.target.value)}></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                    onChange={e => setConfirmPassword(e.target.value)}></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

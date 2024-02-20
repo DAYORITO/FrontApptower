@@ -38,6 +38,7 @@ export const Aside = () => {
     const [nameRole, setNameRole] = useState('');
     const { data, load, error } = useFetchget('rols')
 
+
     useEffect(() => {
         if (data && userData && userData?.user) {
             const userRole = data?.rols?.find(role => role.idrole === userData?.user?.idrole)?.namerole;
@@ -169,24 +170,39 @@ export const Aside = () => {
                                     <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24'
                                     />
                                 )}
+
                                 {allowedPermissions.includes('Notificaciones') && (
                                     <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
                                 )}
-                                {allowedPermissions && (allowedPermissions.includes('Reservas') || allowedPermissions.includes('Ingresos')) ? (
-                                    <DropDownNav module={"Reservas"} icon='fe fe-phone-outgoing fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}
-                                    >
 
-                                        <>
-                                            {allowedPermissions.includes('Ingresos') && (
-                                                <DropDownList subprocess={"Ingresos"} href='guest_income/' ></DropDownList>
-                                            )}
-                                            {allowedPermissions.includes('Reservas') && (
-                                                <DropDownList subprocess={"Reservas"} href='booking'></DropDownList>
-                                            )}
-                                        </>
+                                {allowedPermissions.includes('Usuarios') && (
+                                    <ListNav module={'Usuarios'} href='users/' icon='fe fe-user' />
+                                )}
 
-                                    </DropDownNav>
-                                ) : null}
+                                {allowedPermissions.includes('Vigilantes') && (
+                                    nameRole && (nameRole.toLocaleLowerCase() === 'administrador')
+                                        ? <DropDownNav module={"Vigilancia"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
+                                            <>
+                                                {allowedPermissions.includes('Vigilantes') && (
+                                                    <DropDownList subprocess={"Empresas de Seguridad"} href='watchman/enterprice'></DropDownList>
+                                                )}
+                                                {allowedPermissions.includes('Vigilantes') && (
+                                                    <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
+                                                )}
+
+                                            </>
+                                        </DropDownNav>
+                                        : nameRole && (nameRole.toLocaleLowerCase() === 'vigilante' || nameRole.toLocaleLowerCase() === 'vigilancia' || nameRole.toLocaleLowerCase() === 'seguridad')
+                                            ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
+                                            : null
+                                )}
+
+
+
+                                {allowedPermissions.includes('Reservas') && (
+                                    <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24'
+                                    />
+                                )}
 
 
                                 {allowedPermissions && (
@@ -198,6 +214,9 @@ export const Aside = () => {
                                             <DropDownNav module={"Residencial"} icon='fe fe-users fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
 
                                                 <>
+                                                    {allowedPermissions.includes('Ingresos') && (
+                                                        <DropDownList subprocess={"Ingresos de Visitantes"} href='guest_income/' ></DropDownList>
+                                                    )}
                                                     {allowedPermissions.includes('Propietarios') && (
                                                         <DropDownList subprocess={"Propietarios"} href='owners'></DropDownList>
                                                     )}
@@ -207,6 +226,7 @@ export const Aside = () => {
                                                     {allowedPermissions.includes('Visitantes') && (
                                                         <DropDownList subprocess={"Visitantes"} href='visitors'></DropDownList>
                                                     )}
+
                                                     {allowedPermissions.includes('Vehiculos') && (
                                                         <DropDownList subprocess={"Vehiculos"} href='vehicle'></DropDownList>
                                                     )}
@@ -236,13 +256,6 @@ export const Aside = () => {
                                                 <DropDownList subprocess={"Bloques"} href='towers' ></DropDownList>
                                             )}
 
-                                            {/* {allowedPermissions.includes('Apartamentos') && (
-                                                (nameRole === 'Administrador' || userRole === 'Admin' || userRole === 'Super Administrador')
-                                                    ? <ListNav module={'Apartamentos'} href='apartments' />
-                                                    : (userRole === 'Residente' || userRole === 'Residentes')
-                                                        ? <ListNav module={'Apartamentos'} href={rutadetailsapartment} />
-                                                        : null
-                                            )} */}
 
                                             {allowedPermissions.includes('Parqueaderos') && (
                                                 <DropDownList subprocess={"Parqueaderos"} href='parkingSpaces/'></DropDownList>
@@ -262,26 +275,7 @@ export const Aside = () => {
                                 )}
                                 {/* <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' /> */}
 
-                                {allowedPermissions.includes('Usuarios') && (
-                                    <ListNav module={'Usuarios'} href='users/' icon='fe fe-user' />
-                                )}
 
-                                {allowedPermissions.includes('Vigilantes') && (
-                                    nameRole && (nameRole.toLocaleLowerCase() === 'administrador')
-                                        ? <DropDownNav module={"Vigilancia"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
-                                            <>
-                                                {allowedPermissions.includes('Vigilantes') && (
-                                                    <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
-                                                )}
-                                                {allowedPermissions.includes('Vigilantes') && (
-                                                    <DropDownList subprocess={"Empresas Aliadas"} href='watchman/enterprice'></DropDownList>
-                                                )}
-                                            </>
-                                        </DropDownNav>
-                                        : nameRole && (nameRole.toLocaleLowerCase() === 'vigilante' || nameRole.toLocaleLowerCase() === 'vigilancia' || nameRole.toLocaleLowerCase() === 'seguridad')
-                                            ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
-                                            : null
-                                )}
 
                                 {/* {allowedPermissions.includes('Vigilantes') && (
                                     <ListNav module={'Vigilantes'} href='watchman/' icon='fe fe-x-square fe-24' />

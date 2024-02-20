@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-function InputsSelect({ id, disabled = false, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle }) {
+function InputsSelect({ id, disabled = false, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle, StyleInput, containerStyle }) {
 
 
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
@@ -57,6 +57,11 @@ function InputsSelect({ id, disabled = false, options, name, onChange, value, er
     }
   }, [])
 
+  useEffect(() => {
+    setValorSeleccionado(value);
+  }, []);
+
+
   //Aqui esta utilizando el prop validate para validar si el campo esta vacio y mostrar un mensaje de error
   useEffect(() => {
     if (validate && value === "") {
@@ -71,7 +76,7 @@ function InputsSelect({ id, disabled = false, options, name, onChange, value, er
 
   return (
     <>
-      <div className='inputContainer mb-3'>
+      <div className='inputContainer mb-3' style={containerStyle}>
         <span className='inputSpan ' style={inputStyle}>
           <select
             id={id}
@@ -81,6 +86,7 @@ function InputsSelect({ id, disabled = false, options, name, onChange, value, er
             ref={inputRef}
             onChange={onChange}
             disabled={disabled}
+            style={StyleInput}
           // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
             <option value='' selected disabled></option>

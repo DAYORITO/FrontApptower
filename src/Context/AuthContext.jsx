@@ -12,11 +12,11 @@ export const connectSocket = async (user) => {
         menssage = `Se conecto ${user.name}${user.lastName}`
 
         socket.emit('response-connection', menssage)
-        console.log(menssage)
+
 
         socket.on('response-servidor', menssage => {
 
-            console.log(menssage)
+
         })
 
     })
@@ -28,7 +28,6 @@ export const connectSocket = async (user) => {
 
     socket.on('disconnect', menssage => {
         menssage = `Se desconecto ${user.name} ${user.lastName}`
-        console.log(menssage)
 
     })
 

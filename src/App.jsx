@@ -88,13 +88,17 @@ const App = () => {
         }
     }, [data, userData]);
 
+    if (loadingUser || loadingPermissions || load) {
+        return <LoadingPage />
+    }
+
 
 
     return (
 
         <AuthProvider>
 
-            <HashRouter basename='/'>
+            <HashRouter basename='/' >
                 <div className='App'>
                     <Routes>
 
@@ -379,13 +383,16 @@ const App = () => {
                                         <VehicleCreate /> : <NotFound />
                                 } />
 
+                                <Route path="*" element={<NotFound />} />
 
 
-
+                                <Route path="*" element={<NotFound />} />
 
                             </Route >
                         </Route >
                         {/* </Route> */}
+                        <Route path="*" element={<NotFound />} />
+
                     </Routes >
                 </div >
             </HashRouter >

@@ -298,6 +298,9 @@ export const UsersCreate = () => {
                         setRole(selectedRole ? selectedRole.namerole : "");
                         setShowForm(true);
                     }}
+                // StyleInput={{ width: '61.5rem' }}
+                // containerStyle={{ width: '61.5rem', marginLeft: '0.5rem', }}
+                // inputStyle={{ width: '61.5rem' }}
                 ></InputsSelect>
 
 
@@ -457,7 +460,7 @@ export const UsersCreate = () => {
                     </>
                 )}
 
-            </FormContainer>
+            </FormContainer >
         </>
     );
 };

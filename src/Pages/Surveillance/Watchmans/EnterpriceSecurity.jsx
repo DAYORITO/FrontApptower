@@ -31,11 +31,16 @@ import { Row } from "../../../Components/Rows/Row"
 import { Thead } from "../../../Components/Thead/Thead"
 import { Th } from "../../../Components/Th/Th"
 import { Tbody } from "../../../Components/Tbody/Tbody"
+import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal"
+import { dotSpinner } from 'ldrs'
+
 
 
 
 export const EnterpriceSecurity = () => {
     const token = Cookies.get('token');
+    dotSpinner.register()
+    const [showModaload, setShowModaload] = useState(true);
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/"
@@ -95,6 +100,19 @@ export const EnterpriceSecurity = () => {
     const { data: enterprice, get: getEnterprice, loading } = useFetch(url)
     const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
+    useEffect(() => {
+        // Cuando la carga está en progreso (load es true), activamos el modal de carga
+        if (enterprice?.enterprice?.length > 0) {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 700);
+        } else {
+            setTimeout(() => {
+                setShowModaload(false);
+            }, 2000);
+
+        }
+    }, [enterprice]);
 
     const statusEnterprice = [
         {
@@ -217,27 +235,24 @@ export const EnterpriceSecurity = () => {
                     </Thead>
                     <Tbody>
 
-                        {loading ? <Spinner /> : enterpriceList.length == 0 ?
+                        {/* <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> : */}
 
-                            <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
-
-
-                            EnterpriceInfo().map(enterprise => (
-                                <Row
-                                    icon='command'
-                                    key={enterprise.idEnterpriseSecurity}
-                                    A3={'NIT'}
-                                    A4={enterprise.NIT}
-                                    A1={enterprise.nameEnterprice}
-                                    status={enterprise.state}
-                                    A2={''}
-                                    description={enterprise.address}
-                                    A7={enterprise.phone}
-                                    A17={enterprise.email}
-                                >
-                                    <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
-                                </Row>
-                            ))}
+                        {EnterpriceInfo().map(enterprise => (
+                            <Row
+                                icon='command'
+                                key={enterprise.idEnterpriseSecurity}
+                                A3={'NIT'}
+                                A4={enterprise.NIT}
+                                A1={enterprise.nameEnterprice}
+                                status={enterprise.state}
+                                A2={''}
+                                description={enterprise.address}
+                                A7={enterprise.phone}
+                                A17={enterprise.email}
+                            >
+                                <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
+                            </Row>
+                        ))}
 
                     </Tbody>
                 </TablePerson>
@@ -280,6 +295,32 @@ export const EnterpriceSecurity = () => {
 
                             </Modal>
                         </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
+
+            {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                    <p> </p>
+                                    <p className="mt-2 text-muted">Cargando datos...</p>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
                     </>,
                     document.getElementById("modalRender")
                 )}

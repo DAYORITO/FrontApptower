@@ -280,10 +280,15 @@ export const Watchman = () => {
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
-    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
-        value: enterprice.idEnterpriseSecurity,
-        label: enterprice.nameEnterprice
-    })) : [];
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
+        ? dataEnterprice.enterpriseSecurity
+            .filter(enterprice => enterprice.state === "Activo")
+            .map(enterprice => ({
+                value: enterprice.idEnterpriseSecurity,
+                label: enterprice.nameEnterprice
+            }))
+        : [];
 
     const selectedEnterpriceOption = editedWatchman && enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity)?.value;
 
