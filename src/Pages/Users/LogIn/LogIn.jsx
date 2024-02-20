@@ -96,19 +96,19 @@ const LoginForm = ({ setShowLoginForm }) => {
         }
     }
 
-    useEffect(() => {
-        // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (data?.user?.length > 0) {
-            setTimeout(() => {
-                setShowModaload(false);
-            }, 700);
-        } else {
-            setTimeout(() => {
-                setShowModaload(false);
-            }, 2000);
+    // useEffect(() => {
+    //     // Cuando la carga está en progreso (load es true), activamos el modal de carga
+    //     if (data?.user?.length > 0) {
+    //         setTimeout(() => {
+    //             setShowModaload(false);
+    //         }, 700);
+    //     } else {
+    //         setTimeout(() => {
+    //             setShowModaload(false);
+    //         }, 2000);
 
-        }
-    }, [data]);
+    //     }
+    // }, [data]);
 
     return (
         <div className="container-form login">
@@ -138,7 +138,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                         </Link> */}
 
                     </form>
-                    {showModaload &&
+                    {/*   {showModaload &&
                         createPortal(
                             <>
                                 <ModalContainerload ShowModal={setShowModaload}>
@@ -163,6 +163,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                             </>,
                             document.getElementById("modalRender")
                         )}
+                        */}
                 </div>
             </div>
         </div>

@@ -596,7 +596,7 @@ export const ApartmentDetails = (props) => {
 
                                                         // Details
 
-                                                        to={`/admin/user/details/${resident.resident.iduser}`}
+                                                        to={`/admin/resident/details/${resident.resident.iduser}`}
                                                         status={resident.status}
                                                         // Functions
 
