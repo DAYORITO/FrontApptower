@@ -3,7 +3,7 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import { docTypes, sexs } from "../../../Hooks/consts.hooks"
 import FormButton from '../../../Components/Forms/FormButton'
 import Inputs from '../../../Components/Inputs/Inputs'
-import { useFetchget, useFetchForFile } from '../../../Hooks/useFetch'
+import { useFetchget, useFetchForFile, useFetch } from '../../../Hooks/useFetch'
 import { useState, useEffect } from 'react'
 import Select2 from '../../../Components/Inputs/Select2'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
@@ -15,19 +15,22 @@ import { useNavigate } from "react-router-dom";
 import ModalButton from '../../../Components/Modals/ModalButton'
 import { useApiUpdate } from '../../../Hooks/FetchputDan'
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
-import { cardio } from 'ldrs'
+import { dotSpinner } from 'ldrs'
 import { set } from 'date-fns'
 import { useParams } from 'react-router-dom'
+import { Spinner } from '../../../Components/Spinner/Spinner'
 
 
 
 function GuestIncomeCreate() {
+  const url = "http://localhost:3000/api/apartmentResidents";
+  const [LoadingSpiner, setLoadingSpiner] = useState(true);
   const navigate = useNavigate();
-  cardio.register()
+  dotSpinner.register()
   //mostrar modales
   const { id } = useParams()
   const [showModalvisitor, setShowModalvisitor] = useState(false);
-  const [showModaload, setShowModaload] = useState(true);
+  const [showModaload, setShowModaload] = useState(false);
   //estados para valores de los select
   const [TowerData, setTowerData] = useState([]);
   const [phone, setPhone] = useState('Seleccione un apartamento');
@@ -67,31 +70,25 @@ function GuestIncomeCreate() {
   //Peticiones a la api
   const { data: dataVisitors, load: load1, error2 } = useFetchget('visitors')
   const { data, load, error } = useFetchget('apartments')
-  const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
+  // const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
+  const { data: dataResidentApartment, loading: loadResidentsApartment,  get: getResidentApartment} = useFetch(url)
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
-  // useEffect(() => {
-  //   if (load || load2 || load3 || load4 || load1) {
-  //     setShowModaload(true);
-  //   } else {
-  //     setShowModaload(false);
-  //   }
-  // }, [load, load2, load3, load4, load1])
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
 
   useEffect(()=>{
-    if(dataVisitors?.visitors?.length >0 && data?.apartments?.length > 0  && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
+    if(dataVisitors?.visitors?.length >0 && data?.apartments?.length > 0  && loadResidentsApartment ==false && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
       console.log("Entre aqui:",dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
-      setShowModaload(false);
+      setLoadingSpiner(false)
     }
     console.log("Entre a data visitors:",dataVisitors?.visitors?.length >0)
     console.log("Entre a data:",data?.apartments?.length > 0)
-    console.log("Entre a dataResidentApartment:",dataResidentApartment?.apartmentResidents?.length > 0)
+    console.log("Entre a dataResidentApartment:",dataResidentApartment?.data?.apartmentResidents?.length > 0)
     console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
     console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
 
-  },[dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers])
+  },[dataVisitors, data, loadResidentsApartment, dataParkingSpaces, dataTowers])
   const handleChange = (e) => {
     if (e.target.value === 'si') {
       setCheck1(true)
@@ -249,8 +246,8 @@ function GuestIncomeCreate() {
     setApartment(parseInt(selectedValue))
     console.log('este es mi apartamento ' + apartment)
 
-    if (dataResidentApartment && dataResidentApartment.apartmentResidents) {
-      const resident = dataResidentApartment.apartmentResidents.find(
+    if (dataResidentApartment && dataResidentApartment.data.apartmentResidents) {
+      const resident = dataResidentApartment.data.apartmentResidents.find(
         (resident) => resident.idApartment === parseInt(selectedValue)
       );
 
@@ -399,6 +396,7 @@ function GuestIncomeCreate() {
       };
       // Actualizar el estado local agregando el nuevo visitante
       setVisitorsData((prevData) => [newVisitor, ...prevData]);
+      setNameVisitor((prevData) => [response.visitor, ...prevData]);
       setShowModaload(false);
       
       console.log('Respuesta exitosa:', response);
@@ -420,14 +418,23 @@ function GuestIncomeCreate() {
       console.error('Error:', error);
     }
   }
+  useEffect(() => {
+    if (loadResidentsApartment == true) {
+      
+    }
+  },[LoadingSpiner])
 
   return (
     <>
-      <FormContainer name='Crear Ingreso' buttons={<FormButton name='Crear' backButton='Cancelar' onClick={handleSubmit} />} modalButton={<ModalButton name="Crear visitante" onClick={setShowModalvisitor} />}>
-        <div className='d-flex justify-content-around' style={{ width: '100%' }}>
-          <div className='mr-1' style={{ width: '100%' }} >
+      <FormContainer name='Crear Ingreso' 
+      buttons={ <FormButton  name='Crear' disabled={LoadingSpiner} backButton='Cancelar' onClick={handleSubmit} />} 
+      modalButton={<ModalButton disabled={LoadingSpiner} name="Crear visitante"  onClick={setShowModalvisitor} />}
+      >
+        {LoadingSpiner && <Spinner></Spinner>}
+        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
+          <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none': 'block' }} >
             {!id ?
-              <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect inputStyle={{display: LoadingSpiner ? 'none': 'block'}} name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
               :
               <Inputs
                 key={apartment}
@@ -440,9 +447,10 @@ function GuestIncomeCreate() {
             }
           </div>
 
-          <div className="mr-1" style={{ width: '100%' }}>
+          <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
+            
             {!id ?
-              <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{display: LoadingSpiner ? 'none': 'block'}} name={'Apartamento'} id={"select22"} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2> 
               :
               <Inputs
                 key={apartment}
@@ -454,29 +462,32 @@ function GuestIncomeCreate() {
               />}
 
           </div>
-          <div style={{ width: '100%' }}>
+          <div style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
 
-            <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
+            <Inputs  name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8',display: LoadingSpiner ? 'none': 'block' }}></Inputs>
 
           </div>
         </div>
-        <div className='d-flex justify-content-around' style={{ width: '100%' }}>
-          <div className='mr-1' style={{ width: '100%' }}>
-            <Select2 name={'Visitante'} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
+        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
+          <div className='mr-1' style={{ width: '100%',display: LoadingSpiner ? 'none': 'block'  }}>
+            <Select2  name={'Visitante'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
           </div>
-          <div style={{ width: '100%' }}>
-            <Inputs name='Nombre' readonly={true} value={visitorname} ></Inputs>
+          <div style={{ width: '100%' , display: LoadingSpiner ? 'none': 'block' }}>
+            <Inputs id={"nombre"} name='Nombre'  readonly={true} value={visitorname} ></Inputs>
           </div>
 
         </div>
-        <InputsSelect name="Ingreso con vehiculo" style="width: 100%" id={'tipoingreso'} onChange={handleChange} options={opciones}></InputsSelect>
-        {/* <Inputs name="Apartamento" list={'opciones'} options={apartmentsOptions}></Inputs> */}
+        <div style={{display: LoadingSpiner ? 'none':'block', width: '100%'}}>
+        <InputsSelect inputStyle={{display: LoadingSpiner ? 'none': 'block'}} name="Ingreso con vehiculo" style="width: 100%" id={'tipoingreso'} onChange={handleChange} options={opciones}></InputsSelect>
+        </div>
         {
           check1 &&
           <InputsSelect name="Parqueadero" id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
-        <Inputs name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
-        <Inputs name="Observaciones" type="text" onChange={(e) => { setObservations(e.target.value) }}></Inputs>
+        <div style={{width: '100%', display: LoadingSpiner ? 'none':'block'}}>
+        <Inputs id={"personaAcceso"} name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
+        <Inputs id={"observaciones"} name="Observaciones" type="text" onChange={(e) => { setObservations(e.target.value) }}></Inputs>
+        </div>
       </FormContainer>
       {
         showModalvisitor &&
@@ -501,12 +512,11 @@ function GuestIncomeCreate() {
                 showModal={setShowModaload}
               >
                 <div className='d-flex justify-content-center'>
-                  <l-cardio
-                    size="50"
-                    stroke="4"
-                    speed="2"
-                    color="black"
-                  ></l-cardio>
+                <l-dot-spinner
+                size="50"
+                speed="2"
+                color="black"
+                ></l-dot-spinner>
                 </div>
                 <div className='d-flex justify-content-center'>
                   
