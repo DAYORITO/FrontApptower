@@ -12,6 +12,7 @@ import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
 import { useFetch, useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
 import { Spinner } from '../Spinner/Spinner';
+import { io } from 'socket.io-client';
 
 export const Aside = () => {
 
@@ -31,6 +32,8 @@ export const Aside = () => {
     }
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+    
+    const [profile, setProfile] = useState(userData)
 
 
     const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPermissions(token, idToPermissionName);
@@ -113,13 +116,28 @@ export const Aside = () => {
         setIsCloset(!isCloset);
     };
 
+    
+    
+    // useEffect(() => {
 
+    //     const socket = io('http://localhost:3000');
 
+    
+    //     socket.emit('user-logied', userData);
+        
+    
+    //     socket.on('user', data => {
 
+    //         setProfile(data);
+    //         console.log(profile)
 
+    //     });
 
-
-
+        
+    //     return () => {
+    //         socket.disconnect(); // Desconectar el socket cuando el componente se desmonta
+    //     };
+    // }, []);
 
     return (
         <>
@@ -148,11 +166,11 @@ export const Aside = () => {
                     userImg={userData?.user?.userImg}
 
                     to={
-                        nameRole.toLocaleLowerCase().includes('vigilante') ||
-                            nameRole.toLocaleLowerCase().includes('vigilancia') ||
-                            nameRole.toLocaleLowerCase().includes('seguridad')
+                        nameRole?.toLocaleLowerCase().includes('vigilante') ||
+                            nameRole?.toLocaleLowerCase().includes('vigilancia') ||
+                            nameRole?.toLocaleLowerCase().includes('seguridad')
                             ? `watchman/details/${userData?.user?.iduser}`
-                            : nameRole.toLocaleLowerCase().includes('residente')
+                            : nameRole?.toLocaleLowerCase().includes('residente')
                                 ? `resident/details/${userData?.user?.iduser}`
                                 : `users/details/${userData?.user?.iduser}`
                     }
@@ -165,7 +183,7 @@ export const Aside = () => {
                     <div className='myNav-links-content'  >
                         {allowedPermissions && (
                             <>
-                                {allowedPermissions.includes('Usuarios') && nameRole.toLocaleLowerCase().includes('administrador') && (
+                                {allowedPermissions.includes('Usuarios') && nameRole?.toLocaleLowerCase().includes('administrador') && (
                                     <ListNav module={'Dashboard'} href='dashboard' icon='fe fe-bar-chart fe-24'
                                     />
                                 )}

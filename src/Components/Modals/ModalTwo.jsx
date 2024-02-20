@@ -69,50 +69,47 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
     </div>
   );
 };
-
 export const ModalNotifications = ({ children, showModal }) => {
 
   return (
     <div onClick={(e) => e.stopPropagation()} className="notifications-container">
       <div
         id="verticalModal"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="verticalModalTitle"
       >
-        <div class="modal-header">
-          <h5 class="modal-title" id="defaultModalLabel">Notificaciones</h5>
-          <button onClick={() => showModal(false)} type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div className="modal-header notifications-modal">
+          <h5 className="modal-title" id="defaultModalLabel">Notificaciones</h5>
+          <button onClick={() => showModal(false)} type="button" className="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" >
-          <div class="list-group list-group-flush my-n3">
+        <div className="modal-body notifications-modal-body">
+          <div className="list-group list-group-flush my-n3">
 
-            <RowNotificactions />
-            <RowNotificactions />
-            <RowNotificactions />
-            <RowNotificactions />
-            <RowNotificactions />
-            <RowNotificactions />
-            <RowNotificactions />
-            <RowNotificactions />
-
-            <RowNotificactions />
-            
-
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
+            <RowNotificactions/>
 
           </div>
         </div>
-        <div class="modal-footer">
-          <button onClick={() => showModal(false)} type="button" class="btn btn-secondary btn-block " data-dismiss="modal">Clear All</button>
-        </div>
+        {/* <div className="modal-footer">
+          <button onClick={() => showModal(false)} type="button" className="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
+        </div> */}
       </div>
     </div>
-
-
   );
 };
+
 
 {
   /* <div id="verticalModal" tabindex="-1" role="dialog" aria-labelledby="verticalModalTitle">

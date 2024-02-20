@@ -12,16 +12,50 @@ import { io } from 'socket.io-client';
 
 export const Dashboard = () => {
 
-    const [myData, setMyData] = useState([]);
+    const [data, setData] = useState([]);
+
+    const [apartments, setApartments] = useState([])
+    const [guestIncomes, setGuestIncomes] = useState([])
+    const [fines, setFines] = useState([])
+    const [bookings, setBookings] = useState([])
+    const [guardShifts, setGuardShifts] = useState([])
+    const [notifications, setNotifications] = useState([])
+
+    const [users, setUsers] = useState([])
 
 
-    const socket = io('http://localhost:3000');
 
-    socket.on('active-users', (data) => {
-        setMyData(data.users)
+    useEffect(() => {
+        const socket = io('http://localhost:3000');
+
+        socket.on('dashboard-information', (data) => {
+
+            setApartments(data?.apartments)
+            setGuestIncomes(data?.guestIncomes)
+            setFines(data?.fines)
+            setBookings(data?.bookings)
+            // setGuardShifts(data.guardShifts)
+            // setNotifications(data.notifications)
+
+            setUsers(data?.users)
+            console.log(data);
+        });
+
+        socket.emit('dashboard-information', data)
+
+        return () => {
+            socket.disconnect();
+        };
+
+    }, []);
+
+    console.log(users)
+
+    users?.map((user) => {
+
+        console.log(user?.name)
+
     })
-
-
 
     return (
 
@@ -36,38 +70,43 @@ export const Dashboard = () => {
                     module='Ingresos activos'
                     icon='arrow-up-right'
                     to='/admin/guest_income'
-                    count={myData.length}
+                    count={guestIncomes.length}
                 />
                 <ContentInfoDashboard
                     module='Multas inpuestas'
                     icon='dollar-sign'
                     to='/admin/fines'
+                    count={fines.length}
 
                 />
                 <ContentInfoDashboard
                     module='Reservas pendientes'
                     icon='calendar'
                     to='/admin/booking'
+                    count={bookings.length}
 
                 />
                 <ContentInfoDashboard
                     module='Apartamentos desocupados'
                     to='/admin/apartments'
-
+                    count={apartments.length}
                 />
                 <ContentInfoDashboard
                     module='Turnos de hoy'
                     icon='shield'
                     to='/admin/guest_income'
+                // count={ guardShift.length}
 
 
                 />
                 <ContentInfoDashboard
                     module='Nuevas notificaciones'
                     icon='message-circle'
+                // count={ notifications.length }
+
                 />
 
-                <Acordions>
+                {/* <Acordions>
                     <DropdownInfo name={'Ultimas reservas'}>
                         <RowNotificactions />
                         <RowNotificactions />
@@ -99,76 +138,15 @@ export const Dashboard = () => {
 
                     </DropdownInfo>
 
-                </Acordions>
+                </Acordions> */}
 
 
 
 
-                {/* <div class="col-md-6 col-xl-3 mb-4">
-                    <div class="card shadow border-0">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-3 text-center">
-                                    <span class="circle circle-sm bg-primary">
-                                        <i class="fe fe-16 fe-shopping-cart text-white mb-0"></i>
-                                    </span>
-                                </div>
-                                <div class="col pr-0">
-                                    <p class="small text-muted mb-0">Orders</p>
-                                    <span class="h3 mb-0">1,869</span>
-                                    <span class="small text-success">+16.5%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3 mb-4">
-                    <div class="card shadow border-0">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-3 text-center">
-                                    <span class="circle circle-sm bg-primary">
-                                        <i class="fe fe-16 fe-filter text-white mb-0"></i>
-                                    </span>
-                                </div>
-                                <div class="col">
-                                    <p class="small text-muted mb-0">Conversion</p>
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col-auto">
-                                            <span class="h3 mr-2 mb-0"> 86.6% </span>
-                                        </div>
-                                        <div class="col-md-12 col-lg">
-                                            <div class="progress progress-sm mt-2" >
-                                                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3 mb-4">
-                    <div class="card shadow border-0">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-3 text-center">
-                                    <span class="circle circle-sm bg-primary">
-                                        <i class="fe fe-16 fe-activity text-white mb-0"></i>
-                                    </span>
-                                </div>
-                                <div class="col">
-                                    <p class="small text-muted mb-0">AVG Orders</p>
-                                    <span class="h3 mb-0">$80</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
 
-                {/* <h4 className='m-4'>Reservas</h4>
+                <h4 className='m-4 w-100'>Reservas</h4>
 
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <div class="card shadow eq-card timeline">
                         <div class="card-header">
                             <h3 class="h6 mb-0 text-secondary">Ultimas reservas</h3>
@@ -176,13 +154,7 @@ export const Dashboard = () => {
                         </div>
                         <div class="card-body" data-simplebar >
 
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions />
-                            <RowNotificactions /> */}
-
-                {/* <div class="pb-3 timeline-item item-primary">
+                            <div class="pb-3 timeline-item item-primary">
                                 <div class="pl-5">
                                     <div class="mb-1 small"><strong>@Brown Asher</strong><span class="text-muted mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
                                     <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
@@ -199,14 +171,14 @@ export const Dashboard = () => {
                                     <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
                                     </p>
                                 </div>
-                            </div> */}
-                {/* </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <h4 className='m-4'>Ultimos usuarios</h4>
+                {/* <h4 className='m-4 w-50'>Ultimos usuarios</h4> */}
 
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <div class="card shadow mb-12">
                         <div class="card-header">
                             <div class="row align-items-center">
@@ -220,14 +192,20 @@ export const Dashboard = () => {
                         </div>
                         <div class="card-body my-n2">
 
-                            <RowNotificactions icon='user' />
-                            <RowNotificactions icon='user' />
-                            <RowNotificactions icon='user' />
-                            <RowNotificactions icon='user' /> */}
+                            {
+                                users?.map((user) => (
+                                    <RowNotificactions
+                                        name={user?.name}
+                                        lastName={user?.lastName}
+                                        date={user?.createdAt}
+                                        icon='user'
+                                    />
+                                ))
+                            }
 
 
 
-                {/* <div class="row align-items-center my-2">
+                            {/* <div class="row align-items-center my-2">
                                 <div class="col">
                                     <strong>Paris</strong>
                                     <div class="my-0 text-muted small">France</div>
@@ -297,9 +275,9 @@ export const Dashboard = () => {
                                     </div>
                                 </div>
                             </div> */}
-                {/* </div>
+                        </div>
                     </div>
-                </div> */}
+                </div>
             </ContainerDashboard>
 
 

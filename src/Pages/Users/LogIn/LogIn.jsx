@@ -67,20 +67,20 @@ const LoginForm = ({ setShowLoginForm }) => {
                         if (role.includes('vigilante') || role.includes('seguridad') || role.includes('vigilantes')) {
                             // navigate('/admin/watchman/shifts');
                             navigate(`admin/watchman/details/${responseData.user}`);
-                            // window.location.reload();
+                            window.location.reload();
 
                         } else if (role.includes('administrador')) {
                             navigate('/admin/dashboard');
-                            // window.location.reload();
+                            window.location.reload();
 
                         } else if (role.includes('residente')) {
                             navigate(`/admin/resident/details/${responseData.user}`);
-                            // window.location.reload();
+                            window.location.reload();
 
 
                         } else {
                             navigate(`admin/users/details/${responseData.user}`);
-                            // window.location.reload();
+                            window.location.reload();
 
                         }
                     } else {
