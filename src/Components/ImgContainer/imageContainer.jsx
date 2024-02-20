@@ -11,7 +11,7 @@ const ImageContainer = ({ urls }) => {
           urls.map((url, index) => (
             <div key={index} className="mb-3 mr-1 d-flex justify-content-center">
               <div className="card" style={{ maxWidth: "300px" }}>
-                {url && url.endsWith('.jpg') ? (
+                {url && url.endsWith('.jpg') || url.endsWith('.png') |url.endsWith('.jpeg') ? (
                   <div className="d-flex justify-content-center" style={{ width: "200px", height: "100px" }}>
                     <img src={url} className="card-img-top" alt={`evidencia ${index}`} style={{ maxHeight: '100px' }} />
                   </div>

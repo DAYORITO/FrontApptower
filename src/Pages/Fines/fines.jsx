@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import useFetchUserPrivileges, { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
 import { createPortal } from 'react-dom';
 import { Uploader } from '../../Components/Uploader/Uploader';
-import { cardio } from 'ldrs';
+import { dotSpinner } from 'ldrs'
 import { ContainerTable } from '../../Components/ContainerTable/ContainerTable';
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from '../../Components/Buttons/Buttons';
 import { TablePerson } from '../../Components/Tables/Tables';
@@ -21,15 +21,17 @@ import Cookies from 'js-cookie';
 import { idToPermissionName, idToPrivilegesName } from '../../Hooks/permissionRols';
 import FileUploader from '../../Components/ImgContainer/FileSelector';
 import Inputs from '../../Components/Inputs/Inputs';
+import { Spinner } from '../../Components/Spinner/Spinner';
 
 
 
 function Fines() {
+    const [LoadingSpiner, setLoadingSpiner] = useState(true);
     //Se crea un estado para actualizar los datos al momento de cualquier accion
     const [fines, setFines] = useState({ fines: [] })
-    const [showModaload, setShowModaload] = useState(true);
+    const [showModaload, setShowModaload] = useState(false);
     // const [search, setSearch] = useState('');
-    cardio.register()
+    dotSpinner.register()
     const token = Cookies.get('token');
     const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
     const [showModal, setShowModal] = useState(false);
@@ -58,9 +60,9 @@ function Fines() {
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
         if (data?.fines?.length > 0) {
-            setShowModaload(false);
+            setLoadingSpiner(false);
         } else {
-        setTimeout(() => {setShowModaload(false)}, 10000);
+        setTimeout(() => {setLoadingSpiner(false)}, 10000);
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
 
         }
@@ -245,7 +247,7 @@ function Fines() {
                         <Th name={'Acciones'}></Th>
                     </Thead>
                     <Tbody>
-                        {filteredDatafines()?.map(fine => (
+                        {LoadingSpiner == true ? <Spinner/> : filteredDatafines()?.map(fine => (
                             <Row
                                 key={fine.idFines}
                                 A1={fine.fineType}
@@ -352,12 +354,11 @@ function Fines() {
                                 showModal={setShowModaload}
                             >
                                 <div className='d-flex justify-content-center'>
-                                    <l-cardio
-                                        size="50"
-                                        stroke="4"
-                                        speed="2"
-                                        color="black"
-                                    ></l-cardio>
+                                <l-dot-spinner
+                                size="50"
+                                speed="2"
+                                color="black"
+                                ></l-dot-spinner>
                                 </div>
 
 
