@@ -1,5 +1,40 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
+import { useState } from "react"
+
+// Use paginator
+
+const usePaginator = (data, itemsPerPage = 10) => {
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const filteredData = () => {
+    const startIndex = currentPage * itemsPerPage;
+    return data.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const previousPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  };
+
+  return {
+    totalPages,
+    currentPage,
+    nextPage,
+    previousPage,
+    filteredData,
+  };
+};
+
+export default usePaginator;
+
+
 
 
 // Filter apartment 
@@ -55,35 +90,7 @@ export const filterPerSelect = (search, myData, searcher) => {
 
 
 
-export const filterGuestIncomes = (search, guestIncomes) => {
 
-  let guestIncomesbyApartment = [];
-
-  if (!search) {
-    guestIncomesbyApartment = guestIncomes.data.guestIncome;
-  } else {
-    guestIncomesbyApartment = guestIncomes.data.guestIncome.filter((dato) =>
-      dato.asociatedVisitor.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  return guestIncomesbyApartment;
-};
-
-export const filterFines = (search, fines) => {
-
-  let fineByApartment = [];
-
-  if (!search) {
-    fineByApartment = fines.data.fines;
-  } else {
-    fineByApartment = fines.data.fines.filter((dato) =>
-      dato.fineType.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  return fineByApartment;
-};
 
 
 export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {
@@ -113,7 +120,7 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
 
 
 
-export const postRequest = async (event, endPoint, method = "POST", modal, data, url) => {
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
   try {
 
     event.preventDefault();
@@ -126,7 +133,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 
       Swal.fire({
         title: 'Éxito',
-        text: response,
+        text: message ? message : response,
         icon: 'success',
       }).then(() => {
 
@@ -149,7 +156,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 };
 
 
-export const putRequest = async (event, endpoint, successMessage, data, modal, put, get) => {
+export const putRequest = async (event, endpoint, successMessage, data, modal, put, get, message) => {
   try {
 
     event.preventDefault();
@@ -161,7 +168,7 @@ export const putRequest = async (event, endpoint, successMessage, data, modal, p
 
     Swal.fire({
       title: 'Éxito',
-      text: successMessage,
+      text: successMessage ? successMessage : message,
       icon: 'success',
     });
 

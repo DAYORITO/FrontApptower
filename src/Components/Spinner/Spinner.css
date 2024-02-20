@@ -1,9 +1,10 @@
 .container-spinner {
-  height: 50vh !important;
-  width: 100% !important;
+  height: 50vh; /* Utiliza el 100% de la altura de la ventana */
+  width: 100%; /* Utiliza el 100% del ancho del contenedor */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  position: relative; /* Establece la posición relativa para el contenedor */
 }
 
 .container-small-spinner {

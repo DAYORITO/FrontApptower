@@ -4,10 +4,18 @@ import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 
+export const connectSocket = async () => {
+
+    const socket = io('http://localhost:3000');
+
+}
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
+
 
 
 
@@ -25,6 +33,8 @@ export const AuthProvider = ({ children }) => {
                     throw new Error('Error al obtener el usuario');
                 }
                 return response.json();
+
+
             })
             .then(data => {
                 setIsLoggedIn(true);
@@ -44,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (usuario, password) => {
 
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/login', {
+            const response = await fetch('http://localhost:3000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,34 +70,45 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             document.cookie = `token=${data.token}; path=/`;
-            console.log('Token set in cookie:', data.token);
+
+            console.log(data)
 
             fetchUserData(data.token);
 
+            await connectSocket()
+
             return data.token;
+
         } catch (error) {
             console.error('Error de inicio de sesión:', error.message);
 
         }
     };
 
+
+
     useEffect(() => {
         const token = Cookies.get('token');
-        console.log('Token:', token);
 
         if (token) {
-            setIsLoading(true);
-            fetchUserData(token).finally(() => {
-                const isLoggedIn = Cookies.get('isLoggedIn') === 'true';
-                setIsLoggedIn(isLoggedIn);
-                setIsLoading(false);
-            });
+            setIsLoggedIn(true);
         } else {
             setIsLoggedIn(false);
-            setUser(null);
-            setIsLoading(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            setIsLoading(true);
+            fetchUserData(Cookies.get('token')).finally(() => {
+                setIsLoading(false);
+            });
+
+
+        } else {
+            setUser(null);
+        }
+    }, [isLoggedIn]);
 
     const logout = () => {
         Swal.fire({
@@ -127,3 +148,5 @@ export const useAuth = () => {
     }
     return context;
 };
+
+

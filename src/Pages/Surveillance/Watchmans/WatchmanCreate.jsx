@@ -46,7 +46,16 @@ export const WatchmanCreate = () => {
         }
     ];
 
+    const birthDate = new Date(dateOfbirth);
 
+
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+    if (currentDate.getMonth() < birthDate.getMonth() ||
+        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
 
     const { data: rolesData, error } = useFetchget('rols');
     const [roles, setRoles] = useState([]);
@@ -204,6 +213,15 @@ export const WatchmanCreate = () => {
             return;
         }
 
+        if (age < 18) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Debe de ser mayor de edad',
+                icon: 'error',
+            });
+            return;
+        }
+
         let userResponse;
         userResponse = await useFetchForFile('http://localhost:3000/api/users', {
             docType: documentType,
@@ -275,9 +293,10 @@ export const WatchmanCreate = () => {
 
                             /> <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
 
-                            <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-                            {/* <InputsSelect id={"select"} options={opciones} name={"Sexo"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
-                           */}
+                            <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
+                                inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
+
                         </FormColumn>
 
                         <FormColumn>

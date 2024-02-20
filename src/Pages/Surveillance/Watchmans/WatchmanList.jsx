@@ -48,6 +48,18 @@ export const Watchman = () => {
     }, [data]);
 
 
+    const birthDate = new Date(editedWatchman?.user?.birthday);
+
+
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+    if (currentDate.getMonth() < birthDate.getMonth() ||
+        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+
     //Consulta privilegios 
     const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
@@ -163,6 +175,15 @@ export const Watchman = () => {
                     Swal.fire({
                         title: 'Error',
                         text: 'Este correo se encuentra registrado',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                if (age < 18) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'El vigilante debe ser mayor de edad',
                         icon: 'error',
                     });
                     return;
@@ -420,6 +441,8 @@ export const Watchman = () => {
                                         setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, birthday: e.target.value } });
                                     }}
                                     validate={shouldValidate} required={true}
+                                    inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                    errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
                                 />
 
                                 <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedWatchman?.state || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, state: e.target.value })}></InputsSelect>

@@ -91,4 +91,10 @@
     /* Añade sombra si lo deseas */
 }
 
+.notifications-modal-body {
+    width: 42vh !important;
+    max-height: 80vh; /* Establece la altura máxima */
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
+  }
+
 .notifications-container #verticalModalTitle {}

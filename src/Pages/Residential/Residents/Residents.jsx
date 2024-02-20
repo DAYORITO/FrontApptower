@@ -7,9 +7,9 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
-import { useFetch } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -23,10 +23,13 @@ import FormColumn from '../../../Components/Forms/FormColumn'
 import { Thead } from '../../../Components/Thead/Thead'
 import { Th } from '../../../Components/Th/Th'
 import { format } from 'date-fns'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import Cookies from 'js-cookie'
+import { Paginator } from '../../../Components/Paginator/Paginator'
 
 
 export const Residents = () => {
-
+    const token = Cookies.get('token');
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/
@@ -34,6 +37,8 @@ export const Residents = () => {
     const { data: residents, get: getResidents, loading } = useFetch(url)
     const { data: apartments, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { del: delApartmentResidents } = useFetch(url)
+    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
 
 
 
@@ -291,9 +296,9 @@ export const Residents = () => {
         getResidents('residents')
     };
 
+    // Paginator
 
-
-
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: residentsInto } = usePaginator(residentList, 6);
 
 
     return (
@@ -302,7 +307,12 @@ export const Residents = () => {
                 title='Residentes'
                 dropdown={<DropdownExcel />}
                 search={<SearchButton value={search} onChange={searcher} />}
-                buttonToGo={<ButtonGoTo value='Nuevo residente' href={'/admin/residents/create'} />}
+                buttonToGo={
+                    allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear')
+                        ? <ButtonGoTo value='Nuevo residente' href={'/admin/residents/create'} />
+                        : null}
+                showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
             >
                 <TablePerson>
 
@@ -317,11 +327,11 @@ export const Residents = () => {
                     <Tbody>
 
 
-                        {loading ? <Spinner /> : residentList.length == 0 ?
+                        {loading ? <Spinner /> : residentList.length == 0 || currentPage >= totalPages ?
 
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-                            residentList?.map(resident => (
+                            residentsInto()?.map(resident => (
 
                                 <Row
                                     A1={resident.user.name}
@@ -356,7 +366,10 @@ export const Residents = () => {
                                     }
 
                                     {/* <Actions accion='Modificar informacion personal' icon='edit' onClick={() => openModalEdit(resident)}></Actions> */}
-                                    <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions>
+                                    {allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Editar') ? (
+                                        <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions>
+                                    ) : null}
+
                                     {
                                         resident.user.pdf ? <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions> : null
                                     }

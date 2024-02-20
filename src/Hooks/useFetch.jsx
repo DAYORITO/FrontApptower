@@ -356,7 +356,7 @@ export const useFetchUserInformation = (token) => {
 };
 
 
-// Fetch User Privilege and Permission
+// Fetch User permission
 
 export const useFetchUserPermissions = (token, idToPermissionName) => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);

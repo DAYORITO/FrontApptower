@@ -91,6 +91,9 @@ export const ResidentDetails = () => {
     const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = user?.user?.document === docNumber;
+
+    console.log(EqualUser)
+
     useEffect(() => {
 
         // resident information
@@ -280,12 +283,11 @@ export const ResidentDetails = () => {
 
     const openModalEditImg = () => {
 
-        console.log('Hablalo puto')
         setIdUser(idUser)
         setModalEditImg(true)
 
     }
-    
+
     const updateUserImg = async (event) => {
 
         console.log(idUser)
@@ -301,6 +303,7 @@ export const ResidentDetails = () => {
         await postRequest(event, 'users/img', 'PUT', {}, data, url);
         getResident(`residents/${id}`)
         setModalEditImg(false)
+        window.location.reload()
 
     }
 

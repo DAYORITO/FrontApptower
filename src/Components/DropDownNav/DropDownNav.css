@@ -54,4 +54,6 @@
     display: none;
 }
 
-
+.myNav:not(.expanded) .nav-item {
+    justify-content: flex-start;
+}

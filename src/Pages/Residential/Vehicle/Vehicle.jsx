@@ -1,5 +1,5 @@
 
-import { useFetchget } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -14,7 +14,6 @@ import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissio
 import { useEffect, useState } from 'react'
 
 export const Vehicle = () => {
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
   const token = Cookies.get('token');
   const { data, load, error } = useFetchget('vehicle')
   console.log(data)
@@ -35,7 +34,7 @@ export const Vehicle = () => {
       const response = await fetch('https://apptowerbackend.onrender.com/api/privilegefromrole', {
         headers: {
           Authorization: `Bearer ${token}`
-        }, 
+        },
         credentials: 'include'
       });
       if (!response.ok) {
@@ -63,6 +62,7 @@ export const Vehicle = () => {
     }
   };
 
+  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
 
   const totalPages = data.vehicle ? Math.ceil(data.vehicle.length / 8) : 0;
@@ -78,7 +78,7 @@ export const Vehicle = () => {
       return [];
     }
   };
-
+  console.log(filteredDatavehicle());
   const nextPage = () => {
     setCurrentPage(currentPage + 8)
   }
@@ -97,10 +97,13 @@ export const Vehicle = () => {
         title='Vehiculos'
         dropdown={<DropdownExcel />}
         search={<SearchButton />}
+        // buttonToGo={
+        //   allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
+        //     ? <ButtonGoTo value='Crear Vehiculo' href='create' />
+        //     : null
+        // }
         buttonToGo={
-          allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
-            ? <ButtonGoTo value='Crear Vehiculo' href='create' />
-            : null
+          <ButtonGoTo value="Crear Vehiculo" href="/admin/vehicle/create" />
         }
         showPaginator={
           <nav aria-label="Table Paging" className="mb- text-muted my-4">
@@ -125,6 +128,7 @@ export const Vehicle = () => {
 
         <TablePerson>
           <Thead>
+            <Th name={''}></Th>
             <Th name={'placa'}></Th>
             <Th name={'detalle'}></Th>
             <Th name={'apartamento'}></Th>
@@ -138,19 +142,21 @@ export const Vehicle = () => {
             {
               error && <h1 className='d-flex'>Error: {error}</h1>
             }
+
             {
+
               filteredDatavehicle().map(vehicle => (
                 <Row
                   icon='truck'
-                  name={vehicle.licenseplate}
-                  lastName={''}
-                  status={vehicle.state}
-                  op2={vehicle.description}
-                  op3={vehicle.Apartment.apartmentName}
+                  A7={vehicle.licenseplate}
+                  description={vehicle.description}
+                  A17={vehicle.Apartment.apartmentName}
+                  
                 >
-                  {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') && (
+
+                  {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (
                     <Actions accion='Editar' />
-                  )}
+                  ) : null}
                 </Row>
 
               ))
