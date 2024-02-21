@@ -316,7 +316,6 @@ export const useFetchput = (endpoint, data) => {
 
 //Fetch Information User
 
-
 export const useFetchUserInformation = (token) => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -329,7 +328,6 @@ export const useFetchUserInformation = (token) => {
                     Authorization: `Bearer ${token}`
                 },
                 credentials: 'include'
-
             });
 
             if (!response.ok) {
@@ -352,9 +350,8 @@ export const useFetchUserInformation = (token) => {
         }
     }, [token]);
 
-    return { data: userData, get: fetchUserInformation, loading };
+    return { data: userData, fetchUserInformation, loading };
 };
-
 
 // Fetch User permission
 

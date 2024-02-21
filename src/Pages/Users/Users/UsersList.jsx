@@ -27,7 +27,39 @@ export const Users = () => {
     const [showModaload, setShowModaload] = useState(true);
 
     const token = Cookies.get('token');
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+
+    //Consulta Permisos
+
+    const [allowedPermissions, setAllowedPermissions] = useState({});
+
+    useEffect(() => {
+        const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
+
+        if (permisosAndPrivileges) {
+            const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+
+            if (privileges) {
+                const allowedPermissions = {};
+
+                privileges.forEach(privilege => {
+                    const permissionName = idToPermissionName[privilege.idpermission];
+                    const privilegeName = idToPrivilegesName[privilege.idprivilege];
+
+                    if (!allowedPermissions[permissionName]) {
+                        allowedPermissions[permissionName] = [];
+                    }
+                    allowedPermissions[permissionName].push(privilegeName);
+                });
+                setAllowedPermissions(allowedPermissions);
+            } else {
+                console.log('No privileges found');
+            }
+        } else {
+            console.log('No permisosAndPrivileges found');
+        }
+    }, []);
+
     const { data: { rols: dataRols }, load2, error2 } = useFetchget('rols')
     const { data, load, error } = useFetchget('users')
 

@@ -35,7 +35,7 @@ import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
-import { AuthProvider } from "./Context/AuthContext";
+
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { NotFound } from "./Pages/PagesAdicional/NotFound";
 import { Towers } from "./Pages/Spaces/Towers/Towers";
@@ -63,8 +63,10 @@ import { LoadingPage } from "./Pages/PagesAdicional/Loading";
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
-import useFetchUserPrivileges, { useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
+import  { useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
 // import { UserDetail } from "./Pages/Users/Users/userDetails";
+
+import { AuthProvider } from "./Context/AuthContext";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -72,11 +74,11 @@ const socket = io('https://apptowerbackend.onrender.com/');
 const App = () => {
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
+    const [allowedPermissions, setAllowedPermissions] = useState({});
+    console.log(allowedPermissions, 'allowedPermissions desde app')
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
-
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
     const [nameRole, setNameRole] = useState('');
     const { data, load, error } = useFetchget('rols')
@@ -88,9 +90,36 @@ const App = () => {
         }
     }, [data, userData]);
 
-    if (loadingUser || loadingPermissions || load) {
-        return <LoadingPage />
-    }
+
+    useEffect(() => {
+        const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
+
+        if (permisosAndPrivileges) {
+            const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+
+            if (privileges) {
+                const allowedPermissions = {};
+
+                privileges.forEach(privilege => {
+                    const permissionName = idToPermissionName[privilege.idpermission];
+                    const privilegeName = idToPrivilegesName[privilege.idprivilege];
+
+                    if (!allowedPermissions[permissionName]) {
+                        allowedPermissions[permissionName] = [];
+                    }
+
+                    allowedPermissions[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowedPermissions);
+
+            } else {
+                console.log('No privileges found');
+            }
+        } else {
+            console.log('No permisosAndPrivileges found');
+        }
+    }, []);
 
 
 
