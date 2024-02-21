@@ -34,7 +34,8 @@ export const Row = ({
     A15,
     A16,
     A17,
-
+    A18,
+    A19,
 
     A1A2 = A1 + " " + A2
 
@@ -105,6 +106,14 @@ export const Row = ({
                     <em class="badge badge-white text-muted">{A9}</em>
                     <br />
                     <span className="badge badge-white text-secondary">{A10}</span><em class="badge badge-white text-muted">{A11}</em>
+                </td> : null}
+
+            {A18 != null ?
+                <td class="text-secondary">
+                    <span className="badge badge-white text-secondary"></span>
+                    <em class="badge badge-white text-muted">{A18}</em>
+                    <br />
+                    <span className="badge badge-white text-secondary">{A19}</span><em class="badge badge-white text-muted"></em>
                 </td> : null}
 
             {A12 != null ?
