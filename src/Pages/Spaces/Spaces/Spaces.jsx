@@ -4,7 +4,7 @@ import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
-import useFetchUserPrivileges, { useFetch, useFetchget } from '../../../Hooks/useFetch';
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch';
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
 import usePaginator, { filter, postRequest } from "../../../Helpers/Helpers";
 import { Spinner } from "../../../Components/Spinner/Spinner";
@@ -26,7 +26,10 @@ export const Spaces = () => {
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
 
   useEffect(() => {

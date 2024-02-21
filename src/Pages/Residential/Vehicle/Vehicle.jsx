@@ -1,5 +1,5 @@
 
-import useFetchUserPrivileges, { useFetchget } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -62,7 +62,9 @@ export const Vehicle = () => {
     }
   };
 
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
 
   const totalPages = data.vehicle ? Math.ceil(data.vehicle.length / 8) : 0;
@@ -151,7 +153,7 @@ export const Vehicle = () => {
                   A7={vehicle.licenseplate}
                   description={vehicle.description}
                   A17={vehicle.Apartment.apartmentName}
-                  
+
                 >
 
                   {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (
