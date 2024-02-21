@@ -11,7 +11,7 @@ import { Th } from "../../../Components/Th/Th";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { Row } from "../../../Components/Rows/Row";
 import { Actions } from "../../../Components/Actions/Actions";
-import useFetchUserPrivileges, { useFetchForFile, useFetchget, useFetchpost, useFetch } from "../../../Hooks/useFetch";
+import { useFetchForFile, useFetchget, useFetchpost, useFetch, useAllowedPermissionsAndPrivileges } from "../../../Hooks/useFetch";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -98,7 +98,10 @@ function Visitors() {
   const { data: dataResidentApartment, loading: loadResidentApartment, get: getResidentApartment } = useFetch(url)
   const { data: dataParkingSpaces, loading: loadParkingSpaces, get: getParkingSpaces } = useFetch(url)
   const { data: dataTowers, loading: loadTowers, get: getTowers } = useFetch(url)
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
   // const { data: dataApartment} = useFetchget('apartments')
   // const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')

@@ -7,7 +7,7 @@ import { ContainerTable } from "../../../Components/ContainerTable/ContainerTabl
 import { TablePerson } from "../../../Components/Tables/Tables"
 import { useEffect, useState } from "react"
 
-import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 
 
 import usePaginator, { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
@@ -98,7 +98,11 @@ export const EnterpriceSecurity = () => {
     // Get Data
 
     const { data: enterprice, get: getEnterprice, loading } = useFetch(url)
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga

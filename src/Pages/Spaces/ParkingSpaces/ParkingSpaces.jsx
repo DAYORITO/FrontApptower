@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useFetchUserPrivileges, { useFetch, useFetchget } from "../../../Hooks/useFetch";
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from "../../../Hooks/useFetch";
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
@@ -34,7 +34,11 @@ export const ParkingSpaces = () => {
 
   const { data: parkingSpaces, get: getParkingSpace, loading } = useFetch(url)
   const { data: apartments, get: getApartments } = useFetch(url)
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
 
 

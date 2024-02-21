@@ -354,104 +354,36 @@ export const useFetchUserInformation = (token) => {
     return { data: userData, fetchUserInformation, loading };
 };
 
-// Fetch User permission
 
-export const useFetchUserPermissions = (token, idToPermissionName) => {
+
+// Fetch User Permissions 
+
+export const useAllowedPermissions = (idToPermissionName) => {
     const [allowedPermissions, setAllowedPermissions] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const fetchUserPermissions = async () => {
-        try {
-            setLoading(true);
-
-            const response = await fetch('https://apptowerbackend.onrender.com/api/permissionfromrole', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch user permissions');
-            }
-
-            const data = await response.json();
-            if (data && data.permissions && Array.isArray(data.permissions)) {
-                const allowed = data.permissions.map(permission => idToPermissionName[permission]);
-                setAllowedPermissions(allowed);
-            }
-        } catch (error) {
-            console.error('Error fetching user permissions:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        if (token) {
-            fetchUserPermissions();
-        }
-    }, [token, idToPermissionName]);
+        const PermissionsUser = Cookies.get('permisosAndPrivileges');
 
-    return { data: allowedPermissions, get: fetchUserPermissions, loading };
+        if (PermissionsUser) {
+            const privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
+
+            if (privileges) {
+                const permissions = privileges.map(privilege => privilege.idpermission);
+
+                const uniquePermissions = [...new Set(permissions)];
+
+                const allowedPermissions = uniquePermissions.map(id => idToPermissionName[id]);
+
+                setAllowedPermissions(allowedPermissions);
+            }
+        }
+    }, []);
+
+    return allowedPermissions;
 };
 
 
-const useFetchUserPrivileges = (initialToken, idToPermissionName, idToPrivilegesName) => {
-    const [allowedPermissions, setAllowedPermissions] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [token, setToken] = useState(initialToken);
-
-    useEffect(() => {
-        const fetchUserPrivilegeAndPermission = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/api/privilegefromrole', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    credentials: 'include'
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user privileges');
-                }
-
-                const data = await response.json();
-
-                if (data && data.privileges && Array.isArray(data.privileges)) {
-                    const allowed = {};
-                    data.privileges.forEach(({ idpermission, idprivilege }) => {
-                        const permissionName = idToPermissionName[idpermission];
-                        const privilegeName = idToPrivilegesName[idprivilege];
-
-                        if (!allowed[permissionName]) {
-                            allowed[permissionName] = [];
-                        }
-                        allowed[permissionName].push(privilegeName);
-                    });
-
-                    setAllowedPermissions(allowed);
-                }
-            } catch (error) {
-                console.error('Error fetching user permissions:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (token) {
-            fetchUserPrivilegeAndPermission();
-        }
-    }, [token, idToPermissionName, idToPrivilegesName]);
-
-    const fetchPermissions = (newToken) => {
-        setToken(newToken);
-    };
-
-    return { data: allowedPermissions, get: fetchPermissions, loading };
-};
-
-export default useFetchUserPrivileges;
-
-
+// Fetch User Privileges
 
 export const useAllowedPermissionsAndPrivileges = (idToPermissionName, idToPrivilegesName) => {
     const [allowedPermissions, setAllowedPermissions] = useState({});
@@ -482,7 +414,7 @@ export const useAllowedPermissionsAndPrivileges = (idToPermissionName, idToPrivi
         } else {
             console.log('No permisosAndPrivileges found');
         }
-    }, [idToPermissionName, idToPrivilegesName]);
+    }, []);
 
     return allowedPermissions;
 };

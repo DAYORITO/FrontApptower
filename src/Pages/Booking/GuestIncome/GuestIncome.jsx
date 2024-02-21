@@ -7,7 +7,7 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useAllowedPermissionsAndPrivileges, useFetchUserPermissions, useFetchget } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetchget } from '../../../Hooks/useFetch'
 import { useFetchForFile } from '../../../Hooks/useFetch'
 
 import Swal from 'sweetalert2';
