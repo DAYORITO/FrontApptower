@@ -7,7 +7,7 @@ import { ContainerTable } from "../../../Components/ContainerTable/ContainerTabl
 import { TablePerson } from "../../../Components/Tables/Tables"
 import { useEffect, useState } from "react"
 
-import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 
 
 import usePaginator, { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
@@ -77,7 +77,10 @@ export const Towers = () => {
     // Get Data
 
     const { data: towers, get: getTowers, loading } = useFetch(url)
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
 
     useEffect(() => {

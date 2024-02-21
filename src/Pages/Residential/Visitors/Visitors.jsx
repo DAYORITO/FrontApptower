@@ -11,7 +11,7 @@ import { Th } from "../../../Components/Th/Th";
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { Row } from "../../../Components/Rows/Row";
 import { Actions } from "../../../Components/Actions/Actions";
-import useFetchUserPrivileges, { useFetchForFile, useFetchget, useFetchpost, useFetch } from "../../../Hooks/useFetch";
+import { useFetchForFile, useFetchget, useFetchpost, useFetch, useAllowedPermissionsAndPrivileges } from "../../../Hooks/useFetch";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -32,11 +32,11 @@ function Visitors() {
   const token = Cookies.get('token');
   const url = "https://apptowerbackend.onrender.com/api/";
   // const token = Cookies.get('token');
-  const [allowedPermissions, setAllowedPermissions] = useState([]);
 
-  const filterOptions = [{label: 'Nombre', value: 'name'}, {label: 'Documento', value: 'documentNumber'}, {label: 'Acceso', value: 'access'}];
+
+  const filterOptions = [{ label: 'Nombre', value: 'name' }, { label: 'Documento', value: 'documentNumber' }, { label: 'Acceso', value: 'access' }];
   const [selectedFilterParam, setSelectedFilterParam] = useState('name');
-  const accessOptions = [{label: 'Permitido', value: true}, {label: 'Denegado', value: false}];
+  const accessOptions = [{ label: 'Permitido', value: true }, { label: 'Denegado', value: false }];
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [visitorsData, setVisitorsData] = useState({ visitors: [] });
   const [visitorsDataOriginal, setVisitorDataOriginal] = useState({ visitors: [] });
@@ -45,7 +45,7 @@ function Visitors() {
   dotSpinner.register()
 
   // const { data, load, error } = useFetchget('visitors')
-  const {data: fetchVisitors, loading: loadVisitors, get: getVisitors} = useFetch(url)
+  const { data: fetchVisitors, loading: loadVisitors, get: getVisitors } = useFetch(url)
 
   //se usa el effect para actualizar los datos del get
 
@@ -56,15 +56,15 @@ function Visitors() {
     getVisitors('visitors')
   }, []);
   useEffect(() => {
-    if(fetchVisitors?.data?.visitors){
+    if (fetchVisitors?.data?.visitors) {
       setVisitorsData(fetchVisitors.data.visitors);
       setVisitorDataOriginal(fetchVisitors.data.visitors);
       console.log('Encontre visitantes', fetchVisitors?.data)
     }
-    else{
+    else {
       console.log('No hay datos', fetchVisitors?.data)
     }
-  },[fetchVisitors.data])
+  }, [fetchVisitors.data])
   //Se crea un estado para actualizar los datos al momento de cualquier accion
   const [showModal, setShowmodal] = useState(false);
   const [TowerData, setTowerData] = useState([]);
@@ -87,23 +87,28 @@ function Visitors() {
   //Se crean los estados para el modal de visitantes
   const [documentNumber, setDocumentNumber] = useState("");
   const [name, setName] = useState("");
-  
+
   const opciones = [
     { value: "si", label: "Si" },
     { value: "no", label: "No" },
   ];
 
   //Peticiones a la api
-  const { data: dataApartment, loading: loadApartments, get: getApartments} = useFetch(url)
-  const { data: dataResidentApartment, loading: loadResidentApartment, get: getResidentApartment} = useFetch(url)
-  const { data: dataParkingSpaces, loading: loadParkingSpaces, get: getParkingSpaces} = useFetch(url)
-  const { data: dataTowers, loading: loadTowers, get: getTowers} = useFetch(url)
+  const { data: dataApartment, loading: loadApartments, get: getApartments } = useFetch(url)
+  const { data: dataResidentApartment, loading: loadResidentApartment, get: getResidentApartment } = useFetch(url)
+  const { data: dataParkingSpaces, loading: loadParkingSpaces, get: getParkingSpaces } = useFetch(url)
+  const { data: dataTowers, loading: loadTowers, get: getTowers } = useFetch(url)
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
   // const { data: dataApartment} = useFetchget('apartments')
   // const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
   // const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   // const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
 
-  useEffect(()=>{
+  useEffect(() => {
     // if(dataApartment?.apartments?.length >0 && dataResidentApartment?.apartmentResidents?.length > 0  && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
     //   setVisitorsData(sortByCreatedAtDescending(data.visitors));
     //   setVisitorDataOriginal(sortByCreatedAtDescending(data.visitors));
@@ -113,18 +118,18 @@ function Visitors() {
     getResidentApartment('aparmentResidents')
     getParkingSpaces('parkingSpaces')
     getTowers('towers')
-  },[])
+  }, [])
 
   useEffect(() => {
-    if(loadApartments|| loadResidentApartment || loadParkingSpaces || loadTowers){
+    if (loadApartments || loadResidentApartment || loadParkingSpaces || loadTowers) {
       setLoadingSpine(true);
       console.log(dataApartment, 'dataApartment')
     }
-    else{
+    else {
       console.log(dataApartment, 'dataApartment')
       setLoadingSpine(false);
     }
-  },[loadApartments, loadResidentApartment, loadParkingSpaces, loadTowers])
+  }, [loadApartments, loadResidentApartment, loadParkingSpaces, loadTowers])
 
   const handleChange = (e) => {
     if (e.target.value === "si") {
@@ -136,14 +141,14 @@ function Visitors() {
   function sortByCreatedAtDescending(data) {
     // Copia el array para no modificar el original
     const sortedData = [...data];
-  
+
     // Ordena el array por fecha de creación de forma descendente
     sortedData.sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
       return dateB - dateA;
     });
-  
+
     return sortedData;
   }
 
@@ -155,7 +160,7 @@ function Visitors() {
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
     };
   });
-  console.log("Estas son las towers",towers)
+  console.log("Estas son las towers", towers)
 
   const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
@@ -201,14 +206,15 @@ function Visitors() {
   };
 
   useEffect(() => {
-    if (dataApartment.data.apartments){
+    if (dataApartment.data.apartments) {
       console.log(dataApartment.data.apartments, 'dataApartment1')
       setTowerData(organizeApartmentsByTower(dataApartment))
-      console.log(TowerData, 'towerData')}
-      else{
-        console.log('No hay datos de apartamentos2', dataApartment.data.apartments)
-      }
-    }, [dataApartment])
+      console.log(TowerData, 'towerData')
+    }
+    else {
+      console.log('No hay datos de apartamentos2', dataApartment.data.apartments)
+    }
+  }, [dataApartment])
 
 
   useEffect(() => {
@@ -344,11 +350,11 @@ function Visitors() {
           throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
         }
 
-            // Desactivar el espacio de estacionamiento
-            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
-                "idParkingSpace": parkingGuestIncome,
-                "status": 'Inactive'
-            }, 'PUT');
+        // Desactivar el espacio de estacionamiento
+        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+          "idParkingSpace": parkingGuestIncome,
+          "status": 'Inactive'
+        }, 'PUT');
 
         if (parkingError) {
           throw new Error('Error al desactivar el espacio de estacionamiento');
@@ -392,10 +398,10 @@ function Visitors() {
   const [selectedFilterValue, setSelectedFilterValue] = useState('true');
 
   const searcher = (e) => {
-    console.log("Searcher value",e.target.value);
+    console.log("Searcher value", e.target.value);
     setSelectedFilterValue(e.target.value);
     const filtered = visitorsDataOriginal.filter((visitor) => {
-      if (selectedFilterParam ==='access') {
+      if (selectedFilterParam === 'access') {
         console.log("Estoy en el access")
         console.log("Visitor Access", visitor.access);
         return visitor.access.toString() === e.target.value;
@@ -411,7 +417,7 @@ function Visitors() {
     setVisitorsData(filtered);
   }
 
-  function handleChangeFilter (e){
+  function handleChangeFilter(e) {
     searcher(e);
   }
 
@@ -421,14 +427,14 @@ function Visitors() {
       <ContainerTable
         title="Visitantes"
         dropdown={<DropdownExcel />}
-        search2={<SearchSelect options={filterOptions} onChange={(e)=>{
+        search2={<SearchSelect options={filterOptions} onChange={(e) => {
           setSelectedFilterParam(e.target.value);
           console.log(selectedFilterParam);
           setSelectedFilterValue('');
           setSelectedFilterValue('');
           setVisitorsData(visitorsDataOriginal);
         }}></SearchSelect>}
-        search={selectedFilterParam == "access" ? <SearchSelect options={accessOptions} label="Buscar visitante" onChange={handleChangeFilter} />:<SearchButton value={selectedFilterValue} label="Buscar visitante" onChange={handleChangeFilter} />}
+        search={selectedFilterParam == "access" ? <SearchSelect options={accessOptions} label="Buscar visitante" onChange={handleChangeFilter} /> : <SearchButton value={selectedFilterValue} label="Buscar visitante" onChange={handleChangeFilter} />}
         buttonToGo={
           allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear')
             ? <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
@@ -462,7 +468,7 @@ function Visitors() {
             <Th name={"Acciones"}></Th>
           </Thead>
           <Tbody>
-            {LoadingSpine == true ? <Spinner/> : filteredDatavisitor().map(visitor => (
+            {LoadingSpine == true ? <Spinner /> : filteredDatavisitor().map(visitor => (
               <Row
                 A3={visitor.documentType}
                 A4={visitor.documentNumber}
@@ -508,11 +514,11 @@ function Visitors() {
             <ModalContainerload ShowModal={setShowModaload}>
               <Modaload showModal={setShowModaload}>
                 <div className="d-flex justify-content-center">
-                <l-dot-spinner
-                size="50"
-                speed="2"
-                color="black"
-                ></l-dot-spinner>
+                  <l-dot-spinner
+                    size="50"
+                    speed="2"
+                    color="black"
+                  ></l-dot-spinner>
                 </div>
                 <div className="d-flex justify-content-center">
                   <p> </p>

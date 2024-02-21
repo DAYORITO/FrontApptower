@@ -13,8 +13,7 @@ import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
 import { idToPermissionName } from '../../../Hooks/permissionRols'
-
-import { useFetch, useFetchUserInformation, useFetchUserPermissions, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
+import { useAllowedPermissions, useFetch, useFetchUserInformation, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -73,8 +72,11 @@ export const UsersDetails = () => {
     const { data: users, get: getuser, loading: loadingusers } = useFetch(url)
     const { data: userInfo, get: getUserInfo, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = userInfo?.user?.document === docNumber;
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPermissions(token, idToPermissionName);
 
+    //Consulta Permisos
+
+    const allowedPermissions = useAllowedPermissions
+        (idToPermissionName);
     console.log(userInfo, 'userInfo')
 
     useEffect(() => {

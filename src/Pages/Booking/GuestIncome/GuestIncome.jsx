@@ -7,7 +7,7 @@ import { Th } from '../../../Components/Th/Th'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import useFetchUserPrivileges, { useFetchUserPermissions, useFetchget } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetchget } from '../../../Hooks/useFetch'
 import { useFetchForFile } from '../../../Hooks/useFetch'
 
 import Swal from 'sweetalert2';
@@ -39,7 +39,14 @@ function GuestIncome() {
     const [showModaload, setShowModaload] = useState(false);
     const { data, load, error } = useFetchget('guestIncome')
     const { data: data2, load: load2, error: error2 } = useFetchget('guestincomeparking')
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+
+
+
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
 
     console.log(data2)
 
@@ -63,10 +70,10 @@ function GuestIncome() {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
         if (data?.guestIncome?.length > 0 && data2?.guestincomeparking?.length > 0) {
             setLoadingSpiner(false);
-            
+
         } else {
             setTimeout(() => {
-            setLoadingSpiner(false);
+                setLoadingSpiner(false);
             }, 10000)
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
 
@@ -83,7 +90,7 @@ function GuestIncome() {
         if (verify !== null && verify !== undefined) {
             const parkingUpdateData = { "idParkingSpace": verify.idParkingSpace, "status": 'Active' };
             const parkingUpdateUrl = 'https://apptowerbackend.onrender.com/api/parkingSpaces';
-            
+
             try {
                 const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
                 console.log(parkingResponse);
@@ -92,7 +99,7 @@ function GuestIncome() {
                 // Manejar el error si es necesario
             }
         }
-    
+
         const guestIncomeUpdateUrl = 'https://apptowerbackend.onrender.com/api/guestIncome';
         try {
             const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
@@ -205,7 +212,7 @@ function GuestIncome() {
                             <Actions accion='Registrar salida'></Actions>
                             <Actions accion='Detalles del Ingreso'></Actions>
                         </Row> */}
-                        {LoadingSpiner == true ? <Spinner/> :filteredDataguestIncome().map(Income => (
+                        {LoadingSpiner == true ? <Spinner /> : filteredDataguestIncome().map(Income => (
                             <Row
                                 A3="Apto visitado"
                                 A4={Income.asociatedApartment.apartmentName}
@@ -237,11 +244,11 @@ function GuestIncome() {
                                 showModal={setShowModaload}
                             >
                                 <div className='d-flex justify-content-center'>
-                                <l-dot-spinner
-                                size="50"
-                                speed="2"
-                                color="black"
-                                ></l-dot-spinner>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
                                 </div>
 
 

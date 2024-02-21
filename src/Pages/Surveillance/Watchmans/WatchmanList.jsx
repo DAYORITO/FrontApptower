@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import useFetchUserPrivileges, { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
@@ -60,8 +60,9 @@ export const Watchman = () => {
     }
 
 
-    //Consulta privilegios 
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
     const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
 

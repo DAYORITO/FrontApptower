@@ -1,4 +1,4 @@
-import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Actions } from "../../../Components/Actions/Actions"
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons"
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
@@ -34,7 +34,11 @@ export const Apartments = () => {
 
   const { data, get: getApartments, put: putApartment, loading } = useFetch(url)
   const { data: towers, get: getTowers } = useFetch(url)
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
 
   useEffect(() => {
 
@@ -171,7 +175,7 @@ export const Apartments = () => {
         buttonToGo={
           allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
             ? <ButtonGoTo value='Agregar apartamentos' href={`/admin/apartments/create/${tower}`}  ></ButtonGoTo>
-            : null }
+            : null}
         showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
       >
 

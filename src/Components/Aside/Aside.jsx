@@ -10,19 +10,40 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
-import { useFetch, useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
+import { useAllowedPermissions, useFetch, useFetchUserInformation, useFetchget } from '../../Hooks/useFetch';
 import { Spinner } from '../Spinner/Spinner';
 import { io } from 'socket.io-client';
+import { id } from 'date-fns/locale';
 
 export const Aside = () => {
 
     const { user, login, logout } = useAuth();
+
     const token = Cookies.get('token');
+
+    //Consulta Permisos
+
+    const allowedPermissions = useAllowedPermissions(idToPermissionName);
+
+    // useEffect(() => {
+    //     const encodedUser = Cookies.get('user');
+    //     const decodedUser = decodeURIComponent(encodedUser);
+    //     const userHola = JSON.parse(decodedUser);
+
+    //     const iduser = userHola.iduser;
+    //     const name = userHola.name;
+
+    //     console.log(iduser, name, 'iduser, name');
+    // }, []);
+
+
 
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
     const [idResidents, setIdResidents] = useState('');
     const [idApartment, setIdapartaments] = useState('');
+
+
 
     const [notificationsModal, setNotificationsModal] = useState(false)
 
@@ -32,11 +53,8 @@ export const Aside = () => {
     }
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
-    
+
     const [profile, setProfile] = useState(userData)
-
-
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPermissions(token, idToPermissionName);
 
     const [nameRole, setNameRole] = useState('');
     const { data, load, error } = useFetchget('rols')
@@ -49,10 +67,6 @@ export const Aside = () => {
         }
     }, [data, userData]);
 
-    useEffect(() => {
-
-        fetchPermissions();
-    }, [allowedPermissions]);
 
 
     const url = "https://apptowerbackend.onrender.com/api/"
@@ -62,51 +76,13 @@ export const Aside = () => {
 
 
     useEffect(() => {
-
-        getResidentByDocument(`residents/document/${userDocument}`)
-        getApartmentResidents(`aparmentResidents/resident/${idResidents}`)
-
-
-    }, [])
-
-    useEffect(() => {
-
-        setIdResidents(resident.data.residente && resident.residente.idResident);
-        setIdapartaments(apartmentResidents.data.apartmentResidents && apartmentResidents.apartmentResidents.idApartment)
-
-    }, [resident, apartmentResidents])
-
-
-
-
-    // useEffect(() => {
-
-    //     fetch(`https://apptowerbackend.onrender.com/api/residents/document/${userDocument}`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.residente) {
-    //                 setIdResidents(data.residente.idResident);
-
-    //             }
-    //         })
-    //         .catch(error => console.error('Error:', error));
-
-
-    //     fetch(`https://apptowerbackend.onrender.com/api/aparmentResidents/resident/${idResidents}`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.apartmentResidents) {
-    //                 setIdapartaments(data.apartmentResidents.idApartment)
-
-
-    //             }
-    //         })
-    //         .catch(error => console.error('Error:', error));
-
-
-    // }, [])
-
-
+        if (resident && resident.data && resident.data.residente) {
+            setIdResidents(resident.data.residente.idResident);
+        }
+        if (apartmentResidents && apartmentResidents.data && apartmentResidents.data.apartmentResidents) {
+            setIdapartaments(apartmentResidents.data.apartmentResidents.idApartment);
+        }
+    }, [resident, apartmentResidents]);
 
 
     const rutadetailsapartment = `apartments/details/${idApartment}`
@@ -117,28 +93,6 @@ export const Aside = () => {
         setIsCloset(!isCloset);
     };
 
-    
-    
-    // useEffect(() => {
-
-    //     const socket = io('http://localhost:3000');
-
-    
-    //     socket.emit('user-logied', userData);
-        
-    
-    //     socket.on('user', data => {
-
-    //         setProfile(data);
-    //         console.log(profile)
-
-    //     });
-
-        
-    //     return () => {
-    //         socket.disconnect(); // Desconectar el socket cuando el componente se desmonta
-    //     };
-    // }, []);
 
     return (
         <>
@@ -322,7 +276,7 @@ export const Aside = () => {
                 createPortal(
                     <>
                         <ModalContainer showModal={setNotificationsModal}>
-                            <ModalNotifications showModal={setNotificationsModal}>
+                            <ModalNotifications showModal={setNotificationsModal} userId={userData?.user?.iduser}>
 
                             </ModalNotifications>
                         </ModalContainer>
