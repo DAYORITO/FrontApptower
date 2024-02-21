@@ -245,8 +245,8 @@ function Fines() {
                     <Thead>
 
                         <Th name={'Tipo de multa'}></Th>
-                        <Th name={'Fecha del incidente'}></Th>
-                        <Th name={'Fecha limite de pago'}></Th>
+                        <Th name={'Fecha de incidente'}></Th>
+                        <Th name={'Fecha límite de pago'}></Th>
                         <Th name={'Valor a pagar'}></Th>
                         <Th name={'Estado'}></Th>
                         <Th name={'Acciones'}></Th>

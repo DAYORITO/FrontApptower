@@ -82,7 +82,7 @@ export const RecoverPassword = () => {
                     <div className="info-childs">
                         {/* <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" /> */}
                         <h2>Bienvenido</h2>
-                        <p className='message'>Recupera tu contraseña de forma segura con un código de verificación enviado a tu correo</p>
+                        <p className='message'>Recupera tu contraseña de forma segura con un código de verificación enviado a tu correo.</p>
                     </div>
                 </div>
                 <div className="form-informations">
@@ -93,7 +93,7 @@ export const RecoverPassword = () => {
                             {/* <p>Ingresa tu correo  </p> */}
                             <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} />
 
-                            <button className='boton-login'>Enviar Codigo</button><br />
+                            <button className='boton-login'>Enviar Código</button><br />
                             <div>
                                 <Link to="/" class="buttonStyle" id="sign-up">Regresar</Link>
                             </div>

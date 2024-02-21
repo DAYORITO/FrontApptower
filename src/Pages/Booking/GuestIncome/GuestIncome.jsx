@@ -106,7 +106,7 @@ function GuestIncome() {
             setShowModaload(false);
             Swal.fire({
                 icon: 'success',
-                title: 'Salida registrada con éxito',
+                title: 'Salida registrada con éxito.',
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -195,7 +195,7 @@ function GuestIncome() {
 
                 <TablePerson>
                     <Thead>
-                        <Th name={'Informacion del Ingreso'}></Th>
+                        <Th name={'Información del ingreso'}></Th>
                         <Th name={'Fecha inicio'}></Th>
                         <Th name={'Fecha fin'}></Th>
                         <Th name={'Acciones'}></Th>

@@ -358,7 +358,7 @@ export const Watchman = () => {
                     <Thead>
                         <Th name={'Información Vigilante'}></Th>
                         <Th name={'Empresa Aliada'}></Th>
-                        <Th name={'Telefono'}></Th>
+                        <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th ></Th>
 
