@@ -25,17 +25,9 @@ export const Aside = () => {
 
     const allowedPermissions = useAllowedPermissions(idToPermissionName);
 
-    useEffect(() => {
-        const encodedUser = Cookies.get('user');
-        const decodedUser = decodeURIComponent(encodedUser);
-        const userHola = JSON.parse(decodedUser);
-
-        const iduser = userHola.iduser;
-        const name = userHola.name;
-
-        console.log(userHola, 'iduser, name');
-    }, []);
     
+
+
 
 
 

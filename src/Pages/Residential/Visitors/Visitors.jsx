@@ -243,8 +243,8 @@ function Visitors() {
     setApartment(parseInt(selectedValue))
     console.log('este es mi apartamento ' + apartment)
 
-    if (dataResidentApartment && dataResidentApartment.apartmentResidents) {
-      const resident = dataResidentApartment.apartmentResidents.find(
+    if (dataResidentApartment.data && dataResidentApartment.data.apartmentResidents) {
+      const resident = dataResidentApartment.data.apartmentResidents.find(
         (resident) => resident.idApartment === parseInt(selectedValue)
       );
 

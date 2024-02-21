@@ -23,7 +23,7 @@ import { Spinner } from '../../../Components/Spinner/Spinner'
 
 
 function GuestIncomeCreate() {
-  const url = "http://localhost:3000/api/apartmentResidents";
+  const url = "http://localhost:3000/api/";
   const [LoadingSpiner, setLoadingSpiner] = useState(true);
   const navigate = useNavigate();
   dotSpinner.register()
@@ -75,6 +75,10 @@ function GuestIncomeCreate() {
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
 
+  useEffect(() => {
+    getResidentApartment('aparmentResidents')
+  }, [])
+
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
 
   useEffect(()=>{
@@ -82,11 +86,7 @@ function GuestIncomeCreate() {
       console.log("Entre aqui:",dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
       setLoadingSpiner(false)
     }
-    console.log("Entre a data visitors:",dataVisitors?.visitors?.length >0)
-    console.log("Entre a data:",data?.apartments?.length > 0)
     console.log("Entre a dataResidentApartment:",dataResidentApartment?.data?.apartmentResidents?.length > 0)
-    console.log("Entre a dataParkingSpaces:",dataParkingSpaces?.parkingSpaces?.length > 0)
-    console.log("Entre a dataTowers:",dataTowers?.towers?.length > 0)
 
   },[dataVisitors, data, loadResidentsApartment, dataParkingSpaces, dataTowers])
   const handleChange = (e) => {
@@ -245,8 +245,9 @@ function GuestIncomeCreate() {
     console.log("Selected Value:", selectedValue);
     setApartment(parseInt(selectedValue))
     console.log('este es mi apartamento ' + apartment)
+    console.log('arrayapartmentresidents' + dataResidentApartment.data.apartmentResidents)
 
-    if (dataResidentApartment && dataResidentApartment.data.apartmentResidents) {
+    if (dataResidentApartment.data && dataResidentApartment.data.apartmentResidents) {
       const resident = dataResidentApartment.data.apartmentResidents.find(
         (resident) => resident.idApartment === parseInt(selectedValue)
       );
@@ -302,7 +303,7 @@ function GuestIncomeCreate() {
 
 
   useEffect(() => {
-    if (data && data.apartments) {
+    if (data && data.apartments && id !== undefined) {
       const apartment = data.apartments.find((apartment) => apartment.idApartment === Number(id));
       if (apartment) {
         setApartment(apartment.idApartment);
