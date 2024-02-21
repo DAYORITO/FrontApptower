@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import useFetchUserPrivileges, { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useAllowedPermissionsAndPrivileges, useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
@@ -28,37 +28,9 @@ export const Users = () => {
 
     const token = Cookies.get('token');
 
+    //Consulta Privilegios
 
-    //Consulta Permisos
-
-    const [allowedPermissions, setAllowedPermissions] = useState({});
-
-    useEffect(() => {
-        const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
-
-        if (permisosAndPrivileges) {
-            const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
-
-            if (privileges) {
-                const allowedPermissions = {};
-
-                privileges.forEach(privilege => {
-                    const permissionName = idToPermissionName[privilege.idpermission];
-                    const privilegeName = idToPrivilegesName[privilege.idprivilege];
-
-                    if (!allowedPermissions[permissionName]) {
-                        allowedPermissions[permissionName] = [];
-                    }
-                    allowedPermissions[permissionName].push(privilegeName);
-                });
-                setAllowedPermissions(allowedPermissions);
-            } else {
-                console.log('No privileges found');
-            }
-        } else {
-            console.log('No permisosAndPrivileges found');
-        }
-    }, []);
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
     const { data: { rols: dataRols }, load2, error2 } = useFetchget('rols')
     const { data, load, error } = useFetchget('users')

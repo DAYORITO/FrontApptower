@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
-import { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
+import { useAllowedPermissionsAndPrivileges, useFetchForFile, useFetchget } from '../../Hooks/useFetch';
 import { createPortal } from 'react-dom';
 import { Uploader } from '../../Components/Uploader/Uploader';
 import { dotSpinner } from 'ldrs'
@@ -195,36 +195,9 @@ function Fines() {
 
 
 
-    //Consulta Permisos
+    //Consulta Privilegios
 
-    const [allowedPermissions, setAllowedPermissions] = useState({});
-
-    useEffect(() => {
-        const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
-
-        if (permisosAndPrivileges) {
-            const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
-
-            if (privileges) {
-                const allowedPermissions = {};
-
-                privileges.forEach(privilege => {
-                    const permissionName = idToPermissionName[privilege.idpermission];
-                    const privilegeName = idToPrivilegesName[privilege.idprivilege];
-
-                    if (!allowedPermissions[permissionName]) {
-                        allowedPermissions[permissionName] = [];
-                    }
-                    allowedPermissions[permissionName].push(privilegeName);
-                });
-                setAllowedPermissions(allowedPermissions);
-            } else {
-                console.log('No privileges found');
-            }
-        } else {
-            console.log('No permisosAndPrivileges found');
-        }
-    }, []);
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
 
     return (

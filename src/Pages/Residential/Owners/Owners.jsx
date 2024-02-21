@@ -7,7 +7,7 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
-import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
 import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
@@ -35,10 +35,11 @@ export const Owners = () => {
     const { data: owners, get: getOwners, loading } = useFetch(url)
     const { data: apartments, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { del: delApartmentResidents } = useFetch(url)
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
 
+    //Consulta Privilegios
 
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
     useEffect(() => {
 
