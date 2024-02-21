@@ -4,7 +4,7 @@ import './AsideNotifications.css';
 
 import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
-import { connectSocket, useAuth } from '../../Context/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';

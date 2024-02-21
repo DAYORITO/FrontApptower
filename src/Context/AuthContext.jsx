@@ -4,20 +4,11 @@ import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 
-export const connectSocket = async () => {
-
-    const socket = io('http://localhost:3000');
-
-}
-
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState(null);
-
-
-
 
 
     const fetchUserData = (token) => {
@@ -74,8 +65,6 @@ export const AuthProvider = ({ children }) => {
             console.log(data)
 
             fetchUserData(data.token);
-
-            await connectSocket()
 
             return data.token;
 
