@@ -56,10 +56,8 @@ import Cookies from 'js-cookie';
 import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 import { ResidentDetails } from "./Pages/Residential/Residents/ResidentDetails";
 import { LoadingPage } from "./Pages/PagesAdicional/Loading";
-
-
-
-
+import GuestIncomeDetails from "./Pages/Booking/GuestIncome/GuestIncomeDetails";
+import FinesDetail from "./Pages/Fines/finesDetails";
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
@@ -101,12 +99,11 @@ const App = () => {
             <HashRouter basename='/' >
                 <div className='App'>
                     <Routes>
-
+                    
                         <Route path='/' element={<LogIn />} />
                         <Route path='/recoverpassword' element={<RecoverPassword />} />
                         <Route path="/recoveycode" element={<EnterRecoveryCode />} />
                         <Route path="/resetpassword" element={<ResetPassword />} />
-
 
 
                         <Route element={<ProtectedRoutes />}>
@@ -212,8 +209,14 @@ const App = () => {
 
                                 <Route path='guest_income/create/:id?' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear') ?
-                                        <GuestIncomeCreate /> : <NotFound />
+                                        <GuestIncomeCreate /> 
+                                        : <NotFound />
                                 } />
+                                <Route path='guest_income/details/:id?' element={
+                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
+                                        <GuestIncomeDetails />
+                                        : <NotFound />
+                                        } />
 
 
 
@@ -239,6 +242,12 @@ const App = () => {
                                 <Route path='fines/create' element={
                                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear') ?
                                         <FinesCreate /> : <NotFound />
+                                } />
+
+                                <Route path='fines/details/:id?' element={
+                                    // allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
+                                    <FinesDetail />
+                                    // : <NotFound />
                                 } />
 
 

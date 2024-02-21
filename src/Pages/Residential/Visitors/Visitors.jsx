@@ -32,7 +32,7 @@ function Visitors() {
   const token = Cookies.get('token');
   const url = "https://apptowerbackend.onrender.com/api/";
   // const token = Cookies.get('token');
-  // const [allowedPermissions, setAllowedPermissions] = useState([]);
+  const [allowedPermissions, setAllowedPermissions] = useState([]);
 
   const filterOptions = [{label: 'Nombre', value: 'name'}, {label: 'Documento', value: 'documentNumber'}, {label: 'Acceso', value: 'access'}];
   const [selectedFilterParam, setSelectedFilterParam] = useState('name');
@@ -237,8 +237,8 @@ function Visitors() {
     setApartment(parseInt(selectedValue))
     console.log('este es mi apartamento ' + apartment)
 
-    if (dataResidentApartment && dataResidentApartment.apartmentResidents) {
-      const resident = dataResidentApartment.apartmentResidents.find(
+    if (dataResidentApartment.data && dataResidentApartment.data.apartmentResidents) {
+      const resident = dataResidentApartment.data.apartmentResidents.find(
         (resident) => resident.idApartment === parseInt(selectedValue)
       );
 
