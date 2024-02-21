@@ -13,16 +13,78 @@ import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
 import { useFetch, useFetchUserInformation, useFetchUserPermissions, useFetchget } from '../../Hooks/useFetch';
 import { Spinner } from '../Spinner/Spinner';
 import { io } from 'socket.io-client';
+import { id } from 'date-fns/locale';
 
 export const Aside = () => {
 
     const { user, login, logout } = useAuth();
+
     const token = Cookies.get('token');
+
+    // useEffect(() => {
+    //     const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
+
+    //     if (permisosAndPrivileges) {
+    //         const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+
+    //         if (privileges) {
+    //             privileges.forEach(privilege => {
+    //                 console.log(`Permission ID: ${privilege.idpermission}, Privilege ID: ${privilege.idprivilege}`);
+    //             });
+    //         } else {
+    //             console.log('No privileges found');
+    //         }
+    //     } else {
+    //         console.log('No permisosAndPrivileges found');
+    //     }
+    // }, []);
+
+
+    const [allowedPermissions, setAllowedPermissions] = useState([]);
+
+    useEffect(() => {
+        const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
+
+        if (permisosAndPrivileges) {
+            const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+
+            if (privileges) {
+                // Obtén solo los permisos
+                const permissions = privileges.map(privilege => privilege.idpermission);
+
+                // Elimina los permisos duplicados
+                const uniquePermissions = [...new Set(permissions)];
+
+                // Mapea los permisos a sus nombres correspondientes
+                const allowedPermissions = uniquePermissions.map(id => idToPermissionName[id]);
+
+                // Actualiza el estado de allowedPermissions
+                setAllowedPermissions(allowedPermissions);
+            }
+        }
+    }, []);
+
+
+
+    // useEffect(() => {
+    //     const encodedUser = Cookies.get('user');
+    //     const decodedUser = decodeURIComponent(encodedUser);
+    //     const userHola = JSON.parse(decodedUser);
+
+    //     const iduser = userHola.iduser;
+    //     const name = userHola.name;
+
+    //     console.log(iduser, name, 'iduser, name');
+    // }, []);
+
+
 
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
     const [idResidents, setIdResidents] = useState('');
     const [idApartment, setIdapartaments] = useState('');
+
+
 
     const [notificationsModal, setNotificationsModal] = useState(false)
 
@@ -32,11 +94,8 @@ export const Aside = () => {
     }
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
-    
+
     const [profile, setProfile] = useState(userData)
-
-
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPermissions(token, idToPermissionName);
 
     const [nameRole, setNameRole] = useState('');
     const { data, load, error } = useFetchget('rols')
@@ -49,10 +108,6 @@ export const Aside = () => {
         }
     }, [data, userData]);
 
-    useEffect(() => {
-
-        fetchPermissions();
-    }, [allowedPermissions]);
 
 
     const url = "https://apptowerbackend.onrender.com/api/"
@@ -117,16 +172,16 @@ export const Aside = () => {
         setIsCloset(!isCloset);
     };
 
-    
-    
+
+
     // useEffect(() => {
 
     //     const socket = io('http://localhost:3000');
 
-    
+
     //     socket.emit('user-logied', userData);
-        
-    
+
+
     //     socket.on('user', data => {
 
     //         setProfile(data);
@@ -134,7 +189,7 @@ export const Aside = () => {
 
     //     });
 
-        
+
     //     return () => {
     //         socket.disconnect(); // Desconectar el socket cuando el componente se desmonta
     //     };
@@ -322,7 +377,7 @@ export const Aside = () => {
                 createPortal(
                     <>
                         <ModalContainer showModal={setNotificationsModal}>
-                            <ModalNotifications showModal={setNotificationsModal}>
+                            <ModalNotifications showModal={setNotificationsModal} userId={userData?.user?.iduser}>
 
                             </ModalNotifications>
                         </ModalContainer>

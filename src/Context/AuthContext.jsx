@@ -11,6 +11,9 @@ export const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
 
 
+
+
+
     const fetchUserData = (token) => {
         return fetch('https://apptowerbackend.onrender.com/api/login/access', {
             method: 'GET',
@@ -24,13 +27,20 @@ export const AuthProvider = ({ children }) => {
                     throw new Error('Error al obtener el usuario');
                 }
                 return response.json();
-
-
             })
             .then(data => {
-                setIsLoggedIn(true);
-                setUser(data?.role);
-                Cookies.set('isLoggedIn', 'true');
+                if (data?.user) {
+                    try {
+                        const user = JSON.parse(decodeURIComponent(data.user));
+                        if (user) {
+                            setUser(user);
+                            setIsLoggedIn(true);
+                            Cookies.set('isLoggedIn', 'true');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing user data:', e);
+                    }
+                }
             })
             .catch(error => {
                 console.error('Error al obtener el usuario:', error.message);
@@ -66,6 +76,8 @@ export const AuthProvider = ({ children }) => {
 
             fetchUserData(data.token);
 
+            await connectSocket()
+
             return data.token;
 
         } catch (error) {
@@ -78,26 +90,16 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = Cookies.get('token');
-
         if (token) {
             setIsLoggedIn(true);
+            fetchUserData(token).finally(() => {
+                setIsLoading(false);
+            });
         } else {
+            setUser(null);
             setIsLoggedIn(false);
         }
     }, []);
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            setIsLoading(true);
-            fetchUserData(Cookies.get('token')).finally(() => {
-                setIsLoading(false);
-            });
-
-
-        } else {
-            setUser(null);
-        }
-    }, [isLoggedIn]);
 
     const logout = () => {
         Swal.fire({
@@ -110,6 +112,9 @@ export const AuthProvider = ({ children }) => {
             if (result.isConfirmed) {
                 Cookies.remove('token');
                 Cookies.remove('isLoggedIn');
+                Cookies.remove('user');
+                Cookies.remove('permisosAndPrivileges');
+                Cookies.remove('privileges');
                 setUser(null);
                 setIsLoggedIn(false);
                 Swal.fire({
@@ -137,5 +142,4 @@ export const useAuth = () => {
     }
     return context;
 };
-
 

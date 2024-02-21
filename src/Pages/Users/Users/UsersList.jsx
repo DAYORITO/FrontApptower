@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import useFetchUserPrivileges, { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import useFetchUserPrivileges, { useAllowedPermissionsAndPrivileges, useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
@@ -27,7 +27,11 @@ export const Users = () => {
     const [showModaload, setShowModaload] = useState(true);
 
     const token = Cookies.get('token');
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
     const { data: { rols: dataRols }, load2, error2 } = useFetchget('rols')
     const { data, load, error } = useFetchget('users')
 

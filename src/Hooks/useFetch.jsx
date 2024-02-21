@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 // 0. Start UseFech integral experimental
 
@@ -316,7 +317,6 @@ export const useFetchput = (endpoint, data) => {
 
 //Fetch Information User
 
-
 export const useFetchUserInformation = (token) => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -329,7 +329,6 @@ export const useFetchUserInformation = (token) => {
                     Authorization: `Bearer ${token}`
                 },
                 credentials: 'include'
-
             });
 
             if (!response.ok) {
@@ -352,9 +351,8 @@ export const useFetchUserInformation = (token) => {
         }
     }, [token]);
 
-    return { data: userData, get: fetchUserInformation, loading };
+    return { data: userData, fetchUserInformation, loading };
 };
-
 
 // Fetch User permission
 
@@ -452,5 +450,41 @@ const useFetchUserPrivileges = (initialToken, idToPermissionName, idToPrivileges
 };
 
 export default useFetchUserPrivileges;
+
+
+
+export const useAllowedPermissionsAndPrivileges = (idToPermissionName, idToPrivilegesName) => {
+    const [allowedPermissions, setAllowedPermissions] = useState({});
+
+    useEffect(() => {
+        const permisosAndPrivileges = Cookies.get('permisosAndPrivileges');
+
+        if (permisosAndPrivileges) {
+            const privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+
+            if (privileges) {
+                const allowedPermissions = {};
+
+                privileges.forEach(privilege => {
+                    const permissionName = idToPermissionName[privilege.idpermission];
+                    const privilegeName = idToPrivilegesName[privilege.idprivilege];
+
+                    if (!allowedPermissions[permissionName]) {
+                        allowedPermissions[permissionName] = [];
+                    }
+                    allowedPermissions[permissionName].push(privilegeName);
+                });
+
+                setAllowedPermissions(allowedPermissions);
+            } else {
+                console.log('No privileges found');
+            }
+        } else {
+            console.log('No permisosAndPrivileges found');
+        }
+    }, [idToPermissionName, idToPrivilegesName]);
+
+    return allowedPermissions;
+};
 
 

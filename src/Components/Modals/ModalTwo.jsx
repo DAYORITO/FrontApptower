@@ -3,7 +3,7 @@
 import { io } from "socket.io-client";
 import { RowNotificactions } from "../RowNotificacions/RowNotificactions";
 import "./ModalTwo.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -43,7 +43,7 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"
-                onClick={() =>{onClickClose, showModal(false)}}
+                onClick={() => { onClickClose, showModal(false) }}
               >
                 Cerrar
               </button>
@@ -55,11 +55,11 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               }
               {
                 showSave ?
-                <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
-                Guardar Cambios
-              </button> : null
+                  <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
+                    Guardar Cambios
+                  </button> : null
               }
-              
+
 
 
             </div>
@@ -69,7 +69,33 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
     </div>
   );
 };
-export const ModalNotifications = ({ children, showModal }) => {
+
+
+
+
+
+
+
+export const ModalNotifications = ({ showModal, userId }) => {
+
+  console.log(userId);
+  const [notifications, setNotifications] = useState([]);
+
+
+  useEffect(() => {
+    const socket = io('http://localhost:3000');
+
+    socket.emit('user-id', userId);
+
+    socket.on('notifications-user', (notifications) => {
+      setNotifications(notifications);
+      console.log(notifications);
+    })
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userId]);
 
   return (
     <div onClick={(e) => e.stopPropagation()} className="notifications-container">
@@ -87,49 +113,23 @@ export const ModalNotifications = ({ children, showModal }) => {
         </div>
         <div className="modal-body notifications-modal-body">
           <div className="list-group list-group-flush my-n3">
-
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-            <RowNotificactions/>
-
+            {
+              notifications.map((notification, index) => {
+                return (
+                  <RowNotificactions
+                    key={index}
+                    msg={notification.content}
+                    date={notification.createdAt}
+                  />
+                )
+              })
+            }
           </div>
         </div>
-        {/* <div className="modal-footer">
-          <button onClick={() => showModal(false)} type="button" className="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-        </div> */}
       </div>
     </div>
   );
 };
-
-
-{
-  /* <div id="verticalModal" tabindex="-1" role="dialog" aria-labelledby="verticalModalTitle">
-                        <div className="modal-dialog modal-dialog-centered" role="document">
-                          <div className="modal-content">
-                            <div className="modal-header">
-                              <h5 className="modal-title" id="verticalModalTitle">Modal title</h5>
-                              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div className="modal-body"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla dui urna, cursus mollis cursus vitae, fringilla vel augue. In vitae dui ut ex fringilla consectetur. Sed vulputate ante arcu, non vehicula mauris porttitor quis. Praesent tempor varius orci sit amet sodales. Nullam feugiat condimentum posuere. Vivamus bibendum mattis mi, vitae placerat lorem sagittis nec. Proin ac magna iaculis, faucibus odio sit amet, volutpat felis. Proin eleifend suscipit eros, quis vulputate tellus condimentum eget. Maecenas eget dui velit. Aenean in maximus est, sit amet convallis tortor. In vel bibendum mauris, id rhoncus lectus. Suspendisse ullamcorper bibendum tellus a tincidunt. Donec feugiat dolor lectus, sed ullamcorper ante rutrum non. Mauris vestibulum, metus sit amet lobortis fringilla, dui est venenatis ligula, a euismod sem augue vel lorem. Nunc feugiat eget tortor vel tristique. Mauris lobortis efficitur ligula, et consectetur lectus maximus sed. </div>
-                            <div className="modal-footer">
-                              <button type="button" className="btn mb-2 btn-secondary" data-dismiss="modal">Close</button>
-                              <button type="button" className="btn mb-2 btn-primary">Save changes</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div> */
-}
 
 // export const Modal = ({ title, children, showModal}) => {
 //   return (
