@@ -33,8 +33,9 @@ export const Aside = () => {
         const iduser = userHola.iduser;
         const name = userHola.name;
 
-        console.log(iduser, name, 'iduser, name');
+        console.log(userHola, 'iduser, name');
     }, []);
+    
 
 
 
