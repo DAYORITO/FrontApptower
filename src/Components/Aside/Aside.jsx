@@ -25,16 +25,16 @@ export const Aside = () => {
 
     const allowedPermissions = useAllowedPermissions(idToPermissionName);
 
-    useEffect(() => {
-        const encodedUser = Cookies.get('user');
-        const decodedUser = decodeURIComponent(encodedUser);
-        const userHola = JSON.parse(decodedUser);
+    // useEffect(() => {
+    //     const encodedUser = Cookies.get('user');
+    //     const decodedUser = decodeURIComponent(encodedUser);
+    //     const userHola = JSON.parse(decodedUser);
 
-        const iduser = userHola.iduser;
-        const name = userHola.name;
+    //     const iduser = userHola.iduser;
+    //     const name = userHola.name;
 
-        console.log(iduser, name, 'iduser, name');
-    }, []);
+    //     console.log(iduser, name, 'iduser, name');
+    // }, []);
 
 
 
