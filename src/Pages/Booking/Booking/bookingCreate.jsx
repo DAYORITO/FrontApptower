@@ -104,6 +104,7 @@ export const BookingCreate = (props) => {
         }))
         : [];
 
+    console.log('userList:', userList);
     const spacesList = spaces && spaces.spaces ? spaces.spaces
         .filter(space => space.status === 'Active')
         .map(space => ({

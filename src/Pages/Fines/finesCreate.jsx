@@ -40,32 +40,32 @@ function FinesCreate() {
 
   //
   const token = Cookies.get('token');
-  console.log("Datos piopio",userData)
+  console.log("Datos piopio", userData)
 
   //Funcion para obtener el documento del usuario
   const fetchUserInformation = async (token) => {
     try {
-        const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }, credentials: 'include'
-        });
+      const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }, credentials: 'include'
+      });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch user information');
-        }
+      if (!response.ok) {
+        throw new Error('Failed to fetch user information');
+      }
 
-        const data = await response.json();
-        setUserData(data);
-        SetUserDocument(data.user.document);
+      const data = await response.json();
+      setUserData(data);
+      SetUserDocument(data.user.document);
 
     } catch (error) {
-        console.error('Error fetching user information:', error);
+      console.error('Error fetching user information:', error);
     }
-};
+  };
   useEffect(() => {
     if (token) {
-        fetchUserInformation(token);
+      fetchUserInformation(token);
     }
   }, [token]);
 
@@ -216,7 +216,7 @@ function FinesCreate() {
           ></Inputs>
 
           <Inputs
-            name="Fecha limite de pago"
+            name="Fecha límite de pago"
             onChange={(e) => {
               setLimitDate(e.target.value);
             }}

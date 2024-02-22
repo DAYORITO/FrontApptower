@@ -363,8 +363,6 @@ export const WatchmanDetails = () => {
                                 {/* <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li> */}
                                 {/* <li>{email}</li>
               <li>{phone}</li> */}
-
-
                             </ul>
 
                         </DropdownInfo>

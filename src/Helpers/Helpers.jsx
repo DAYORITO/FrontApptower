@@ -21,6 +21,13 @@ export const useUserLogged = () => {
   return idUserLogged;
 };
 
+// Use capitalize first letter
+
+export const useCapitalizeFirstLetter = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+
+}
+
 // Use paginator
 
 const usePaginator = (data, itemsPerPage = 10) => {

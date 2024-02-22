@@ -9,13 +9,17 @@ export const sexs = [
         value: "F",
         label: "Femenino"
     },
+    {
+        value: "O",
+        label: "Otro"
+    }
 
 ]
 
 export const docTypes = [
     {
         value: "CC",
-        label: "Cedula de ciudadania"
+        label: "Cédula de ciudadanía"
     },
     {
         value: "TI",
@@ -23,15 +27,26 @@ export const docTypes = [
     },
     {
         value: "CE",
-        label: "Cedula de extranjeria"
+        label: "Cédula de extranjería"
     },
     {
         value: "PAST",
         label: "Pasaporte"
+    },
+    {
+        value: "RC",
+        label: "Registro civil"
+    },
+    {
+        value: "NIT",
+        label: "Número de identificación tributaria"
+    },
+    {
+        value: "PEP",
+        label: "Permiso especial de permanencia"
     }
-
-
 ];
+
 
 export const residentsTypes = [
 
@@ -84,7 +99,7 @@ export const bools = [
 export const parkingTypes = [
     {
         value: "Public",
-        label: "Publico"
+        label: "Público"
     },
     {
         value: "Private",
@@ -94,27 +109,43 @@ export const parkingTypes = [
 
 export const fineTypes = [
     {
-        value: "Daño a Espacios Comunes",
-        label: "Daño a Espacios Comunes"
+        value: "Estacionamiento indebido",
+        label: "Estacionamiento indebido"
     },
     {
-        value: "Mal uso de parqueaderos",
-        label: "Mal uso de parqueaderos"
+        value: "Ruido excesivo",
+        label: "Ruido excesivo"
     },
     {
-        value: "Mal uso de zonas comunes",
-        label: "Mal uso de zonas comunes"
+        value: "Mantenimiento inadecuado",
+        label: "Mantenimiento inadecuado"
     },
     {
-        value: "Violación de Normas de Convivencia",
-        label: "Violación de Normas de Convivencia"
+        value: "Violaciones de las normas de la piscina",
+        label: "Violaciones de las normas de la piscina"
     },
     {
-        value: "Convivencia",
-        label: "Convivencia"
+        value: "Violaciones de las normas de mascotas",
+        label: "Violaciones de las normas de mascotas"
     },
     {
-        value: "Violación de Regulaciones de Mascotas",
-        label: "Violación de Regulaciones de Mascotas"
+        value: "Incumplimiento de normas de basura",
+        label: "Incumplimiento de normas de basura"
+    },
+    {
+        value: "Incumplimiento de normas de seguridad",
+        label: "Incumplimiento de normas de seguridad"
+    },
+    {
+        value: "Uso indebido de áreas comunes",
+        label: "Uso indebido de áreas comunes"
+    },
+    {
+        value: "Alteración no autorizada de la propiedad",
+        label: "Alteración no autorizada de la propiedad"
+    },
+    {
+        value: "Incumplimiento de normas de convivencia",
+        label: "Incumplimiento de normas de convivencia"
     }
-]
+];

@@ -212,7 +212,7 @@ const App = () => {
                                         <GuestIncomeCreate /> 
                                         : <NotFound />
                                 } />
-                                <Route path='guest_income/details/:id?' element={
+                                <Route path='guest_income/details/:details' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
                                         <GuestIncomeDetails />
                                         : <NotFound />
@@ -245,9 +245,9 @@ const App = () => {
                                 } />
 
                                 <Route path='fines/details/:id?' element={
-                                    // allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
+                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
                                     <FinesDetail />
-                                    // : <NotFound />
+                                    : <NotFound />
                                 } />
 
 
