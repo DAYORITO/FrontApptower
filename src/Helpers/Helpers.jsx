@@ -148,11 +148,12 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
     const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
+
       console.log('Response:', response);
 
       Swal.fire({
         title: 'Éxito',
-        text: message ? message : response,
+        text: message ? message : response.message,
         icon: 'success',
       }).then(() => {
 

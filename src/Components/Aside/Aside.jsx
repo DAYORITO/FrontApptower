@@ -252,7 +252,7 @@ export const Aside = () => {
                     </div>
 
                     <div className='myNav-links-end'>
-                        {allowedPermissions && (allowedPermissions.includes('Usuarios') && nameRole.toLocaleLowerCase().includes("administrador")) && (
+                        {allowedPermissions && (allowedPermissions.includes('Usuarios') && nameRole?.toLocaleLowerCase().includes("administrador")) && (
                             <ListNav module={'Configuración'} href='rols/' icon='fe fe-settings fe-24' />
                         )}
                         <ListNav module={'Salir'} onClick={e => {

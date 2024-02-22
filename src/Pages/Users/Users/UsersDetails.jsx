@@ -13,7 +13,7 @@ import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
 import { idToPermissionName } from '../../../Hooks/permissionRols'
-import { useAllowedPermissions, useAllowedPermissions, useFetch, useFetchUserInformation } from "../../../Hooks/useFetch"
+import { useAllowedPermissions, useFetch, useFetchUserInformation } from "../../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -27,7 +27,7 @@ import { format } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
 const token = Cookies.get('token');
@@ -46,6 +46,8 @@ export const UsersDetails = () => {
     // watchman information
 
     const { id } = useParams();
+
+    const idUserLogged = useUserLogged()
 
     const [idUser, setIdUser] = useState(id)
     const [userImg, setUserImg] = useState("")
@@ -155,6 +157,10 @@ export const UsersDetails = () => {
 
         const data = {
 
+            // User logged
+
+            idUserLogged: idUserLogged,
+
             iduser: idUser,
             docType: docType,
             document: docNumber,
@@ -201,7 +207,6 @@ export const UsersDetails = () => {
         await postRequest(event, 'users/img', 'PUT', {}, data, url,);
         setModalEditImg(false)
         getuser(`users/${id}`)
-        window.location.reload()
 
     }
 
@@ -258,8 +263,8 @@ export const UsersDetails = () => {
 
                             A1={`${name}`}
                             A2={`${lastName}`}
-                            A5={`Correo electronico: ${email}`}
-                            A6={`Telefono: ${phone}`}
+                            A5={`Correo electrónico: ${email}`}
+                            A6={`Teléfono: ${phone}`}
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}

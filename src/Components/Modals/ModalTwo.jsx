@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { RowNotificactions } from "../RowNotificacions/RowNotificactions";
 import "./ModalTwo.css";
 import { useEffect, useState } from "react";
+import { NotificationsAlert } from "../NotificationsAlert/NotificationsAlert";
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -114,15 +115,20 @@ export const ModalNotifications = ({ showModal, userId }) => {
         <div className="modal-body notifications-modal-body">
           <div className="list-group list-group-flush my-n3">
             {
-              notifications.map((notification, index) => {
-                return (
-                  <RowNotificactions
-                    key={index}
-                    msg={notification.content}
-                    date={notification.createdAt}
-                  />
-                )
-              })
+              notifications == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
+                notifications.map((notification, index) => {
+                  return (
+                    <RowNotificactions
+                      isNotification={true}
+                      seen={notification.seen}
+                      key={index}
+                      type={notification.type}
+                      msg={notification.content.message}
+                      to={notification.content.information}
+                      date={notification.createdAt}
+                    />
+                  )
+                })
             }
           </div>
         </div>
