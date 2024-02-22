@@ -1,6 +1,25 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Cookies from "js-cookie";
+
+
+// Use get user logged
+
+export const useUserLogged = () => {
+  const [idUserLogged, setIdUserLogged] = useState('');
+
+  useEffect(() => {
+      const encodedUser = Cookies.get('user');
+      if (encodedUser) {
+          const decodedUser = decodeURIComponent(encodedUser);
+          const userLogged = JSON.parse(decodedUser);
+          setIdUserLogged(userLogged.iduser);
+      }
+  }, []);
+
+  return idUserLogged;
+};
 
 // Use capitalize first letter
 

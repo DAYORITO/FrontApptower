@@ -229,7 +229,7 @@ export const EnterpriceSecurity = () => {
                     <Thead>
                         <Th name={'Información Empresa'}></Th>
                         <Th name={'Dirección'}></Th>
-                        <Th name={'Telefono'}></Th>
+                        <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>
 
 

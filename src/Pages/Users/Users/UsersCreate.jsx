@@ -12,6 +12,8 @@ import { useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
 import Select2 from '../../../Components/Inputs/Select2'
 import { is, tr } from 'date-fns/locale';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useUserLogged } from '../../../Helpers/Helpers';
 
 
 export const UsersCreate = () => {
@@ -54,7 +56,9 @@ export const UsersCreate = () => {
 
     const { data: roles } = useFetchget('rols');
 
+    const idUserLogged = useUserLogged()
 
+    console.log(idUserLogged, 'usuario logueado')
 
 
     useEffect(() => {
@@ -97,6 +101,7 @@ export const UsersCreate = () => {
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
 
+
     useEffect(() => {
         fetch(`http://localhost:3000/api/users/document/${document}`)
             .then(response => response.json())
@@ -121,6 +126,7 @@ export const UsersCreate = () => {
     }, [email]);
 
     const [shouldValidate, setShouldValidate] = useState(false);
+
 
     const handleSubmit = async (event) => {
         // const formattedDate = new Date(dateOfbirth).toISOString().split('T')[0];
@@ -176,6 +182,11 @@ export const UsersCreate = () => {
 
         try {
             const userResponse = await useFetchForFile('http://localhost:3000/api/users', {
+
+                // User logged
+
+                idUserLogged: idUserLogged,
+
                 docType: documentType,
                 name,
                 email,

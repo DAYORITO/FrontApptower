@@ -142,14 +142,14 @@ export const Booking = () => {
 
 
         <TablePerson>
-          <Thead>
+          {/* <Thead>
             <Th name={'Zona Común'} ></Th>
             <Th name={'Nombre del Solicitante'}></Th>
             <Th name={'Cantidad de personas'}></Th>
             <Th name={'Fecha de Inicio'}></Th>
             <Th name={'Fecha de Fin'}></Th>
             <Th></Th>
-          </Thead>
+          </Thead> */}
           <Tbody>
             {
               load && <h1 className='d-flex'>Cargando...</h1>
@@ -160,15 +160,25 @@ export const Booking = () => {
             {
               filteredDatabooking().map(booking => (
                 <Row
-                  name={booking.Space.spaceName}
                   icon='calendar'
-                  lastName={''}
-                  docType={booking.status}
-                  status={booking.status}
-                  op1={booking.user.name + ' ' + booking.user.lastname}
-                  op2={booking.amount}
-                  op3={format(parseISO(booking.bookingdate), 'PPpp')}
-                  op4={format(parseISO(booking.finalDate), 'PPpp')}
+                  
+                  A1={booking.user.name}
+                  A2={booking.user.lastName}
+                  A3={`Estado`}
+                  A4={booking.status}
+                  A9={"Fecha inicio "}
+                  A10={format(parseISO(booking.bookingdate), 'PPpp')}
+                  A18={"Fecha fin"}
+                  A19={format(parseISO(booking.finalDate), 'PPpp')}
+                  
+                  A13={"Espacio a reservar"}
+                  A12={booking.Space.spaceName}
+
+                  A14='Cantidad de personas'
+                  A15={booking.amount}
+
+                  // op3={format(parseISO(booking.bookingdate), 'PPpp')}
+                  // op4={format(parseISO(booking.finalDate), 'PPpp')}
                 >
 
                   {allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Editar') ? (

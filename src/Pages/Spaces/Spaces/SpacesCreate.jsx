@@ -57,11 +57,11 @@ export const SpacesCreate = () => {
 
         <FormColumn>
 
-          <Uploader label={'Foto de zona comun'} name="img" onChange={e => setImage(e.target.files[0])} />
+          <Uploader label={'Foto de zona común'} name="img" onChange={e => setImage(e.target.files[0])} />
 
         </FormColumn>
         <FormColumn>
-          <h6 className='mb-4 text-muted'>Informacion zona comun</h6>
+          <h6 className='mb-4 text-muted'>Información zona común</h6>
 
           <InputsSelect name={"Tipo de espacio"} options={spacesTypes}
             value={spaceType} onChange={e => setSpaceType(e.target.value)}> </InputsSelect>
@@ -69,12 +69,12 @@ export const SpacesCreate = () => {
           <Inputs name="Nombre espacio" placeholder="Ejemplo: 101"
             value={spaceName} onChange={e => setSpaceName(e.target.value)}></Inputs>
 
-          <Inputs name="Area" type="number"
+          <Inputs name="Área" type="number"
             value={area} onChange={e => setArea(e.target.value)}></Inputs>
 
           <Inputs name="Capacidad" type="number"
             value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
-            
+
         </FormColumn>
 
         {/* <Inputs name="Estado"

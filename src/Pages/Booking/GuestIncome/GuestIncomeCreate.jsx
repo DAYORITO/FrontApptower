@@ -58,7 +58,7 @@ function GuestIncomeCreate() {
 
   const [lastname, setLastName] = useState("");
   const [genre, setGenre] = useState("");
-  
+
 
 
 
@@ -71,7 +71,7 @@ function GuestIncomeCreate() {
   const { data: dataVisitors, load: load1, error2 } = useFetchget('visitors')
   const { data, load, error } = useFetchget('apartments')
   // const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
-  const { data: dataResidentApartment, loading: loadResidentsApartment,  get: getResidentApartment} = useFetch(url)
+  const { data: dataResidentApartment, loading: loadResidentsApartment, get: getResidentApartment } = useFetch(url)
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
 
@@ -81,14 +81,14 @@ function GuestIncomeCreate() {
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
 
-  useEffect(()=>{
-    if(dataVisitors?.visitors?.length >0 && data?.apartments?.length > 0  && loadResidentsApartment ==false && dataParkingSpaces?.parkingSpaces?.length > 0  && dataTowers?.towers?.length > 0){
-      console.log("Entre aqui:",dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
+  useEffect(() => {
+    if (dataVisitors?.visitors?.length > 0 && data?.apartments?.length > 0 && loadResidentsApartment == false && dataParkingSpaces?.parkingSpaces?.length > 0 && dataTowers?.towers?.length > 0) {
+      console.log("Entre aqui:", dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
       setLoadingSpiner(false)
     }
-    console.log("Entre a dataResidentApartment:",dataResidentApartment?.data?.apartmentResidents?.length > 0)
+    console.log("Entre a dataResidentApartment:", dataResidentApartment?.data?.apartmentResidents?.length > 0)
 
-  },[dataVisitors, data, loadResidentsApartment, dataParkingSpaces, dataTowers])
+  }, [dataVisitors, data, loadResidentsApartment, dataParkingSpaces, dataTowers])
   const handleChange = (e) => {
     if (e.target.value === 'si') {
       setCheck1(true)
@@ -215,7 +215,7 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (dataVisitors.visitors)
       setNameVisitor(dataVisitors.visitors);
-      setVisitorsData(getVisitors(dataVisitors))
+    setVisitorsData(getVisitors(dataVisitors))
   }, [dataVisitors]);
 
 
@@ -317,62 +317,62 @@ function GuestIncomeCreate() {
     setShowModaload(true);
 
     try {
-        // Crear el guestIncome
-        const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
-            "startingDate": new Date(),
-            "departureDate": null,
-            "idApartment": apartment,
-            "personAllowsAccess": personAllowsAccesss,
-            "observations": observationss ? observationss : "Sin observaciones",
-            "idVisitor": visitor,
+      // Crear el guestIncome
+      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+        "startingDate": new Date(),
+        "departureDate": null,
+        "idApartment": apartment,
+        "personAllowsAccess": personAllowsAccesss,
+        "observations": observationss ? observationss : "Sin observaciones",
+        "idVisitor": visitor,
+      });
+
+      if (guestIncomeError) {
+        throw new Error('Error al crear el ingreso de huésped');
+      }
+
+      if (guestIncomeResponse && check1) {
+        // Crear el guestIncomeParking
+        const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+          "idParkingSpace": parkingGuestIncome,
+          "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
         });
 
-        if (guestIncomeError) {
-            throw new Error('Error al crear el ingreso de huésped');
+        if (guestIncomeParkingError) {
+          throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
         }
 
-        if (guestIncomeResponse && check1) {
-            // Crear el guestIncomeParking
-            const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
-                "idParkingSpace": parkingGuestIncome,
-                "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
-            });
+        // Desactivar el espacio de estacionamiento
+        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+          "idParkingSpace": parkingGuestIncome,
+          "status": 'Inactive'
+        }, 'PUT');
 
-            if (guestIncomeParkingError) {
-                throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
-            }
-
-            // Desactivar el espacio de estacionamiento
-            const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
-                "idParkingSpace": parkingGuestIncome,
-                "status": 'Inactive'
-            }, 'PUT');
-
-            if (parkingError) {
-                throw new Error('Error al desactivar el espacio de estacionamiento');
-            }
+        if (parkingError) {
+          throw new Error('Error al desactivar el espacio de estacionamiento');
         }
+      }
 
-        // Éxito
-        setShowModaload(false);
-        console.log('Respuesta exitosa:', guestIncomeResponse);
-        Swal.fire({
-            title: 'Éxito',
-            text: 'Ingreso creado exitosamente',
-            icon: 'success',
-        }).then(() => {
-            navigate(-1);
-        });
+      // Éxito
+      setShowModaload(false);
+      console.log('Respuesta exitosa:', guestIncomeResponse);
+      Swal.fire({
+        title: 'Éxito',
+        text: 'Ingreso creado exitosamente',
+        icon: 'success',
+      }).then(() => {
+        navigate(-1);
+      });
     } catch (error) {
-        setShowModaload(false);
-        Swal.fire({
-            title: 'Error',
-            text: error.message || 'Error desconocido',
-            icon: 'error',
-        });
-        console.error('Error:', error);
+      setShowModaload(false);
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Error desconocido',
+        icon: 'error',
+      });
+      console.error('Error:', error);
     }
-}
+  }
 
 
   const handleSubmitVisitor = async (e) => {
@@ -399,7 +399,7 @@ function GuestIncomeCreate() {
       setVisitorsData((prevData) => [newVisitor, ...prevData]);
       setNameVisitor((prevData) => [response.visitor, ...prevData]);
       setShowModaload(false);
-      
+
       console.log('Respuesta exitosa:', response);
       Swal.fire({
         title: 'Éxito',
@@ -421,21 +421,21 @@ function GuestIncomeCreate() {
   }
   useEffect(() => {
     if (loadResidentsApartment == true) {
-      
+
     }
-  },[LoadingSpiner])
+  }, [LoadingSpiner])
 
   return (
     <>
-      <FormContainer name='Crear Ingreso' 
-      buttons={ <FormButton  name='Crear' disabled={LoadingSpiner} backButton='Cancelar' onClick={handleSubmit} />} 
-      modalButton={<ModalButton disabled={LoadingSpiner} name="Crear visitante"  onClick={setShowModalvisitor} />}
+      <FormContainer name='Crear Ingreso'
+        buttons={<FormButton name='Crear' disabled={LoadingSpiner} backButton='Cancelar' onClick={handleSubmit} />}
+        modalButton={<ModalButton disabled={LoadingSpiner} name="Crear visitante" onClick={setShowModalvisitor} />}
       >
         {LoadingSpiner && <Spinner></Spinner>}
-        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
-          <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none': 'block' }} >
+        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+          <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect inputStyle={{display: LoadingSpiner ? 'none': 'block'}} name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
               :
               <Inputs
                 key={apartment}
@@ -448,10 +448,10 @@ function GuestIncomeCreate() {
             }
           </div>
 
-          <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
-            
+          <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+
             {!id ?
-              <Select2 inputStyle={{display: LoadingSpiner ? 'none': 'block'}} name={'Apartamento'} id={"select22"} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2> 
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento'} id={"select22"} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -463,31 +463,31 @@ function GuestIncomeCreate() {
               />}
 
           </div>
-          <div style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
+          <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
-            <Inputs  name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8',display: LoadingSpiner ? 'none': 'block' }}></Inputs>
+            <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8', display: LoadingSpiner ? 'none' : 'block' }}></Inputs>
 
           </div>
         </div>
-        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none': 'block'  }}>
-          <div className='mr-1' style={{ width: '100%',display: LoadingSpiner ? 'none': 'block'  }}>
-            <Select2  name={'Visitante'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
+        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+          <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+            <Select2 name={'Visitante'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
           </div>
-          <div style={{ width: '100%' , display: LoadingSpiner ? 'none': 'block' }}>
-            <Inputs id={"nombre"} name='Nombre'  readonly={true} value={visitorname} ></Inputs>
+          <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+            <Inputs id={"nombre"} name='Nombre' readonly={true} value={visitorname} ></Inputs>
           </div>
 
         </div>
-        <div style={{display: LoadingSpiner ? 'none':'block', width: '100%'}}>
-        <InputsSelect inputStyle={{display: LoadingSpiner ? 'none': 'block'}} name="Ingreso con vehiculo" style="width: 100%" id={'tipoingreso'} onChange={handleChange} options={opciones}></InputsSelect>
+        <div style={{ display: LoadingSpiner ? 'none' : 'block', width: '100%' }}>
+          <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name="Ingreso con vehículo" style="width: 100%" id={'tipoingreso'} onChange={handleChange} options={opciones}></InputsSelect>
         </div>
         {
           check1 &&
           <InputsSelect name="Parqueadero" id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
-        <div style={{width: '100%', display: LoadingSpiner ? 'none':'block'}}>
-        <Inputs id={"personaAcceso"} name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
-        <Inputs id={"observaciones"} name="Observaciones" type="text" onChange={(e) => { setObservations(e.target.value) }}></Inputs>
+        <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+          <Inputs id={"personaAcceso"} name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
+          <Inputs id={"observaciones"} name="Observaciones" type="text" onChange={(e) => { setObservations(e.target.value) }}></Inputs>
         </div>
       </FormContainer>
       {
@@ -513,14 +513,14 @@ function GuestIncomeCreate() {
                 showModal={setShowModaload}
               >
                 <div className='d-flex justify-content-center'>
-                <l-dot-spinner
-                size="50"
-                speed="2"
-                color="black"
-                ></l-dot-spinner>
+                  <l-dot-spinner
+                    size="50"
+                    speed="2"
+                    color="black"
+                  ></l-dot-spinner>
                 </div>
                 <div className='d-flex justify-content-center'>
-                  
+
                   <p className='mt-2 text-muted'>Cargando datos...</p>
                 </div>
 

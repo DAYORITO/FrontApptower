@@ -4,7 +4,7 @@ import './AsideNotifications.css';
 
 import { DropDownList, DropDownNav, ListNav } from '../DropDownNav/DropDownNav';
 import { CardUserNav } from '../CardUserNav/CardUserNav';
-import { connectSocket, useAuth } from '../../Context/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 import { idToPermissionName } from '../../Hooks/permissionRols';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -25,16 +25,9 @@ export const Aside = () => {
 
     const allowedPermissions = useAllowedPermissions(idToPermissionName);
 
-    // useEffect(() => {
-    //     const encodedUser = Cookies.get('user');
-    //     const decodedUser = decodeURIComponent(encodedUser);
-    //     const userHola = JSON.parse(decodedUser);
+    
 
-    //     const iduser = userHola.iduser;
-    //     const name = userHola.name;
 
-    //     console.log(iduser, name, 'iduser, name');
-    // }, []);
 
 
 

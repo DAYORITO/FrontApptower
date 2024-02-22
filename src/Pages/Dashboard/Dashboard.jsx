@@ -73,7 +73,7 @@ export const Dashboard = () => {
                     count={guestIncomes.length}
                 />
                 <ContentInfoDashboard
-                    module='Multas inpuestas'
+                    module='Multas impuestas'
                     icon='dollar-sign'
                     to='/admin/fines'
                     count={fines.length}
@@ -149,7 +149,7 @@ export const Dashboard = () => {
                 <div class="col-md-4">
                     <div class="card shadow eq-card timeline">
                         <div class="card-header">
-                            <h3 class="h6 mb-0 text-secondary">Ultimas reservas</h3>
+                            <h3 class="h6 mb-0 text-secondary">Últimas reservas</h3>
                             <a class="float-right small text-muted" href="#!">Ver todo</a>
                         </div>
                         <div class="card-body" data-simplebar >
@@ -183,10 +183,10 @@ export const Dashboard = () => {
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h3 class="h6 mb-0 text-secondary">Ultimos usuarios registrados</h3>
+                                    <h3 class="h6 mb-0 text-secondary">Últimos usuarios registrados</h3>
                                 </div>
                                 <div class="col-auto">
-                                    <a class="small text-muted" href="#!">View all</a>
+                                    <a class="small text-muted" href="#!">Ver todo</a>
                                 </div>
                             </div>
                         </div>

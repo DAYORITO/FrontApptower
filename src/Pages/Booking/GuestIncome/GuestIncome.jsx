@@ -106,7 +106,7 @@ function GuestIncome() {
             setShowModaload(false);
             Swal.fire({
                 icon: 'success',
-                title: 'Salida registrada con éxito',
+                title: 'Salida registrada con éxito.',
                 showConfirmButton: false,
                 timer: 1500
             });
