@@ -79,7 +79,6 @@ export const UsersDetails = () => {
 
     const allowedPermissions = useAllowedPermissions
         (idToPermissionName);
-    console.log(userInfo, 'userInfo')
 
     useEffect(() => {
 
@@ -126,10 +125,9 @@ export const UsersDetails = () => {
 
         }
 
-
-
     }, [])
 
+    console.log(users)
 
     // Edit personal information watchman
 
@@ -149,7 +147,7 @@ export const UsersDetails = () => {
             setPhone(data.user.phone || phone);
             setUserStatus(data.user.status || userStatus);
         }
-        console.log(birthday, 'birthday')
+        // console.log(birthday, 'birthday')
     }
 
 
@@ -173,7 +171,7 @@ export const UsersDetails = () => {
 
         }
 
-        console.log("edit data", data)
+        // console.log("edit data", data)
 
         await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
         getuser(`users/${id}`)
@@ -188,7 +186,6 @@ export const UsersDetails = () => {
 
     const openModalEditImg = () => {
 
-        console.log('Hola')
         setModalEditImg(true)
 
     }

@@ -74,29 +74,8 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
 
 
 
+export const ModalNotifications = ({ showModal, userId , children}) => {
 
-
-
-export const ModalNotifications = ({ showModal, userId }) => {
-
-  console.log(userId);
-  const [notifications, setNotifications] = useState([]);
-
-
-  useEffect(() => {
-    const socket = io('http://localhost:3000');
-
-    socket.emit('user-id', userId);
-
-    socket.on('notifications-user', (notifications) => {
-      setNotifications(notifications);
-      console.log(notifications);
-    })
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [userId]);
 
   return (
     <div onClick={(e) => e.stopPropagation()} className="notifications-container">
@@ -114,22 +93,7 @@ export const ModalNotifications = ({ showModal, userId }) => {
         </div>
         <div className="modal-body notifications-modal-body">
           <div className="list-group list-group-flush my-n3">
-            {
-              notifications == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
-                notifications.map((notification, index) => {
-                  return (
-                    <RowNotificactions
-                      isNotification={true}
-                      seen={notification.seen}
-                      key={index}
-                      type={notification.type}
-                      msg={notification.content.message}
-                      to={notification.content.information}
-                      date={notification.createdAt}
-                    />
-                  )
-                })
-            }
+            {children}
           </div>
         </div>
       </div>
