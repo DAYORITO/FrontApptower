@@ -27,7 +27,7 @@ import { format } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 
 export const OwnerDetail = () => {
 
@@ -40,6 +40,9 @@ export const OwnerDetail = () => {
   // Owner information
 
   const { id } = useParams();
+
+  const idUserLogged = useUserLogged()
+
 
   const [idOwner, setIdOwner] = useState(id)
   const [idUser, setIdUser] = useState("")
@@ -161,6 +164,10 @@ export const OwnerDetail = () => {
 
     const data = {
 
+      // User logged
+
+      idUserLogged: idUserLogged,
+
       iduser: idUser,
       pdf: pdf,
       newFile: newPdf,
@@ -277,8 +284,8 @@ export const OwnerDetail = () => {
               A1={`Propietario ${name}`}
               A2={`${lastName}`}
               // A3={`${docType} ${document}`}
-              A5={`Correo electronico: ${email}`}
-              A6={`Telefono: ${phone}`}
+              A5={`Correo electrónico: ${email}`}
+              A6={`Teléfono: ${phone}`}
               A7={pdf}
               status={statusOwner}
               onClickEdit={openModalEdit}

@@ -14,11 +14,14 @@ import { useParams } from 'react-router-dom';
 import Select2 from '../../../Components/Inputs/Select2';
 import { set } from 'date-fns';
 import { is } from 'date-fns/locale';
+import { useUserLogged } from '../../../Helpers/Helpers';
 
 
 export const UsersEdit = () => {
 
     const { iduser } = useParams();
+
+    const idUserLogged = useUserLogged()
 
     const [editedUser, setEditedUser] = useState({});
     const [usersData, setUsersData] = useState([]);
@@ -56,6 +59,10 @@ export const UsersEdit = () => {
         if (userData && userData.user) {
             const user = userData.user;
             setEditedUser({
+
+                // User logged
+
+                idUserLogged: idUserLogged,
                 ...user,
                 idrole: user.idrole,
                 pdf: user.pdf,
@@ -191,7 +198,10 @@ export const UsersEdit = () => {
                         title: 'Éxito',
                         text: 'Usuario modificado exitosamente',
                         icon: 'success',
-                    }).then(() => navigate('/admin/users'));
+                    }).then(() => {
+                        navigate('/admin/users');
+                        window.location.reload
+                    });
                 } else {
                     const errorResponse = await response.json();
                     console.error('Error al guardar los cambios:', response.status, errorResponse);
@@ -205,6 +215,8 @@ export const UsersEdit = () => {
                 console.error('Error al procesar la solicitud:', error);
             }
         }
+
+
     };
 
 

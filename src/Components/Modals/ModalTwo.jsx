@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { RowNotificactions } from "../RowNotificacions/RowNotificactions";
 import "./ModalTwo.css";
 import { useEffect, useState } from "react";
+import { NotificationsAlert } from "../NotificationsAlert/NotificationsAlert";
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -73,29 +74,8 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
 
 
 
+export const ModalNotifications = ({ showModal, userId , children}) => {
 
-
-
-export const ModalNotifications = ({ showModal, userId }) => {
-
-  console.log(userId);
-  const [notifications, setNotifications] = useState([]);
-
-
-  useEffect(() => {
-    const socket = io('http://localhost:3000');
-
-    socket.emit('user-id', userId);
-
-    socket.on('notifications-user', (notifications) => {
-      setNotifications(notifications);
-      console.log(notifications);
-    })
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [userId]);
 
   return (
     <div onClick={(e) => e.stopPropagation()} className="notifications-container">
@@ -113,17 +93,7 @@ export const ModalNotifications = ({ showModal, userId }) => {
         </div>
         <div className="modal-body notifications-modal-body">
           <div className="list-group list-group-flush my-n3">
-            {
-              notifications.map((notification, index) => {
-                return (
-                  <RowNotificactions
-                    key={index}
-                    msg={notification.content}
-                    date={notification.createdAt}
-                  />
-                )
-              })
-            }
+            {children}
           </div>
         </div>
       </div>

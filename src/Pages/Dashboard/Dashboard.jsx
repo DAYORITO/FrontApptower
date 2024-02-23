@@ -7,8 +7,9 @@ import './dashboard.css';
 import { RowNotificactions } from '../../Components/RowNotificacions/RowNotificactions';
 import { Acordions } from '../../Components/Acordions/Acordions';
 import { DropdownInfo } from '../../Components/DropdownInfo/DropdownInfo';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { SocketContext } from '../../Context/SocketContext';
 
 export const Dashboard = () => {
 
@@ -23,10 +24,10 @@ export const Dashboard = () => {
 
     const [users, setUsers] = useState([])
 
+    const { socket } = useContext(SocketContext)
 
 
     useEffect(() => {
-        const socket = io('http://localhost:3000');
 
         socket.on('dashboard-information', (data) => {
 
@@ -43,19 +44,16 @@ export const Dashboard = () => {
 
         socket.emit('dashboard-information', data)
 
-        return () => {
-            socket.disconnect();
-        };
+    
+    }, [socket]);
 
-    }, []);
+    // console.log(users)
 
-    console.log(users)
+    // users?.map((user) => {
 
-    users?.map((user) => {
+    //     // console.log(user?.name)
 
-        console.log(user?.name)
-
-    })
+    // })
 
     return (
 

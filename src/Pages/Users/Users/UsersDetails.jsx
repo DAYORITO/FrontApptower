@@ -27,7 +27,7 @@ import { format } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
 const token = Cookies.get('token');
@@ -46,6 +46,8 @@ export const UsersDetails = () => {
     // watchman information
 
     const { id } = useParams();
+
+    const idUserLogged = useUserLogged()
 
     const [idUser, setIdUser] = useState(id)
     const [userImg, setUserImg] = useState("")
@@ -77,7 +79,6 @@ export const UsersDetails = () => {
 
     const allowedPermissions = useAllowedPermissions
         (idToPermissionName);
-    console.log(userInfo, 'userInfo')
 
     useEffect(() => {
 
@@ -124,10 +125,9 @@ export const UsersDetails = () => {
 
         }
 
-
-
     }, [])
 
+    console.log(users)
 
     // Edit personal information watchman
 
@@ -147,13 +147,17 @@ export const UsersDetails = () => {
             setPhone(data.user.phone || phone);
             setUserStatus(data.user.status || userStatus);
         }
-        console.log(birthday, 'birthday')
+        // console.log(birthday, 'birthday')
     }
 
 
     const updatePersonalInfo = async (event) => {
 
         const data = {
+
+            // User logged
+
+            idUserLogged: idUserLogged,
 
             iduser: idUser,
             docType: docType,
@@ -167,7 +171,7 @@ export const UsersDetails = () => {
 
         }
 
-        console.log("edit data", data)
+        // console.log("edit data", data)
 
         await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
         getuser(`users/${id}`)
@@ -182,7 +186,6 @@ export const UsersDetails = () => {
 
     const openModalEditImg = () => {
 
-        console.log('Hola')
         setModalEditImg(true)
 
     }
@@ -201,7 +204,6 @@ export const UsersDetails = () => {
         await postRequest(event, 'users/img', 'PUT', {}, data, url,);
         setModalEditImg(false)
         getuser(`users/${id}`)
-        window.location.reload()
 
     }
 
@@ -258,8 +260,8 @@ export const UsersDetails = () => {
 
                             A1={`${name}`}
                             A2={`${lastName}`}
-                            A5={`Correo electronico: ${email}`}
-                            A6={`Telefono: ${phone}`}
+                            A5={`Correo electrónico: ${email}`}
+                            A6={`Teléfono: ${phone}`}
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
