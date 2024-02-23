@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './BigCard.css';
 import imageNotImg from "../../assets/imgDontFound.png"
 
-export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) => {
+export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children, accions = true }) => {
 
     console.log(img, 'img')
 
@@ -18,7 +18,7 @@ export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) =>
 
                     <div class="card-body text-center" id='card-space'>
                         <div class="avatar avatar-lg mt-2">
-                            <img class="space-img" id='img' src={img ? img :imageNotImg } alt="Descripción de la imagen"></img>
+                            <img class="space-img" id='img' src={img ? img : imageNotImg} alt="Descripción de la imagen"></img>
                         </div>
                         <div class="card-text">
                             <strong class="card-title">{title}</strong>
@@ -44,10 +44,10 @@ export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children }) =>
                         </div>
                         <div class="col-auto">
                             <div class="file-action">
-                                <button A1="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto"
+                                {accions ? <button A1="button" class="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="text-muted sr-only">Action</span>
-                                </button>
+                                </button> : null}
                                 <div class="dropdown-menu m-2">
 
                                     {children}

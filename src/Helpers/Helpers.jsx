@@ -10,12 +10,12 @@ export const useUserLogged = () => {
   const [idUserLogged, setIdUserLogged] = useState('');
 
   useEffect(() => {
-      const encodedUser = Cookies.get('user');
-      if (encodedUser) {
-          const decodedUser = decodeURIComponent(encodedUser);
-          const userLogged = JSON.parse(decodedUser);
-          setIdUserLogged(userLogged.iduser);
-      }
+    const encodedUser = Cookies.get('user');
+    if (encodedUser) {
+      const decodedUser = decodeURIComponent(encodedUser);
+      const userLogged = JSON.parse(decodedUser);
+      setIdUserLogged(userLogged.iduser);
+    }
   }, []);
 
   return idUserLogged;
@@ -137,11 +137,8 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
   }
 };
 
-
-
 export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
   try {
-
     event.preventDefault();
     console.log('Data:', data);
 
@@ -155,10 +152,10 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         text: message ? message : response,
         icon: 'success',
       }).then(() => {
-
         modal(false);
-
       });
+
+      return { success: true, response }
     }
 
     if (error) {
@@ -167,13 +164,17 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         title: 'Error',
         text: 'Error al realizar la operación',
         icon: 'error',
+      }).then(() => {
+        modal(false);
       });
+
+      return { success: false, response }
     }
   } catch (error) {
     console.error('Error inesperado:', error);
+    return { success: false, response: error }
   }
 };
-
 
 export const putRequest = async (event, endpoint, successMessage, data, modal, put, get, message) => {
   try {

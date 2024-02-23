@@ -43,7 +43,7 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"
-                onClick={() => { onClickClose, showModal(false) }}
+                onClick={() => { onClickClose(); showModal(false); }}
               >
                 Cerrar
               </button>

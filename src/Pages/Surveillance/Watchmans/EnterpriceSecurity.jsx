@@ -38,9 +38,6 @@ import { dotSpinner } from 'ldrs'
 
 
 export const EnterpriceSecurity = () => {
-    const token = Cookies.get('token');
-    dotSpinner.register()
-    const [showModaload, setShowModaload] = useState(true);
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/"
@@ -94,7 +91,6 @@ export const EnterpriceSecurity = () => {
     }
 
 
-
     // Get Data
 
     const { data: enterprice, get: getEnterprice, loading } = useFetch(url)
@@ -102,21 +98,6 @@ export const EnterpriceSecurity = () => {
     //Consulta Privilegios
 
     const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
-
-
-    useEffect(() => {
-        // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (enterprice?.enterprice?.length > 0) {
-            setTimeout(() => {
-                setShowModaload(false);
-            }, 700);
-        } else {
-            setTimeout(() => {
-                setShowModaload(false);
-            }, 2000);
-
-        }
-    }, [enterprice]);
 
     const statusEnterprice = [
         {
@@ -190,10 +171,15 @@ export const EnterpriceSecurity = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'enterpricesecurity', 'POST', {}, data, url, 'Empresa creada correctamente')
-        setEnterpriceFormModal(false)
-        setShouldValidate(true)
-        getEnterprice('enterpricesecurity')
+        try {
+            await postRequest(event, 'enterpricesecurity', 'POST', {}, data, url, 'Empresa creada correctamente')
+            setEnterpriceFormModal(false)
+            setShouldValidate(true)
+            getEnterprice('enterpricesecurity')
+        } catch (error) {
+            console.error("Error creating enterprise: ", error);
+
+        }
 
     };
 
@@ -216,12 +202,14 @@ export const EnterpriceSecurity = () => {
 
                 search={<SearchButton value={search} onChange={searcher} placeholder='Buscar Empresa' />}
                 showPaginator={
-                    <Paginator
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        nextPage={nextPage}
-                        previousPage={previousPage}
-                    />}
+                    !loading && enterpriceList && enterpriceList.length > 0 ?
+                        <Paginator
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            nextPage={nextPage}
+                            previousPage={previousPage}
+                        /> : null
+                }
             >
 
 
@@ -231,32 +219,39 @@ export const EnterpriceSecurity = () => {
                         <Th name={'Dirección'}></Th>
                         <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>
-
-
-                        <Th></Th>
+                        <Th name={'Acciones'}></Th>
 
 
                     </Thead>
                     <Tbody>
+                        {loading ?
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                                <Spinner />
+                            </div>
+                            : enterpriceList.length == 0 || currentPage >= totalPages ?
 
-                        {/* <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> : */}
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', marginLeft: '9vw' }}>
+                                    <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" />
+                                </div> :
 
-                        {EnterpriceInfo().map(enterprise => (
-                            <Row
-                                icon='command'
-                                key={enterprise.idEnterpriseSecurity}
-                                A3={'NIT'}
-                                A4={enterprise.NIT}
-                                A1={enterprise.nameEnterprice}
-                                status={enterprise.state}
-                                A2={''}
-                                description={enterprise.address}
-                                A7={enterprise.phone}
-                                A17={enterprise.email}
-                            >
-                                <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
-                            </Row>
-                        ))}
+                                EnterpriceInfo().map(enterprise => (
+                                    <Row
+                                        icon='command'
+                                        key={enterprise.idEnterpriseSecurity}
+                                        A3={'NIT'}
+                                        A4={enterprise.NIT}
+                                        A1={enterprise.nameEnterprice}
+                                        status={enterprise.state}
+                                        A2={''}
+                                        description={enterprise.address}
+                                        A7={enterprise.phone}
+                                        A17={enterprise.email}
+                                        onClick={() => openEnterpriceModal(enterprise)}
+
+                                    >
+                                        <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
+                                    </Row>
+                                ))}
 
                     </Tbody>
                 </TablePerson>
@@ -302,34 +297,6 @@ export const EnterpriceSecurity = () => {
                     </>,
                     document.getElementById("modalRender")
                 )}
-
-            {showModaload &&
-                createPortal(
-                    <>
-                        <ModalContainerload ShowModal={setShowModaload}>
-                            <Modaload
-                                showModal={setShowModaload}
-                            >
-                                <div className='d-flex justify-content-center'>
-                                    <l-dot-spinner
-                                        size="50"
-                                        speed="2"
-                                        color="black"
-                                    ></l-dot-spinner>
-                                </div>
-                                <div className="d-flex justify-content-center">
-                                    <p> </p>
-                                    <p className="mt-2 text-muted">Cargando datos...</p>
-                                </div>
-
-
-                            </Modaload>
-                        </ModalContainerload>
-                    </>,
-                    document.getElementById("modalRender")
-                )}
-
-
         </>
 
 

@@ -1,0 +1,82 @@
+.rbc-btn-group {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.rbc-btn-group button {
+    border: none;
+    background-color: #f5f5f5;
+    color: #000;
+    font-size: 16px;
+    border-radius: 0%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.rbc-btn-group button:hover {
+    background-color: rgba(2, 45, 73, 0.781);
+    color: #f5f5f5;
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.rbc-header {
+    background: linear-gradient(to right, #cad3d3e3, #f8f8f8e8);
+    color: #000;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ddd;
+    font-family: 'Arial', sans-serif;
+}
+
+.rbc-day-bg.rbc-off-range-bg {
+    background-color: #dddddd;
+    opacity: 0.6;
+}
+
+.rbc-day-bg {
+    background-color: #ffffff;
+    margin: 1px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.308);
+}
+
+
+.rbc-toolbar-label {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #000000dc;
+    margin-bottom: 20px;
+}
+
+.rbc-toolbar-label {
+    text-transform: capitalize;
+}
+
+.rbc-button-link {
+    color: #000000c0;
+    font-weight: 700;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rbc-btn-group .rbc-active {
+    height: 32px;
+
+}
+
+.rbc-header span[role="columnheader"] {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #000000;
+    text-transform: capitalize;
+}
+
+
+.rbc-day-bg.rbc-today {
+    background-color: #cef4ff7a;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.308);
+}

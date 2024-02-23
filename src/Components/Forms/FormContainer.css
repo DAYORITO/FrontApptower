@@ -41,5 +41,12 @@
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  
+
+}
+
+.botonregresso {
+  background-color: #dfdfdf;
+  outline: none;
+  padding: 10px 20px;
+  cursor: pointer;
 }
