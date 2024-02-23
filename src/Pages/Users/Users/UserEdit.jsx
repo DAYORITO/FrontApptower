@@ -26,6 +26,17 @@ export const UsersEdit = () => {
     const [namerole, setNamerole] = useState('');
 
 
+    const birthDate = new Date(editedUser.birthday);
+
+
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+    if (currentDate.getMonth() < birthDate.getMonth() ||
+        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
     const { data: rolesData } = useFetchget('rols');
     const [roles, setRoles] = useState([]);
 
@@ -152,6 +163,15 @@ export const UsersEdit = () => {
                     Swal.fire({
                         title: 'Error',
                         text: 'Este correo se encuentra registrado',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                if (age < 18) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Debe de ser mayor de edad',
                         icon: 'error',
                     });
                     return;
@@ -385,7 +405,10 @@ export const UsersEdit = () => {
                                         validate={shouldValidate} required={true} />
 
                                     <Inputs name="Fecha de nacimiento" type="date" value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}></Inputs>
+                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+                                    ></Inputs>
 
                                     <InputsSelect
                                         id="select"
@@ -464,6 +487,9 @@ export const UsersEdit = () => {
                                         onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
                                         required={true}
                                         validate={shouldValidate}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+
                                     />
 
                                 </FormColumn>
@@ -522,6 +548,18 @@ export const UsersEdit = () => {
                                         errorMessage={editedUser?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
                                         validate={shouldValidate} required={true} />
 
+                                    <Inputs
+                                        name="Fecha Nacimiento"
+                                        type="date"
+                                        value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
+                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
+                                        required={true}
+                                        validate={shouldValidate}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+
+                                    />
+
                                 </FormColumn>
 
                                 <FormColumn>
@@ -560,6 +598,18 @@ export const UsersEdit = () => {
                                 <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
                                     inputStyle={editedUser?.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
                                     errorMessage={editedUser?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
+                                />
+
+                                <Inputs
+                                    name="Fecha Nacimiento"
+                                    type="date"
+                                    value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
+                                    onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
+                                    required={true}
+                                    validate={shouldValidate}
+                                    inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                    errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+
                                 />
 
                             </FormColumn>

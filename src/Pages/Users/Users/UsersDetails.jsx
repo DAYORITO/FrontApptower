@@ -12,7 +12,8 @@ import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
-import { useFetch, useFetchUserInformation, useFetchget, useFetchgetById } from "../../../Hooks/useFetch"
+import { idToPermissionName } from '../../../Hooks/permissionRols'
+import { useAllowedPermissions, useFetch, useFetchUserInformation } from "../../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -20,7 +21,6 @@ import { Acordions } from "../../../Components/Acordions/Acordions"
 import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
 import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
-import Cookies from 'js-cookie';
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
 import { format } from 'date-fns';
@@ -31,9 +31,12 @@ import { postRequest } from '../../../Helpers/Helpers'
 import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
 const token = Cookies.get('token');
+import Cookies from 'js-cookie';
+import { da } from 'date-fns/locale'
+import Swal from 'sweetalert2'
 
 export const UsersDetails = () => {
-
+    const token = Cookies.get('token');
     // API URL
 
     const url = "http://localhost:3000/api/"
@@ -55,6 +58,8 @@ export const UsersDetails = () => {
     const [phone, setPhone] = useState("")
     const [userStatus, setUserStatus] = useState("")
     const [age, setAge] = useState(null)
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
     const [pdf, setPdf] = useState(null);
 
@@ -68,27 +73,28 @@ export const UsersDetails = () => {
     const { data: userInfo, get: getUserInfo, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = userInfo?.user?.document === docNumber;
 
+    //Consulta Permisos
 
-
-    console.log('User info:', userInfo);
-
+    const allowedPermissions = useAllowedPermissions
+        (idToPermissionName);
+    console.log(userInfo, 'userInfo')
 
     useEffect(() => {
 
         // users information
         setIdUser(users?.data.user?.iduser)
 
-        setUserImg(users?.data.user?.userImg)
+        setUserImg(users?.data?.user?.userImg)
         setPdf(users?.data.user?.pdf)
-        setDocType(users?.data.user?.docType)
-        setDocNumber(users?.data.user?.document)
+        setDocType(users?.data?.user?.docType)
+        setDocNumber(users?.data?.user?.document)
         setName(users?.data.user?.name)
-        setLastName(users?.data.user?.lastName)
-        setBirthday(users?.data.user?.birthday)
+        setLastName(users?.data?.user?.lastName)
+        setBirthday(users?.data?.user?.birthday)
         // setSex(users?.data?.users?.user?.sex)
-        setEmail(users?.data.user?.email)
-        setPhone(users?.data.user?.phone)
-        setUserStatus(users?.data.user?.status)
+        setEmail(users?.data?.user?.email)
+        setPhone(users?.data?.user?.phone)
+        setUserStatus(users?.data?.user?.status)
 
         getusers("users")
 
@@ -128,20 +134,44 @@ export const UsersDetails = () => {
     const [modalPersonalInfoUsers, setModalPersonalInfoUsers] = useState(false);
 
     const openModalEdit = (data) => {
+        setModalPersonalInfoUsers(true);
 
-        console.log(data)
-        setModalPersonalInfoUsers(true)
 
-        setIdUser(data.iduser)
-        setDocType(data.docType)
-        setDocNumber(data.document)
-        setName(data.name)
-        setLastName(data.lastName)
-        setBirthday(format(new Date(data.birthday), 'yyyy-MM-dd'))
-        // setSex(data.user.sex)
-        setEmail(data.email)
-        setPhone(data.phone)
-        setUserStatus(data.status)
+        if (data && data.user) {
+            setDocType(data.user.docType || docType);
+            setDocNumber(data.user.document || docNumber);
+            setName(data.user.name || name);
+            setLastName(data.user.lastName || lastName);
+            setBirthday(data.user.birthday ? new Date(data.user.birthday).toISOString().split('T')[0] : '');
+            setEmail(data.user.email || email);
+            setPhone(data.user.phone || phone);
+            setUserStatus(data.user.status || userStatus);
+        }
+        console.log(birthday, 'birthday')
+    }
+
+
+    const updatePersonalInfo = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            docType: docType,
+            document: docNumber,
+            name: name,
+            lastName: lastName,
+            birthday: birthday,
+            email: email,
+            phone: phone,
+            status: userStatus
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
+        getuser(`users/${id}`)
+        setModalPersonalInfoUsers(false)
 
     }
 
@@ -168,9 +198,10 @@ export const UsersDetails = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'users/img', 'PUT', {}, data, url);
-        getResident(`residents/${id}`)
+        await postRequest(event, 'users/img', 'PUT', {}, data, url,);
         setModalEditImg(false)
+        getuser(`users/${id}`)
+        window.location.reload()
 
     }
 
@@ -183,6 +214,34 @@ export const UsersDetails = () => {
         setModalChangePassword(true)
 
     }
+
+
+    const updateUserPassword = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            password: password
+
+        }
+
+        console.log("edit data", data)
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Las contraseñas no coinciden',
+            })
+            return
+        }
+
+        await postRequest(event, 'users/password', 'PUT', {}, data, url, 'Contraseña actualizada correctamente');
+        setModalChangePassword(false)
+        getuser(`users/${id}`)
+
+    }
+
     return (
         <>
             <Details>
@@ -204,7 +263,7 @@ export const UsersDetails = () => {
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
-                            showBackButton={EqualUser ? false : true}
+                            showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
                         // onClickEdit={setShowModalEditApartment}
                         />
 
@@ -248,7 +307,7 @@ export const UsersDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalPersonalInfoUsers}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updatePersonalInfo}
                                 showModal={setModalPersonalInfoUsers}
                                 title={"Editar informacion "}
 
@@ -262,18 +321,13 @@ export const UsersDetails = () => {
                                 <Inputs name="Numero de documento" type={"text"}
                                     value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
 
-                                <Inputs name="Nombres" type={"text"}
-                                    value={name} onChange={e => setName(e.target.value)}></Inputs>
+                                <Inputs name="Nombres" type="text" value={name} onChange={e => setName(e.target.value)} />
 
                                 <Inputs name="Apellidos" type={"text"}
                                     value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
 
                                 <Inputs name="Fecha de Nacimiento" type={"date"}
                                     value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
-
-                                {/* <InputsSelect id={"select"} options={sexs} name={"Sexo"}
-                                    value={sex} onChange={e => setSex(e.target.value)}
-                                ></InputsSelect> */}
 
                                 <Inputs name="Correo electronico" type={"text"}
                                     value={email} onChange={e => setEmail(e.target.value)}></Inputs>
@@ -294,7 +348,7 @@ export const UsersDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalEditImg}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserImg}
                                 showModal={setModalEditImg}
                                 title={"Cambiar imagen de perfil"}
 
@@ -313,16 +367,16 @@ export const UsersDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalChangePassword}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserPassword}
                                 showModal={setModalChangePassword}
                                 title={"Cambiar contraseña"}
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+                                    onChange={e => setPassword(e.target.value)}></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                    onChange={e => setConfirmPassword(e.target.value)}></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

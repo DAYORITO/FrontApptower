@@ -126,53 +126,63 @@ export const ResidentCreate = (props) => {
 
 
 
+
+        {/* <h6 className='mb-4 text-muted'>Informacion personal</h6> */}
+        <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion personal</h6>
+
         <FormColumn>
-
-          <h6 className='mb-4 text-muted'>Informacion personal</h6>
-
           <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
             value={docType} onChange={e => setDocType(e.target.value)}></InputsSelect>
+        </FormColumn>
 
+        <FormColumn>
           <Inputs name="Numero de documento" placeholder="1000000007"
             value={document} onChange={e => setDocument(e.target.value)}></Inputs>
+        </FormColumn>
 
-
+        <FormColumn>
           <Inputs name="Nombre"
             value={name} onChange={e => setName(e.target.value)}></Inputs>
+        </FormColumn>
 
+        <FormColumn>
           <Inputs name="Apellido"
             value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
+        </FormColumn>
 
+        <FormColumn>
           <InputsSelect id={"select"} options={sexs} name={"Sexo"}
             value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
+        </FormColumn>
 
+        <FormColumn>
           <Inputs name="Fecha de nacimiento" type="Date"
             value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+        </FormColumn>
 
+        <FormColumn>
           <Inputs name="Correo" type="email"
             value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+        </FormColumn>
 
+        <FormColumn>
           <Inputs name="Numero de telefono"
             value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+        </FormColumn>
 
-          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-
-
-          <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-
-          <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-
-          <h6 className='mb-4 text-muted'>¿Apartamento en el que vas a vivir?</h6>
-
-
+        <FormColumn>
           <InputsSelect
             id={"select"}
             options={apartmentList}
             name={"Apartamento"}
             value={idApartment}
             onChange={e => setIdApartment(e.target.value)}
+            disabled={id ? idApartment: ''}
           ></InputsSelect>
 
+        </FormColumn>
+
+        <FormColumn>
           {idApartment && (
             <>
               <Inputs
@@ -184,18 +194,44 @@ export const ResidentCreate = (props) => {
 
             </>
           )}
-
         </FormColumn>
+
 
         <FormColumn>
 
           <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
             onChange={e => setPdf(e.target.files[0])} />
 
-          <InputsSelect id={"select"} options={rolList} name={"Rol"}
+          <InputsSelect disabled id={"select"} options={rolList} name={"Rol"}
             value={idRol} onChange={e => setIdRol(e.target.value)}></InputsSelect>
 
         </FormColumn>
+
+        <FormColumn>
+          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
+
+          <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
+
+          <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+
+        </FormColumn>
+
+        <FormColumn>
+
+
+
+
+
+        </FormColumn>
+
+
+
+
+
+
+
+
+
 
       </>
 

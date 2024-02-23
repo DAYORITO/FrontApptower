@@ -7,9 +7,9 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
-import { useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -19,12 +19,15 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import { useParams } from 'react-router'
 import { docTypes, residentsTypes, sexs, statusList } from '../../../Hooks/consts.hooks'
 import { Uploader } from '../../../Components/Uploader/Uploader'
+import Cookies from 'js-cookie'
 
 import { format } from 'date-fns'
+import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
+import { Paginator } from '../../../Components/Paginator/Paginator'
 
 
 export const Owners = () => {
-
+    const token = Cookies.get('token');
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/
@@ -34,6 +37,9 @@ export const Owners = () => {
     const { del: delApartmentResidents } = useFetch(url)
 
 
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
     useEffect(() => {
 
@@ -145,6 +151,7 @@ export const Owners = () => {
     }
 
 
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: ownersInfo } = usePaginator(ownerList, 4);
 
 
 
@@ -156,8 +163,17 @@ export const Owners = () => {
                 title='Propietarios'
                 dropdown={<DropdownExcel />}
                 search={<SearchButton value={search} onChange={searcher} />}
-                buttonToGo={<ButtonGoTo value='Nuevo propietario' href={'/admin/owners/create'} />}
+                buttonToGo={
+                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear')
+                        ? <ButtonGoTo value='Nuevo propietario' href={'/admin/owners/create'} />
+                        : null
+                }
+                showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
             >
+
+
+
                 <TablePerson>
 
                     {/* <Thead>
@@ -171,11 +187,11 @@ export const Owners = () => {
                     <Tbody>
 
 
-                        {loading ? <Spinner /> : ownerList.length == 0 ?
+                        {loading ? <Spinner /> : ownerList.length == 0 || currentPage >= totalPages ?
 
                             <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-                            ownerList?.map(owner => (
+                            ownersInfo()?.map(owner => (
 
                                 <Row
                                     A1={owner.user.name}

@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import './WatchmanShifs.css'
 import { TablePerson } from '../../../Components/Tables/Tables'
-import { useFetchpost, useFetchget } from '../../../Hooks/useFetch'
+import { useFetchpost, useFetchget, useFetchUserInformation } from '../../../Hooks/useFetch'
 import FormContainer from '../../../Components/Forms/FormContainer'
 import { useEffect } from 'react'
 import Cookies from 'js-cookie';
 import moment from 'moment-timezone';
 import Swal from 'sweetalert2'
+import { set } from 'date-fns'
 
 
 
@@ -20,23 +21,58 @@ export const WatchmanShifts = () => {
     const [endDisabled, setEndDisabled] = useState(true);
     const [turnState, setTurnState] = useState('Fuera de turno');
     const [watchmanId, setWatchmanId] = useState(null);
-    console.log(watchmanId, 'watchmanId')
-    const [watchmanName, setWatchmanName] = useState(null);
-    const [watchmanLastName, setWatchmanLastName] = useState(null);
-    const [stateWatchman, setStateWatchman] = useState(null);
+    const [idUser, setIdUser] = useState(null);
 
-
-
-    const [userData, setUserData] = useState({});
-    console.log(userData, 'userData')
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
-    console.log(userRole, 'userRole')
+
+    const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+
+    useEffect(() => {
+        setIdUser(userData?.user?.iduser);
+    }, [userData?.user?.iduser]);
+
+
+    const { data: dataEnterprice, load4, error4 } = useFetchget('watchman')
+
+    const watchman = dataEnterprice?.watchman ? dataEnterprice.watchman.filter(watchmans => watchmans.user.iduser === idUser) : [];
+
+
+    useEffect(() => {
+        if (watchman.length > 0) {
+            setWatchmanId(watchman[0]?.idwatchman);
+        }
+    }, [watchman]);
+
+    const { data: shiftData } = useFetchget(`guardshifts/${watchmanId}`);
+
+    useEffect(() => {
+        if (shiftData?.shifts) {
+            const ongoingShift = shiftData?.shifts?.find(shift => shift.end === null);
+            if (ongoingShift) {
+                setShiftStart(ongoingShift.start);
+                console.log('shiftStart after set:', shiftStart);
+                setDisplayedStart(new Date(ongoingShift.start).toLocaleTimeString());
+                setStartDisabled(true);
+                setEndDisabled(false);
+                setTurnState('Dentro de turno');
+                console.log('Ongoing shift start:', ongoingShift.start);
+            }
+        }
+    }, [shiftData]);
+
+    console.log('ShiftData: holaaa', shiftData);
 
 
 
 
-
+    useEffect(() => {
+        const shiftData = JSON.parse(localStorage.getItem(`shiftStarted_${watchmanId}`));
+        if (shiftData && shiftData.started) {
+            setStartDisabled(true);
+            setEndDisabled(false);
+        }
+    }, [watchmanId]);
 
     const starShift = async () => {
         const url = 'guardshifts';
@@ -55,13 +91,24 @@ export const WatchmanShifts = () => {
 
         })
 
-        setShiftStart(start);
         setDisplayedStart(new Date(data.start).toLocaleTimeString());
         setStartDisabled(true);
         setEndDisabled(false);
         setTurnState('Dentro de turno');
 
+        localStorage.setItem(`shiftStarted_${watchmanId}`, JSON.stringify({ started: true }));
+
         console.log('Data:', data);
+
+        useFetchpost(url, data)
+            .then(({ response, error }) => {
+                if (response) {
+                    console.log('Response:', response);
+                }
+            })
+            .catch((error) => {
+                console.log('Error:', error);
+            });
     }
 
     const endShift = async () => {
@@ -87,6 +134,7 @@ export const WatchmanShifts = () => {
             setDisplayedEnd(new Date(data.end).toLocaleTimeString());
             setEndDisabled(true);
             setTurnState('Fuera de turno');
+            localStorage.setItem(`shiftStarted_${watchmanId}`, JSON.stringify({ started: false }));
 
             console.log('Data:', data);
 
@@ -105,56 +153,6 @@ export const WatchmanShifts = () => {
         }
     }
 
-    useEffect(() => {
-        if (token) {
-
-            fetchUserInformation(token);
-        }
-    }, [token]);
-
-    const fetchUserInformation = async (token) => {
-        try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/informationUser', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }, credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user information');
-            }
-
-            const data = await response.json();
-            setUserData(data);
-
-        } catch (error) {
-            console.error('Error fetching user information:', error);
-        }
-    };
-
-
-    useEffect(() => {
-        if (userData?.user && userData.user?.document) {
-            fetch(`http://localhost:3000/api/watchman/document/${userData.user.document}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.watchman) {
-                        const watchmanId = data.watchman.idwatchman;
-                        console.log('Watchman id holaaa:', watchmanId);
-                        setWatchmanId(data.watchman.idwatchman);
-                        setWatchmanName(data.watchman.namewatchman)
-                        setWatchmanLastName(data.watchman.lastnamewatchman)
-                        setStateWatchman(data.watchman.state)
-
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    }, [userData]);
-
-
-
-
 
     return (
         <>
@@ -166,7 +164,7 @@ export const WatchmanShifts = () => {
                         </div>
                         <div class='info-v'>
                             <h2>Vigilante</h2>
-                            <p>{`${watchmanName ? watchmanName : ''}  ${watchmanLastName ? watchmanLastName : ''}`}</p>
+                            <p>{`${userData ? userData?.user?.name : ''}  ${userData ? userData?.user.lastName : ''}`}</p>
                         </div>
                         <div class='observation'>
                             <h4>Estado: {turnState}</h4>

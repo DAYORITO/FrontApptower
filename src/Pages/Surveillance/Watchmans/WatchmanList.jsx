@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import useFetchUserPrivileges, { useFetchget, useFetchput } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetchget, useFetchput } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
 import { TablePerson } from '../../../Components/Tables/Tables'
@@ -48,8 +48,21 @@ export const Watchman = () => {
     }, [data]);
 
 
-    //Consulta privilegios 
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+    const birthDate = new Date(editedWatchman?.user?.birthday);
+
+
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+    if (currentDate.getMonth() < birthDate.getMonth() ||
+        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
     const { data: { enterpriseSecurity } = {} } = useFetchget('enterpricesecurity');
 
@@ -168,6 +181,15 @@ export const Watchman = () => {
                     return;
                 }
 
+                if (age < 18) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'El vigilante debe ser mayor de edad',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
 
                 const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
                     method: 'PUT',
@@ -259,10 +281,15 @@ export const Watchman = () => {
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
-    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
-        value: enterprice.idEnterpriseSecurity,
-        label: enterprice.nameEnterprice
-    })) : [];
+
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
+        ? dataEnterprice.enterpriseSecurity
+            .filter(enterprice => enterprice.state === "Activo")
+            .map(enterprice => ({
+                value: enterprice.idEnterpriseSecurity,
+                label: enterprice.nameEnterprice
+            }))
+        : [];
 
     const selectedEnterpriceOption = editedWatchman && enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity)?.value;
 
@@ -331,7 +358,7 @@ export const Watchman = () => {
                     <Thead>
                         <Th name={'Información Vigilante'}></Th>
                         <Th name={'Empresa Aliada'}></Th>
-                        <Th name={'Telefono'}></Th>
+                        <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>
                         <Th ></Th>
 
@@ -420,6 +447,8 @@ export const Watchman = () => {
                                         setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, birthday: e.target.value } });
                                     }}
                                     validate={shouldValidate} required={true}
+                                    inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                    errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
                                 />
 
                                 <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedWatchman?.state || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, state: e.target.value })}></InputsSelect>

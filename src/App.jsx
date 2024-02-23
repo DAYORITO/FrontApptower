@@ -35,9 +35,9 @@ import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
 import { ApartmentCreate } from "./Pages/Spaces/Apartments/ApartmentCreate";
 import { RolsEditNew } from "./Pages/Rols/RolsEditNew";
-import { AuthProvider } from "./Context/AuthContext";
+
 import { ProtectedRoutes } from "./ProtectedRoutes";
-import { NotFound } from "./Pages/NotFound/NotFound";
+import { NotFound } from "./Pages/PagesAdicional/NotFound";
 import { Towers } from "./Pages/Spaces/Towers/Towers";
 import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
@@ -55,15 +55,16 @@ import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 import { ResidentDetails } from "./Pages/Residential/Residents/ResidentDetails";
-
-
-
+import { LoadingPage } from "./Pages/PagesAdicional/Loading";
+import GuestIncomeDetails from "./Pages/Booking/GuestIncome/GuestIncomeDetails";
+import FinesDetail from "./Pages/Fines/finesDetails";
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
-import { TowerCreate } from "./Pages/Spaces/Towers/TowerCreate";
-import useFetchUserPrivileges, { useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
+import { useAllowedPermissionsAndPrivileges, useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
 // import { UserDetail } from "./Pages/Users/Users/userDetails";
+
+import { AuthProvider } from "./Context/AuthContext";
 
 const socket = io('https://apptowerbackend.onrender.com/');
 
@@ -72,11 +73,8 @@ const App = () => {
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
 
-
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
-
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
 
     const [nameRole, setNameRole] = useState('');
     const { data, load, error } = useFetchget('rols')
@@ -88,20 +86,24 @@ const App = () => {
         }
     }, [data, userData]);
 
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
+
 
     return (
 
         <AuthProvider>
 
-            <HashRouter basename='/'>
+            <HashRouter basename='/' >
                 <div className='App'>
                     <Routes>
-
+                    
                         <Route path='/' element={<LogIn />} />
                         <Route path='/recoverpassword' element={<RecoverPassword />} />
                         <Route path="/recoveycode" element={<EnterRecoveryCode />} />
                         <Route path="/resetpassword" element={<ResetPassword />} />
-
 
 
                         <Route element={<ProtectedRoutes />}>
@@ -164,7 +166,6 @@ const App = () => {
 
                                 <Route path='watchman/details/:id' element={<WatchmanDetails />} />
 
-
                                 <Route path='watchman/enterprice' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
                                         ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
@@ -208,8 +209,14 @@ const App = () => {
 
                                 <Route path='guest_income/create/:id?' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear') ?
-                                        <GuestIncomeCreate /> : <NotFound />
+                                        <GuestIncomeCreate /> 
+                                        : <NotFound />
                                 } />
+                                <Route path='guest_income/details/:details' element={
+                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
+                                        <GuestIncomeDetails />
+                                        : <NotFound />
+                                        } />
 
 
 
@@ -237,6 +244,12 @@ const App = () => {
                                         <FinesCreate /> : <NotFound />
                                 } />
 
+                                <Route path='fines/details/:details' element={
+                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
+                                    <FinesDetail />
+                                    : <NotFound />
+                                } />
+
 
 
                                 {/* {/* Spaces */}
@@ -253,7 +266,7 @@ const App = () => {
                                 } />
 
 
-                                <Route path='apartments/create/id?' element={
+                                <Route path='apartments/create/:id?' element={
                                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear') ?
                                         <ApartmentCreate /> : <NotFound />
                                 } />
@@ -262,11 +275,6 @@ const App = () => {
                                 <Route path='towers' element={
                                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
                                         <Towers /> : <NotFound />
-                                } />
-
-                                <Route path='towers/create' element={
-                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
-                                        <TowerCreate /> : <NotFound />
                                 } />
 
 
@@ -281,7 +289,10 @@ const App = () => {
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
                                         <OwnerDetail /> : <NotFound />
                                 } />
-
+                                <Route path='owners/create' element={
+                                    allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?
+                                        <OwnersCreate /> : <NotFound />
+                                } />
 
                                 <Route path='owners/create/:id' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?
@@ -376,15 +387,21 @@ const App = () => {
                                     allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear') ?
                                         <VehicleCreate /> : <NotFound />
                                 } />
+                                <Route path='vehicle/create/:id?' element={
+                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear') ?
+                                        <VehicleCreate /> : <NotFound />
+                                } />
+
+                                <Route path="*" element={<NotFound />} />
 
 
-
-
-
+                                <Route path="*" element={<NotFound />} />
 
                             </Route >
                         </Route >
                         {/* </Route> */}
+                        <Route path="*" element={<NotFound />} />
+
                     </Routes >
                 </div >
             </HashRouter >

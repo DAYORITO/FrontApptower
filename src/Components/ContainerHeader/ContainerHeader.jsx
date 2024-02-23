@@ -1,7 +1,7 @@
 
 export const ContainerHeader = ({children}) => {
   return (
-    <div class="wrapper">  
+    <div className="wrapper">  
         {children}
     </div>
   )

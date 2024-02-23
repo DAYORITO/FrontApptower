@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
-import useFetchUserPrivileges, { useFetchForFile, useFetchget } from '../../Hooks/useFetch';
+import { useAllowedPermissionsAndPrivileges, useFetchForFile, useFetchget } from '../../Hooks/useFetch';
 import { createPortal } from 'react-dom';
 import { Uploader } from '../../Components/Uploader/Uploader';
 import { dotSpinner } from 'ldrs'
@@ -33,7 +33,6 @@ function Fines() {
     // const [search, setSearch] = useState('');
     dotSpinner.register()
     const token = Cookies.get('token');
-    const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
     const [showModal, setShowModal] = useState(false);
     const [evidenceFiles, setEvidenceFiles] = useState();
     const [paymentproof, setPaymentproof] = useState();
@@ -45,24 +44,24 @@ function Fines() {
 
     const { data, load, error } = useFetchget('fines')
 
-    const filterOptions =[{label: 'Fecha incidente', value: "incidentDate"},
-    {label:'Fecha limite de pago', value:'paymentDate'},
-    {label: 'Fecha de creacion', value: "createdAt"},
-    {label: 'Estado', value: "state"},
-    {label: 'Tipo de multa', value: "fineType"},
-    {label: 'apartamento', value: "apartmentName"}
+    const filterOptions = [{ label: 'Fecha incidente', value: "incidentDate" },
+    { label: 'Fecha límite de pago', value: 'paymentDate' },
+    { label: 'Fecha de creación', value: "createdAt" },
+    { label: 'Estado', value: "state" },
+    { label: 'Tipo de multa', value: "fineType" },
+    { label: 'Apartamento', value: "apartmentName" }
     ]
     const [optionState, setOptionState] = useState('Por revisar');
-    const typeOptions = [{label: 'Pendiente', value: 'pendiente'}, {label: 'Por revisar', value: 'por revisar'}, {label: 'Pagada', value: 'pagada'}]
+    const typeOptions = [{ label: 'Pendiente', value: 'pendiente' }, { label: 'Por revisar', value: 'por revisar' }, { label: 'Pagada', value: 'pagada' }]
     // const [dateOption, setDateOption] = useState('incidentDate');
-    const dateOptions = [{label: 'Fecha incidente', value: 'incidentDate'}, {label: 'Fecha limite de pago', value: 'paymentDate'}, {label: 'Fecha de creacion', value: 'createdAt'}]
+    const dateOptions = [{ label: 'Fecha incidente', value: 'incidentDate' }, { label: 'Fecha limite de pago', value: 'paymentDate' }, { label: 'Fecha de creacion', value: 'createdAt' }]
     const [dateMarked, setDateMarked] = useState();
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
         if (data?.fines?.length > 0) {
             setLoadingSpiner(false);
         } else {
-        setTimeout(() => {setLoadingSpiner(false)}, 10000);
+            setTimeout(() => { setLoadingSpiner(false) }, 10000);
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
 
         }
@@ -75,16 +74,16 @@ function Fines() {
         }
     }, [data]);
 
-    function handleChange(e){
+    function handleChange(e) {
         searcher(e);
     }
 
 
     function searcher(e) {
         setSelectedFilterValue(e.target.value.toLowerCase());
-      
-        
-        let filteredFines=originalFines.filter((dato) =>{
+
+
+        let filteredFines = originalFines.filter((dato) => {
             if (selectedFilterParam === "incidentDate") {
                 return dato.incidentDate.toString().toLowerCase().includes(e.target.value.toLowerCase())
             }
@@ -100,73 +99,73 @@ function Fines() {
             }
         })
         setFines(filteredFines);
-       
+
     }
-    
-      
+
+
 
     function reorderFines(fines) {
         return fines.sort((a, b) => {
-          // Comparar por estado
-          if (a.state === "Pagada" && b.state !== "Pagada") return 1;
-          if (a.state !== "Pagada" && b.state === "Pagada") return -1;
-          if (a.state === "Por aprobar" && b.state !== "Por aprobar") return -1;
-          if (a.state !== "Por aprobar" && b.state === "Por aprobar") return 1;
-          if (a.state === "Pendiente" && b.state !== "Pendiente") return -1;
-          if (a.state !== "Pendiente" && b.state === "Pendiente") return 1;
-          // Si ambos tienen el mismo estado, comparar por fecha de incidente (de más antiguo a más nuevo)
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
-          return dateA - dateB;
+            // Comparar por estado
+            if (a.state === "Pagada" && b.state !== "Pagada") return 1;
+            if (a.state !== "Pagada" && b.state === "Pagada") return -1;
+            if (a.state === "Por aprobar" && b.state !== "Por aprobar") return -1;
+            if (a.state !== "Por aprobar" && b.state === "Por aprobar") return 1;
+            if (a.state === "Pendiente" && b.state !== "Pendiente") return -1;
+            if (a.state !== "Pendiente" && b.state === "Pendiente") return 1;
+            // Si ambos tienen el mismo estado, comparar por fecha de incidente (de más antiguo a más nuevo)
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            return dateA - dateB;
         })
-      }
+    }
 
     //se crea una funcion para el boton que hara la accion de actualizar y se le pasa como parametro los datos que se van a actualizar
     const handleEditClick = async (dataToUpdate) => {
         setShowModaload(true);
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        let response = await useFetchForFile('https://apptowerbackend.onrender.com/api/fines',dataToUpdate, 'PUT')
-            // .then((responseData) => {
-                
-            console.log("respuesta de api holi",response)
-            if(response.response != null){
-                setShowModaload(false);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Archivo actualizado',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-                    const updatedfine = fines.map((fine) => {
-                        console.log("entre pero no encontrado", fine)
-                        console.log("id buscado", dataToUpdate.idFines, "idActual", fine.idFines)
-                        console.log("datos respuesta", response.response)
-                        if (fine.idFines == dataToUpdate.idfines) {
-                            if (dataToUpdate.paymentproof) {
-                                fine.paymentproof = response.response.results.paymentproof;
-                            }
-                            console.log("Encontrado! ", fine, "id",fine.idFines)
-                            fine.state = dataToUpdate.state;
-                        }
-                        
-                        return fine;
-                        
-                    });
-                    console.log("regiostro actualizado: ", updatedfine)
-                    setFines(updatedfine);
-                }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Algo salió mal!',
-                        });
-                        setShowModaload(false);
+        let response = await useFetchForFile('https://apptowerbackend.onrender.com/api/fines', dataToUpdate, 'PUT')
+        // .then((responseData) => {
 
+        console.log("respuesta de api holi", response)
+        if (response.response != null) {
+            setShowModaload(false);
+            Swal.fire({
+                icon: 'success',
+                title: 'Archivo actualizado',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
+            const updatedfine = fines.map((fine) => {
+                console.log("entre pero no encontrado", fine)
+                console.log("id buscado", dataToUpdate.idFines, "idActual", fine.idFines)
+                console.log("datos respuesta", response.response)
+                if (fine.idFines == dataToUpdate.idfines) {
+                    if (dataToUpdate.paymentproof) {
+                        fine.paymentproof = response.response.results.paymentproof;
+                    }
+                    console.log("Encontrado! ", fine, "id", fine.idFines)
+                    fine.state = dataToUpdate.state;
                 }
-                
-            
+
+                return fine;
+
+            });
+            console.log("regiostro actualizado: ", updatedfine)
+            setFines(updatedfine);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Algo salió mal!',
+            });
+            setShowModaload(false);
+
+        }
+
+
     };
 
 
@@ -195,21 +194,27 @@ function Fines() {
     }
 
 
+
+    //Consulta Privilegios
+
+    const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
+
     return (
         <>
             <ContainerTable title='Multas'
                 dropdown={<DropdownExcel />}
-                search2={<SearchSelect options={filterOptions} onChange={(e)=>{setSelectedFilterParam(e.target.value);
+                search2={<SearchSelect options={filterOptions} onChange={(e) => {
+                    setSelectedFilterParam(e.target.value);
                     setSelectedFilterValue('');
                     setFines(originalFines);
-                    if(e.target.value == "incidentDate"
-                    || e.target.value == "paymentDate"
-                    || e.target.value == "createdAt"
-                    )
-                    {setDateMarked('date')}else{ setDateMarked('text')}
-                    }}/>}
+                    if (e.target.value == "incidentDate"
+                        || e.target.value == "paymentDate"
+                        || e.target.value == "createdAt"
+                    ) { setDateMarked('date') } else { setDateMarked('text') }
+                }} />}
                 search={selectedFilterParam == "state" ? <SearchButton options={typeOptions} type={dateMarked} onChange={handleChange} />
-                :<SearchButton value={selectedFilterValue} type={dateMarked} onChange={handleChange} placeholder='Buscar multa'/>}
+                    : <SearchButton value={selectedFilterValue} type={dateMarked} onChange={handleChange} placeholder='Buscar multa' />}
                 buttonToGo={
                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear')
                         ? <ButtonGoTo value='Crear Multa' href='/admin/fines/create' />
@@ -247,7 +252,7 @@ function Fines() {
                         <Th name={'Acciones'}></Th>
                     </Thead>
                     <Tbody>
-                        {LoadingSpiner == true ? <Spinner/> : filteredDatafines()?.map(fine => (
+                        {LoadingSpiner == true ? <Spinner /> : filteredDatafines()?.map(fine => (
                             <Row
                                 key={fine.idFines}
                                 A1={fine.fineType}
@@ -277,32 +282,34 @@ function Fines() {
                                 })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
+                                to={`details/${encodeURIComponent(JSON.stringify(fine))}`}
                             >
                                 {fine.state != 'Pagada' ?
-                                    <Actions accion='Agregar Comprobante' onClick={()=>{
+                                    <Actions accion='Agregar Comprobante' onClick={() => {
                                         setShowEvidences(false);
                                         setId(fine.idFines);
                                         console.log("Comprobante de pago1", fine.paymentproof);
 
-                                        setPaymentproof([fine.paymentproof]); 
+                                        setPaymentproof([fine.paymentproof]);
                                         console.log("Comprobante de pago2", paymentproof);
-                                        setShowModal(true)} } /> : ""}
+                                        setShowModal(true)
+                                    }} /> : ""}
 
                                 {fine.paymentproof != null && fine.state != 'Pagada'
-                                 ?
-                                <Actions accion='Aprobar pago' onClick={() => {
-                                    handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
-                                }} /> : ""}
+                                    ?
+                                    <Actions accion='Aprobar pago' onClick={() => {
+                                        handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
+                                    }} /> : ""}
 
-                                <Actions accion='Ver detalles' 
-                                // href={`/admin/fines/details/${fine.idFines}`}
-                                onClick={() => {
-                                    setShowEvidences(true);
-                                    setEvidenceFiles(fine.evidenceFiles);
-                                    setShowModal(true);
-                                }
-                                }
-                                 />
+                                <Actions accion='Ver detalles'
+                                    // href={`/admin/fines/details/${fine.idFines}`}
+                                    onClick={() => {
+                                        setShowEvidences(true);
+                                        setEvidenceFiles(fine.evidenceFiles);
+                                        setShowModal(true);
+                                    }
+                                    }
+                                />
                             </Row>
                         ))}
 
@@ -316,35 +323,35 @@ function Fines() {
                         <ModalContainer ShowModal={setShowModal}>
                             <Modal
                                 showModal={setShowModal}
-                                onClick={() => {setShowModal(false), handleEditClick({idfines: id, state: "Por revisar", paymentproof: paymentproof})} }
+                                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproof }) }}
                                 title={showevidences ? "Evidencias" : "Comprobante de pago"}
-                                onClickClose={() => {setEvidenceFiles([]); setPaymentproof([])}}
+                                onClickClose={() => { setEvidenceFiles([]); setPaymentproof([]) }}
                                 showSave={showevidences ? false : true}
                             >
-                            {
-                                showevidences ? 
-                                <ImageContainer urls={evidenceFiles} />
-                                :
-                                <div className="d-flex flex-column justify-content-center align-items-center">
-                                    <ImageContainer urls={paymentproof} />
-                                    <div style={{width: "200px", height: "200px"}}>
-                                    <Uploader label={"Agregar archivo"}
-                                        onChange={(e) => {
-                                            setPaymentproof(e.target.files[0]);
-                                        }}
-                                    />
-                                    </div>
-                                    
-                                    
-                                </div>
-                                
-                            }
+                                {
+                                    showevidences ?
+                                        <ImageContainer urls={evidenceFiles} />
+                                        :
+                                        <div className="d-flex flex-column justify-content-center align-items-center">
+                                            <ImageContainer urls={paymentproof} />
+                                            <div style={{ width: "200px", height: "200px" }}>
+                                                <Uploader label={"Agregar archivo"}
+                                                    onChange={(e) => {
+                                                        setPaymentproof(e.target.files[0]);
+                                                    }}
+                                                />
+                                            </div>
+
+
+                                        </div>
+
+                                }
                             </Modal>
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
                 )
-                                
+
             }
             // {showModaload &&
                 createPortal(
@@ -354,11 +361,11 @@ function Fines() {
                                 showModal={setShowModaload}
                             >
                                 <div className='d-flex justify-content-center'>
-                                <l-dot-spinner
-                                size="50"
-                                speed="2"
-                                color="black"
-                                ></l-dot-spinner>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
                                 </div>
 
 

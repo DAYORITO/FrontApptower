@@ -31,6 +31,7 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest } from '../../../Helpers/Helpers'
 import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
+import Swal from 'sweetalert2'
 const token = Cookies.get('token');
 
 export const WatchmanDetails = () => {
@@ -59,6 +60,8 @@ export const WatchmanDetails = () => {
     const [enterprice, setEnterprice] = useState("")
     const [age, setAge] = useState(null);
     const [pdf, setPdf] = useState(null);
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
 
 
@@ -68,6 +71,7 @@ export const WatchmanDetails = () => {
     const { data: watchmans, get: getWatchmans, loading: loadingWatchmans } = useFetch(url)
     const { data: watchman, get: getWatchman, loading: loadingWatchman } = useFetch(url)
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+
 
     useEffect(() => {
 
@@ -164,6 +168,52 @@ export const WatchmanDetails = () => {
 
     }
 
+    const updateUserImg = async (event) => {
+
+        console.log(idUser)
+        const data = {
+
+            iduser: idUser,
+            userImg: userImg
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/img', 'PUT', {}, data, url);
+        setModalEditImg(false)
+        getWatchman(`watchman/${idWatchman}`)
+        window.location.reload()
+
+    }
+
+
+
+    const updatePersonalInfo = async (event) => {
+
+        const data = {
+
+            iduser: idWatchman,
+            docType: docType,
+            document: docNumber,
+            name: name,
+            lastName: lastName,
+            birthday: birthday,
+            email: email,
+            phone: phone,
+
+        }
+
+        console.log("edit data", data)
+
+        await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
+        getWatchman(`watchman/${idWatchman}`)
+        setModalPersonalInfoWatchman(false)
+
+    }
+
+
+
     const [modalChangePassword, setModalChangePassword] = useState(false)
 
     const openModalChangePassword = () => {
@@ -171,6 +221,32 @@ export const WatchmanDetails = () => {
         setIdUser(idUser)
 
         setModalChangePassword(true)
+
+    }
+
+    const updateUserPassword = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            password: password
+
+        }
+
+        console.log("edit data", data)
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Las contraseñas no coinciden',
+            })
+            return
+        }
+
+        await postRequest(event, 'users/password', 'PUT', {}, data, url, 'Contraseña actualizada correctamente');
+        setModalChangePassword(false)
+        getWatchman(`watchman/${idWatchman}`)
 
     }
 
@@ -287,15 +363,13 @@ export const WatchmanDetails = () => {
                                 {/* <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li> */}
                                 {/* <li>{email}</li>
               <li>{phone}</li> */}
-
-
                             </ul>
 
                         </DropdownInfo>
 
                         {/* Poner los turnos aquiiiiiiiiii */}
 
-                        <DropdownInfo
+                        {!EqualUser ? <DropdownInfo
                             name={'Turnos'}
                             initiallyOpen={false}>
 
@@ -345,7 +419,7 @@ export const WatchmanDetails = () => {
 
 
 
-                        </DropdownInfo>
+                        </DropdownInfo> : null}
 
                     </Acordions>
 
@@ -358,7 +432,7 @@ export const WatchmanDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalPersonalInfoWatchman}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updatePersonalInfo}
                                 showModal={setModalPersonalInfoWatchman}
                                 title={"Editar informacion "}
 
@@ -404,7 +478,7 @@ export const WatchmanDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalEditImg}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserImg}
                                 showModal={setModalEditImg}
                                 title={"Cambiar imagen de perfil"}
 
@@ -423,16 +497,16 @@ export const WatchmanDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalChangePassword}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateUserPassword}
                                 showModal={setModalChangePassword}
                                 title={"Cambiar contraseña"}
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+                                    onChange={e => setPassword(e.target.value)}></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                    onChange={e => setConfirmPassword(e.target.value)}></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

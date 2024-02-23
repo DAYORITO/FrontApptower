@@ -4,9 +4,9 @@ import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
-import { useFetch, useFetchget } from '../../../Hooks/useFetch';
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch';
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
-import { filter, postRequest } from "../../../Helpers/Helpers";
+import usePaginator, { filter, postRequest } from "../../../Helpers/Helpers";
 import { Spinner } from "../../../Components/Spinner/Spinner";
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from "react-dom";
@@ -15,13 +15,22 @@ import { Uploader } from "../../../Components/Uploader/Uploader";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { spacesTypes, statusList } from "../../../Hooks/consts.hooks";
 import Inputs from "../../../Components/Inputs/Inputs";
+import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
+import Cookies from 'js-cookie'
+import { Paginator } from "../../../Components/Paginator/Paginator";
 
 export const Spaces = () => {
+  const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
 
   useEffect(() => {
 
@@ -99,24 +108,33 @@ export const Spaces = () => {
 
   };
 
+  // Paginator
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: spacesInfo } = usePaginator(spacesList, 4);
+
+
 
   return (
     <>
       <ContainerTable
         title='Zonas Comunes'
-        buttonToGo={<ButtonGoTo value='Nueva Zona Común' href='create' />}
-        search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />
-
+        buttonToGo={
+          allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Crear')
+            ? <ButtonGoTo value='Nueva Zona Común' href='create' />
+            : null
         }
+        search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona comun' />}
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+
       >
         <TablePerson>
           <ContainerCard>
 
 
-            {loading ? <Spinner /> : spacesList.length == 0 ?
+            {loading ? <Spinner /> : spacesList.length == 0 || currentPage >= totalPages ?
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
-              spacesList?.map((space) => (
+              spacesInfo().map((space) => (
                 <BigCard
                   key={space.idSpace}
                   title={space.spaceName}
@@ -125,7 +143,10 @@ export const Spaces = () => {
                   status={space.status}
                   to={`/admin/booking/create`}
                 >
-                  <Actions accion='Editar' onClick={() => openModal(space)} />
+                  {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') ? (
+                    <Actions accion='Editar' onClick={() => openModal(space)} />
+                  ) : null}
+
                   <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
                 </BigCard>
               ))}

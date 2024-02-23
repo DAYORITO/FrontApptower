@@ -12,6 +12,8 @@ import { useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
 import Select2 from '../../../Components/Inputs/Select2'
 import { is, tr } from 'date-fns/locale';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useUserLogged } from '../../../Helpers/Helpers';
 
 
 export const UsersCreate = () => {
@@ -37,10 +39,26 @@ export const UsersCreate = () => {
     const [residentType, setResidentType] = useState("");
     const [dateOfbirth, setDateOfBirth] = useState("");
     const [idApartment, setIdApartment] = useState("");
-    console.log(idApartment, ' soy hola idApartment')
+
+
+    const birthDate = new Date(dateOfbirth || birthday);
+
+
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+    if (currentDate.getMonth() < birthDate.getMonth() ||
+        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
 
 
     const { data: roles } = useFetchget('rols');
+
+    const idUserLogged = useUserLogged()
+
+    console.log(idUserLogged, 'usuario logueado')
 
 
     useEffect(() => {
@@ -83,6 +101,7 @@ export const UsersCreate = () => {
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
 
+
     useEffect(() => {
         fetch(`http://localhost:3000/api/users/document/${document}`)
             .then(response => response.json())
@@ -108,12 +127,13 @@ export const UsersCreate = () => {
 
     const [shouldValidate, setShouldValidate] = useState(false);
 
+
     const handleSubmit = async (event) => {
         // const formattedDate = new Date(dateOfbirth).toISOString().split('T')[0];
         event.preventDefault();
 
 
-        if (!documentType || !name || !email || !password || !document || !lastname) {
+        if (!documentType || !name || !email || !password || !document || !lastname || birthday) {
             Swal.fire({
                 title: 'Error',
                 text: 'Por favor, rellene todos los campos requeridos',
@@ -151,8 +171,22 @@ export const UsersCreate = () => {
             return;
         }
 
+        if (age < 18) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Debe de ser mayor de edad',
+                icon: 'error',
+            });
+            return;
+        }
+
         try {
             const userResponse = await useFetchForFile('http://localhost:3000/api/users', {
+
+                // User logged
+
+                idUserLogged: idUserLogged,
+
                 docType: documentType,
                 name,
                 email,
@@ -275,6 +309,9 @@ export const UsersCreate = () => {
                         setRole(selectedRole ? selectedRole.namerole : "");
                         setShowForm(true);
                     }}
+                // StyleInput={{ width: '61.5rem' }}
+                // containerStyle={{ width: '61.5rem', marginLeft: '0.5rem', }}
+                // inputStyle={{ width: '61.5rem' }}
                 ></InputsSelect>
 
 
@@ -290,7 +327,10 @@ export const UsersCreate = () => {
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
                                     /> <Inputs name="Numero de telefono" value={phone} onChange={e => setPhone(e.target.value)} type='number' validate={shouldValidate} required={true}></Inputs>
-                                    <Inputs name="Fecha de nacimiento" type="date" value={birthday} onChange={e => setBirthday(e.target.value)} ></Inputs>
+                                    <Inputs name="Fecha de nacimiento" type="date" value={birthday} onChange={e => setBirthday(e.target.value)}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
+
                                     <InputsSelect id={"select"} options={sexs} name={"Sexo"} value={sex} onChange={e => setSex(e.target.value)} ></InputsSelect>
                                 </FormColumn>
                                 <FormColumn>
@@ -325,7 +365,10 @@ export const UsersCreate = () => {
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
                                     /> <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
+                                        validate={shouldValidate} required={true}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
 
                                 </FormColumn>
 
@@ -364,7 +407,9 @@ export const UsersCreate = () => {
 
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
 
                                 </FormColumn>
 
@@ -396,12 +441,15 @@ export const UsersCreate = () => {
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}
+                                        validate={shouldValidate} required={true}></InputsSelect>
                                     <Inputs
                                         name="Documento"
                                         type='number'
@@ -416,13 +464,14 @@ export const UsersCreate = () => {
                                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true} />
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
                                     <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
+
                                 </FormColumn>
 
                             </>}
                     </>
                 )}
 
-            </FormContainer>
+            </FormContainer >
         </>
     );
 };

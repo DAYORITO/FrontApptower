@@ -77,11 +77,10 @@ export const RolsCreate = () => {
     }, [namerole]);
 
 
+
     const [shouldValidate, setShouldValidate] = useState(false);
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // const url = 'http://localhost:3000/api/rols';
-
         if (!namerole || !description) {
             Swal.fire({
                 title: 'Error',

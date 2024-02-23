@@ -153,7 +153,7 @@ export const RolsEditNew = () => {
 
 
 
-                const response = await fetch(`https://apptowerbackend.onrender.com/api/rols/${idrole}`, {
+                const response = await fetch(`http://localhost:3000/api/rols/${idrole}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

@@ -29,6 +29,7 @@ import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest } from '../../../Helpers/Helpers'
+import Swal from 'sweetalert2'
 const token = Cookies.get('token');
 
 export const ResidentDetails = () => {
@@ -69,7 +70,7 @@ export const ResidentDetails = () => {
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [password, setPassword] = useState("")
-    const [configPassword, setConfigPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
     const [userStatus, setUserStatus] = useState("")
 
@@ -91,6 +92,9 @@ export const ResidentDetails = () => {
     const { data: apartmentss, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = user?.user?.document === docNumber;
+
+    console.log(EqualUser)
+
     useEffect(() => {
 
         // resident information
@@ -280,12 +284,11 @@ export const ResidentDetails = () => {
 
     const openModalEditImg = () => {
 
-        console.log('Hablalo puto')
         setIdUser(idUser)
         setModalEditImg(true)
 
     }
-    
+
     const updateUserImg = async (event) => {
 
         console.log(idUser)
@@ -301,6 +304,7 @@ export const ResidentDetails = () => {
         await postRequest(event, 'users/img', 'PUT', {}, data, url);
         getResident(`residents/${id}`)
         setModalEditImg(false)
+        window.location.reload()
 
     }
 
@@ -309,9 +313,33 @@ export const ResidentDetails = () => {
     const openModalChangePassword = () => {
 
         setIdUser(idUser)
-        setPassword("")
-
         setModalChangePassword(true)
+
+    }
+
+    const updateResidentPassword = async (event) => {
+
+        const data = {
+
+            iduser: idUser,
+            password: password
+
+        }
+
+        console.log("edit data", data)
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Las contraseñas no coinciden',
+            })
+            return
+        }
+
+        await postRequest(event, 'users/password', 'PUT', {}, data, url, 'Contraseña actualizada correctamente');
+        setModalChangePassword(false)
+        getResident(`residents/${id}`)
 
     }
 
@@ -534,16 +562,16 @@ export const ResidentDetails = () => {
                     <>
                         <ModalContainer ShowModal={setModalChangePassword}>
                             <Modal
-                                // onClick={handleUpdateApartmentresident}
+                                onClick={updateResidentPassword}
                                 showModal={setModalChangePassword}
                                 title={"Cambiar contraseña"}
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    value={password} onChange={e => setPassword(e.target.value)}></Inputs>
+                                    onChange={e => setPassword(e.target.value)}></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    value={configPassword} onChange={e => setConfigPassword(e.target.value)}></Inputs>
+                                    onChange={e => setConfirmPassword(e.target.value)}></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

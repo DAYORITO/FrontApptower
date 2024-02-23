@@ -94,6 +94,7 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
             readOnly={readonly}
             list={list}
             style={inputStyle}
+            min={type === 'number' ? 0 : null}
           />
           {type === 'password' && (
             <span

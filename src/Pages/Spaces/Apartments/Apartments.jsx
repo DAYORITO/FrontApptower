@@ -1,4 +1,4 @@
-import useFetchUserPrivileges, { useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Actions } from "../../../Components/Actions/Actions"
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons"
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
@@ -7,7 +7,7 @@ import { Thead } from '../../../Components/Thead/Thead'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { useEffect, useState } from 'react'
-import { filter, filterPerSelect, postRequest } from '../../../Helpers/Helpers'
+import usePaginator, { filter, filterPerSelect, postRequest } from '../../../Helpers/Helpers'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
 import { createPortal } from 'react-dom'
@@ -18,6 +18,7 @@ import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { Spinner } from '../../../Components/Spinner/Spinner'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie'
+import { Paginator } from '../../../Components/Paginator/Paginator'
 
 
 
@@ -33,7 +34,11 @@ export const Apartments = () => {
 
   const { data, get: getApartments, put: putApartment, loading } = useFetch(url)
   const { data: towers, get: getTowers } = useFetch(url)
-  const { data: allowedPermissions, get: fetchPermissions, loading: loadingPermissions } = useFetchUserPrivileges(token, idToPermissionName, idToPrivilegesName);
+
+  //Consulta Privilegios
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
 
   useEffect(() => {
 
@@ -154,6 +159,9 @@ export const Apartments = () => {
 
   searchApartments()
 
+  // Paginator
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: apartmentInfo } = usePaginator(apartmentList, 4);
 
 
 
@@ -167,8 +175,8 @@ export const Apartments = () => {
         buttonToGo={
           allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Crear')
             ? <ButtonGoTo value='Agregar apartamentos' href={`/admin/apartments/create/${tower}`}  ></ButtonGoTo>
-            : null
-        }
+            : null}
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
       >
 
         <TablePerson>
@@ -178,11 +186,11 @@ export const Apartments = () => {
           <Tbody>
 
 
-            {loading ? <Spinner /> : apartmentList.length == 0 ?
+            {loading ? <Spinner /> : apartmentList.length == 0 || currentPage >= totalPages ?
 
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-              apartmentList?.map(apartment => (
+              apartmentInfo()?.map(apartment => (
 
                 <Row
                   A1='Apartamento'
