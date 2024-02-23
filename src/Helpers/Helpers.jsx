@@ -21,6 +21,13 @@ export const useUserLogged = () => {
   return idUserLogged;
 };
 
+// Use capitalize first letter
+
+export const useCapitalizeFirstLetter = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+
+}
+
 // Use paginator
 
 const usePaginator = (data, itemsPerPage = 10) => {
@@ -145,11 +152,12 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
     const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
+
       console.log('Response:', response);
 
       Swal.fire({
         title: 'Éxito',
-        text: message ? message : response,
+        text: message ? message : response.message,
         icon: 'success',
       }).then(() => {
         modal(false);

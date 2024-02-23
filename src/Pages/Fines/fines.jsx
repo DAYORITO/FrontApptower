@@ -45,11 +45,11 @@ function Fines() {
     const { data, load, error } = useFetchget('fines')
 
     const filterOptions = [{ label: 'Fecha incidente', value: "incidentDate" },
-    { label: 'Fecha limite de pago', value: 'paymentDate' },
-    { label: 'Fecha de creacion', value: "createdAt" },
+    { label: 'Fecha límite de pago', value: 'paymentDate' },
+    { label: 'Fecha de creación', value: "createdAt" },
     { label: 'Estado', value: "state" },
     { label: 'Tipo de multa', value: "fineType" },
-    { label: 'apartamento', value: "apartmentName" }
+    { label: 'Apartamento', value: "apartmentName" }
     ]
     const [optionState, setOptionState] = useState('Por revisar');
     const typeOptions = [{ label: 'Pendiente', value: 'pendiente' }, { label: 'Por revisar', value: 'por revisar' }, { label: 'Pagada', value: 'pagada' }]
@@ -245,7 +245,7 @@ function Fines() {
                     <Thead>
 
                         <Th name={'Tipo de multa'}></Th>
-                        <Th name={'Fecha de incidente'}></Th>
+                        <Th name={'Fecha del incidente'}></Th>
                         <Th name={'Fecha límite de pago'}></Th>
                         <Th name={'Valor a pagar'}></Th>
                         <Th name={'Estado'}></Th>
@@ -282,6 +282,7 @@ function Fines() {
                                 })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
+                                to={'details/'}
                             >
                                 {fine.state != 'Pagada' ?
                                     <Actions accion='Agregar Comprobante' onClick={() => {

@@ -195,7 +195,7 @@ function GuestIncome() {
 
                 <TablePerson>
                     <Thead>
-                        <Th name={'Información del ingreso'}></Th>
+                        <Th name={'Información del Ingreso'}></Th>
                         <Th name={'Fecha inicio'}></Th>
                         <Th name={'Fecha fin'}></Th>
                         <Th name={'Acciones'}></Th>
@@ -220,7 +220,7 @@ function GuestIncome() {
                                 A2={Income.asociatedVisitor.lastname}
                                 A7={Income.departureDate == null ? 'No registrada' : formatDate(Income.departureDate)}
                                 A6={formatDate(Income.startingDate)}
-                                to={'details/'}
+                                to={`details/${encodeURIComponent(JSON.stringify(Income))}`}
                             >
                                 {Income.departureDate == null ?
                                     <Actions accion='Registrar salida' onClick={() => {

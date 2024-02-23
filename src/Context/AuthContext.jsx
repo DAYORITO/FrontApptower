@@ -5,12 +5,6 @@ import io from 'socket.io-client';
 
 const AuthContext = createContext();
 
-export const connectSocket = async () => {
-
-    const socket = io('http://localhost:3000');
-
-}
-
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,7 +50,6 @@ export const AuthProvider = ({ children }) => {
 
             fetchUserData(data.token);
 
-            await connectSocket()
 
             return data.token;
 

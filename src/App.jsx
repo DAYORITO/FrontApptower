@@ -49,7 +49,7 @@ import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -66,11 +66,15 @@ import { BookingCalendar } from "./Pages/Booking/Booking/BookingCalendar";
 // import { UserDetail } from "./Pages/Users/Users/userDetails";
 
 import { AuthProvider } from "./Context/AuthContext";
-
-const socket = io('https://apptowerbackend.onrender.com/');
+import { SocketContext } from "./Context/SocketContext";
 
 
 const App = () => {
+    
+    const { socket, online } = useContext(SocketContext)
+
+    console.log(online? 'Online': 'Offline')
+
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
 
@@ -219,7 +223,7 @@ const App = () => {
                                         <GuestIncomeCreate />
                                         : <NotFound />
                                 } />
-                                <Route path='guest_income/details/:id?' element={
+                                <Route path='guest_income/details/:details' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
                                         <GuestIncomeDetails />
                                         : <NotFound />
@@ -252,9 +256,9 @@ const App = () => {
                                 } />
 
                                 <Route path='fines/details/:id?' element={
-                                    // allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
-                                    <FinesDetail />
-                                    // : <NotFound />
+                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
+                                        <FinesDetail />
+                                        : <NotFound />
                                 } />
 
 
@@ -367,7 +371,7 @@ const App = () => {
                                 {/* Notifications */}
                                 <Route path='notifications' element={
                                     allowedPermissions['Notificaciones'] ?
-                                        <Notifications socket={socket} /> : <NotFound />
+                                        <Notifications  /> : <NotFound />
                                 } />
 
 
@@ -380,7 +384,7 @@ const App = () => {
 
                                 <Route path='booking/create' element={
                                     allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Crear') ?
-                                        <BookingCreate socket={socket} /> : <NotFound />
+                                        <BookingCreate /> : <NotFound />
                                 } />
 
 

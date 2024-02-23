@@ -10,7 +10,7 @@ const FinesDetail = () => {
       <Details>
         <InfoDetails>
             <Acordions>
-                <DropdownInfo name="Datos del ingreso">
+                <DropdownInfo name="Datos del la multa">
 
                 </DropdownInfo>
 

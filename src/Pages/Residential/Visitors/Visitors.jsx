@@ -462,9 +462,9 @@ function Visitors() {
       >
         <TablePerson>
           <Thead>
-            <Th name={"Informacion del visitante"}></Th>
+            <Th name={"Información del visitante"}></Th>
             <Th name={"Acceso"}></Th>
-            <Th name={"Sexo"}></Th>
+            <Th name={"Género"}></Th>
             <Th name={"Acciones"}></Th>
           </Thead>
           <Tbody>
@@ -539,7 +539,7 @@ function Visitors() {
                   <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
                 </div>
 
-                <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
+                <Inputs name='Teléfono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
 
                 <div
                   className="d-flex justify-content-around"
@@ -560,7 +560,7 @@ function Visitors() {
                   </div>
                 </div>
                 <InputsSelect
-                  name="Ingreso con vehiculo"
+                  name="Ingreso con vehículo"
                   style="width: 100%"
                   id={"tipoingreso"}
                   onChange={handleChange}

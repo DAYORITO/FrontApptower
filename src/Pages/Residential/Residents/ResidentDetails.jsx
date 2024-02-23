@@ -28,7 +28,7 @@ import { format } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import Swal from 'sweetalert2'
 const token = Cookies.get('token');
 
@@ -43,6 +43,8 @@ export const ResidentDetails = () => {
     // resident information
 
     const { id } = useParams();
+
+    const idUserLogged = useUserLogged()
 
     const [idResident, setIdResident] = useState('')
     const [idUser, setIdUser] = useState("")
@@ -179,6 +181,10 @@ export const ResidentDetails = () => {
     const updatePersonalInfo = async (event) => {
 
         const data = {
+
+            // User logged
+
+            idUserLogged: idUserLogged,
 
             iduser: idUser,
             pdf: pdf,
@@ -364,8 +370,8 @@ export const ResidentDetails = () => {
                             A1={`${residentType == 'owner' ? 'Propietario' : 'Arrendatario'} ${name}`}
                             A2={`${lastName}`}
                             // A3={`${docType} ${document}`}
-                            A5={`Correo electronico: ${email}`}
-                            A6={`Telefono: ${phone}`}
+                            A5={`Correo electrónico: ${email}`}
+                            A6={`Teléfono: ${phone}`}
                             A7={pdf}
                             status={statusResident}
                             onClick2={EqualUser ? openModalChangePassword : null}
