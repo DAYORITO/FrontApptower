@@ -172,8 +172,7 @@ export const EnterpriceSecurity = () => {
         console.log("edit data", data)
 
         try {
-            await postRequest(event, 'enterpricesecurity', 'POST', {}, data, url, 'Empresa creada correctamente')
-            setEnterpriceFormModal(false)
+            await postRequest(event, 'enterpricesecurity', 'POST', setEnterpriceFormModal, data, url, 'Empresa creada correctamente')
             setShouldValidate(true)
             getEnterprice('enterpricesecurity')
         } catch (error) {

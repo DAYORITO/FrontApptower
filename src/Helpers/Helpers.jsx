@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 export const useUserLogged = () => {
   const [idUserLogged, setIdUserLogged] = useState('');
+  const [idRolLogged, setIdRolLogged] = useState('');
 
   useEffect(() => {
     const encodedUser = Cookies.get('user');
@@ -15,6 +16,7 @@ export const useUserLogged = () => {
       const decodedUser = decodeURIComponent(encodedUser);
       const userLogged = JSON.parse(decodedUser);
       setIdUserLogged(userLogged.iduser);
+      setIdRolLogged(userLogged.idrole);
     }
   }, []);
 
@@ -172,8 +174,6 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         title: 'Error',
         text: 'Error al realizar la operación',
         icon: 'error',
-      }).then(() => {
-        modal(false);
       });
 
       return { success: false, response }
