@@ -19,7 +19,7 @@ export const SocketProvider = ({ children }) => {
         })
 
 
-    }, [notifications]);
+    }, [socket, notifications]);
 
 
     console.log(idUserLogged, )

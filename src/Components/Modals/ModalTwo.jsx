@@ -74,7 +74,7 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
 
 
 
-export const ModalNotifications = ({ showModal, userId , children}) => {
+export const ModalNotifications = ({ showModal, userId, children }) => {
 
 
   return (

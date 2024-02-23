@@ -173,9 +173,9 @@ export const UsersDetails = () => {
 
         // console.log("edit data", data)
 
-        await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
+        await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoUsers, data, url, 'Informacion actualizada correctamente');
         getuser(`users/${id}`)
-        setModalPersonalInfoUsers(false)
+        
 
     }
 

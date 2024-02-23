@@ -14,10 +14,12 @@ import Inputs from "../../../Components/Inputs/Inputs";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
-import Cookies from 'js-cookie';
 import Select2 from '../../../Components/Inputs/Select2';
-import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal'
-import { dotSpinner } from 'ldrs'
+import usePaginator, { filter } from '../../../Helpers/Helpers'
+import { Paginator } from '../../../Components/Paginator/Paginator'
+import { Spinner } from 'react-bootstrap'
+import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
+
 
 
 
@@ -25,27 +27,8 @@ export const Watchman = () => {
     const [showModal, setShowModal] = useState(false);
     const [editedWatchman, setEditedWatchman] = useState(null);
     const [watchmanData, setWatchmanData] = useState([]);
-    const token = Cookies.get('token');
-    const [enterprice, setEnterprice] = useState(null)
-
-    dotSpinner.register()
-    const [showModaload, setShowModaload] = useState(true);
-    const { data, load, error } = useFetchget('watchman')
+    const { data, load: loading, error } = useFetchget('watchman')
     const { error: putError, load: putLoad, } = useFetchput('watchman', editedWatchman);
-
-    useEffect(() => {
-        // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (data?.watchman?.length > 0) {
-            setTimeout(() => {
-                setShowModaload(false);
-            }, 700);
-        } else {
-            setTimeout(() => {
-                setShowModaload(false);
-            }, 2000);
-
-        }
-    }, [data]);
 
 
     const birthDate = new Date(editedWatchman?.user?.birthday);
@@ -258,7 +241,6 @@ export const Watchman = () => {
     // Buscador
     const [search, setSearch] = useState('');
     const searcher = (e) => {
-
         setSearch(e.target.value)
         console.log(e.target.value)
     }
@@ -267,14 +249,17 @@ export const Watchman = () => {
     if (!search) {
         filterData = watchmanData;
     } else {
-        filterData = watchmanData.filter((dato) =>
-            (dato.name && dato.name.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.lastname && dato.lastname.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.document && dato.document.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.email && dato.email.toLowerCase().includes(search.toLowerCase())) ||
-            (dato.phone && dato.phone.toLowerCase().includes(search.toLowerCase()))
-        );
+        filterData = watchmanData.filter((dato) => {
+            const searchTrimmed = search.trim().toLowerCase();
+            const fullName = `${dato?.user?.name} ${dato?.user?.lastName}`.toLowerCase();
+            return fullName.includes(searchTrimmed) ||
+                (dato?.user?.document && dato.user.document.toLowerCase().includes(searchTrimmed)) ||
+                (dato?.user?.email && dato.user.email.toLowerCase().includes(searchTrimmed)) ||
+                (dato?.user?.phone && dato.user.phone.toLowerCase().includes(searchTrimmed));
+        });
     }
+
+
 
 
     // Traer empresas de seguridad
@@ -301,25 +286,9 @@ export const Watchman = () => {
     };
 
 
-    //paginador
-    const totalPages = Math.ceil(filterData.length / 10);
-    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+    //paginator
 
-
-    const [currentPage, setCurrentPage] = useState(0);
-    const filteredDataWatchman = () => {
-        return filterData.slice(currentPage, currentPage + 10)
-    }
-
-    const nextPage = () => {
-        setCurrentPage(currentPage + 10)
-    }
-
-
-    const PreviousPage = () => {
-        if (currentPage > 0)
-            setCurrentPage(currentPage - 10)
-    }
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: WatchmanInfo } = usePaginator(filterData, 10);
 
     return (
         <>
@@ -334,23 +303,13 @@ export const Watchman = () => {
                         : null
                 }
                 showPaginator={
-                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
-                        <ul className="pagination justify-content-center mb-0">
-                            <li className="page-item">
-                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-                            </li>
-                            {pageNumbers.map((pageNumber) => (
-                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                                </li>
-                            ))}
-
-
-                            <li className="page-item">
-                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-                            </li>
-                        </ul>
-                    </nav >
+                    watchmanData && watchmanData.length > 0 ?
+                        <Paginator
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            nextPage={nextPage}
+                            previousPage={previousPage}
+                        /> : null
                 }
             >
 
@@ -360,40 +319,52 @@ export const Watchman = () => {
                         <Th name={'Empresa Aliada'}></Th>
                         <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>
-                        <Th ></Th>
+                        <Th name={'Acciones'}></Th>
 
                     </Thead>
                     <Tbody>
 
-                        {filteredDataWatchman().map(watchman => {
-                            const enterprice = enterpriseSecurity?.find(enterprice => enterprice.idEnterpriseSecurity === watchman.idEnterpriseSecurity);
-                            const enterpriceName = enterprice ? enterprice.nameEnterprice : 'Empresa no encontrada';
+                        {
+                            loading ?
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '56%', transform: 'translate(-50%, -50%)' }}>
+                                    <Spinner style={{ color: 'blue' }} />
+                                </div>
+                                : watchmanData.length == 0 || currentPage >= totalPages ?
 
-                            return (
-                                <Row
-                                    icon='shield'
-                                    key={watchman.idwatchman}
-                                    A3={watchman.user ? watchman.user.docType : 'Desconocido'}
-                                    A4={watchman.user ? watchman.user.document : 'Desconocido'}
-                                    A1={watchman.user ? watchman.user.name : 'Desconocido'}
-                                    A2={watchman.user ? watchman.user.lastName : 'Desconocido'}
-                                    description={enterpriceName}
-                                    A7={watchman.user && watchman.user.phone ? watchman.user.phone : 'Desconocido'}
-                                    A17={watchman.user ? watchman.user.email : 'Desconocido'}
-                                    status={watchman.state}
-                                    to={`details/${watchman.iduser}`}
-                                >
-                                    {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
-                                        <Actions accion='Editar' onClick={(e) => {
-                                            e.preventDefault();
-                                            handleModal(watchman);
-                                        }} />
-                                    )}
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', marginLeft: '10vw' }}>
+                                        <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" />
+                                    </div>
+                                    :
 
-                                    <Actions accion='Asignar Turno' href={`/admin/watchman/shift/${watchman.idwatchman}`} />
-                                </Row>
-                            );
-                        })}
+                                    WatchmanInfo().map(watchman => {
+                                        const enterprice = enterpriseSecurity?.find(enterprice => enterprice.idEnterpriseSecurity === watchman.idEnterpriseSecurity);
+                                        const enterpriceName = enterprice ? enterprice.nameEnterprice : 'Empresa no encontrada';
+
+                                        return (
+                                            <Row
+                                                icon='shield'
+                                                key={watchman.idwatchman}
+                                                A3={watchman.user ? watchman.user.docType : 'Desconocido'}
+                                                A4={watchman.user ? watchman.user.document : 'Desconocido'}
+                                                A1={watchman.user ? watchman.user.name : 'Desconocido'}
+                                                A2={watchman.user ? watchman.user.lastName : 'Desconocido'}
+                                                description={enterpriceName}
+                                                A7={watchman.user && watchman.user.phone ? watchman.user.phone : 'Desconocido'}
+                                                A17={watchman.user ? watchman.user.email : 'Desconocido'}
+                                                status={watchman.state}
+                                                to={`details/${watchman.iduser}`}
+                                            >
+                                                {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
+                                                    <Actions accion='Editar' onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleModal(watchman);
+                                                    }} />
+                                                )}
+
+                                                <Actions accion='Asignar Turno' href={`/admin/watchman/shift/${watchman.idwatchman}`} />
+                                            </Row>
+                                        );
+                                    })}
                     </Tbody>
                 </TablePerson>
             </ContainerTable>
@@ -456,32 +427,6 @@ export const Watchman = () => {
 
                             </Modal>
                         </ModalContainer>
-                    </>,
-                    document.getElementById("modalRender")
-                )}
-
-            {showModaload &&
-                createPortal(
-                    <>
-                        <ModalContainerload ShowModal={setShowModaload}>
-                            <Modaload
-                                showModal={setShowModaload}
-                            >
-                                <div className='d-flex justify-content-center'>
-                                    <l-dot-spinner
-                                        size="50"
-                                        speed="2"
-                                        color="black"
-                                    ></l-dot-spinner>
-                                </div>
-                                <div className="d-flex justify-content-center">
-                                    <p> </p>
-                                    <p className="mt-2 text-muted">Cargando datos...</p>
-                                </div>
-
-
-                            </Modaload>
-                        </ModalContainerload>
                     </>,
                     document.getElementById("modalRender")
                 )}

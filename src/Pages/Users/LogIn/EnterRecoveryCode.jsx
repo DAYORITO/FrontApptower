@@ -62,7 +62,7 @@ export const EnterRecoveryCode = () => {
             <div className="container-form login">
                 <div className="informations">
                     <div className="info-childs">
-                        <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" />
+                        {/* <img src={ImageIcono} width="140" height="140" alt="ApptowerApart" /> */}
                         <h2>Bienvenido</h2>
                         <p className='message'>Recupera tu contraseña de forma segura con un código de verificación enviado a tu correo</p>
                     </div>

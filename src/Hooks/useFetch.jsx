@@ -143,7 +143,10 @@ export const useFetchget = (endpoint) => {
                 if (error.name === 'AbortError') {
                     console.log('Hola error: ' + error.message)
                 }
-            }).finally(() => setLoad(false));
+            })
+            .finally(() => {
+                setTimeout(() => setLoad(false), 1000);
+            });
 
         return () => abortController.abort();
 
@@ -195,6 +198,7 @@ export const useFetchForFile = async (url, data, method = "POST") => {
             const errorData = await response.json();
             console.log('Error data:', errorData);
             throw new Error(`HTTP error! status: ${response.status}`);
+            return { response: null, error: errorData };
         }
 
         const json = await response.json();
@@ -206,8 +210,6 @@ export const useFetchForFile = async (url, data, method = "POST") => {
             console.log('Error:', error);
         }
         return { response: null, error };
-    } finally {
-        abortController.abort();
     }
 }
 
