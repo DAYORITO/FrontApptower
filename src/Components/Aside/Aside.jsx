@@ -93,23 +93,10 @@ export const Aside = () => {
 
     // Notifications
 
-    const { socket, online } = useContext(SocketContext)
+    const { notifications } = useContext(SocketContext)
 
-    const [notifications, setNotifications] = useState([]);
-
-    useEffect(() => {
-
-        socket.emit('user-id', userData?.user?.iduser);
-
-        socket.on('notifications-user', (notifications) => {
-            setNotifications(notifications);
-        })
-
-
-    }, [socket]);
-
-
-
+    console.log(notifications)
+    
     return (
         <>
 

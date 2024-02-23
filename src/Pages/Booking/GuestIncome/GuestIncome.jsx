@@ -61,24 +61,18 @@ function GuestIncome() {
     useEffect(() => {
         if (data2 && data2.guestincomeparking) {
             setGuestIncomeParkingData(data2.guestincomeparking);
-
         }
 
     }, [data2])
 
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
-        if (data?.guestIncome?.length > 0 && data2?.guestincomeparking?.length > 0) {
+        if (!load) {
             setLoadingSpiner(false);
-
-        } else {
-            setTimeout(() => {
-                setLoadingSpiner(false);
-            }, 10000)
             // Cuando la carga se completa (load es false), desactivamos el modal de carga
 
         }
-    }, [data, data2]);
+    }, [load]);
 
 
 

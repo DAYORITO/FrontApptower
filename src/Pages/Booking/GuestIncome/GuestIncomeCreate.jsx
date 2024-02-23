@@ -71,7 +71,7 @@ function GuestIncomeCreate() {
   const { data: dataVisitors, load: load1, error2 } = useFetchget('visitors')
   const { data, load, error } = useFetchget('apartments')
   // const { data: dataResidentApartment, load: load2, error4 } = useFetchget('aparmentResidents')
-  const { data: dataResidentApartment, loading: loadResidentsApartment, get: getResidentApartment } = useFetch(url)
+  const { data: dataResidentApartment, loading: loadResidentsApartment, error: errordata, get: getResidentApartment } = useFetch(url)
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
 
@@ -81,14 +81,7 @@ function GuestIncomeCreate() {
 
   //Muestra o no, el los datos del formulario del vehiculo y la reserva
 
-  useEffect(() => {
-    if (dataVisitors?.visitors?.length > 0 && data?.apartments?.length > 0 && loadResidentsApartment == false && dataParkingSpaces?.parkingSpaces?.length > 0 && dataTowers?.towers?.length > 0) {
-      console.log("Entre aqui:", dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
-      setLoadingSpiner(false)
-    }
-    console.log("Entre a dataResidentApartment:", dataResidentApartment?.data?.apartmentResidents?.length > 0)
 
-  }, [dataVisitors, data, loadResidentsApartment, dataParkingSpaces, dataTowers])
   const handleChange = (e) => {
     if (e.target.value === 'si') {
       setCheck1(true)
@@ -223,6 +216,24 @@ function GuestIncomeCreate() {
     if (dataParkingSpaces.parkingSpaces)
       setparkingSpots(getparkingSpots(dataParkingSpaces))
   }, [dataParkingSpaces])
+
+  useEffect(() => {
+    if (!loadResidentsApartment && towers?.length > 0 && errordata == null
+      // && dataTowers?.towers?.length > 0 && data?.apartments?.length > 0 && dataVisitors?.data?.visitors?.length > 0 && dataParkingSpaces?.data?.parkingSpaces?.length > 0 && dataTowers?.data?.towers?.length > 0
+      ) {
+      console.log("Entre aqui:", dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
+      setLoadingSpiner(false)
+    }
+    else if (errordata != null){
+      setLoadingSpiner(false)
+
+    }
+    else{
+      console.log("Error en la carga de datos:", errordata)
+    }
+    console.log("Entre a dataResidentApartment:", dataResidentApartment?.data?.apartmentResidents?.length > 0)
+
+  }, [loadResidentsApartment, towers, errordata])
 
 
   //Evento para cambia los datos del select de apartamentos
@@ -435,7 +446,7 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
               :
               <Inputs
                 key={apartment}
@@ -451,7 +462,7 @@ function GuestIncomeCreate() {
           <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
             {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento'} id={"select22"} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento'} id={"select22"} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -483,7 +494,7 @@ function GuestIncomeCreate() {
         </div>
         {
           check1 &&
-          <InputsSelect name="Parqueadero" id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
+          <InputsSelect name="Parqueadero" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
         <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <Inputs id={"personaAcceso"} name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
