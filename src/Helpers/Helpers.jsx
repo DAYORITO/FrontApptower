@@ -1,7 +1,8 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Cookies from "js-cookie";
+import { SocketContext } from "../Context/SocketContext";
 
 
 // Use get user logged
@@ -161,9 +162,20 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         title: 'Éxito',
         text: message ? message : response.message,
         icon: 'success',
-      }).then(() => {
+      }).then(async () => {
         modal(false);
+
+        const { notifications, socket } = await useContext(SocketContext)
+
+        console.log(socket, 'Socket')
+
+        socket.on('notifications-user', (data) => {
+          console.log(data, 'Notificaciones')
+        });
+
+
       });
+
 
       return { success: true, response }
     }

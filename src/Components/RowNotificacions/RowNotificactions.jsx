@@ -13,25 +13,28 @@ export const RowNotificactions = ({
   date = "Hoy",
   status,
   icon = "message-circle",
-  onclick = () => console.log('hola'),
+  onclick,
   seen = true,
+  isNotification = false,
 
-  isNotification = false
+
+
+
 }) => {
 
   moment.locale('es');
 
   date = moment(date);
 
-  to = 
+  to =
     to.idrole == 2 ? `/admin/residents/${to.iduser}` :
-    to.idrole == 1 ? `/admin/users/details/${to.iduser}` :
-    to.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
+      to.idrole == 1 ? `/admin/users/details/${to.iduser}` :
+        to.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
   return (
 
-    <Link to={to}>
-      <div className={`list-group-item notification hoverable`} onClick={onclick}>
+    <Link onClick={onclick} to={to}>
+      <div className={`list-group-item notification hoverable`} >
         <div className="row">
           <div className="col-auto">
             <div className="circle mt-4">

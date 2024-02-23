@@ -93,10 +93,22 @@ export const Aside = () => {
 
     // Notifications
 
-    const { notifications } = useContext(SocketContext)
+    const { notifications, socket } = useContext(SocketContext)
 
-    console.log(notifications)
-    
+    // Seen notification
+
+    const [notification, setNotification] = useState(false)
+
+    const isSeen = (data) => {
+
+        setNotification(data)
+
+        console.log(data)
+
+        socket.emit('seen-notification', data)
+
+    }
+
     return (
         <>
 
@@ -293,6 +305,7 @@ export const Aside = () => {
                                                     msg={notification.content.message}
                                                     to={notification.content.information}
                                                     date={notification.createdAt}
+                                                    onclick={() => isSeen(notification)}
                                                 />
                                             )
                                         })
