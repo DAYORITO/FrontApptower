@@ -198,7 +198,10 @@ export const UsersEdit = () => {
                         title: 'Éxito',
                         text: 'Usuario modificado exitosamente',
                         icon: 'success',
-                    }).then(() => navigate('/admin/users'));
+                    }).then(() => {
+                        navigate('/admin/users');
+                        window.location.reload
+                    });
                 } else {
                     const errorResponse = await response.json();
                     console.error('Error al guardar los cambios:', response.status, errorResponse);
@@ -212,6 +215,8 @@ export const UsersEdit = () => {
                 console.error('Error al procesar la solicitud:', error);
             }
         }
+
+
     };
 
 
