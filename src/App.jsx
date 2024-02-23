@@ -244,7 +244,7 @@ const App = () => {
                                         <FinesCreate /> : <NotFound />
                                 } />
 
-                                <Route path='fines/details/:id?' element={
+                                <Route path='fines/details/:details' element={
                                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
                                     <FinesDetail />
                                     : <NotFound />

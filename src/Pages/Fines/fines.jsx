@@ -246,7 +246,7 @@ function Fines() {
 
                         <Th name={'Tipo de multa'}></Th>
                         <Th name={'Fecha del incidente'}></Th>
-                        <Th name={'Fecha límite de pago'}></Th>
+                        <Th name={'Fecha limite de pago'}></Th>
                         <Th name={'Valor a pagar'}></Th>
                         <Th name={'Estado'}></Th>
                         <Th name={'Acciones'}></Th>
@@ -282,7 +282,7 @@ function Fines() {
                                 })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
-                                to={'details/'}
+                                to={`details/${encodeURIComponent(JSON.stringify(fine))}`}
                             >
                                 {fine.state != 'Pagada' ?
                                     <Actions accion='Agregar Comprobante' onClick={() => {

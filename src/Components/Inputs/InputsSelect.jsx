@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-function InputsSelect({ id, disabled = false, options, name, onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle, StyleInput, containerStyle }) {
+function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay datos", onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle, StyleInput, containerStyle }) {
 
 
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
@@ -89,7 +89,10 @@ function InputsSelect({ id, disabled = false, options, name, onChange, value, er
             style={StyleInput}
           // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
-            <option value='' selected disabled></option>
+            {options?.length > 0 ? <option value='' selected disabled></option>
+            : 
+            (<><option value='' selected disabled></option><option value='' disabled>{voidmessage}</option></>)}
+            
             {options.map((opcion) => (
 
               <option
