@@ -85,6 +85,21 @@ export const spacesTypes = [
     },
 ]
 
+export const BookingTypes = [
+    {
+        value: "Por revisar",
+        label: "Por revisar"
+    },
+    {
+        value: "Aprobado",
+        label: "Aprobada"
+    },
+    {
+        value: "Cancelado",
+        label: "Cancelada"
+    }
+]
+
 export const bools = [
     {
         value: true,
