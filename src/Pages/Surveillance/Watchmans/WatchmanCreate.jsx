@@ -294,7 +294,7 @@ export const WatchmanCreate = () => {
                         <FormColumn>
                             <div className="mr-1" style={{ width: '100%' }}>
 
-                                <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate}></Select2>
+                                <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate} defaultOption={true}></Select2>
                             </div>
                             <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
                             <Inputs
