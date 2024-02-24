@@ -16,18 +16,20 @@ export const RowNotificactions = ({
   onclick,
   seen = true,
   isNotification = false,
-
+  who
 
 
 
 }) => {
+  console.log(to)
+  let personWho = who?.name + ' ' + who?.lastName + ' '
 
   moment.locale('es');
 
   date = moment(date);
 
   to =
-    to.idrole == 2 ? `/admin/residents/${to.iduser}` :
+    to.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
       to.idrole == 1 ? `/admin/users/details/${to.iduser}` :
         to.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
@@ -53,7 +55,7 @@ export const RowNotificactions = ({
           </div>
           <div className="col">
             <small><strong>{name && `${name} ${lastName}`}</strong></small>
-            <div className=" text-secondary small">{msg}</div>
+            <div className="text-secondary small">{who && <strong>{personWho}</strong>}{msg}</div>
             <small className={`badge badge-light text-${type}`}>{date.format('MMMM Do')}</small>
           </div>
         </div>

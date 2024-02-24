@@ -43,7 +43,6 @@ export const OwnerDetail = () => {
 
   const idUserLogged = useUserLogged()
 
-
   const [idOwner, setIdOwner] = useState(id)
   const [idUser, setIdUser] = useState("")
   const [idApartment, setIdApartment] = useState("")
@@ -183,9 +182,8 @@ export const OwnerDetail = () => {
 
     console.log("edit data", data)
 
-    await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url);
+    await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoOwner, data, url);
     getOwner(`owners/${id}`)
-    setModalPersonalInfoOwner(false)
 
   }
 
@@ -203,6 +201,10 @@ export const OwnerDetail = () => {
   const CreateApartmentOwner = async (event) => {
 
     const data = {
+
+      // User logged
+
+      idUserLogged: idUserLogged,
 
       idApartment: parseInt(idApartment),
       idOwner: idOwner,

@@ -8,7 +8,7 @@ import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import { useFetch } from '../../../Hooks/useFetch'
 import { bools, docTypes, sexs } from '../../../Hooks/consts.hooks'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 
 export const OwnersCreate = () => {
 
@@ -20,6 +20,9 @@ export const OwnersCreate = () => {
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { id } = useParams()
+
+  const idUserLogged = useUserLogged()
+
 
   // const [userImg, setUserImg] = useState("");
   const [pdf, setPdf] = useState("");
@@ -68,6 +71,10 @@ export const OwnersCreate = () => {
 
     const data = {
 
+      // User logged
+
+      idUserLogged: idUserLogged,
+
       // userImg: userImg,
       pdf: pdf,
       docType: docType,
@@ -92,11 +99,9 @@ export const OwnersCreate = () => {
 
     await postRequest(event, 'owners', 'POST', {}, data, url)
 
-    // navigate(-1)
+    navigate(-1)
 
   };
-
-  console.log(apartmentList)
 
 
 
@@ -114,8 +119,6 @@ export const OwnersCreate = () => {
     >
 
       <>
-
-
 
 
         <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion personal</h6>
@@ -168,7 +171,7 @@ export const OwnersCreate = () => {
             options={apartmentList}
             name={"Apartamento"}
             value={idApartment}
-            disabled={id ? idApartment: ''}
+            disabled={id ? idApartment : ''}
             onChange={e => setIdApartment(e.target.value)}
           ></InputsSelect>
         </FormColumn>
@@ -188,7 +191,7 @@ export const OwnersCreate = () => {
         </FormColumn>
 
         <FormColumn>
-        <h6 className='mb-4 w-100 ml-2 text-muted'>¿Va vivir en el apartamento?</h6>
+          <h6 className='mb-4 w-100 ml-2 text-muted'>¿Va vivir en el apartamento?</h6>
 
           <InputsSelect
             id={"select"}
@@ -201,7 +204,7 @@ export const OwnersCreate = () => {
         </FormColumn>
 
         <FormColumn>
-          
+
         </FormColumn>
 
         <FormColumn>
@@ -217,27 +220,6 @@ export const OwnersCreate = () => {
           <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
           <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
         </FormColumn>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <FormColumn>

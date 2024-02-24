@@ -9,7 +9,7 @@ import { Actions } from '../../../Components/Actions/Actions'
 import { useEffect, useState } from 'react'
 import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import usePaginator, { filter, postRequest, showConfirmationDialog, useUserLogged } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -100,9 +100,16 @@ export const Owners = () => {
 
     }
 
+    const idUserLogged = useUserLogged()
+
+
     const CreateApartmentOwner = async (event) => {
 
         const data = {
+
+            // User logged
+
+            idUserLogged: idUserLogged,
 
             idApartment: parseInt(idApartment),
             idOwner: idOwner,
@@ -113,9 +120,8 @@ export const Owners = () => {
 
         console.log(data)
 
-        await postRequest(event, 'apartmentOwners', 'POST', {}, data, url)
+        await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url)
 
-        setModalAssigApartmentToOwner(false)
         getOwners('Owners')
 
     };
@@ -252,7 +258,7 @@ export const Owners = () => {
                             // onClickForDelete={deleteApartmentResident}
                             >
 
-                                <InputsSelect id={"select"} options={ownersList} name={"Propietario"}
+                                <InputsSelect disabled id={"select"} options={ownersList} name={"Propietario"}
                                     value={idOwner} onChange={e => setIdOwner(e.target.value)}
                                 ></InputsSelect>
 

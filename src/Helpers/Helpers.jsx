@@ -146,7 +146,6 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
     console.error("Error al eliminar:", error);
   }
 };
-
 export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
   try {
     event.preventDefault();
@@ -155,29 +154,20 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
     const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
-
       console.log('Response:', response);
 
       Swal.fire({
         title: 'Éxito',
         text: message ? message : response.message,
         icon: 'success',
-      }).then(async () => {
-        modal(false);
-
-        const { notifications, socket } = await useContext(SocketContext)
-
-        console.log(socket, 'Socket')
-
-        socket.on('notifications-user', (data) => {
-          console.log(data, 'Notificaciones')
-        });
-
-
+      }).then(() => {
+        if (modal) {
+          modal(false);
+        }
+        window.location.reload(); // Recargar la página
       });
 
-
-      return { success: true, response }
+      return { success: true, response };
     }
 
     if (error) {
@@ -188,13 +178,14 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'error',
       });
 
-      return { success: false, response }
+      return { success: false, response };
     }
   } catch (error) {
     console.error('Error inesperado:', error);
-    return { success: false, response: error }
+    return { success: false, response: error };
   }
 };
+
 
 export const putRequest = async (event, endpoint, successMessage, data, modal, put, get, message) => {
   try {

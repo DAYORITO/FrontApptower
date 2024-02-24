@@ -141,13 +141,13 @@ export const Spaces = () => {
                   img={space.image}
                   A1={"Reservas: 50"}
                   status={space.status}
-                  to={`/admin/booking/create`}
+                  to={`/admin/booking/calendar/${space.idSpace}`}
                 >
                   {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') ? (
                     <Actions accion='Editar' onClick={() => openModal(space)} />
                   ) : null}
 
-                  <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
+                  <Actions href={`/admin/booking/calendar/${space.idSpace}`} accion='Reservar' icon="calendar" />
                 </BigCard>
               ))}
           </ContainerCard>
