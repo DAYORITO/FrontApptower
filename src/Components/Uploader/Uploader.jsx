@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onChange, validate, fileUrl }) => {
+export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onChange, validate, fileUrl, multiple = false }) => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState(null);
     const [fileError, setFileError] = useState(null);
@@ -59,7 +59,7 @@ export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onCha
                     {!file && (
                         <div className="circle circle-lg bg-primary">
                             <i className="fe fe-upload fe-24 text-white" />
-                            <input type="file" name={name} aria-label="Archivo" onChange={handleFileChange} accept={formatos} />
+                            <input type="file" name={name} aria-label="Archivo" onChange={handleFileChange} accept={formatos} multiple  />
                         </div>
                     )}
                 </div>

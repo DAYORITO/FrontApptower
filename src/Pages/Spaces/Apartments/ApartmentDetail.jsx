@@ -777,6 +777,7 @@ export const ApartmentDetails = (props) => {
                                                             lastName={``}
                                                             date={format(new Date(fine.createdAt), 'yyyy-MM-dd')}
                                                             msg={`${fine.details} `}
+                                                            to={`/admin/fines/details/${fine.idFines}`}
 
                                                         // status="Active"
 

@@ -1,16 +1,16 @@
 import React from 'react';
 
-const ImageContainer = ({ urls }) => { 
+const ImageContainer = ({ urls }) => {
   return (
     <div className="container">
       <div className="row justify-content-center">
         {Array.isArray(urls) && urls[0] != null ? (
           urls.map((url, index) => (
-            <div key={index} className="mb-3 mr-1 d-flex justify-content-center">
-              <div className="d-flex border p-2" style={{ maxWidth: "200px", minWidth: "80px" }}>
-                {url && url.endsWith('.jpg') || url.endsWith('.png') |url.endsWith('.jpeg') ? (
-                  <div className="d-flex justify-content-center" style={{minWidth: "20px", width:"120px", height: "80px", minHeight:"10px" }}>
-                    <img src={url} className="img-fluid img-thumbnail" alt={`evidencia ${index}`} style={{ maxHeight: '100px' }} />
+            <div key={index} className="w-100">
+              <div className="d-flex border">
+                {url && (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg')) ? (
+                  <div className="pdf-icon d-flex flex-column align-items-center justify-content-center">
+                    <img src={url} className="img-fluid img-thumbnail" alt={`evidencia ${index}`} style={{ maxHeight: '20vh' }} />
                   </div>
                 ) : (
                   <div className="pdf-icon d-flex flex-column align-items-center justify-content-center">
@@ -18,17 +18,20 @@ const ImageContainer = ({ urls }) => {
                     <p>Archivo PDF</p>
                   </div>
                 )}
-                <div className="text-center">
-                  <p className=""><strong>{`Evidencia ${index + 1}`}</strong></p>
-                  <a href={url} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-primary">
-                    Ver
-                  </a>
+                <div className="d-flex w-100 justify-content-center align-items-center ml-2">
+                  <div className="text-center">
+                    <p className="mb-0"><strong>{`Evidencia ${index + 1}`}</strong></p>
+                  </div>
+                  <div className="text-center">
+                    <a href={url} target="_blank" rel="noopener noreferrer" className="btn ml-3 btn-sm btn-primary">Ver</a>
+                  </div>
                 </div>
+
               </div>
             </div>
           ))
         ) : (
-          <p>No hay archivos</p>
+          ''
         )}
       </div>
     </div>
@@ -36,8 +39,3 @@ const ImageContainer = ({ urls }) => {
 };
 
 export default ImageContainer;
-
-
-
-
-

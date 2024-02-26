@@ -315,7 +315,7 @@ export const Aside = () => {
                                             return (
                                                 <RowNotificactions
                                                     isNotification={true}
-                                                    who={notification.content.information.userLogged && notification.content.information.userLogged}
+                                                    who={notification?.content?.information?.userLogged && notification?.content?.information?.userLogged}
                                                     seen={notification.seen}
                                                     key={index}
                                                     type={notification.type}

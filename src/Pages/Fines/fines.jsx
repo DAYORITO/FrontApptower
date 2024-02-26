@@ -257,7 +257,7 @@ function Fines() {
                                 key={fine.idFines}
                                 A1={fine.fineType}
                                 A3="APTO"
-                                A4={fine.apartment.apartmentName}
+                                A4={fine.apartment?.apartmentName}
                                 icon='dollar-sign'
                                 // status='Pendiente'
                                 A6={(() => {
@@ -282,7 +282,7 @@ function Fines() {
                                 })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
-                                to={`details/${encodeURIComponent(JSON.stringify(fine))}`}
+                                to={`details/${fine.idFines}`}
                             >
                                 {fine.state != 'Pagada' ?
                                     <Actions accion='Agregar Comprobante' onClick={() => {
