@@ -31,16 +31,17 @@ function FinesCreate() {
   const navigate = useNavigate();
   const [apartmets, setApartments] = useState({ apartments: [] });
   const [showModal, setShowmodal] = useState(false);
+  const [errors, setErrors] = useState([{}])
 
   const { data, load, error } = useFetchget("apartments");
-  console.log(data);
+  // console.log(data);
 
   //Se crean los estados para los datos del usuario
   const [userData, setUserData] = useState({});
 
   //
   const token = Cookies.get('token');
-  console.log("Datos piopio", userData)
+  // console.log("Datos piopio", userData)
 
   //Funcion para obtener el documento del usuario
   const fetchUserInformation = async (token) => {
@@ -100,7 +101,7 @@ function FinesCreate() {
       value: "",
       label: "",
     });
-    console.log(apartmentsList);
+    // console.log(apartmentsList);
     return apartmentsList;
   };
 
@@ -122,8 +123,8 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const url = 'https://apptowerbackend.onrender.com/api/fines';
-    // const url = "http://localhost:3000/api/fines";
+    // const url = 'https://apptowerbackend.onrender.com/api/fines';
+    const url = "http://localhost:3000/api/fines";
     const data = {
       fineType: fineType,
       idApartment: idApartment,
@@ -161,6 +162,9 @@ function FinesCreate() {
         text: "Error al crear la multa",
         icon: "error",
       });
+      const errorData = error.errorData;
+      setErrors(errorData);
+
     }
   };
   return (
@@ -179,6 +183,8 @@ function FinesCreate() {
         <FormColumn>
           <InputsSelect
             name="Tipo de multa"
+            identifier={"fineType"}
+            errors={errors}
             onChange={(e) => {
               setFineType(e.target.value);
             }}
@@ -209,6 +215,8 @@ function FinesCreate() {
           }
           <Inputs
             name="Fecha del incidente"
+            identifier={"incidentDate"}
+            errors={errors}
             onChange={(e) => {
               setIncidentDate(e.target.value);
             }}
@@ -217,6 +225,8 @@ function FinesCreate() {
 
           <Inputs
             name="Fecha límite de pago"
+            identifier={"paymentDate"}
+            errors={errors}
             onChange={(e) => {
               setLimitDate(e.target.value);
             }}
@@ -225,15 +235,19 @@ function FinesCreate() {
           <Inputs
             name="Monto"
             type="number"
+            identifier={"amount"}
             onChange={(e) => {
               setAmount(e.target.value);
               console.log(amount);
             }}
+            errors={errors}
             validate={true}
             required={true}
           ></Inputs>
           <InputTextArea
             name="Descripción"
+            identifier={"details"}
+            errors={errors}
             onChange={(e) => {
               setDescription(e.target.value);
               console.log(e.target.value);

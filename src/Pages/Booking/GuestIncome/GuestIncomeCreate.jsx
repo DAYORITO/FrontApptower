@@ -43,6 +43,10 @@ function GuestIncomeCreate() {
   //mostrar el nombre del visitante
   const [visitorname, setVisitorname] = useState(' ')
 
+  //Recibe los errores del back
+
+  const [errors, setErrors] = useState([{}])
+
   //Se crean los estados para los datos del formulario
   const [apartment, setApartment] = useState(null)
   const [personAllowsAccesss, setPersonAllowsAccess] = useState('')
@@ -339,7 +343,10 @@ function GuestIncomeCreate() {
       });
 
       if (guestIncomeError) {
+        const errorData = guestIncomeError.errorData;
+        setErrors(errorData);
         throw new Error('Error al crear el ingreso de huésped');
+        
       }
 
       if (guestIncomeResponse && check1) {
@@ -421,6 +428,8 @@ function GuestIncomeCreate() {
 
 
     if (error) {
+      const errorData = guestIncomeError.errorData;
+      setErrors(errorData);
       setShowModaload(false);
       Swal.fire({
         title: 'Error',
@@ -446,7 +455,7 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect identifier={"idApartment"} errors={errors} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas'  onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
               :
               <Inputs
                 key={apartment}
@@ -462,7 +471,7 @@ function GuestIncomeCreate() {
           <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
             {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento'} id={"select22"} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento*'}  voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -476,16 +485,16 @@ function GuestIncomeCreate() {
           </div>
           <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
-            <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8', display: LoadingSpiner ? 'none' : 'block' }}></Inputs>
+            <Inputs name='Telefono'  readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8', display: LoadingSpiner ? 'none' : 'block' }}></Inputs>
 
           </div>
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Select2 name={'Visitante'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
+            <Select2 name={'Visitante*'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
           </div>
           <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Inputs id={"nombre"} name='Nombre' readonly={true} value={visitorname} ></Inputs>
+            <Inputs id={"nombre"} errors={errors} identifier={"idVisitor"} name='Nombre*' readonly={true} value={visitorname} ></Inputs>
           </div>
 
         </div>
@@ -494,23 +503,23 @@ function GuestIncomeCreate() {
         </div>
         {
           check1 &&
-          <InputsSelect name="Parqueadero" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
+          <InputsSelect name="Parqueadero*" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
         <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-          <Inputs id={"personaAcceso"} name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
-          <Inputs id={"observaciones"} name="Observaciones" type="text" onChange={(e) => { setObservations(e.target.value) }}></Inputs>
+          <Inputs name="Persona que permite el acceso*" type="text" errors={errors} identifier={"personAllowsAccess"} onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
+          <Inputs name="Observaciones" type="text" errors={errors} identifier={"observations"} onChange={(e) => { setObservations(e.target.value) }}></Inputs>
         </div>
       </FormContainer>
       {
         showModalvisitor &&
         createPortal(
           <ModalContainer showModal={setShowModalvisitor}>
-            <Modal title={'Crear Ingreso'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
-              <InputsSelect name="Tipo de documento" options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-              <Inputs name="Numero Documento" onChange={(e) => setDocumentVisitor(e.target.value)} />
-              <Inputs name="Nombre" onChange={(e) => setName(e.target.value)} />
-              <Inputs name="Apellido" type="text" onChange={(e) => setLastName(e.target.value)} />
-              <InputsSelect name="Sexo" options={sexs} onChange={(e) => setGenre(e.target.value)} />
+            <Modal title={'Crear Visitante'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
+              <InputsSelect name="Tipo de documento*" errors={errors} identifier={"documentNumber"} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+              <Inputs name="Numero Documento*" errors={errors} onChange={(e) => setDocumentVisitor(e.target.value)} />
+              <Inputs name="Nombre*" errors={errors} identifier={"name"} onChange={(e) => setName(e.target.value)} />
+              <Inputs name="Apellido*" errors={errors} identifier={"lastName"} type="text" onChange={(e) => setLastName(e.target.value)} />
+              <InputsSelect name="Genero*" errors={errors} identifier={"genre"} options={sexs} onChange={(e) => setGenre(e.target.value)} />
             </Modal>
           </ModalContainer>,
           document.getElementById('modalRender')
