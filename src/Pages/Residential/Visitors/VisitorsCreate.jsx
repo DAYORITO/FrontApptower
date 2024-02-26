@@ -17,6 +17,8 @@ function VisitorsCreate() {
   const [name, setName] = useState("");
   const [lastname, setLastName] = useState("");
   const [genre, setGenre] = useState("");
+  const [errors, setErrors] = useState([]);
+
 
   const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ function VisitorsCreate() {
       "genre": genre,
       "access": true
     });
+    console.log("Respuesta:",response,"Error:", error)
 
     // Manejar la respuesta o el error según sea necesario
     if (response) {
@@ -51,7 +54,8 @@ function VisitorsCreate() {
                 text: 'Error al crear usuario',
                 icon: 'error',
             });
-      console.error('Error:', error);
+            const errorData = error.errorData;
+            setErrors(errorData);
     }
   };
 
@@ -65,11 +69,11 @@ function VisitorsCreate() {
       // }
       buttons={<FormButton name={"Crear"} backButton={"regresar"} onClick={handleSubmit} />}
       >
-        <InputsSelect name="Tipo de documento" options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-        <Inputs name="Numero Documento" onChange={(e) => setDocument(e.target.value)} />
-        <Inputs name="Nombre" onChange={(e) => setName(e.target.value)} />
-        <Inputs name="Apellido" type="text" onChange={(e) => setLastName(e.target.value)} />
-        <InputsSelect name="Sexo" options={sexs} onChange={(e) => setGenre(e.target.value)} />
+        <InputsSelect name="Tipo de documento" identifier={"documentType"} errors={errors} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+        <Inputs name="Numero Documento" identifier={"documentNumber"} errors={errors} onChange={(e) => setDocument(e.target.value)} />
+        <Inputs name="Nombre" identifier={"name"} errors={errors} onChange={(e) => setName(e.target.value)} />
+        <Inputs name="Apellido" identifier={"lastname"} errors={errors} type="text" onChange={(e) => setLastName(e.target.value)} />
+        <InputsSelect name="Genero" identifier={"genre"} errors={errors} options={sexs} onChange={(e) => setGenre(e.target.value)} />
         
 
       </FormContainer>

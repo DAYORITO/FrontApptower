@@ -1,21 +1,24 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Cookies from "js-cookie";
+import { SocketContext } from "../Context/SocketContext";
 
 
 // Use get user logged
 
 export const useUserLogged = () => {
   const [idUserLogged, setIdUserLogged] = useState('');
+  const [idRolLogged, setIdRolLogged] = useState('');
 
   useEffect(() => {
-      const encodedUser = Cookies.get('user');
-      if (encodedUser) {
-          const decodedUser = decodeURIComponent(encodedUser);
-          const userLogged = JSON.parse(decodedUser);
-          setIdUserLogged(userLogged.iduser);
-      }
+    const encodedUser = Cookies.get('user');
+    if (encodedUser) {
+      const decodedUser = decodeURIComponent(encodedUser);
+      const userLogged = JSON.parse(decodedUser);
+      setIdUserLogged(userLogged.iduser);
+      setIdRolLogged(userLogged.idrole);
+    }
   }, []);
 
   return idUserLogged;
@@ -144,28 +147,37 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
   }
 };
 
-
-
 export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
   try {
-
     event.preventDefault();
     console.log('Data:', data);
 
     const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
+
       console.log('Response:', response);
 
       Swal.fire({
         title: 'Éxito',
-        text: message ? message : response,
+        text: message ? message : response.message,
         icon: 'success',
-      }).then(() => {
-
+      }).then(async () => {
         modal(false);
 
+        const { notifications, socket } = await useContext(SocketContext)
+
+        console.log(socket, 'Socket')
+
+        socket.on('notifications-user', (data) => {
+          console.log(data, 'Notificaciones')
+        });
+
+
       });
+
+
+      return { success: true, response }
     }
 
     if (error) {
@@ -175,12 +187,14 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         text: 'Error al realizar la operación',
         icon: 'error',
       });
+
+      return { success: false, response }
     }
   } catch (error) {
     console.error('Error inesperado:', error);
+    return { success: false, response: error }
   }
 };
-
 
 export const putRequest = async (event, endpoint, successMessage, data, modal, put, get, message) => {
   try {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Aside.css';
 import './AsideNotifications.css';
 
@@ -14,6 +14,10 @@ import { useAllowedPermissions, useFetch, useFetchUserInformation, useFetchget }
 import { Spinner } from '../Spinner/Spinner';
 import { io } from 'socket.io-client';
 import { id } from 'date-fns/locale';
+import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
+import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
+import { useSocket } from '../../Hooks/useSockets';
+import { SocketContext } from '../../Context/SocketContext';
 
 export const Aside = () => {
 
@@ -25,7 +29,7 @@ export const Aside = () => {
 
     const allowedPermissions = useAllowedPermissions(idToPermissionName);
 
-    
+
 
 
 
@@ -87,6 +91,24 @@ export const Aside = () => {
     };
 
 
+    // Notifications
+
+    const { notifications, socket } = useContext(SocketContext)
+
+    // Seen notification
+
+    const [notification, setNotification] = useState(false)
+
+    const isSeen = (data) => {
+
+        setNotification(data)
+
+        console.log(data)
+
+        socket.emit('seen-notification', data)
+
+    }
+
     return (
         <>
 
@@ -137,7 +159,7 @@ export const Aside = () => {
                                 )}
 
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav onClick={openNotifications} A1={1} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
+                                    <ListNav onClick={openNotifications} A1={notifications.length} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (
@@ -252,7 +274,7 @@ export const Aside = () => {
                     </div>
 
                     <div className='myNav-links-end'>
-                        {allowedPermissions && (allowedPermissions.includes('Usuarios') && nameRole.toLocaleLowerCase().includes("administrador")) && (
+                        {allowedPermissions && (allowedPermissions.includes('Usuarios') && nameRole?.toLocaleLowerCase().includes("administrador")) && (
                             <ListNav module={'Configuración'} href='rols/' icon='fe fe-settings fe-24' />
                         )}
                         <ListNav module={'Salir'} onClick={e => {
@@ -269,8 +291,25 @@ export const Aside = () => {
                 createPortal(
                     <>
                         <ModalContainer showModal={setNotificationsModal}>
-                            <ModalNotifications showModal={setNotificationsModal} userId={userData?.user?.iduser}>
+                            <ModalNotifications showModal={setNotificationsModal}>
 
+                                {
+                                    notifications == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
+                                        notifications.map((notification, index) => {
+                                            return (
+                                                <RowNotificactions
+                                                    isNotification={true}
+                                                    seen={notification.seen}
+                                                    key={index}
+                                                    type={notification.type}
+                                                    msg={notification.content.message}
+                                                    to={notification.content.information}
+                                                    date={notification.createdAt}
+                                                    onclick={() => isSeen(notification)}
+                                                />
+                                            )
+                                        })
+                                }
                             </ModalNotifications>
                         </ModalContainer>
                     </>,

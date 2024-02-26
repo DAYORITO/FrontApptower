@@ -30,7 +30,7 @@ export const RecoverPassword = () => {
                 console.log(userData.message);
                 Cookies.set("email", email);
 
-                const sendCode = await fetch('http://localhost:3000/api/email/verify', {
+                const sendCode = await fetch('http://localhost:3000/api/email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

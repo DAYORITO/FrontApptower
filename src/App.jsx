@@ -49,7 +49,7 @@ import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
 import { VehicleCreate } from "./Pages/Residential/Vehicle/vehicleCreate";
 import { io } from 'socket.io-client';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -62,14 +62,19 @@ import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
 import { Residents } from "./Pages/Residential/Residents/Residents";
 import { useAllowedPermissionsAndPrivileges, useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
+import { BookingCalendar } from "./Pages/Booking/Booking/BookingCalendar";
 // import { UserDetail } from "./Pages/Users/Users/userDetails";
 
 import { AuthProvider } from "./Context/AuthContext";
-
-const socket = io('https://apptowerbackend.onrender.com/');
+import { SocketContext } from "./Context/SocketContext";
 
 
 const App = () => {
+    
+    const { socket, online } = useContext(SocketContext)
+
+    console.log(online? 'Online': 'Offline')
+
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
 
@@ -99,7 +104,7 @@ const App = () => {
             <HashRouter basename='/' >
                 <div className='App'>
                     <Routes>
-                    
+
                         <Route path='/' element={<LogIn />} />
                         <Route path='/recoverpassword' element={<RecoverPassword />} />
                         <Route path="/recoveycode" element={<EnterRecoveryCode />} />
@@ -108,6 +113,7 @@ const App = () => {
 
                         <Route element={<ProtectedRoutes />}>
                             <Route path='/admin/*' element={<Layout />}>
+
 
                                 <Route path='notfound' element={<NotFound />} />
                                 <Route path='dashboard' element={
@@ -142,10 +148,15 @@ const App = () => {
                                 <Route path='watchman' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
                                         ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
-                                            ? <>
-                                                <Watchman />
-                                                <EnterpriceSecurity />
-                                            </>
+                                            ? <Watchman />
+                                            : <NotFound />
+                                        : <NotFound />
+                                } />
+
+                                <Route path='enterprice' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
+                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
+                                            ? <EnterpriceSecurity />
                                             : <NotFound />
                                         : <NotFound />
                                 } />
@@ -209,14 +220,14 @@ const App = () => {
 
                                 <Route path='guest_income/create/:id?' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear') ?
-                                        <GuestIncomeCreate /> 
+                                        <GuestIncomeCreate />
                                         : <NotFound />
                                 } />
                                 <Route path='guest_income/details/:details' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
                                         <GuestIncomeDetails />
                                         : <NotFound />
-                                        } />
+                                } />
 
 
 
@@ -246,8 +257,8 @@ const App = () => {
 
                                 <Route path='fines/details/:details' element={
                                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
-                                    <FinesDetail />
-                                    : <NotFound />
+                                        <FinesDetail />
+                                        : <NotFound />
                                 } />
 
 
@@ -360,7 +371,7 @@ const App = () => {
                                 {/* Notifications */}
                                 <Route path='notifications' element={
                                     allowedPermissions['Notificaciones'] ?
-                                        <Notifications socket={socket} /> : <NotFound />
+                                        <Notifications  /> : <NotFound />
                                 } />
 
 
@@ -373,9 +384,13 @@ const App = () => {
 
                                 <Route path='booking/create' element={
                                     allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Crear') ?
-                                        <BookingCreate socket={socket} /> : <NotFound />
+                                        <BookingCreate /> : <NotFound />
                                 } />
 
+
+                                <Route path='booking/calendar/:id?' element={
+                                    <BookingCalendar />
+                                } />
 
 
                                 {/* Vehicles */}

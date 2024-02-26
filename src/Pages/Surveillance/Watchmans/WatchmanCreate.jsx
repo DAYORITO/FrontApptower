@@ -195,14 +195,6 @@ export const WatchmanCreate = () => {
             return;
         }
 
-        if (!enterprice) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, seleccione una empresa de seguridad',
-                icon: 'error',
-            });
-            return;
-        }
 
         if (password !== confirmPassword) {
             Swal.fire({

@@ -61,7 +61,7 @@ export const ContainerModule = ({
                                     A4 ? <><br /><span className="badge badge-light text-secondary">{A4}</span></> : null
                                 }
                                 {
-                                    A5 ? <><br /><span className="badge badge-white text-muted">{A5}</span></> : null
+                                    A5 ? <><br /><span className="badge badge-white text-secondary">{A5}</span></> : null
                                 }
                                 {
                                     A6 ? <><br /><span className="badge badge-white text-secondary">{A6}</span></> : null
