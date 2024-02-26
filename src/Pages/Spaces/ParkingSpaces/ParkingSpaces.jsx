@@ -10,7 +10,7 @@ import { Actions } from "../../../Components/Actions/Actions";
 import { Spinner } from "../../../Components/Spinner/Spinner";
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
-import usePaginator, { filter, filterPerSelect, postRequest } from "../../../Helpers/Helpers";
+import { usePaginator, filter, postRequest, useUserLogged, filterPerSelect } from '../../../Helpers/Helpers'
 import { Tbody } from "../../../Components/Tbody/Tbody";
 import { createPortal } from "react-dom";
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo";

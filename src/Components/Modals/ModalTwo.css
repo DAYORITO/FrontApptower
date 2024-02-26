@@ -80,7 +80,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 300px;
+    width: 60vh;
     /* Ajusta el ancho según tus necesidades */
     background-color: white;
     z-index: 1000;
@@ -92,7 +92,7 @@
 }
 
 .notifications-modal-body {
-    width: 42vh !important;
+    width: 100% !important;
     max-height: 80vh; /* Establece la altura máxima */
     overflow-y: auto; /* Habilita el desplazamiento vertical */
   }

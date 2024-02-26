@@ -1,8 +1,8 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Cookies from "js-cookie";
-import { SocketContext } from "../Context/SocketContext";
+import { useNavigate } from "react-router";
 
 
 // Use get user logged
@@ -33,7 +33,7 @@ export const useCapitalizeFirstLetter = (text) => {
 
 // Use paginator
 
-const usePaginator = (data, itemsPerPage = 10) => {
+export const usePaginator = (data, itemsPerPage = 10) => {
 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -61,8 +61,6 @@ const usePaginator = (data, itemsPerPage = 10) => {
   };
 };
 
-export default usePaginator;
-
 
 
 
@@ -78,7 +76,6 @@ export const filter = (search, myData, searcher, searcher2) => {
 
   if (!search) {
     data = myData;
-    console.log(myData)
   } else {
     console.log(searcher)
     data = myData.filter((dato) =>
@@ -120,8 +117,6 @@ export const filterPerSelect = (search, myData, searcher) => {
 
 
 
-
-
 export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {
   try {
     const result = await Swal.fire({
@@ -147,37 +142,34 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
   }
 };
 
-export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
+
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message, navigate, socket) => {
+
+
   try {
     event.preventDefault();
-    console.log('Data:', data);
-
     const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
-
       console.log('Response:', response);
 
       Swal.fire({
         title: 'Éxito',
         text: message ? message : response.message,
         icon: 'success',
-      }).then(async () => {
-        modal(false);
+      }).then(() => {
 
-        const { notifications, socket } = await useContext(SocketContext)
+        if (socket) {socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket')}
+        
 
-        console.log(socket, 'Socket')
-
-        socket.on('notifications-user', (data) => {
-          console.log(data, 'Notificaciones')
-        });
-
+        if (typeof modal === 'function') {modal(false)}
+        
+        if (navigate) {navigate(-1);}
+        
 
       });
 
-
-      return { success: true, response }
+      return { success: true, response };
     }
 
     if (error) {
@@ -188,13 +180,14 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'error',
       });
 
-      return { success: false, response }
+      return { success: false, response };
     }
   } catch (error) {
     console.error('Error inesperado:', error);
-    return { success: false, response: error }
+    return { success: false, response: error };
   }
 };
+
 
 export const putRequest = async (event, endpoint, successMessage, data, modal, put, get, message) => {
   try {

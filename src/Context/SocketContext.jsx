@@ -21,13 +21,6 @@ export const SocketProvider = ({ children }) => {
 
     }, [socket, notifications]);
 
-
-    console.log(idUserLogged, )
-
-
-    console.log(notifications)
-
-    console.log(socket)
     return (
         <SocketContext.Provider value={{ socket, online, notifications}} >
 

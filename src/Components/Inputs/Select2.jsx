@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import 'select2'; // Importa Select2
 // import './Inputs.css';
 import './Select2.css';
-function Select2({ id, options, name, onChange, value, validate,voidmessage="No hay datos", readOnly = false, inputStyle }) {
+function Select2({ id, options, name, onChange, value, validate, voidmessage = "No hay datos", readOnly = false, inputStyle, defaultOption = false }) {
   const inputRef = useRef(null);
   const labelRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(value || '');
@@ -112,8 +112,9 @@ function Select2({ id, options, name, onChange, value, validate,voidmessage="No 
             <option value='' disabled>
 
             </option>
-            {options?.length > 0 ? null: <option value='' disabled>{voidmessage}</option>}
-            
+            {defaultOption && <option value='' disabled>Seleccione una opción</option>}
+            {options?.length > 0 ? null : <option value='' disabled>{voidmessage}</option>}
+
             {options && options.map((opcion) => (
               <option className='' key={opcion.value} value={opcion.value}>
                 {opcion.label}
