@@ -3,12 +3,14 @@ import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router'
 import { docTypes, sexs } from '../../../Hooks/consts.hooks'
 import FormColumn from "../../../Components/Forms/FormColumn";
 import { useFetch } from '../../../Hooks/useFetch'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { Socket } from 'socket.io-client'
+import { SocketContext } from '../../../Context/SocketContext'
 
 export const ResidentCreate = (props) => {
 
@@ -19,6 +21,15 @@ export const ResidentCreate = (props) => {
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { id } = useParams()
+
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
+  // User logged
+
+  const idUserLogged = useUserLogged()
 
   const [userImg, setUserImg] = useState("");
   const [pdf, setPdf] = useState("");
@@ -82,6 +93,10 @@ export const ResidentCreate = (props) => {
 
     const data = {
 
+      // User logged
+
+      idUserLogged: idUserLogged,
+
       userImg: userImg,
       pdf: pdf,
       docType: docType,
@@ -101,9 +116,8 @@ export const ResidentCreate = (props) => {
 
     }
 
-    await postRequest(event, 'residents', 'POST', {}, data, url)
+    await postRequest(event, 'residents', 'POST', null, data, url, null, navigate, socket)
 
-    navigate(-1)
 
   };
 
@@ -177,7 +191,7 @@ export const ResidentCreate = (props) => {
             name={"Apartamento"}
             value={idApartment}
             onChange={e => setIdApartment(e.target.value)}
-            disabled={id ? idApartment: ''}
+            disabled={id ? idApartment : ''}
           ></InputsSelect>
 
         </FormColumn>

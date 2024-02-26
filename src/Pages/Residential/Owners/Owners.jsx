@@ -6,10 +6,10 @@ import { TablePerson } from '../../../Components/Tables/Tables'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import usePaginator, { filter, postRequest, showConfirmationDialog, useUserLogged } from '../../../Helpers/Helpers'
+import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -24,10 +24,16 @@ import Cookies from 'js-cookie'
 import { format } from 'date-fns'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import { Paginator } from '../../../Components/Paginator/Paginator'
+import { SocketContext } from '../../../Context/SocketContext'
 
 
 export const Owners = () => {
     const token = Cookies.get('token');
+
+    // socket 
+
+    const { socket } = useContext(SocketContext)
+
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/
@@ -62,8 +68,6 @@ export const Owners = () => {
         console.log(e.target.value)
 
     }
-
-    console.log(ownerList)
 
     const [modalAssigApartmentToOwner, setModalAssigApartmentToOwner] = useState(false);
 
@@ -118,9 +122,10 @@ export const Owners = () => {
 
         }
 
-        console.log(data)
+        console.log(socket)
 
-        await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url)
+        
+        await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, null, null, socket)
 
         getOwners('Owners')
 

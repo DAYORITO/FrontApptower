@@ -6,7 +6,7 @@ import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
 import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch';
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
-import usePaginator, { filter, postRequest } from "../../../Helpers/Helpers";
+import { usePaginator, filter, postRequest } from '../../../Helpers/Helpers'
 import { Spinner } from "../../../Components/Spinner/Spinner";
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from "react-dom";

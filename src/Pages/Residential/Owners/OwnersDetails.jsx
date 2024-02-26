@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Details } from "../../../Components/Details/details"
 import Inputs from '../../../Components/Inputs/Inputs'
@@ -28,6 +28,7 @@ import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { SocketContext } from '../../../Context/SocketContext'
 
 export const OwnerDetail = () => {
 
@@ -40,6 +41,12 @@ export const OwnerDetail = () => {
   // Owner information
 
   const { id } = useParams();
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
+  // User logged
 
   const idUserLogged = useUserLogged()
 
@@ -182,7 +189,7 @@ export const OwnerDetail = () => {
 
     console.log("edit data", data)
 
-    await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoOwner, data, url);
+    await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoOwner, data, url, null, null, socket);
     getOwner(`owners/${id}`)
 
   }
@@ -215,9 +222,8 @@ export const OwnerDetail = () => {
 
     console.log(data)
 
-    await postRequest(event, 'apartmentOwners', 'POST', {}, data, url)
+    await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, null, null, socket)
 
-    setModalAssigApartmentToOwner(false)
     getOwner(`owners/${id}`)
 
   };

@@ -1,8 +1,8 @@
 import Swal from "sweetalert2";
 import { useFetchForFile } from "../Hooks/useFetch";
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Cookies from "js-cookie";
-import { SocketContext } from "../Context/SocketContext";
+import { useNavigate } from "react-router";
 
 
 // Use get user logged
@@ -33,7 +33,7 @@ export const useCapitalizeFirstLetter = (text) => {
 
 // Use paginator
 
-const usePaginator = (data, itemsPerPage = 10) => {
+export const usePaginator = (data, itemsPerPage = 10) => {
 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -61,8 +61,6 @@ const usePaginator = (data, itemsPerPage = 10) => {
   };
 };
 
-export default usePaginator;
-
 
 
 
@@ -78,7 +76,6 @@ export const filter = (search, myData, searcher, searcher2) => {
 
   if (!search) {
     data = myData;
-    console.log(myData)
   } else {
     console.log(searcher)
     data = myData.filter((dato) =>
@@ -120,8 +117,6 @@ export const filterPerSelect = (search, myData, searcher) => {
 
 
 
-
-
 export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {
   try {
     const result = await Swal.fire({
@@ -146,11 +141,13 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
     console.error("Error al eliminar:", error);
   }
 };
-export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message) => {
+
+
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message, navigate, socket) => {
+
+
   try {
     event.preventDefault();
-    console.log('Data:', data);
-
     const { response, error } = await useFetchForFile(`${url}${endPoint}`, data, method);
 
     if (response) {
@@ -161,10 +158,15 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         text: message ? message : response.message,
         icon: 'success',
       }).then(() => {
-        if (modal) {
-          modal(false);
-        }
-        window.location.reload(); // Recargar la página
+
+        if (socket) {socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket')}
+        
+
+        if (typeof modal === 'function') {modal(false)}
+        
+        if (navigate) {navigate(-1);}
+        
+
       });
 
       return { success: true, response };

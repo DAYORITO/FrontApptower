@@ -394,6 +394,10 @@ const App = () => {
 
 
                                 {/* Vehicles */}
+                                <Route path='vehicle/:id' element={
+                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Listar') ?
+                                        <Vehicle /> : <NotFound />
+                                } />
                                 <Route path='vehicle' element={
                                     allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Listar') ?
                                         <Vehicle /> : <NotFound />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import Inputs from '../../../Components/Inputs/Inputs'
 import InputsSelect from "../../../Components/Inputs/InputsSelect"
@@ -19,11 +19,11 @@ import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
 import { createPortal } from "react-dom"
 import { useParams } from "react-router"
 import { format } from 'date-fns';
+import { SocketContext } from '../../../Context/SocketContext'
 
 
-import { putRequest, postRequest, showConfirmationDialog, filter } from '../../../Helpers/Helpers'
+import { postRequest, showConfirmationDialog, filter, useUserLogged } from '../../../Helpers/Helpers'
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
-
 
 
 export const ApartmentDetails = (props) => {
@@ -37,6 +37,16 @@ export const ApartmentDetails = (props) => {
     // Apartment information
 
     const { id } = useParams();
+
+    // Socket
+
+    const { socket } = useContext(SocketContext)
+
+    // User logged
+
+    const idUserLogged = useUserLogged()
+
+
     const [area, setArea] = useState('');
     const [idTower, setIdTower] = useState('');
     const [towerName, setTowerName] = useState('');
@@ -195,6 +205,7 @@ export const ApartmentDetails = (props) => {
 
         console.log(data, "datica")
         setIdApartmentOwner(data.idApartmentOwner)
+        setIdApartment(data.idApartment)
         setIdOwner(data.idOwner)
         setOwnershipStartDate(format(new Date(data.OwnershipStartDate), 'yyyy-MM-dd'))
         setOwnershipEndDate(format(new Date(data.OwnershipEndDate), 'yyyy-MM-dd'))
@@ -342,16 +353,18 @@ export const ApartmentDetails = (props) => {
 
         const data = {
 
+            // User logged
+            idUserLogged: idUserLogged,
+
             idApartment,
             idResident,
             residentStartDate,
             // Add other properties as needed for different requests
         };
 
-        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url);
+        await postRequest(event, 'aparmentResidents', 'POST', setShowApartmentResidentsModal, data, url, null, null, socket);
 
         getApartmentResidents(`aparmentResidents/${id}`)
-        setShowApartmentResidentsModal(false)
     };
 
     // create assignedparkingspace 
@@ -360,15 +373,17 @@ export const ApartmentDetails = (props) => {
 
         const data = {
 
+            // User logged
+            idUserLogged: idUserLogged,
+
             idApartment,
             idParkingSpace
 
         };
 
-        await postRequest(event, 'assignedParkingSpaces', 'POST', {}, data, url);
+        await postRequest(event, 'assignedParkingSpaces', 'POST', setShowParkingSpacesModal, data, url, null, null, socket);
 
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
-        setShowParkingSpacesModal(false)
 
     };
 
@@ -379,6 +394,7 @@ export const ApartmentDetails = (props) => {
     const handleUpdateResident = async (event) => {
 
         const data = {
+
 
             idApartment: idApartment,
             tower: idTower,
@@ -403,7 +419,11 @@ export const ApartmentDetails = (props) => {
 
         const data = {
 
+            // User logged
+            idUserLogged: idUserLogged,
+
             idApartmentOwner: idApartmentOwner,
+            idApartment: idApartment,
             idOwner: idOwner,
             OwnershipStartDate: OwnershipStartDate,
             OwnershipEndDate: OwnershipEndDate,
@@ -415,8 +435,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'apartmentOwners', 'PUT', {}, data, url);
-        setShowApartmentOwnermODAL(false)
+        await postRequest(event, 'apartmentOwners', 'PUT', setShowApartmentOwnermODAL, data, url, null, null, socket);
         getApartmentOwners(`apartmentOwners/${id}`)
 
     };
@@ -426,6 +445,9 @@ export const ApartmentDetails = (props) => {
     const handleUpdateApartmentResident = async (event) => {
 
         const data = {
+
+            // User logged
+            idUserLogged: idUserLogged,
 
             idApartmentResident: idApartmentResident,
             idResident: idResident,
@@ -439,10 +461,9 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url);
+        await postRequest(event, 'aparmentResidents', 'PUT', setShowApartmentResidentEditModal, data, url);
         getApartmentResidents(`aparmentResidents/${id}`)
 
-        setShowApartmentResidentEditModal(false)
 
 
     };
@@ -454,6 +475,9 @@ export const ApartmentDetails = (props) => {
 
         const data = {
 
+            // User logged
+            idUserLogged: idUserLogged,
+
             idAssignedParking: idAssignedParking,
             idParkingSpace: parseInt(idParkingSpace),
             idApartment: idApartment
@@ -462,10 +486,10 @@ export const ApartmentDetails = (props) => {
 
         // console.log("edit data", data)
 
-        await postRequest(event, 'assignedParkingSpaces', `PUT`, {}, data, url);
+        await postRequest(event, 'assignedParkingSpaces', `PUT`, setShowParkingSpacesModal, data, url);
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
 
-        setShowParkingSpacesModal(false)
+
     };
 
     // Delete apartmentresident
@@ -673,7 +697,7 @@ export const ApartmentDetails = (props) => {
                                                         name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
 
                                                         // Details
-                                                        to={`/admin/vehicle/details/${vehicle.idvehicle}`}
+                                                        to={`/admin/vehicle/${vehicle.licenseplate}`}
                                                         status={vehicle.state}
                                                     // Funtions
 

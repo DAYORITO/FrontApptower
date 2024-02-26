@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import FormContainer from '../../../Components/Forms/FormContainer'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
@@ -9,6 +9,7 @@ import FormColumn from '../../../Components/Forms/FormColumn'
 import { useFetch } from '../../../Hooks/useFetch'
 import { bools, docTypes, sexs } from '../../../Hooks/consts.hooks'
 import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { SocketContext } from '../../../Context/SocketContext'
 
 export const OwnersCreate = () => {
 
@@ -20,6 +21,12 @@ export const OwnersCreate = () => {
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { id } = useParams()
+
+  // Socket
+
+  const {socket } = useContext(SocketContext)
+
+  // User logged
 
   const idUserLogged = useUserLogged()
 
@@ -65,6 +72,8 @@ export const OwnersCreate = () => {
       }))
     : [];
 
+
+
   // create owner
 
   const createOwner = async (event) => {
@@ -97,9 +106,7 @@ export const OwnersCreate = () => {
 
     console.log(data)
 
-    await postRequest(event, 'owners', 'POST', {}, data, url)
-
-    navigate(-1)
+    await postRequest(event, 'owners', 'POST', null, data, url, null, navigate, socket)
 
   };
 

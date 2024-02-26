@@ -10,28 +10,32 @@ export const RowNotificactions = ({
   name,
   lastName,
   msg = "Aqui va el mensaje",
-  date = "Hoy",
+  date,
   status,
   icon = "message-circle",
   onclick,
   seen = true,
   isNotification = false,
-  who
+  who,
+  info
 
 
 
 }) => {
-  console.log(to)
+
   let personWho = who?.name + ' ' + who?.lastName + ' '
 
   moment.locale('es');
 
-  date = moment(date);
-
+  console.log(to, 'to')
   to =
-    to.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
-      to.idrole == 1 ? `/admin/users/details/${to.iduser}` :
-        to.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
+    to.owner ? `/admin/owners/details/${to.owner.idOwner}` :
+      to.resident ? `/admin/resident/details/${to.resident.iduser}` :
+        to.apartment ? `/admin/apartments/details/${to.apartment.idApartment}` :
+
+          to?.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
+            to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
+              to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
   return (
 
@@ -56,7 +60,7 @@ export const RowNotificactions = ({
           <div className="col">
             <small><strong>{name && `${name} ${lastName}`}</strong></small>
             <div className="text-secondary small">{who && <strong>{personWho}</strong>}{msg}</div>
-            <small className={`badge badge-light text-${type}`}>{date.format('MMMM Do')}</small>
+            <small className={`badge badge-light text-${type}`}>{date ? moment(date).format('MMMM Do') : ''} {info && info}</small>
           </div>
         </div>
 

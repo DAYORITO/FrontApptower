@@ -34,10 +34,10 @@ export const Row = ({
   A15,
   A16,
   A17,
-    A18,
-    A19,
+  A18,
+  A19,
 
-  A1A2 =  (A1 + " " + A2),
+  A1A2 = (A1 + " " + A2),
 
 }) => {
 
@@ -123,25 +123,15 @@ export const Row = ({
           <em class="badge badge-white text-muted">{A15}</em>
         </td>
       ) : null}
-            {A18 != null ?
-                <td class="text-secondary">
-                    <span className="badge badge-white text-secondary"></span>
-                    <em class="badge badge-white text-muted">{A18}</em>
-                    <br />
-                    <span className="badge badge-white text-secondary">{A19}</span><em class="badge badge-white text-muted"></em>
-                </td> : null}
+      {A18 != null ?
+        <td class="text-secondary">
+          <span className="badge badge-white text-secondary"></span>
+          <em class="badge badge-white text-muted">{A18}</em>
+          <br />
+          <span className="badge badge-white text-secondary">{A19}</span><em class="badge badge-white text-muted"></em>
+        </td> : null}
 
-            {A12 != null ?
-                <td class="text-secondary">
-                    <span className="badge badge-white text-secondary">{A13}</span>
-                    {A12 === "Pendiente" ? <em class="badge badge-white text-danger">{A12}</em>
-                    : A12 === "Pagada" ? <em class="badge badge-white text-success">{A12}</em>
-                    : A12 === "Por revisar" ? <em class="badge badge-white text-warning">{A12}</em>
-                    :<em class="badge badge-white text-muted">{A12}</em>}
-                    
-                    <br />
-                    <span className="badge badge-white text-secondary">{A14}</span><em class="badge badge-white text-muted">{A15}</em>
-                </td> : null}
+      
 
       {file && (
         <td className="text-secondary">

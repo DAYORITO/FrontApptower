@@ -16,7 +16,6 @@ import { io } from 'socket.io-client';
 import { id } from 'date-fns/locale';
 import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
 import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
-import { useSocket } from '../../Hooks/useSockets';
 import { SocketContext } from '../../Context/SocketContext';
 
 export const Aside = () => {
@@ -25,15 +24,13 @@ export const Aside = () => {
 
     const token = Cookies.get('token');
 
+    // Socket
+
+    const { notifications, socket } = useContext(SocketContext)
+
     //Consulta Permisos
 
     const allowedPermissions = useAllowedPermissions(idToPermissionName);
-
-
-
-
-
-
 
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
@@ -80,8 +77,6 @@ export const Aside = () => {
 
     // Notifications
 
-    const { notifications, socket } = useContext(SocketContext)
-
     const [notificationsList, setNotificationsList] = useState(notifications)
 
 
@@ -93,17 +88,13 @@ export const Aside = () => {
 
         setIdNotification(id)
 
-        console.log(id, 'Notification id')
-
         socket.emit('seen-notification', id)
 
         socket.on('notifications-user', (notificationsUpdated) => {
 
-            console.log('Notification from backend', notificationsUpdated)
             setNotificationsList(notificationsUpdated)
-        })
 
-        // setNotificationsModal(false)
+        })
 
 
     }
@@ -118,16 +109,7 @@ export const Aside = () => {
 
         setNotificationsModal(!notificationsModal)
 
-        socket.off('notifications-user', notifications);
-
-        console.log(notifications)
-
-        socket.on('notifications-user', (notifications) => {
-
-            console.log('Notification from backend', notifications)
-            setNotificationsList(notifications)
-        })
-
+        socket.disconnect(); socket.connect();
 
     }
 
@@ -139,17 +121,7 @@ export const Aside = () => {
 
         setIsCloset(!isCloset);
 
-        socket.off('notifications-user', notifications);
-
-        console.log(notifications)
-
-        socket.on('notifications-user', (notifications) => {
-
-            console.log('Notification from backend', notifications)
-            setNotificationsList(notifications)
-        })
-
-
+        socket.disconnect(); socket.connect();
 
     };
 
@@ -343,12 +315,12 @@ export const Aside = () => {
                                             return (
                                                 <RowNotificactions
                                                     isNotification={true}
-                                                    who={notification.content.information.userLogged && notification.content.information.userLogged    }
+                                                    who={notification.content.information.userLogged && notification.content.information.userLogged}
                                                     seen={notification.seen}
                                                     key={index}
                                                     type={notification.type}
                                                     msg={notification.content.message}
-                                                    to={notification.content.information.user}
+                                                    to={notification.content.information}
                                                     date={notification.createdAt}
                                                     onclick={() => isSeen(notification.idnotification)}
                                                 />
