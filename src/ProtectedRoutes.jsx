@@ -7,17 +7,17 @@ import { LoadingPage } from "./Pages/PagesAdicional/Loading";
 
 
 export const ProtectedRoutes = () => {
-    const { isLoggedIn } = useAuth();
+    const { isLoading, isLoggedIn } = useAuth();
     const token = Cookies.get('token');
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
-    if (!isLoggedIn) {
-        return <LogIn />;
+    if (isLoading || loadingUser) {
+        return <LoadingPage />;
     }
 
-    if (loadingUser) {
-        return <LoadingPage />;
+    if (!isLoggedIn) {
+        return <LogIn />;
     }
 
     return <Outlet />;
