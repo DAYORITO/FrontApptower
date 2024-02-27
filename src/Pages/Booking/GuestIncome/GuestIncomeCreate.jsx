@@ -4,7 +4,7 @@ import { docTypes, sexs } from "../../../Hooks/consts.hooks"
 import FormButton from '../../../Components/Forms/FormButton'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { useFetchget, useFetchForFile, useFetch } from '../../../Hooks/useFetch'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Select2 from '../../../Components/Inputs/Select2'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { createPortal } from 'react-dom'
@@ -19,11 +19,23 @@ import { dotSpinner } from 'ldrs'
 import { set } from 'date-fns'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '../../../Components/Spinner/Spinner'
+import { useUserLogged } from '../../../Helpers/Helpers'
+import { SocketContext } from '../../../Context/SocketContext'
 
 
 
 function GuestIncomeCreate() {
+
+
   const url = "http://localhost:3000/api/";
+
+
+  const idUserLogged = useUserLogged()
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
   const [LoadingSpiner, setLoadingSpiner] = useState(true);
   const navigate = useNavigate();
   dotSpinner.register()
@@ -42,6 +54,10 @@ function GuestIncomeCreate() {
   const [check1, setCheck1] = useState(false);
   //mostrar el nombre del visitante
   const [visitorname, setVisitorname] = useState(' ')
+
+  //Recibe los errores del back
+
+  const [errors, setErrors] = useState([{}])
 
   //Se crean los estados para los datos del formulario
   const [apartment, setApartment] = useState(null)
@@ -128,7 +144,7 @@ function GuestIncomeCreate() {
 
   //Obtiene las torres de TowerData
   const towers = TowerData.map((towerData) => {
-    const matchingTower = dataTowers.towers.find((tower) => tower.idTower === parseInt(towerData.tower));
+    const matchingTower = dataTowers?.towers?.find((tower) => tower.idTower === parseInt(towerData.tower));
     return {
       value: towerData.tower,
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
@@ -220,15 +236,15 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (!loadResidentsApartment && towers?.length > 0 && errordata == null
       // && dataTowers?.towers?.length > 0 && data?.apartments?.length > 0 && dataVisitors?.data?.visitors?.length > 0 && dataParkingSpaces?.data?.parkingSpaces?.length > 0 && dataTowers?.data?.towers?.length > 0
-      ) {
+    ) {
       console.log("Entre aqui:", dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
       setLoadingSpiner(false)
     }
-    else if (errordata != null){
+    else if (errordata != null) {
       setLoadingSpiner(false)
 
     }
-    else{
+    else {
       console.log("Error en la carga de datos:", errordata)
     }
     console.log("Entre a dataResidentApartment:", dataResidentApartment?.data?.apartmentResidents?.length > 0)
@@ -339,12 +355,19 @@ function GuestIncomeCreate() {
       });
 
       if (guestIncomeError) {
+        const errorData = guestIncomeError.errorData;
+        setErrors(errorData);
         throw new Error('Error al crear el ingreso de huésped');
+
       }
 
       if (guestIncomeResponse && check1) {
         // Crear el guestIncomeParking
         const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
+
+          // User logged
+          "idUserLogged": idUserLogged,
+
           "idParkingSpace": parkingGuestIncome,
           "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
         });
@@ -372,6 +395,8 @@ function GuestIncomeCreate() {
         text: 'Ingreso creado exitosamente',
         icon: 'success',
       }).then(() => {
+
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') };
         navigate(-1);
       });
     } catch (error) {
@@ -421,6 +446,8 @@ function GuestIncomeCreate() {
 
 
     if (error) {
+      const errorData = guestIncomeError.errorData;
+      setErrors(errorData);
       setShowModaload(false);
       Swal.fire({
         title: 'Error',
@@ -446,7 +473,7 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect identifier={"idApartment"} errors={errors} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
               :
               <Inputs
                 key={apartment}
@@ -462,7 +489,7 @@ function GuestIncomeCreate() {
           <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
             {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento'} id={"select22"} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento*'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -482,10 +509,10 @@ function GuestIncomeCreate() {
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Select2 name={'Visitante'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
+            <Select2 name={'Visitante*'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
           </div>
           <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Inputs id={"nombre"} name='Nombre' readonly={true} value={visitorname} ></Inputs>
+            <Inputs id={"nombre"} errors={errors} identifier={"idVisitor"} name='Nombre*' readonly={true} value={visitorname} ></Inputs>
           </div>
 
         </div>
@@ -494,23 +521,23 @@ function GuestIncomeCreate() {
         </div>
         {
           check1 &&
-          <InputsSelect name="Parqueadero" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
+          <InputsSelect name="Parqueadero*" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
         <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-          <Inputs id={"personaAcceso"} name="Persona que permite el acceso" type="text" onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
-          <Inputs id={"observaciones"} name="Observaciones" type="text" onChange={(e) => { setObservations(e.target.value) }}></Inputs>
+          <Inputs name="Persona que permite el acceso*" type="text" errors={errors} identifier={"personAllowsAccess"} onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
+          <Inputs name="Observaciones" type="text" errors={errors} identifier={"observations"} onChange={(e) => { setObservations(e.target.value) }}></Inputs>
         </div>
       </FormContainer>
       {
         showModalvisitor &&
         createPortal(
           <ModalContainer showModal={setShowModalvisitor}>
-            <Modal title={'Crear Ingreso'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
-              <InputsSelect name="Tipo de documento" options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-              <Inputs name="Numero Documento" onChange={(e) => setDocumentVisitor(e.target.value)} />
-              <Inputs name="Nombre" onChange={(e) => setName(e.target.value)} />
-              <Inputs name="Apellido" type="text" onChange={(e) => setLastName(e.target.value)} />
-              <InputsSelect name="Sexo" options={sexs} onChange={(e) => setGenre(e.target.value)} />
+            <Modal title={'Crear Visitante'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
+              <InputsSelect name="Tipo de documento*" errors={errors} identifier={"documentNumber"} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+              <Inputs name="Numero Documento*" errors={errors} onChange={(e) => setDocumentVisitor(e.target.value)} />
+              <Inputs name="Nombre*" errors={errors} identifier={"name"} onChange={(e) => setName(e.target.value)} />
+              <Inputs name="Apellido*" errors={errors} identifier={"lastName"} type="text" onChange={(e) => setLastName(e.target.value)} />
+              <InputsSelect name="Genero*" errors={errors} identifier={"genre"} options={sexs} onChange={(e) => setGenre(e.target.value)} />
             </Modal>
           </ModalContainer>,
           document.getElementById('modalRender')

@@ -6,10 +6,10 @@ import { TablePerson } from '../../../Components/Tables/Tables'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -24,10 +24,16 @@ import Cookies from 'js-cookie'
 import { format } from 'date-fns'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import { Paginator } from '../../../Components/Paginator/Paginator'
+import { SocketContext } from '../../../Context/SocketContext'
 
 
 export const Owners = () => {
     const token = Cookies.get('token');
+
+    // socket 
+
+    const { socket } = useContext(SocketContext)
+
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/
@@ -62,8 +68,6 @@ export const Owners = () => {
         console.log(e.target.value)
 
     }
-
-    console.log(ownerList)
 
     const [modalAssigApartmentToOwner, setModalAssigApartmentToOwner] = useState(false);
 
@@ -100,9 +104,16 @@ export const Owners = () => {
 
     }
 
+    const idUserLogged = useUserLogged()
+
+
     const CreateApartmentOwner = async (event) => {
 
         const data = {
+
+            // User logged
+
+            idUserLogged: idUserLogged,
 
             idApartment: parseInt(idApartment),
             idOwner: idOwner,
@@ -111,11 +122,11 @@ export const Owners = () => {
 
         }
 
-        console.log(data)
+        console.log(socket)
 
-        await postRequest(event, 'apartmentOwners', 'POST', {}, data, url)
+        
+        await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, null, null, socket)
 
-        setModalAssigApartmentToOwner(false)
         getOwners('Owners')
 
     };
@@ -252,7 +263,7 @@ export const Owners = () => {
                             // onClickForDelete={deleteApartmentResident}
                             >
 
-                                <InputsSelect id={"select"} options={ownersList} name={"Propietario"}
+                                <InputsSelect disabled id={"select"} options={ownersList} name={"Propietario"}
                                     value={idOwner} onChange={e => setIdOwner(e.target.value)}
                                 ></InputsSelect>
 

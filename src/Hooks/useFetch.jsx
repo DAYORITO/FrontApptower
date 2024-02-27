@@ -197,8 +197,10 @@ export const useFetchForFile = async (url, data, method = "POST") => {
         if (!response.ok) {
             const errorData = await response.json();
             console.log('Error data:', errorData);
-            throw new Error(`HTTP error! status: ${response.status}`);
-            return { response: null, error: errorData };
+            const error = new Error(`HTTP error! status: ${response.status}`);
+            error.errorData = errorData; // Agrega errorData al objeto de error para nuestras validaciones
+            throw error;
+            // return { response: null, error: errorData };
         }
 
         const json = await response.json();
@@ -244,7 +246,10 @@ export const useFetchpost = async (endpoint, data) => {
         if (!response.ok) {
             const errorData = await response.json();
             console.log('Error data:', errorData);
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const error = new Error(`HTTP error! status: ${response.status}`);
+            error.errorData = errorData; // Agrega errorData al objeto de error para nuestras validaciones
+            throw error;
+            // return { response: null, error: errorData };
         }
 
         const json = await response.json();

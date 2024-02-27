@@ -16,7 +16,6 @@ import { io } from 'socket.io-client';
 import { id } from 'date-fns/locale';
 import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
 import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
-import { useSocket } from '../../Hooks/useSockets';
 import { SocketContext } from '../../Context/SocketContext';
 
 export const Aside = () => {
@@ -25,29 +24,18 @@ export const Aside = () => {
 
     const token = Cookies.get('token');
 
+    // Socket
+
+    const { notifications, socket } = useContext(SocketContext)
+
     //Consulta Permisos
 
     const allowedPermissions = useAllowedPermissions(idToPermissionName);
-
-
-
-
-
-
 
     const [userRole, setUserRole] = useState('');
     const [userDocument, SetUserDocument] = useState('');
     const [idResidents, setIdResidents] = useState('');
     const [idApartment, setIdapartaments] = useState('');
-
-
-
-    const [notificationsModal, setNotificationsModal] = useState(false)
-
-    const openNotifications = () => {
-
-        setNotificationsModal(!notificationsModal)
-    }
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
@@ -84,30 +72,58 @@ export const Aside = () => {
 
     const rutadetailsapartment = `apartments/details/${idApartment}`
 
-    const [isCloset, setIsCloset] = useState(false);
 
-    const toggleSidebar = () => {
-        setIsCloset(!isCloset);
-    };
 
 
     // Notifications
 
-    const { notifications, socket } = useContext(SocketContext)
+    const [notificationsList, setNotificationsList] = useState(notifications)
+
 
     // Seen notification
 
-    const [notification, setNotification] = useState(false)
+    const [idnotification, setIdNotification] = useState('')
 
-    const isSeen = (data) => {
+    const isSeen = (id) => {
 
-        setNotification(data)
+        setIdNotification(id)
 
-        console.log(data)
+        socket.emit('seen-notification', id)
 
-        socket.emit('seen-notification', data)
+        socket.on('notifications-user', (notificationsUpdated) => {
+
+            setNotificationsList(notificationsUpdated)
+
+        })
+
 
     }
+
+    const [notificationsModal, setNotificationsModal] = useState(false)
+
+
+
+    // Open modal notifications
+
+    const openNotifications = () => {
+
+        setNotificationsModal(!notificationsModal)
+
+        socket.disconnect(); socket.connect();
+
+    }
+
+    // Open and closed sidevar
+
+    const [isCloset, setIsCloset] = useState(false);
+
+    const toggleSidebar = async () => {
+
+        setIsCloset(!isCloset);
+
+        socket.disconnect(); socket.connect();
+
+    };
 
     return (
         <>
@@ -159,7 +175,7 @@ export const Aside = () => {
                                 )}
 
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav onClick={openNotifications} A1={notifications.length} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
+                                    <ListNav onClick={openNotifications} A1={notificationsList.filter(notification => !notification.seen).length} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (
@@ -258,7 +274,7 @@ export const Aside = () => {
 
 
                                 {allowedPermissions.includes('Multas') && (
-                                    <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
+                                    <ListNav module={'Multas'} href='fines' icon='fe fe-file-plus fe-24' />
                                 )}
                                 {/* <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' /> */}
 
@@ -294,18 +310,19 @@ export const Aside = () => {
                             <ModalNotifications showModal={setNotificationsModal}>
 
                                 {
-                                    notifications == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
-                                        notifications.map((notification, index) => {
+                                    notificationsList == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
+                                        notificationsList?.map((notification, index) => {
                                             return (
                                                 <RowNotificactions
                                                     isNotification={true}
+                                                    who={notification?.content?.information?.userLogged && notification?.content?.information?.userLogged}
                                                     seen={notification.seen}
                                                     key={index}
                                                     type={notification.type}
                                                     msg={notification.content.message}
                                                     to={notification.content.information}
                                                     date={notification.createdAt}
-                                                    onclick={() => isSeen(notification)}
+                                                    onclick={() => isSeen(notification.idnotification)}
                                                 />
                                             )
                                         })

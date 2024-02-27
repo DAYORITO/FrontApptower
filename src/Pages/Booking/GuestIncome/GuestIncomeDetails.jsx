@@ -1,142 +1,397 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react'
+
 import { Details } from "../../../Components/Details/details"
-import { InfoDetails } from '../../../Components/InfoDetails/InfoDetails';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
-import { createPortal } from 'react-dom';
-import Swal from 'sweetalert2';
-import { useFetch, useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
-import "./GuestIncomeDetails.css";
-import { set } from 'date-fns';
+import Inputs from '../../../Components/Inputs/Inputs'
+import InputsSelect from "../../../Components/Inputs/InputsSelect"
+import { docTypes, sexs, statusList } from "../../../Hooks/consts.hooks"
+import { TablePerson } from '../../../Components/Tables/Tables'
+import { TableDetails } from "../../../Components/TableDetails/TableDetails"
+import { NavDetails } from "../../../Components/NavDetails/NavDetails"
+import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails"
+import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails"
+import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
+import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
+import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
+import { idToPermissionName } from '../../../Hooks/permissionRols'
+import { useAllowedPermissions, useFetch, useFetchUserInformation } from "../../../Hooks/useFetch"
+import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
+import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
+import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
+import { Acordions } from "../../../Components/Acordions/Acordions"
+import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions"
+import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert"
+import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
+import { Link } from "react-router-dom"
+import { useParams } from "react-router"
+import { format } from 'date-fns';
+import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
+import { createPortal } from 'react-dom'
+import { Uploader } from '../../../Components/Uploader/Uploader'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { Table, ThInfo } from '../../../Components/Table/Table'
+import { Thead } from '../../../Components/Thead/Thead'
+const token = Cookies.get('token');
+import Cookies from 'js-cookie';
+import { da } from 'date-fns/locale'
+import Swal from 'sweetalert2'
+import ImageContainer from '../../../Components/ImgContainer/imageContainer'
+import moment from 'moment';
+import { SocketContext } from '../../../Context/SocketContext'
+
+// import React, { useEffect, useState } from 'react';
+// import { Details } from "../../../Components/Details/details"
+// import { InfoDetails } from '../../../Components/InfoDetails/InfoDetails';
+// import { Navigate, useNavigate, useParams } from 'react-router-dom';
+// import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
+// import { createPortal } from 'react-dom';
+// import Swal from 'sweetalert2';
+// import { useFetch, useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
+// import "./GuestIncomeDetails.css";
+// import { set } from 'date-fns';
 
 
 
 const GuestIncomeDetails = () => {
-    const { details } = useParams();
-    const objeto2 = JSON.parse(decodeURIComponent(details));
-    // console.log(objeto, 'objeto');
-    const [objeto, setObjeto] = useState(objeto2);
-    const [showModaload, setShowModaload] = useState(false);
-    const navigate = useNavigate();
-    const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({guestIncomeParking:[]});
-    const {data} = useFetchget("guestIncomeParking");
-    
+
+    const token = Cookies.get('token');
+    // API URL
+
+    const url = "http://localhost:3000/api/"
+    // const url = "https://apptowerbackend.onrender.com/api/"
+
+
+    // guest income informacion
+
+    const { id } = useParams();
+
+    const idUserLogged = useUserLogged()
+
+    // Socket
+
+    const { socket } = useContext(SocketContext)
+
+    const [idGuest_income, setIdGuest_income] = useState(id)
+
+    // info guestincome relations
+
+    const { data: guestIncome, get: getGuestIncome, loading: loadingGuestIncome } = useFetch(url)
+
+
     useEffect(() => {
-        setGuestIncomeParkingData(data.guestincomeparking);
-        console.log("Datos de ingresos de parqueadero:", guestIncomeParkingData);
-    }, [data]);
 
-    const handleEditClick = async (dataToUpdate) => {
-        setShowModaload(true);
-
-        const verify = guestIncomeParkingData?.find((guestIncomeParking) => guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income);
-        console.log("Respuesta verify:", verify);
-        if (verify !== null && verify !== undefined) {
-            const parkingUpdateData = { "idParkingSpace": verify.idParkingSpace, "status": 'Active' };
-            const parkingUpdateUrl = 'https://apptowerbackend.onrender.com/api/parkingSpaces';
-
-            try {
-                const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
-                console.log(parkingResponse);
-            } catch (error) {
-                console.error('Error al actualizar el estado del espacio de estacionamiento:', error);
-                
-            }
-        }
-
-        const guestIncomeUpdateUrl = 'https://apptowerbackend.onrender.com/api/guestIncome';
         try {
-            const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
-            setShowModaload(false);
-            Swal.fire({
-                icon: 'success',
-                title: 'Salida registrada con éxito.',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            const updatedGuestIncome = objeto.departureDate = dataToUpdate.departureDate;
-            setGuestIncomeData(updatedGuestIncome);
+
+            getGuestIncome(`guestIncome/${idGuest_income}`)
+
+
         } catch (error) {
-            setShowModaload(false);
-            console.error('Error al actualizar los datos del ingreso del huésped:', error);
+
+            console.error('Error al obtener datos de ingreso', error);
+
         }
-    }
 
-  return (
-    <>
-      <Details>
+    }, [])
 
-        <InfoDetails>
-            
-                    <div className='' style={{width: '100%', paddingTop:"2rem"}}>
-                        <div className='header'>
-                            <h3>Detalles del ingreso</h3>
-                            <button type="button" onClick={() => { navigate(-1); if (regresar) regresar(); }} class="btn btn-light">Regresar</button>
-                        </div>
-                        <div className="mt-5">
-                        <p><strong className='text-secondary'>Apartamento:</strong> {objeto.asociatedApartment.apartmentName}</p>
-                        <p><strong className='text-secondary'>Visitante: </strong>{objeto.asociatedVisitor.name+" "+objeto.asociatedVisitor.lastname}</p>
-                        <p><strong className='text-secondary'>Fecha de ingreso: </strong>{(() => {
-                                    let startingDate = new Date(objeto.startingDate).toLocaleDateString('es-CO', {
-                                        weekday: 'long',
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
-                                        hour: 'numeric',
-                                        minute: 'numeric',
+    // Guest income details
 
-                                        
-                                    });
-                                    return startingDate;
-                                })()}</p>
-                        <div className='header'>
-                        <p><strong className='text-secondary'>Fecha de salida: </strong>{objeto.departureDate == null ? "Sin registrar" : (() => {
-                                    let departureDate = new Date(objeto.departureDate ).toLocaleDateString('es-CO', {
-                                        weekday: 'long',
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
-                                        hour: 'numeric',
-                                        minute: 'numeric',
-                                    });
-                                    return departureDate;
-                                })()}</p>
-                        
-                        </div>
-                        <p><strong className='text-secondary'>Persona que permitió el acceso: </strong>{objeto.personAllowsAccess}</p>
-                        <p><strong className='text-secondary'>Observaciones: </strong>{objeto.observations}</p>
-                        </div>
-                        {objeto.departureDate == null ? <button 
-                        onClick={()=>handleEditClick({ idGuest_income: objeto.idGuest_income, departureDate: new Date().toISOString() })} 
-                        className='btn btn-dark' >Registrar salida</button>: null}
-                        
-                        </div>
-                       
-        </InfoDetails>
-      </Details>
-      {showModaload &&
+    const [startingDate, setStartingDate] = useState('')
+    const [departureDate, setDepartureDate] = useState('')
+    const [personAllowsAccess, setPersonAllowsAccess] = useState('')
+    const [observations, setObservations] = useState('')
+    const [asociatedVisitor, setAsociatedVisitor] = useState('')
+    const [asociatedApartment, setAsociatedApartment] = useState('')
+    const [createdAt, setCreatedAt] = useState('')
+    const [updatedAt, setUpdatedAt] = useState('')
+
+    const [guestIncomeParking, setGuestIncomeParking] = useState('')
+
+
+    useEffect(() => {
+
+        setStartingDate(guestIncome?.data?.guestIncome?.startingDate)
+        setDepartureDate(guestIncome?.data?.guestIncome?.departureDate)
+        setPersonAllowsAccess(guestIncome?.data?.guestIncome?.personAllowsAccess)
+        setObservations(guestIncome?.data?.guestIncome?.observations)
+        setAsociatedVisitor(guestIncome?.data?.guestIncome?.asociatedVisitor)
+        setAsociatedApartment(guestIncome?.data?.guestIncome?.asociatedApartment)
+        setCreatedAt(guestIncome?.data?.guestIncome?.createdAt)
+        setUpdatedAt(guestIncome?.data?.guestIncome?.updatedAt)
+
+        setGuestIncomeParking(guestIncome?.data?.guestIncomeVehicle)
+
+
+
+    }, [guestIncome?.data?.guestIncome])
+
+
+    console.log(guestIncomeParking)
+
+    // add proof modal
+
+    // const [addProofFilesModal, setAaddProofFilesModal] = useState(false);
+
+    // const openProofFilesModal = () => {
+
+    //     setAaddProofFilesModal(true)
+
+    // }
+
+
+
+
+    console.log(asociatedVisitor)
+    return (
+        <>
+            <Details>
+
+                {
+
+
+                    loadingGuestIncome ? <Spinner /> :
+                        <ContainerModule
+                            to={'/admin/guest_income/'}
+                            icon='arrow-up-right'
+                            A1={`Ingreso de `}
+                            A2={`${asociatedVisitor?.name} ${asociatedVisitor?.lastname}`}
+                            A5={`Se dirige a: apartamento ${asociatedApartment?.apartmentName}`}
+                            A6={`Autoriza: ${personAllowsAccess}`}
+
+                            status={'Active'}
+
+                            actionOnClick2='Marcar salida'
+                            onClick2={() => console.log('marcar salida')}
+                        // // A7={pdf}
+                        // status={state}
+                        // onClick2={EqualUser ? openModalChangePassword : null}
+                        // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
+                        // onClickEdit={setShowModalEditApartment}
+                        />
+
+                }
+
+
+
+                <InfoDetails>
+
+                    <Acordions>
+
+                        <DropdownInfo
+                            name={`Informacion del ingreso`}
+                        // action1={'Editar datos de la multa'}
+                        // onClickAction1={openModalEdit}
+                        >
+
+                            <ul className='list-unstyled'>
+
+                                <li>Ingreso de: {asociatedVisitor?.name} {asociatedVisitor?.lastname}</li>
+                                <li>Se dirige a: <Link to={`/admin/apartments/details/${asociatedApartment?.idApartment}`}>{`apartamento ${asociatedApartment?.apartmentName}`}</Link> </li>
+                                <br />
+                                <li>Autoriza: {personAllowsAccess} </li>
+                                <li>{observations} el dia {startingDate}</li>
+                                <br />
+                                <li>Fecha y hora de salida: {departureDate ? departureDate : ''} </li>
+
+
+                            </ul>
+
+                        </DropdownInfo>
+
+                    </Acordions>
+
+                    {
+
+                        guestIncomeParking ?
+                            <Acordions>
+
+                                <DropdownInfo
+                                    name={`Parqueadero asignado`}
+                                // action1={'Agregar evidencia'}
+                                // onClickAction1={openEvidenceFilesModal}
+                                >
+
+                                    <RowNotificactions
+
+                                        // Information
+                                        name={'Parqueadero publico'}
+                                        lastName={guestIncomeParking?.asociatedParkingSpace?.parkingName}
+                                        msg={observations}
+                                        to={`/admin/parkingSpaces/${guestIncomeParking?.asociatedParkingSpace?.parkingName}`}
+
+                                        icon="map-pin"
+
+
+                                    ></RowNotificactions>
+
+
+
+                                </DropdownInfo>
+
+                            </Acordions> : null
+                    }
+
+
+                </InfoDetails>
+
+            </Details >
+
+
+            {/* {addProofFilesModal &&
                 createPortal(
                     <>
-                        <ModalContainerload ShowModal={setShowModaload}>
-                            <Modaload
-                                showModal={setShowModaload}
+                        <ModalContainer ShowModal={setAaddProofFilesModal}>
+                            <Modal
+                                showModal={setAaddProofFilesModal}
+                                onClick={() => console.log('Hola')}
+                                title={"Agregar comprobante de pago"}
+                            // showSave={showevidences ? false : true}
                             >
-                                <div className='d-flex justify-content-center'>
-                                    <l-dot-spinner
-                                        size="50"
-                                        speed="2"
-                                        color="black"
-                                    ></l-dot-spinner>
-                                </div>
+
+                                <Uploader multiple label={"Agregar comprobante de pago"}
+                                    onChange={(e) => {
+                                        setFile(e.target.files);
+                                    }}
+                                />
+                                <ImageContainer urls={paymentproof} />
 
 
-                            </Modaload>
-                        </ModalContainerload>
+
+
+
+
+                            </Modal>
+                        </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
-    </>
-  );
+                )
+
+            } */}
+        </>
+    )
+    //     const { details } = useParams();
+    //     const objeto2 = JSON.parse(decodeURIComponent(details));
+    //     // console.log(objeto, 'objeto');
+    //     const [objeto, setObjeto] = useState(objeto2);
+    //     const [showModaload, setShowModaload] = useState(false);
+    //     const navigate = useNavigate();
+    //     const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({guestIncomeParking:[]});
+    //     const {data} = useFetchget("guestIncomeParking");
+
+    //     useEffect(() => {
+    //         setGuestIncomeParkingData(data.guestincomeparking);
+    //         console.log("Datos de ingresos de parqueadero:", guestIncomeParkingData);
+    //     }, [data]);
+
+    //     const handleEditClick = async (dataToUpdate) => {
+    //         setShowModaload(true);
+
+    //         const verify = guestIncomeParkingData?.find((guestIncomeParking) => guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income);
+    //         console.log("Respuesta verify:", verify);
+    //         if (verify !== null && verify !== undefined) {
+    //             const parkingUpdateData = { "idParkingSpace": verify.idParkingSpace, "status": 'Active' };
+    //             const parkingUpdateUrl = 'https://apptowerbackend.onrender.com/api/parkingSpaces';
+
+    //             try {
+    //                 const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
+    //                 console.log(parkingResponse);
+    //             } catch (error) {
+    //                 console.error('Error al actualizar el estado del espacio de estacionamiento:', error);
+
+    //             }
+    //         }
+
+    //         const guestIncomeUpdateUrl = 'https://apptowerbackend.onrender.com/api/guestIncome';
+    //         try {
+    //             const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
+    //             setShowModaload(false);
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: 'Salida registrada con éxito.',
+    //                 showConfirmButton: false,
+    //                 timer: 1500
+    //             });
+    //             const updatedGuestIncome = objeto.departureDate = dataToUpdate.departureDate;
+    //             setGuestIncomeData(updatedGuestIncome);
+    //         } catch (error) {
+    //             setShowModaload(false);
+    //             console.error('Error al actualizar los datos del ingreso del huésped:', error);
+    //         }
+    //     }
+
+    //   return (
+    //     <>
+    //       <Details>
+
+    //         <InfoDetails>
+
+    //                     <div className='' style={{width: '100%', paddingTop:"2rem"}}>
+    //                         <div className='header'>
+    //                             <h3>Detalles del ingreso</h3>
+    //                             <button type="button" onClick={() => { navigate(-1); if (regresar) regresar(); }} class="btn btn-light">Regresar</button>
+    //                         </div>
+    //                         <div className="mt-5">
+    //                         <p><strong className='text-secondary'>Apartamento:</strong> {objeto.asociatedApartment.apartmentName}</p>
+    //                         <p><strong className='text-secondary'>Visitante: </strong>{objeto.asociatedVisitor.name+" "+objeto.asociatedVisitor.lastname}</p>
+    //                         <p><strong className='text-secondary'>Fecha de ingreso: </strong>{(() => {
+    //                                     let startingDate = new Date(objeto.startingDate).toLocaleDateString('es-CO', {
+    //                                         weekday: 'long',
+    //                                         day: 'numeric',
+    //                                         month: 'short',
+    //                                         year: 'numeric',
+    //                                         hour: 'numeric',
+    //                                         minute: 'numeric',
+
+
+    //                                     });
+    //                                     return startingDate;
+    //                                 })()}</p>
+    //                         <div className='header'>
+    //                         <p><strong className='text-secondary'>Fecha de salida: </strong>{objeto.departureDate == null ? "Sin registrar" : (() => {
+    //                                     let departureDate = new Date(objeto.departureDate ).toLocaleDateString('es-CO', {
+    //                                         weekday: 'long',
+    //                                         day: 'numeric',
+    //                                         month: 'short',
+    //                                         year: 'numeric',
+    //                                         hour: 'numeric',
+    //                                         minute: 'numeric',
+    //                                     });
+    //                                     return departureDate;
+    //                                 })()}</p>
+
+    //                         </div>
+    //                         <p><strong className='text-secondary'>Persona que permitió el acceso: </strong>{objeto.personAllowsAccess}</p>
+    //                         <p><strong className='text-secondary'>Observaciones: </strong>{objeto.observations}</p>
+    //                         </div>
+    //                         {objeto.departureDate == null ? <button 
+    //                         onClick={()=>handleEditClick({ idGuest_income: objeto.idGuest_income, departureDate: new Date().toISOString() })} 
+    //                         className='btn btn-dark' >Registrar salida</button>: null}
+
+    //                         </div>
+
+    //         </InfoDetails>
+    //       </Details>
+    //       {showModaload &&
+    //                 createPortal(
+    //                     <>
+    //                         <ModalContainerload ShowModal={setShowModaload}>
+    //                             <Modaload
+    //                                 showModal={setShowModaload}
+    //                             >
+    //                                 <div className='d-flex justify-content-center'>
+    //                                     <l-dot-spinner
+    //                                         size="50"
+    //                                         speed="2"
+    //                                         color="black"
+    //                                     ></l-dot-spinner>
+    //                                 </div>
+
+
+    //                             </Modaload>
+    //                         </ModalContainerload>
+    //                     </>,
+    //                     document.getElementById("modalRender")
+    //                 )}
+    //     </>
+    //   );
 };
 
 export default GuestIncomeDetails;

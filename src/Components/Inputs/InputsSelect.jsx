@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay datos", onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle, StyleInput, containerStyle }) {
+function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay datos", onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle, StyleInput, containerStyle, errors, identifier, className}) {
 
 
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
@@ -9,6 +9,7 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
   const [labelText, setLabelText] = useState(name);
   const inputRef = useRef(null);
   const labelRef = useRef(null);
+  const [errorMessageToShow, setErrorMessageToShow] = useState(null);
 
   useEffect(() => {
     if (value !== '') {
@@ -57,9 +58,29 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
     }
   }, [])
 
+  const organizarErrores = ()=>{
+    if (errors){
+      return errors?.errors?.reduce((a,b)=>{
+        a[b.field] = b.message;
+        if (b.field === identifier){
+          className = "border boder-danger";
+        }
+        return a;
+      }, {})
+    }
+  }
+
   useEffect(() => {
     setValorSeleccionado(value);
   }, []);
+
+  useEffect(()=>{
+    if(errors){
+    setErrorMessageToShow(organizarErrores());
+  }
+    console.log("errors en el input:", errors)
+   
+  }, [errors])
 
 
   //Aqui esta utilizando el prop validate para validar si el campo esta vacio y mostrar un mensaje de error
@@ -82,11 +103,12 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
             id={id}
             // value={valorSeleccionado}
             value={value}
-            className='selectComponent'
+            className={`selectComponent ${className} ${errorMessageToShow != null && errorMessageToShow[identifier] != null ? "border-danger" : ""}`}
             ref={inputRef}
             onChange={onChange}
             disabled={disabled}
             style={StyleInput}
+            
           // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
             {options?.length > 0 ? <option value='' selected disabled></option>
@@ -104,6 +126,8 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
         </span>
         <label htmlFor={name} className='form-label' ref={labelRef}>{labelText}</label>
         {errorMessage && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
+        {errors && errorMessageToShow != null  && 
+         <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
 
       </div>
     </>

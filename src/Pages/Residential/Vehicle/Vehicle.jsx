@@ -1,5 +1,5 @@
 
-import { useAllowedPermissionsAndPrivileges, useFetchget } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch'
 import { ContainerTable } from '../../../Components/ContainerTable/ContainerTable'
 import { DivRow } from '../../../Components/DivRow/DivRow'
 import { ButtonGoTo, DropdownExcel, SearchButton } from '../../../Components/Buttons/Buttons'
@@ -11,15 +11,40 @@ import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { RowNotificactions } from '../../../Components/RowNotificacions/RowNotificactions'
+import { Spinner } from '../../../Components/Spinner/Spinner'
+import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { Paginator } from '../../../Components/Paginator/Paginator'
+import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
+import { useParams } from 'react-router'
+import { createPortal } from 'react-dom'
+import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
+import InputsSelect from '../../../Components/Inputs/InputsSelect'
+import Inputs from '../../../Components/Inputs/Inputs'
+import { SocketContext } from '../../../Context/SocketContext'
+
 
 export const Vehicle = () => {
-  const token = Cookies.get('token');
-  const { data, load, error } = useFetchget('vehicle')
-  console.log(data)
-  console.log(load)
-  console.log(error)
 
+  const url = "http://localhost:3000/api/"
+
+  const { id } = useParams();
+
+  const { socket } = useContext(SocketContext)
+
+  const idUserLogged = useUserLogged()
+
+
+  const token = Cookies.get('token');
+
+  const { data: vehicles, get: getVehicles, loading: vehicleLoading } = useFetch(url)
+
+  useEffect(() => {
+
+    getVehicles("vehicle")
+
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -62,34 +87,102 @@ export const Vehicle = () => {
     }
   };
 
+
+  // Modal edit vehicle
+
+  const [vehicleModalEdit, setVehicleModalEdit] = useState(false);
+
+  const openVehicleModalEdit = (data) => {
+
+    console.log(data)
+
+    setIdVehicle(data.idvehicle)
+    setIdApartment(data.idApartment)
+    setDescription(data.description)
+    setPlate(data.licenseplate)
+
+    setVehicleModalEdit(true)
+  }
+
+  // filter 
+
+  const [search, setSearch] = useState(id ? id : '');
+
+  const searcher = (e) => {
+
+    setSearch(e.target.value)
+    console.log(e.target.value)
+
+  }
+
+  let vehicleList = filter(search, vehicles?.data?.vehicle, "licenseplate")
+
+
   //Consulta Privilegios
 
   const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
 
 
-  const totalPages = data.vehicle ? Math.ceil(data.vehicle.length / 8) : 0;
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  // Paginator
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: vehiclesInto } = usePaginator(vehicleList, 4);
 
 
-  const [currentPage, setCurrentPage] = useState(0);
 
-  const filteredDatavehicle = () => {
-    if (data && data.vehicle) {
-      return data.vehicle.slice(currentPage, currentPage + 8);
-    } else {
-      return [];
+  // data
+
+  const [plate, setPlate] = useState('');
+  const [description, setDescription] = useState('');
+  const [idApartment, setIdApartment] = useState('');
+  const [idvehicle, setIdVehicle] = useState('');
+
+
+  // List
+
+  const { data: apartments, get: getApartment } = useFetch(url)
+
+  useEffect(() => {
+
+    getApartment("apartments")
+
+  }, []);
+
+  const AparmetList = apartments && apartments?.data?.apartments
+    ? apartments?.data?.apartments
+      .filter(apartment => apartment.status === 'Active')
+      .map(apartment => ({
+        value: apartment.idApartment,
+        label: `${apartment.apartmentName} ${apartment.Tower.towerName}`
+      }))
+    : [];
+
+
+  // Edit vehicle
+
+  const editVehicle = async (event) => {
+
+    console.log('Le diste click')
+    const data = {
+
+      // User logged
+
+      idUserLogged: idUserLogged,
+
+      idvehicle: idvehicle,
+      idApartment: parseInt(idApartment),
+      licenseplate: plate,
+      description: description
+
     }
-  };
-  console.log(filteredDatavehicle());
-  const nextPage = () => {
-    setCurrentPage(currentPage + 8)
+
+    await postRequest(event, 'vehicle', 'PUT', setVehicleModalEdit, data, url, null, null, socket);
+    
+    getVehicles('vehicle')
+
+
   }
 
 
-  const PreviousPage = () => {
-    if (currentPage > 0)
-      setCurrentPage(currentPage - 8)
-  }
 
 
   return (
@@ -98,74 +191,84 @@ export const Vehicle = () => {
       <ContainerTable
         title='Vehiculos'
         dropdown={<DropdownExcel />}
-        search={<SearchButton />}
+        search={<SearchButton value={search} onChange={searcher} />}
         // buttonToGo={
         //   allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
         //     ? <ButtonGoTo value='Crear Vehiculo' href='create' />
         //     : null
         // }
-        buttonToGo={
-          <ButtonGoTo value="Crear Vehiculo" href="/admin/vehicle/create" />
-        }
-        showPaginator={
-          <nav aria-label="Table Paging" className="mb- text-muted my-4">
-            <ul className="pagination justify-content-center mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-              </li>
-              {pageNumbers.map((pageNumber) => (
-                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                </li>
-              ))}
+        buttonToGo={<ButtonGoTo value="Crear Vehiculo" href="/admin/vehicle/create" />}
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
 
-
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-              </li>
-            </ul>
-          </nav >
-        }
       >
 
         <TablePerson>
-          <Thead>
-            <Th name={''}></Th>
-            <Th name={'placa'}></Th>
-            <Th name={'detalle'}></Th>
-            <Th name={'apartamento'}></Th>
-            <Th name={''}></Th>
-            <Th></Th>
-          </Thead>
+
           <Tbody>
-            {
-              load && <h1 className='d-flex'>Cargando...</h1>
-            }
-            {
-              error && <h1 className='d-flex'>Error: {error}</h1>
-            }
+
 
             {
 
-              filteredDatavehicle().map(vehicle => (
-                <Row
-                  icon='truck'
-                  A7={vehicle.licenseplate}
-                  description={vehicle.description}
-                  A17={vehicle.Apartment.apartmentName}
+              vehicleLoading ? <Spinner /> : vehicleList.length == 0 || currentPage >= totalPages ?
 
-                >
+                <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
 
-                  {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (
-                    <Actions accion='Editar' />
-                  ) : null}
-                </Row>
+                vehiclesInto().map(vehicle => (
 
-              ))
+                  <Row
+                    img={'https://icones.pro/wp-content/uploads/2021/03/icone-de-voiture-symbole-png-grise.png'}
+                    A1={`Placa`}
+                    A2={vehicle.licenseplate}
+                    A3={'Descripcion: '}
+                    A4={vehicle.description.toLowerCase()}
+
+                    // A4={`Asociado al apartamento ${vehicle.Apartment.apartmentName}`}
+
+                    A9={`Apartamento asociado`}
+                    A11={`${vehicle.Apartment.apartmentName}`}
+
+                    status={vehicle.state}
+
+                    onClick={() => openVehicleModalEdit(vehicle)}
+
+                  >
+
+                    {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (
+                      <Actions onClick={() => openVehicleModalEdit(vehicle)} accion='Editar' />
+                    ) : null}
+                  </Row>
+
+                ))
             }
           </Tbody>
         </TablePerson>
       </ContainerTable>
+
+      {
+        vehicleModalEdit &&
+        createPortal(
+          <>
+            <ModalContainer>
+              <Modal
+                onClick={editVehicle}
+                showModal={setVehicleModalEdit}
+                title={`Informacion vehiculo `}
+              >
+
+
+                <InputsSelect id={"select"} options={AparmetList} name={"Numero de aparmento"} value={idApartment} onChange={e => setIdApartment(e.target.value)} ></InputsSelect>
+                <Inputs name={"Placa"} value={plate} type="text" onChange={e => setPlate(e.target.value)}></Inputs>
+                <Inputs name={"Descripcion"} value={description} type="text" onChange={e => setDescription(e.target.value)}></Inputs>
+
+                <Inputs type={"hidden"}
+                  value={idvehicle} onChange={e => setIdVehicle(e.target.value)}></Inputs>
+
+              </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )
+      }
     </>
   )
 }

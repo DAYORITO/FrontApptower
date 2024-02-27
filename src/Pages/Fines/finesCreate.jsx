@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import FormContainer from "../../Components/Forms/FormContainer";
 import InputsSelect from "../../Components/Inputs/InputsSelect";
 import { fineTypes } from "../../Hooks/consts.hooks";
@@ -18,8 +18,19 @@ import FormColumn from "../../Components/Forms/FormColumn";
 import { useParams } from "react-router";
 import { tr } from "date-fns/locale";
 import Cookies from 'js-cookie';
+import { useUserLogged } from "../../Helpers/Helpers";
+import { SocketContext } from "../../Context/SocketContext";
 
 function FinesCreate() {
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
+  // User Logeed
+  
+  const idUserLogged = useUserLogged()
+
   const { id } = useParams();
   const [fineType, setFineType] = useState("");
   const [idApartment, setIdApartment] = useState("");
@@ -31,16 +42,17 @@ function FinesCreate() {
   const navigate = useNavigate();
   const [apartmets, setApartments] = useState({ apartments: [] });
   const [showModal, setShowmodal] = useState(false);
+  const [errors, setErrors] = useState([{}])
 
   const { data, load, error } = useFetchget("apartments");
-  console.log(data);
+  // console.log(data);
 
   //Se crean los estados para los datos del usuario
   const [userData, setUserData] = useState({});
 
   //
   const token = Cookies.get('token');
-  console.log("Datos piopio", userData)
+  // console.log("Datos piopio", userData)
 
   //Funcion para obtener el documento del usuario
   const fetchUserInformation = async (token) => {
@@ -57,7 +69,7 @@ function FinesCreate() {
 
       const data = await response.json();
       setUserData(data);
-      SetUserDocument(data.user.document);
+      // SetUserDocument(data.user.document);
 
     } catch (error) {
       console.error('Error fetching user information:', error);
@@ -100,7 +112,7 @@ function FinesCreate() {
       value: "",
       label: "",
     });
-    console.log(apartmentsList);
+    // console.log(apartmentsList);
     return apartmentsList;
   };
 
@@ -122,9 +134,14 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const url = 'https://apptowerbackend.onrender.com/api/fines';
-    // const url = "http://localhost:3000/api/fines";
+    // const url = 'https://apptowerbackend.onrender.com/api/fines';
+    const url = "http://localhost:3000/api/fines";
     const data = {
+
+      // User logged
+
+      idUserLogged: idUserLogged,
+
       fineType: fineType,
       idApartment: idApartment,
       incidentDate: incidentDate,
@@ -140,7 +157,7 @@ function FinesCreate() {
 
     const { response, error } = await useFetchForFile(url, data);
 
-    console.log(data);
+    console.log(response);
 
     console.log("Response:", response);
     if (response) {
@@ -149,6 +166,10 @@ function FinesCreate() {
         text: "Multa creada exitosamente",
         icon: "success",
       }).then(() => {
+
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') };
+
+
         navigate(-1);
       });
 
@@ -161,6 +182,9 @@ function FinesCreate() {
         text: "Error al crear la multa",
         icon: "error",
       });
+      const errorData = error.errorData;
+      setErrors(errorData);
+
     }
   };
   return (
@@ -179,6 +203,8 @@ function FinesCreate() {
         <FormColumn>
           <InputsSelect
             name="Tipo de multa"
+            identifier={"fineType"}
+            errors={errors}
             onChange={(e) => {
               setFineType(e.target.value);
             }}
@@ -209,6 +235,8 @@ function FinesCreate() {
           }
           <Inputs
             name="Fecha del incidente"
+            identifier={"incidentDate"}
+            errors={errors}
             onChange={(e) => {
               setIncidentDate(e.target.value);
             }}
@@ -217,6 +245,8 @@ function FinesCreate() {
 
           <Inputs
             name="Fecha límite de pago"
+            identifier={"paymentDate"}
+            errors={errors}
             onChange={(e) => {
               setLimitDate(e.target.value);
             }}
@@ -225,18 +255,21 @@ function FinesCreate() {
           <Inputs
             name="Monto"
             type="number"
+            identifier={"amount"}
             onChange={(e) => {
               setAmount(e.target.value);
               console.log(amount);
             }}
+            errors={errors}
             validate={true}
             required={true}
           ></Inputs>
           <InputTextArea
             name="Descripción"
+            identifier={"details"}
+            errors={errors}
             onChange={(e) => {
               setDescription(e.target.value);
-              console.log(e.target.value);
             }}
           ></InputTextArea>
         </FormColumn>

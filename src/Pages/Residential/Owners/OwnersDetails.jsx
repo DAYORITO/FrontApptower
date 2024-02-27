@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Details } from "../../../Components/Details/details"
 import Inputs from '../../../Components/Inputs/Inputs'
@@ -28,6 +28,7 @@ import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { SocketContext } from '../../../Context/SocketContext'
 
 export const OwnerDetail = () => {
 
@@ -41,8 +42,13 @@ export const OwnerDetail = () => {
 
   const { id } = useParams();
 
-  const idUserLogged = useUserLogged()
+  // Socket
 
+  const { socket } = useContext(SocketContext)
+
+  // User logged
+
+  const idUserLogged = useUserLogged()
 
   const [idOwner, setIdOwner] = useState(id)
   const [idUser, setIdUser] = useState("")
@@ -183,9 +189,8 @@ export const OwnerDetail = () => {
 
     console.log("edit data", data)
 
-    await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url);
+    await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoOwner, data, url, null, null, socket);
     getOwner(`owners/${id}`)
-    setModalPersonalInfoOwner(false)
 
   }
 
@@ -204,6 +209,10 @@ export const OwnerDetail = () => {
 
     const data = {
 
+      // User logged
+
+      idUserLogged: idUserLogged,
+
       idApartment: parseInt(idApartment),
       idOwner: idOwner,
       OwnershipStartDate: ownershipStartDate,
@@ -213,9 +222,8 @@ export const OwnerDetail = () => {
 
     console.log(data)
 
-    await postRequest(event, 'apartmentOwners', 'POST', {}, data, url)
+    await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, null, null, socket)
 
-    setModalAssigApartmentToOwner(false)
     getOwner(`owners/${id}`)
 
   };

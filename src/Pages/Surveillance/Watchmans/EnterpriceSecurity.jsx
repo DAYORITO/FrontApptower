@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 
 
-import usePaginator, { filter, postRequest, putRequest } from "../../../Helpers/Helpers"
+import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import { Modal, ModalContainer } from "../../../Components/Modals/ModalTwo"
 import { createPortal } from "react-dom"
 

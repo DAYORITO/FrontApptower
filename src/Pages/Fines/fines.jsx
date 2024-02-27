@@ -257,8 +257,8 @@ function Fines() {
                                 key={fine.idFines}
                                 A1={fine.fineType}
                                 A3="APTO"
-                                A4={fine.apartment.apartmentName}
-                                icon='dollar-sign'
+                                A4={fine.apartment?.apartmentName}
+                                icon='file-plus'
                                 // status='Pendiente'
                                 A6={(() => {
                                     let incidentDate = new Date(fine.incidentDate).toLocaleDateString('es-ES', {
@@ -282,7 +282,7 @@ function Fines() {
                                 })()}
                                 A9={"$" + fine.amount}
                                 A12={fine.state}
-                                to={`details/${encodeURIComponent(JSON.stringify(fine))}`}
+                                to={`details/${fine.idFines}`}
                             >
                                 {fine.state != 'Pagada' ?
                                     <Actions accion='Agregar Comprobante' onClick={() => {

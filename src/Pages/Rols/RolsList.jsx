@@ -8,7 +8,7 @@ import { Th } from '../../Components/Th/Th'
 import { Tbody } from '../../Components/Tbody/Tbody'
 import { Row } from '../../Components/Rows/Row'
 import { Actions } from '../../Components/Actions/Actions'
-import usePaginator, { filter } from '../../Helpers/Helpers'
+import { usePaginator, filter, postRequest, useUserLogged } from '../../Helpers/Helpers'
 import { Paginator } from '../../Components/Paginator/Paginator'
 import dataNotFoundImg from "../../assets/dataNotFound.jpg"
 import { Spinner } from 'react-bootstrap'

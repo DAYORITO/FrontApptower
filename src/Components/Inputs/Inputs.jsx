@@ -2,13 +2,15 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage, validate = false, required = false }) {
+function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage,className, validate = false, required = false, errors }) {
   const [internalErrorMessage, setInternalErrorMessage] = useState(null);
   const [labelText, setLabelText] = useState(name);
   const [passwordShown, setPasswordShown] = useState(false);
   const eyeIconRef = useRef(null);
   const inputRef = useRef(null);
   const labelRef = useRef(null);
+  const [errorMessageToShow, setErrorMessageToShow] = useState(null);
+  // const [errorStyle, setErrorStyle] = useState(null);
 
   useEffect(() => {
     if (value !== '') {
@@ -58,6 +60,19 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
     }
   }, [])
 
+  const organizarErrores = ()=>{
+    if (errors){
+      return errors?.errors?.reduce((a,b)=>{
+        a[b.field] = b.message;
+        // if (b.field === identifier){
+        //   setErrorStyle("boder-danger");
+        // }
+        return a;
+      }, {})
+    }
+  }
+  
+
   //Aqui esta utilizando el prop validate para validar si el campo esta vacio y mostrar un mensaje de error
   useEffect(() => {
     if (validate && value === "") {
@@ -68,7 +83,19 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
     }
   }, [value, validate]);
 
+
+
   const errorMessage = externalErrorMessage || internalErrorMessage;
+
+  useEffect(()=>{
+    if(errors){
+    setErrorMessageToShow(organizarErrores());
+  }
+    console.log("errors en el input:", errors)
+   
+  }, [errors])
+  
+  
 
 
   const togglePasswordVisibility = () => {
@@ -88,7 +115,7 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-            className=''
+            className={`${className} ${errorMessageToShow != null && errorMessageToShow[identifier] != null ? "border-danger" : ""}`}
             ref={inputRef}
             id={id}
             readOnly={readonly}
@@ -115,7 +142,10 @@ function Inputs({ name, value, onChange, placeholder, type, list, options, id, r
             <option value={opcion.value} label={opcion.label} />
           ))}
         </datalist>}
-        {errorMessage && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
+        {errorMessage && 
+        <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
+        {errors && errorMessageToShow != null  &&
+         <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
       </div>
     </>
   )

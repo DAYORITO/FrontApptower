@@ -95,7 +95,7 @@ export const ResidentDetails = () => {
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
     const EqualUser = user?.user?.document === docNumber;
 
-    console.log(EqualUser)
+    console.log(resident)
 
     useEffect(() => {
 
@@ -201,9 +201,8 @@ export const ResidentDetails = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url);
+        await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInforesident, data, url);
         getResident(`residents/${id}`)
-        setModalPersonalInforesident(false)
 
     }
 
@@ -436,7 +435,7 @@ export const ResidentDetails = () => {
                         <DropdownInfo
                             name={`Reservas`}
                             action1={'Hacer nueva reserva'}
-                            toAction1={`/admin/booking/create/${idApartment}`}
+                            toAction1={`/admin/booking${idApartment}`}
                         >
 
                             {
