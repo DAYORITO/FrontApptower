@@ -6,10 +6,10 @@ import { TablePerson } from '../../../Components/Tables/Tables'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
-import usePaginator, { filter, postRequest, showConfirmationDialog } from '../../../Helpers/Helpers'
+import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
 
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from 'react-dom'
@@ -26,6 +26,7 @@ import { format } from 'date-fns'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie'
 import { Paginator } from '../../../Components/Paginator/Paginator'
+import { SocketContext } from '../../../Context/SocketContext'
 
 
 export const Residents = () => {
@@ -33,6 +34,11 @@ export const Residents = () => {
 
     const url = "http://localhost:3000/api/"
     // const url = "https://apptowerbackend.onrender.com/api/
+
+    // Socket
+
+    const { socket } = useContext(SocketContext)
+
 
     const { data: residents, get: getResidents, loading } = useFetch(url)
     const { data: apartments, get: getApartments, loading: loadingApartments } = useFetch(url)
@@ -75,6 +81,8 @@ export const Residents = () => {
     // Apartment information
 
     const { id } = useParams()
+
+    const idUserLogged = useUserLogged()
 
     const [idResident, setIdResident] = useState("");
 
@@ -224,47 +232,52 @@ export const Residents = () => {
 
         const data = {
 
+            // User logged
+
+            idUserLogged: idUserLogged,
+
             idApartment: parseInt(idApartment),
             idResident: idResident,
             residentStartDate: residentStartDate,
             // status: "active"
 
         }
-        console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url)
+        await postRequest(event, 'aparmentResidents', 'POST', setModalAddChangeApartment, data, url, null, null, socket)
 
-        setModalAddChangeApartment(false)
         getResidents('residents')
 
     };
 
     // Edit resident user information
 
-    const updateResidentPersonalInformation = async (event) => {
+    // const updateResidentPersonalInformation = async (event) => {
 
-        const data = {
+    //     const data = {
 
-            iduser: idUser,
-            pdf: pdf,
-            docType: docType,
-            document: docNumber,
-            name: name,
-            lastName: lastName,
-            birthday: birthday,
-            sex: sex,
-            email: email,
-            phone: phone,
+    //         // User logged
 
-        }
+    //         idUserLogged: idUserLogged,
+
+    //         iduser: idUser,
+    //         pdf: pdf,
+    //         docType: docType,
+    //         document: docNumber,
+    //         name: name,
+    //         lastName: lastName,
+    //         birthday: birthday,
+    //         sex: sex,
+    //         email: email,
+    //         phone: phone,
+
+    //     }
 
 
-        await postRequest(event, 'users', 'PUT', data, url)
+    //     await postRequest(event, 'users', 'PUT', setModalResidentEdit, data, url)
 
-        setModalResidentEdit(false)
-        getResidents('residents')
+    //     getResidents('residents')
 
-    };
+    // };
 
 
     // Edit resident
@@ -273,6 +286,10 @@ export const Residents = () => {
 
         const data = {
 
+            // User logged
+
+            idUserLogged: idUserLogged,
+
             idResident: idResident,
             residentType: residentType,
             status: status,
@@ -280,7 +297,7 @@ export const Residents = () => {
 
         }
 
-        await postRequest(event, 'residents', 'PUT', setModalResident, data, url)
+        await postRequest(event, 'residents', 'PUT', setModalResident, data, url, null, null, socket)
 
         getResidents('residents')
 
@@ -401,11 +418,11 @@ export const Residents = () => {
                                 onClickForDelete={deleteApartmentResident}
                             >
 
-                                <InputsSelect id={"select"} options={residentsList} name={"Residente"}
+                                <InputsSelect disabled id={"select"} options={residentsList} name={"Residente"}
                                     value={idResident} onChange={e => setIdApartmentResident(e.target.value)}
                                 ></InputsSelect>
 
-                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                <InputsSelect disabled={!isCreateApartmentResident} id={"select"} options={apartmentList} name={"Apartamento"}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}
                                 ></InputsSelect>
 

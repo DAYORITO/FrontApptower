@@ -15,7 +15,7 @@ import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import Swal from 'sweetalert2';
 import { idToPrivilegesName, idToPermissionName } from '../../../Hooks/permissionRols'
 import Select2 from '../../../Components/Inputs/Select2';
-import usePaginator, { filter } from '../../../Helpers/Helpers'
+import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import { Paginator } from '../../../Components/Paginator/Paginator'
 import { Spinner } from 'react-bootstrap'
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"

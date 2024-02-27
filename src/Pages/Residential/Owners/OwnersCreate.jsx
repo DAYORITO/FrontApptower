@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import FormContainer from '../../../Components/Forms/FormContainer'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
@@ -8,7 +8,8 @@ import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import FormColumn from '../../../Components/Forms/FormColumn'
 import { useFetch } from '../../../Hooks/useFetch'
 import { bools, docTypes, sexs } from '../../../Hooks/consts.hooks'
-import { postRequest } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
+import { SocketContext } from '../../../Context/SocketContext'
 
 export const OwnersCreate = () => {
 
@@ -20,6 +21,15 @@ export const OwnersCreate = () => {
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { id } = useParams()
+
+  // Socket
+
+  const {socket } = useContext(SocketContext)
+
+  // User logged
+
+  const idUserLogged = useUserLogged()
+
 
   // const [userImg, setUserImg] = useState("");
   const [pdf, setPdf] = useState("");
@@ -62,11 +72,17 @@ export const OwnersCreate = () => {
       }))
     : [];
 
+
+
   // create owner
 
   const createOwner = async (event) => {
 
     const data = {
+
+      // User logged
+
+      idUserLogged: idUserLogged,
 
       // userImg: userImg,
       pdf: pdf,
@@ -90,13 +106,9 @@ export const OwnersCreate = () => {
 
     console.log(data)
 
-    await postRequest(event, 'owners', 'POST', {}, data, url)
-
-    // navigate(-1)
+    await postRequest(event, 'owners', 'POST', null, data, url, null, navigate, socket)
 
   };
-
-  console.log(apartmentList)
 
 
 
@@ -114,8 +126,6 @@ export const OwnersCreate = () => {
     >
 
       <>
-
-
 
 
         <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion personal</h6>
@@ -168,7 +178,7 @@ export const OwnersCreate = () => {
             options={apartmentList}
             name={"Apartamento"}
             value={idApartment}
-            disabled={id ? idApartment: ''}
+            disabled={id ? idApartment : ''}
             onChange={e => setIdApartment(e.target.value)}
           ></InputsSelect>
         </FormColumn>
@@ -188,7 +198,7 @@ export const OwnersCreate = () => {
         </FormColumn>
 
         <FormColumn>
-        <h6 className='mb-4 w-100 ml-2 text-muted'>¿Va vivir en el apartamento?</h6>
+          <h6 className='mb-4 w-100 ml-2 text-muted'>¿Va vivir en el apartamento?</h6>
 
           <InputsSelect
             id={"select"}
@@ -201,7 +211,7 @@ export const OwnersCreate = () => {
         </FormColumn>
 
         <FormColumn>
-          
+
         </FormColumn>
 
         <FormColumn>
@@ -217,27 +227,6 @@ export const OwnersCreate = () => {
           <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
           <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
         </FormColumn>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <FormColumn>

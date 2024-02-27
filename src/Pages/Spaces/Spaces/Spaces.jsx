@@ -6,7 +6,7 @@ import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
 import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch';
 import { ContainerCard } from "../../../Components/ContainerCard/ContainerCard";
-import usePaginator, { filter, postRequest } from "../../../Helpers/Helpers";
+import { usePaginator, filter, postRequest } from '../../../Helpers/Helpers'
 import { Spinner } from "../../../Components/Spinner/Spinner";
 import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { createPortal } from "react-dom";
@@ -141,13 +141,13 @@ export const Spaces = () => {
                   img={space.image}
                   A1={"Reservas: 50"}
                   status={space.status}
-                  to={`/admin/booking/create`}
+                  to={`/admin/booking/calendar/${space.idSpace}`}
                 >
                   {allowedPermissions['Zona Comunes'] && allowedPermissions['Zona Comunes'].includes('Editar') ? (
                     <Actions accion='Editar' onClick={() => openModal(space)} />
                   ) : null}
 
-                  <Actions href={`/admin/booking/create`} accion='Reservar' icon="calendar" />
+                  <Actions href={`/admin/booking/calendar/${space.idSpace}`} accion='Reservar' icon="calendar" />
                 </BigCard>
               ))}
           </ContainerCard>

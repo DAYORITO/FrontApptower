@@ -127,7 +127,6 @@ export const UsersDetails = () => {
 
     }, [])
 
-    console.log(users)
 
     // Edit personal information watchman
 
@@ -147,7 +146,6 @@ export const UsersDetails = () => {
             setPhone(data.user.phone || phone);
             setUserStatus(data.user.status || userStatus);
         }
-        // console.log(birthday, 'birthday')
     }
 
 
@@ -171,7 +169,6 @@ export const UsersDetails = () => {
 
         }
 
-        // console.log("edit data", data)
 
         await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoUsers, data, url, 'Informacion actualizada correctamente');
         getuser(`users/${id}`)
@@ -199,13 +196,13 @@ export const UsersDetails = () => {
 
         }
 
-        console.log("edit data", data)
 
-        await postRequest(event, 'users/img', 'PUT', {}, data, url,);
-        setModalEditImg(false)
+        await postRequest(event, 'users/img', 'PUT', setModalEditImg, data, url,);
         getuser(`users/${id}`)
 
     }
+
+    // Change Password
 
     const [modalChangePassword, setModalChangePassword] = useState(false)
 
@@ -227,7 +224,6 @@ export const UsersDetails = () => {
 
         }
 
-        console.log("edit data", data)
 
         if (password !== confirmPassword) {
             Swal.fire({
