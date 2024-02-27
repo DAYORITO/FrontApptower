@@ -258,7 +258,7 @@ function Fines() {
                                 A1={fine.fineType}
                                 A3="APTO"
                                 A4={fine.apartment?.apartmentName}
-                                icon='dollar-sign'
+                                icon='file-plus'
                                 // status='Pendiente'
                                 A6={(() => {
                                     let incidentDate = new Date(fine.incidentDate).toLocaleDateString('es-ES', {

@@ -274,7 +274,7 @@ export const Aside = () => {
 
 
                                 {allowedPermissions.includes('Multas') && (
-                                    <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
+                                    <ListNav module={'Multas'} href='fines' icon='fe fe-file-plus fe-24' />
                                 )}
                                 {/* <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' /> */}
 

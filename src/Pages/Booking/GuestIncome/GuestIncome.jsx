@@ -214,7 +214,7 @@ function GuestIncome() {
                                 A2={Income.asociatedVisitor.lastname}
                                 A7={Income.departureDate == null ? 'No registrada' : formatDate(Income.departureDate)}
                                 A6={formatDate(Income.startingDate)}
-                                to={`details/${encodeURIComponent(JSON.stringify(Income))}`}
+                                to={`details/${Income.idGuest_income}`}
                             >
                                 {Income.departureDate == null ?
                                     <Actions accion='Registrar salida' onClick={() => {

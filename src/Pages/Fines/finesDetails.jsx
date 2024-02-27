@@ -151,6 +151,8 @@ export const FinesDetail = () => {
               A2={`${fineType}`}
               A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
               A6={`Estado de pago: ${state}`}
+              actionOnClick2='Agregar comprobante de pago'
+              onClick2={openProofFilesModal}
               // A7={pdf}
               status={state}
             // onClick2={EqualUser ? openModalChangePassword : null}
@@ -168,7 +170,7 @@ export const FinesDetail = () => {
 
             <DropdownInfo
               name={`Informacion de la multa`}
-              action1={'Editar datos de la multa'}
+              // action1={'Editar datos de la multa'}
             // onClickAction1={openModalEdit}
             >
 

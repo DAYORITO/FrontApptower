@@ -224,7 +224,12 @@ const App = () => {
                                         <GuestIncomeCreate />
                                         : <NotFound />
                                 } />
-                                <Route path='guest_income/details/:details' element={
+                                {/* <Route path='guest_income/details/:details' element={
+                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
+                                        <GuestIncomeDetails />
+                                        : <NotFound />
+                                } /> */}
+                                <Route path='guest_income/details/:id' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
                                         <GuestIncomeDetails />
                                         : <NotFound />
