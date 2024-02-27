@@ -11,7 +11,7 @@ function FormButton({ name, funcion, disabled, backButton, to, onClick, bstyle }
 
   return (
     <>
-      <div className='d-flex justify-content-end' style={{width: '100%', position:'sticky', top:0, backgroundColor: 'white', bstyle}}>
+      <div className='d-flex justify-content-end mt-2' style={{width: '100%', position:'sticky', top:0, backgroundColor: 'white', bstyle}}>
         <div className="form-group mr-2">
           <input type="submit" value={name} disabled={disabled} className="btn btn-primary" onClick={onClick} />
         </div>
