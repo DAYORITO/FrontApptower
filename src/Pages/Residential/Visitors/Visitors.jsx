@@ -468,7 +468,9 @@ function Visitors() {
             <Th name={"Acciones"}></Th>
           </Thead>
           <Tbody>
-            {LoadingSpine == true ? <Spinner /> : filteredDatavisitor().map(visitor => (
+            {LoadingSpine == true ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
+              <Spinner />
+            </div> : filteredDatavisitor().map(visitor => (
               <Row
                 A3={visitor.documentType}
                 A4={visitor.documentNumber}

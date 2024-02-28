@@ -252,7 +252,9 @@ function Fines() {
                         <Th name={'Acciones'}></Th>
                     </Thead>
                     <Tbody>
-                        {LoadingSpiner == true ? <Spinner /> : filteredDatafines()?.map(fine => (
+                        {LoadingSpiner == true ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
+                            <Spinner />
+                        </div> : filteredDatafines()?.map(fine => (
                             <Row
                                 key={fine.idFines}
                                 A1={fine.fineType}

@@ -3,11 +3,13 @@
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    transition: filter 0.3s ease; /* Agregamos transición para suavizar el cambio */
+    transition: filter 0.3s ease;
+    /* Agregamos transición para suavizar el cambio */
 }
 
 .userImg:hover {
-    filter: brightness(80%); /* Reducimos el brillo al 80% */
+    filter: brightness(80%);
+    /* Reducimos el brillo al 80% */
 }
 
 .userImg.fe-edit {
@@ -33,6 +35,7 @@
 .myNav-user a {
     text-decoration: none;
 }
+
 
 
 
@@ -62,8 +65,10 @@
 .myNav-user-card-text {
     display: flex;
     flex-direction: column;
-    transition: opacity 0.5s; /* Añade una transición de 0.5 segundos en la propiedad opacity */
-    opacity: 1; /* Establece la opacidad inicial */
+    transition: opacity 0.5s;
+    /* Añade una transición de 0.5 segundos en la propiedad opacity */
+    opacity: 1;
+    /* Establece la opacidad inicial */
 }
 
 
@@ -83,7 +88,7 @@
 .myNav.collapsed .myNav-user-card-text {
 
     display: none;
-    opacity: 0; 
+    opacity: 0;
 
 }
 

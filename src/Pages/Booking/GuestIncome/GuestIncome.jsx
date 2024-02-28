@@ -206,7 +206,9 @@ function GuestIncome() {
                             <Actions accion='Registrar salida'></Actions>
                             <Actions accion='Detalles del Ingreso'></Actions>
                         </Row> */}
-                        {LoadingSpiner == true ? <Spinner /> : filteredDataguestIncome().map(Income => (
+                        {LoadingSpiner == true ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
+                            <Spinner />
+                        </div> : filteredDataguestIncome().map(Income => (
                             <Row
                                 A3="Apto visitado"
                                 A4={Income.asociatedApartment.apartmentName}

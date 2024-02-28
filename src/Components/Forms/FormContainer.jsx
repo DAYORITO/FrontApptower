@@ -3,7 +3,7 @@ import "./FormContainer.css";
 import { useNavigate } from "react-router";
 
 
-function FormContainer({ name, children, buttons, modalButton = false, onSubmit, onClickButtonOne }) {
+function FormContainer({ name, children, buttons, modalButton, ButtonBack, onSubmit, onClickButtonOne }) {
 
   const navigate = useNavigate();
   return (
@@ -13,8 +13,9 @@ function FormContainer({ name, children, buttons, modalButton = false, onSubmit,
           <strong>
             <h3 className="mb-2">{name}</h3>
           </strong>
+          {modalButton}
           {/* <p>Buenos diasBuenos diasBuenos diasBuenos diasBuenos diasBuenos dias</p> */}
-          {modalButton ? <button className="btn btn-light botonregresso " style={{ marginLeft: '80px' }} onClick={() => navigate(-1)} >Regresar</button> : null}
+          {ButtonBack ? <button className="btn btn-light botonregresso " style={{ marginLeft: '80px' }} onClick={() => navigate(-1)} >Regresar</button> : null}
         </div>
         <div className="card-body" id='form'>
           <form onSubmit={onSubmit} encType="multipart/form-data">
