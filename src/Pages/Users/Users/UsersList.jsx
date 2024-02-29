@@ -106,7 +106,7 @@ export const Users = () => {
                     </Thead>
                     <Tbody>
                         {loading ?
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '55%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
                                 <Spinner style={{ color: 'blue' }} />
                             </div>
                             : userList.length == 0 || currentPage >= totalPages ?

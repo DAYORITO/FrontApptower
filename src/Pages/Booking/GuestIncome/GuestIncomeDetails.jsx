@@ -282,6 +282,8 @@ const GuestIncomeDetails = () => {
                     }
 
 
+
+
                 </InfoDetails>
 
             </Details >

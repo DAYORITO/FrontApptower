@@ -224,7 +224,7 @@ export const EnterpriceSecurity = () => {
                     </Thead>
                     <Tbody>
                         {loading ?
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '58%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                                 <Spinner />
                             </div>
                             : enterpriceList.length == 0 || currentPage >= totalPages ?

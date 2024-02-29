@@ -382,13 +382,6 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
 
-
-
-                                </FormColumn>
-
-                                <FormColumn />
-
-                                <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
@@ -402,27 +395,12 @@ export const UsersCreate = () => {
                             </>
                         ) : namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad' ? (
                             <>
+                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
-                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
-                                        inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
-                                        errorMessage={isEmailTaken ? "El correo ya existe" : null}
-
-                                    /> <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
-                                        validate={shouldValidate} required={true}
-                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
-                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
-
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true} ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <div className="mr-1" style={{ width: '100%' }}>
-
-                                        <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate} ></Select2>
-                                    </div>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true} ></InputsSelect>
                                     <Inputs
                                         name="Documento"
                                         type='number'
@@ -432,8 +410,53 @@ export const UsersCreate = () => {
                                         errorMessage={isDocumentTaken ? "El documento ya existe" : null}
                                         validate={shouldValidate}
                                         required={true}
-                                    /> <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                    />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                </FormColumn>
+
+                                <FormColumn>
                                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                        inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
+                                        errorMessage={isEmailTaken ? "El correo ya existe" : null}
+
+                                    />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <div className="mr-1" style={{ width: '100%' }}>
+
+                                        <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate} ></Select2>
+                                    </div>
+                                </FormColumn>
+
+
+                                <FormColumn>
+                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
+                                        validate={shouldValidate} required={true}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
+                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
+
+                                </FormColumn>
+
+
+                                <FormColumn>
+                                    <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
                                     <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
@@ -443,58 +466,70 @@ export const UsersCreate = () => {
                         ) : namerole === 'Admin' || namerole === 'Administrador' || namerole === 'Super Administrador' ? (
 
                             <>
+                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
-                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} validate={shouldValidate} required={true}></InputsSelect>
+
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs
+                                        name="Documento"
+                                        type='number'
+                                        value={document}
+                                        onChange={e => setDocument(e.target.value)}
+                                        inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
+                                        errorMessage={isDocumentTaken ? "El documento ya existe" : null}
+                                        validate={shouldValidate}
+                                        required={true}
+                                    />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
+
+                                <FormColumn>
                                     <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
                                     />
+                                </FormColumn>
+
+                                <FormColumn>
                                     <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
+
+                                <FormColumn>
                                     <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
+                                    <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
+                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} validate={shouldValidate} required={true}></InputsSelect>
-                                    <Inputs
-                                        name="Documento"
-                                        type='number'
-                                        value={document}
-                                        onChange={e => setDocument(e.target.value)}
-                                        inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
-                                        errorMessage={isDocumentTaken ? "El documento ya existe" : null}
-                                        validate={shouldValidate}
-                                        required={true}
-                                    />
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true} />
+                                    <h6 className='mb-4 text-muted'>Datos de acceso</h6>
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} required={true} validate={shouldValidate} />
                                     <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true} validate={shouldValidate} />
                                 </FormColumn>
+
                             </>
                         ) :
                             <>
+                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <Uploader name='pdf' label='Documento de Identidad' formatos='.pdf'
-                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
-                                        inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
-                                        errorMessage={isEmailTaken ? "El correo ya existe" : null}
-                                    />
-                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
-                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
-                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} validate={shouldValidate} required={true}></InputsSelect>
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType}
-                                        validate={shouldValidate} required={true}></InputsSelect>
                                     <Inputs
                                         name="Documento"
                                         type='number'
@@ -505,11 +540,41 @@ export const UsersCreate = () => {
                                         validate={shouldValidate}
                                         required={true}
                                     />
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
 
+                                <FormColumn>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                        inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
+                                        errorMessage={isEmailTaken ? "El correo ya existe" : null}
+
+                                    />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
+                                        inputStyle={age < 18 ? { borderColor: 'red' } : null}
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
+                                    <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
+                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
+
+                                </FormColumn>
+
+                                <FormColumn>
+                                    <h6 className='mb-4 text-muted'>Datos de acceso</h6>
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} required={true} validate={shouldValidate} />
+                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true} validate={shouldValidate} />
                                 </FormColumn>
 
                             </>}

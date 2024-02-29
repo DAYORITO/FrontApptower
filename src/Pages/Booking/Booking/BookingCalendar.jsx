@@ -257,7 +257,7 @@ export const BookingCalendar = () => {
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <FormContainer name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`}
-                modalButton={true}
+                ButtonBack={true}
 
             >
                 <Calendar
