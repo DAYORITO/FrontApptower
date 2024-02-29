@@ -117,22 +117,18 @@ export const Booking = () => {
       >
         <TablePerson>
           <ContainerCard>
-
-
             {loading ? <Spinner /> : spacesList.length == 0 || currentPage >= totalPages ?
-
               <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" /> :
               spacesInfo().map((space) => (
-                <BigCard
-                  key={space.idSpace}
-                  title={space.spaceName}
-                  img={space.image}
-                  status={space.status}
-                  accions={false}
-                  to={`/admin/booking/calendar/${space.idSpace}`}
-                >
-
-                </BigCard>
+                space.status == 'Active' ?
+                  <BigCard
+                    key={space.idSpace}
+                    title={space.spaceName}
+                    img={space.image}
+                    status={space.status}
+                    accions={false}
+                    to={`/admin/booking/calendar/${space.idSpace}`}
+                  /> : null
               ))}
           </ContainerCard>
 
