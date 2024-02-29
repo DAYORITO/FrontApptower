@@ -274,7 +274,7 @@ export const Aside = () => {
 
 
                                 {allowedPermissions.includes('Multas') && (
-                                    <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' />
+                                    <ListNav module={'Multas'} href='fines' icon='fe fe-file-plus fe-24' />
                                 )}
                                 {/* <ListNav module={'Multas'} href='fines' icon='fe fe-x-square fe-24' /> */}
 
@@ -315,7 +315,7 @@ export const Aside = () => {
                                             return (
                                                 <RowNotificactions
                                                     isNotification={true}
-                                                    who={notification.content.information.userLogged && notification.content.information.userLogged}
+                                                    who={notification?.content?.information?.userLogged && notification?.content?.information?.userLogged}
                                                     seen={notification.seen}
                                                     key={index}
                                                     type={notification.type}

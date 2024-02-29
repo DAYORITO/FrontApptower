@@ -82,8 +82,8 @@ export const Users = () => {
         <>
 
             <ContainerTable title='Usuarios'
-                search={<SearchButton value={search} onChange={searcher} placeholder='Buscar Usuario' />}
-                buttonToGo={<ButtonGoTo value='Crear Usuario' href='create' />}
+                search={<SearchButton value={search} onChange={searcher} placeholder='Buscar usuario' />}
+                buttonToGo={<ButtonGoTo value='Crear usuario' href='create' />}
                 search2={<SearchSelect options={roleOptions} value={searchForSelect} onChange={searcherForSelect} ></SearchSelect>}
                 showPaginator={
                     !loading && userList && userList.length > 0 ?
@@ -98,7 +98,7 @@ export const Users = () => {
 
                 <TablePerson>
                     <Thead>
-                        <Th name={'Información Usuario'}></Th>
+                        <Th name={'Información usuario'}></Th>
                         <Th name={'Rol'}></Th>
                         <Th name={'Teléfono'}></Th>
                         <Th name={'Correo'}></Th>

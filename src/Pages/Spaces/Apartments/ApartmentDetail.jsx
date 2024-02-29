@@ -738,6 +738,7 @@ export const ApartmentDetails = (props) => {
                                                             lastName={` ${income.asociatedVisitor.lastname} `}
                                                             date={format(new Date(income.createdAt), 'yyyy-MM-dd')}
                                                             msg={`Se dirije al apartamento ${apartmentName} ${income.observations} `}
+                                                            to={`/admin/guest_income/details/${income.idGuest_income}`}
 
                                                             status="Active"
 
@@ -777,6 +778,7 @@ export const ApartmentDetails = (props) => {
                                                             lastName={``}
                                                             date={format(new Date(fine.createdAt), 'yyyy-MM-dd')}
                                                             msg={`${fine.details} `}
+                                                            to={`/admin/fines/details/${fine.idFines}`}
 
                                                         // status="Active"
 

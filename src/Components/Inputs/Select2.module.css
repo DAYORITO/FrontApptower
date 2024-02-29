@@ -1,0 +1,234 @@
+root {
+    --color-primary: #7ED6FF;
+}
+
+.container{
+    position: relative;
+    width: 100%;
+    /* min-height: 3rem; */
+    /* height: 3rem; */
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    /* padding: .5rem; */
+    outline: none;
+    transition: border-color .3s ease-in-out;
+    /* border: 1px #7A7A7A; */
+    border: 1px solid #e6e5e5;
+    border-radius: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
+    min-height: 38px;
+}
+
+.value {
+    flex-grow: 1;
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    color: #121212;
+}
+
+.clear__button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    /* font-size: 1.25rem;
+    height: 1.25rem; */
+    transition: color .3s ease-in-out;
+    animation: ClearButtonAnimation .3s ease-in-out;
+}
+
+@keyframes ClearButtonFadeIn {
+    from {
+        opacity: 0;
+        rotate: 360deg;
+    }
+    to{
+        opacity: 1;
+        rotate: 0deg;
+    }
+}
+
+.clear-button:focus,
+.clear-button:hover {
+    color: #7ED6FF;
+}
+
+.caret {
+    transition: color .3s ease-in-out;
+    animation: RotateCaretInactive .3s ease-in-out forwards;
+    font-size: 5px;
+    position: absolute;
+    right: 3px;
+    font-weight: 600;
+
+}
+
+.caret svg{
+    width: 15px;
+    height: 15px;
+
+}
+/* .caret.caret__active{
+    animation: RotateCaretActive .3s ease-in-out forwards;
+} */
+
+@keyframes RotateCaretInactive {
+    from {
+        transform: rotate(-180deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes RotateCaretActive {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+.options{
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: none;
+    max-height: 15rem;
+    overflow-y: auto;
+    width: 100%;
+    left: 0;
+    background: #fff;
+    border: 0.5px solid #5a2a70;
+    top: calc(100% + .5rem);
+    z-index: 100;
+}
+
+.options.options__show{
+    display: block;
+}
+
+.option {
+    padding: .25rem .5rem;
+    cursor: pointer;
+    /*transition: .3s ease-in-out;*/
+}
+
+.option.selected{
+    background-color: #7ED6FF;
+    color: #fff;
+}
+
+.option.highlighted{
+    background-color: #98c9ff;
+}
+
+.label{
+    position: absolute;
+    /* font-size: 1rem; */
+    transition: .3s ease-in-out;
+    top: 50%;
+    padding: 0 .2rem;
+    /* font-weight: 600; */
+    transform: translate(0, -50%);
+    background: #fff;
+    pointer-events: none;
+    color: #7A7A7A;
+}
+
+.container:focus .label{
+    top: -.1rem;
+    font-size: .8rem;
+}
+
+.label.label__active{
+    top: -.1rem;
+    font-size: .8rem;
+    color: #7A7A7A;
+    font-weight: bold;
+}
+
+.inputContainer{
+    width: 100%;
+    padding: .5rem;
+}
+
+.input{
+    width: 100%;
+    padding: .5rem;
+    outline: none;
+}
+
+.container::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #7ED6FF;
+    top: -2px;
+    left: -2px;
+    transition: all .3s ease;
+}
+
+.container::after{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 2px;
+    height: 0;
+    background: #7ED6FF;
+    top: -2px;
+    left: -2px;
+    transition: all .3s ease;
+}
+
+.container:has(.options__show)::before{
+    width: calc(100% + 4px);
+}
+
+.container:has(.options__show)::after{
+    height: calc(100% + 4px);
+}
+
+.container .borderAnimation::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #7ED6FF;
+    bottom: -2px;
+    right: -2px;
+    transition: all .3s ease;
+}
+
+.container .borderAnimation::after{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 2px;
+    height: 0;
+    background: #7ED6FF;
+    bottom: -2px;
+    right: -2px;
+    transition: all .3s ease;
+}
+
+.container:has(.options__show) .borderAnimation::before{
+    width: calc(100% + 4px);
+}
+
+.container:has(.options__show) .borderAnimation::after{
+    height: calc(100% + 4px);
+}
+
+.container:has(.options__show) .label {
+    color: #7ED6FF;
+}

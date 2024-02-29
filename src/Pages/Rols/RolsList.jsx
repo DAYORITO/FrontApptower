@@ -52,13 +52,13 @@ export const Rols = () => {
         <>
 
             <ContainerTable title='Roles'
-                search={<SearchButton value={search} onChange={searcher} placeholder='Buscar Rol' />}
-                buttonToGo={<ButtonGoTo value='Crear Rol' href='create' />}
+                search={<SearchButton value={search} onChange={searcher} placeholder='Buscar rol' />}
+                buttonToGo={<ButtonGoTo value='Crear rol' href='create' />}
                 showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
             >
                 <TablePerson>
                     <Thead>
-                        <Th name={'Nombre Rol'} ></Th>
+                        <Th name={'Nombre rol'} ></Th>
                         <Th name={'Descripción'}></Th>
                     </Thead>
                     <Tbody>
@@ -82,7 +82,7 @@ export const Rols = () => {
                                         <Actions accion='Editar' href={`/admin/rols/editNew/${rols.idrole}`} />
                                         {rols.state === "Activo" ?
                                             <>
-                                                <Actions accion='Crear Usuario' href={`/admin/users/create/${rols.idrole}`} />
+                                                <Actions accion='Crear usuario' href={`/admin/users/create/${rols.idrole}`} />
                                             </> : null
                                         }
                                     </Row>

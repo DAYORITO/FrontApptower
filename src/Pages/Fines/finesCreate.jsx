@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import FormContainer from "../../Components/Forms/FormContainer";
 import InputsSelect from "../../Components/Inputs/InputsSelect";
 import { fineTypes } from "../../Hooks/consts.hooks";
@@ -18,8 +18,20 @@ import FormColumn from "../../Components/Forms/FormColumn";
 import { useParams } from "react-router";
 import { tr } from "date-fns/locale";
 import Cookies from 'js-cookie';
+import { useUserLogged } from "../../Helpers/Helpers";
+import { SocketContext } from "../../Context/SocketContext";
+import { set } from "date-fns";
 
 function FinesCreate() {
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
+  // User Logeed
+  
+  const idUserLogged = useUserLogged()
+
   const { id } = useParams();
   const [fineType, setFineType] = useState("");
   const [idApartment, setIdApartment] = useState("");
@@ -58,7 +70,7 @@ function FinesCreate() {
 
       const data = await response.json();
       setUserData(data);
-      SetUserDocument(data.user.document);
+      // SetUserDocument(data.user.document);
 
     } catch (error) {
       console.error('Error fetching user information:', error);
@@ -123,14 +135,20 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("antes de enviar: ", idApartment.value);
     // const url = 'https://apptowerbackend.onrender.com/api/fines';
     const url = "http://localhost:3000/api/fines";
     const data = {
+
+      // User logged
+
+      idUserLogged: idUserLogged,
+
       fineType: fineType,
-      idApartment: idApartment,
+      idApartment: idApartment.value,
       incidentDate: incidentDate,
       paymentDate: limitDate,
-      amount: amount,
+      amount: parseFloat(amount),
       details: description,
       state: "Pendiente",
       evidenceFiles: evidence,
@@ -141,7 +159,7 @@ function FinesCreate() {
 
     const { response, error } = await useFetchForFile(url, data);
 
-    console.log(data);
+    console.log(response);
 
     console.log("Response:", response);
     if (response) {
@@ -150,7 +168,11 @@ function FinesCreate() {
         text: "Multa creada exitosamente",
         icon: "success",
       }).then(() => {
+
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') };
+
         navigate(-1);
+
       });
 
     }
@@ -175,7 +197,6 @@ function FinesCreate() {
           <FormButton
             name="Crear multa"
             backButton="Cancelar"
-
             onClick={handleSubmit}
           />
         }
@@ -195,13 +216,12 @@ function FinesCreate() {
           {!id ?
             <Select2
               // key={idApartment}
-              name="Apartamento"
-              value={idApartment || ""}
-              onChange={(selectedValue) => {
-                setIdApartment(selectedValue);
-              }}
-              inputStyle={{ border: '1px solid red' }}
+              placeholder="Apartamento"
+              value={idApartment}
+              onChange={setIdApartment}
               options={getApartments(data)}
+              identifier={"idApartment"}
+              errors={errors}
             />
             :
             <Inputs
@@ -250,13 +270,13 @@ function FinesCreate() {
             errors={errors}
             onChange={(e) => {
               setDescription(e.target.value);
-              console.log(e.target.value);
             }}
           ></InputTextArea>
         </FormColumn>
         <FormColumn>
           <Uploader
             label="Adjuntar evidencia"
+            // multiple={true}
             onChange={(e) => {
               setEvidence(e.target.files[0]);
             }}

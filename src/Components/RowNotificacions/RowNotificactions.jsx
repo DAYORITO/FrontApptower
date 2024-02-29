@@ -17,6 +17,7 @@ export const RowNotificactions = ({
   seen = true,
   isNotification = false,
   who,
+  img,
   info
 
 
@@ -32,10 +33,12 @@ export const RowNotificactions = ({
     to.owner ? `/admin/owners/details/${to.owner.idOwner}` :
       to.resident ? `/admin/resident/details/${to.resident.iduser}` :
         to.apartment ? `/admin/apartments/details/${to.apartment.idApartment}` :
+          to.fine ? `/admin/fines/details/${to.fine?.idFines}` :
+          to.guest_income? `/admin/guest_income/details/${to.guest_income?.idGuest_income}` :
 
-          to?.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
-            to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
-              to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
+            to?.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
+              to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
+                to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
   return (
 
@@ -43,8 +46,16 @@ export const RowNotificactions = ({
       <div className={`list-group-item notification hoverable`} >
         <div className="row">
           <div className="col-auto">
-            <div className="circle mt-4">
-              <span className={`fe fe-${icon} fe-24 text-muted`}></span>
+            <div className="circle circle-sm">
+
+              {img ? (
+                <img src={img} className="userImg" alt="User Logo" />
+              ) : (
+                <>
+                  <span class={`fe fe-${icon} fe-24 text-muted`}></span>
+
+                </>
+              )}
             </div>
 
             {

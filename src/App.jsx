@@ -57,9 +57,10 @@ import { idToPermissionName, idToPrivilegesName } from './Hooks/permissionRols';
 import { ResidentDetails } from "./Pages/Residential/Residents/ResidentDetails";
 import { LoadingPage } from "./Pages/PagesAdicional/Loading";
 import GuestIncomeDetails from "./Pages/Booking/GuestIncome/GuestIncomeDetails";
-import FinesDetail from "./Pages/Fines/finesDetails";
 import Fines from "./Pages/Fines/fines";
 import FinesCreate from "./Pages/Fines/finesCreate";
+import { FinesDetail } from "./Pages/Fines/finesDetails";
+
 import { Residents } from "./Pages/Residential/Residents/Residents";
 import { useAllowedPermissionsAndPrivileges, useFetchUserInformation, useFetchget } from "./Hooks/useFetch";
 import { BookingCalendar } from "./Pages/Booking/Booking/BookingCalendar";
@@ -70,10 +71,10 @@ import { SocketContext } from "./Context/SocketContext";
 
 
 const App = () => {
-    
+
     const { socket, online } = useContext(SocketContext)
 
-    console.log(online? 'Online': 'Offline')
+    console.log(online ? 'Online' : 'Offline')
 
     const token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
@@ -223,7 +224,12 @@ const App = () => {
                                         <GuestIncomeCreate />
                                         : <NotFound />
                                 } />
-                                <Route path='guest_income/details/:details' element={
+                                {/* <Route path='guest_income/details/:details' element={
+                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
+                                        <GuestIncomeDetails />
+                                        : <NotFound />
+                                } /> */}
+                                <Route path='guest_income/details/:id' element={
                                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
                                         <GuestIncomeDetails />
                                         : <NotFound />
@@ -255,7 +261,12 @@ const App = () => {
                                         <FinesCreate /> : <NotFound />
                                 } />
 
-                                <Route path='fines/details/:details' element={
+                                <Route path='fines/create/:id' element={
+                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear') ?
+                                        <FinesCreate /> : <NotFound />
+                                } />
+
+                                <Route path='fines/details/:id' element={
                                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
                                         <FinesDetail />
                                         : <NotFound />
@@ -371,7 +382,7 @@ const App = () => {
                                 {/* Notifications */}
                                 <Route path='notifications' element={
                                     allowedPermissions['Notificaciones'] ?
-                                        <Notifications  /> : <NotFound />
+                                        <Notifications /> : <NotFound />
                                 } />
 
 

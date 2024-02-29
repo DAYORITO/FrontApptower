@@ -2,12 +2,13 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import io from 'socket.io-client';
+import { LoadingPage } from '../Pages/PagesAdicional/Loading';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState(null);
 
@@ -44,11 +45,10 @@ export const AuthProvider = ({ children }) => {
                     console.error('Error parsing user data:', e);
                 }
             }
-
+            await fetchUserData(data.token);
             Cookies.set('isLoggedIn', true);
             setIsLoggedIn(true);
 
-            fetchUserData(data.token);
 
 
             return data.token;
@@ -101,12 +101,11 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = Cookies.get('token');
         if (token) {
-            setIsLoggedIn(true);
-            fetchUserData(token).finally(() => {
-                setIsLoading(false);
-            });
+            fetchUserData(token)
+                .then(() => setIsLoggedIn(true))
+                .catch(() => setIsLoggedIn(false))
+                .finally(() => setIsLoading(false));
         } else {
-            setUser(null);
             setIsLoggedIn(false);
         }
     }, []);
