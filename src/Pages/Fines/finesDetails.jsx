@@ -13,7 +13,7 @@ import { InfoDetails } from "../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../Components/DetailsActions/DetailsActions"
 import { idToPermissionName } from '../../Hooks/permissionRols'
-import { useAllowedPermissions, useFetch, useFetchUserInformation } from "../../Hooks/useFetch"
+import { useAllowedPermissions, useFetch, useFetchForFile, useFetchUserInformation } from "../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../Components/DropdownInfo/DropdownInfo"
@@ -23,7 +23,7 @@ import { NotificationsAlert } from "../../Components/NotificationsAlert/Notifica
 import { ModalContainer, Modal } from "../../Components/Modals/ModalTwo"
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../Components/Uploader/Uploader'
@@ -37,6 +37,7 @@ import Swal from 'sweetalert2'
 import ImageContainer from '../../Components/ImgContainer/imageContainer'
 import moment from 'moment';
 import { SocketContext } from '../../Context/SocketContext'
+import { ModalContainerload } from '../../Components/Modals/Modal'
 
 
 export const FinesDetail = () => {
@@ -89,10 +90,13 @@ export const FinesDetail = () => {
   const [idApartment, setIdApartment] = useState('')
   const [apartmentName, setApartmentName] = useState('')
   const [state, setState] = useState('')
+  const [showModaload, setShowModaload] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+
 
   const [evidenceFiles, setEvidenceFiles] = useState([])
   const [paymentproof, sePaymentproof] = useState([])
-
+  const [paymentproofFiles, setPaymentproofFiles] = useState([])
   const [userTaxer, setUserTaxer] = useState('')
 
 
@@ -118,6 +122,8 @@ export const FinesDetail = () => {
     sePaymentproof(fines?.data?.fines?.paymentproof)
 
     setUserTaxer(fines?.data?.fines?.user)
+    console.log('fines', fines?.data?.fines)
+    console.log('comprobante', paymentproof)
 
   }, [fines?.data?.fines])
 
@@ -131,6 +137,38 @@ export const FinesDetail = () => {
     setAaddProofFilesModal(true)
 
   }
+  const handleEditClick = async (dataToUpdate) => {
+    setShowModaload(true);
+
+    //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
+    let response = await useFetchForFile('https://apptowerbackend.onrender.com/api/fines', dataToUpdate, 'PUT')
+    // .then((responseData) => {
+
+    console.log("respuesta de api holi", response)
+    if (response.response != null) {
+        setShowModaload(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'Archivo actualizado',
+            showConfirmButton: false,
+            timer: 1500
+        })
+        //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
+        setState(dataToUpdate.state);
+        sePaymentproof(dataToUpdate.paymentproof);
+
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Algo salió mal!',
+        });
+        setShowModaload(false);
+
+    }
+
+
+};
 
 
 
@@ -152,7 +190,7 @@ export const FinesDetail = () => {
               A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
               A6={`Estado de pago: ${state}`}
               actionOnClick2='Agregar comprobante de pago'
-              onClick2={openProofFilesModal}
+              onClick2={()=>{setShowModal(true)}}
               // A7={pdf}
               status={state}
             // onClick2={EqualUser ? openModalChangePassword : null}
@@ -271,6 +309,60 @@ export const FinesDetail = () => {
         </InfoDetails>
 
       </Details >
+      {showModal &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setShowModal}>
+                            <Modal
+                                showModal={setShowModal}
+                                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
+                                title={"Comprobante de pago"}
+                                
+                            >
+                                {
+                      
+                                        <div className="d-flex flex-column justify-content-center align-items-center">
+                                            <ImageContainer urls={paymentproof} />
+                                            <div style={{ width: "200px", height: "200px" }}>
+                                                <Uploader label={"Agregar archivo"}
+                                                    onChange={(e) => {
+                                                        setPaymentproofFiles(e.target.files[0]);
+                                                    }}
+                                                />
+                                            </div>
+
+
+                                        </div>
+
+                                }
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )
+
+            }
+            // {showModaload &&
+                createPortal(
+                    <>
+                        <ModalContainerload ShowModal={setShowModaload}>
+                            <Modaload
+                                showModal={setShowModaload}
+                            >
+                                <div className='d-flex justify-content-center'>
+                                    <l-dot-spinner
+                                        size="50"
+                                        speed="2"
+                                        color="black"
+                                    ></l-dot-spinner>
+                                </div>
+
+
+                            </Modaload>
+                        </ModalContainerload>
+                    </>,
+                    document.getElementById("modalRender")
+                )}
 
 
       {addProofFilesModal &&
