@@ -13,7 +13,7 @@ import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
 import { idToPermissionName } from '../../../Hooks/permissionRols'
-import { useAllowedPermissions, useFetch, useFetchUserInformation } from "../../../Hooks/useFetch"
+import { useAllowedPermissions, useFetch, useFetchForFile, useFetchUserInformation } from "../../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -23,7 +23,7 @@ import { NotificationsAlert } from "../../../Components/NotificationsAlert/Notif
 import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo"
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
@@ -37,12 +37,13 @@ import Swal from 'sweetalert2'
 import ImageContainer from '../../../Components/ImgContainer/imageContainer'
 import moment from 'moment';
 import { SocketContext } from '../../../Context/SocketContext'
+import { dotSpinner } from 'ldrs'
 
 // import React, { useEffect, useState } from 'react';
 // import { Details } from "../../../Components/Details/details"
 // import { InfoDetails } from '../../../Components/InfoDetails/InfoDetails';
 // import { Navigate, useNavigate, useParams } from 'react-router-dom';
-// import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
+import { ModalContainerload, Modaload } from '../../../Components/Modals/Modal';
 // import { createPortal } from 'react-dom';
 // import Swal from 'sweetalert2';
 // import { useFetch, useFetchForFile, useFetchget } from '../../../Hooks/useFetch';
@@ -63,6 +64,7 @@ const GuestIncomeDetails = () => {
     // guest income informacion
 
     const { id } = useParams();
+    dotSpinner.register();
 
     const idUserLogged = useUserLogged()
 
@@ -102,6 +104,7 @@ const GuestIncomeDetails = () => {
     const [asociatedApartment, setAsociatedApartment] = useState('')
     const [createdAt, setCreatedAt] = useState('')
     const [updatedAt, setUpdatedAt] = useState('')
+    const [showModaload, setShowModaload] = useState(false);
 
     const [guestIncomeParking, setGuestIncomeParking] = useState('')
 
@@ -124,7 +127,7 @@ const GuestIncomeDetails = () => {
     }, [guestIncome?.data?.guestIncome])
 
 
-    console.log(guestIncomeParking)
+    console.log("ingreso parqueadero:", guestIncomeParking)
 
     // add proof modal
 
@@ -135,6 +138,55 @@ const GuestIncomeDetails = () => {
     //     setAaddProofFilesModal(true)
 
     // }
+
+    const dateFormater = (date) => {
+      let formatedDate = new Date(date).toLocaleDateString(
+        "es-CO",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        }
+      );
+      return formatedDate;
+    };
+
+    const handleEditClick = async (dataToUpdate) => {
+        setShowModaload(true);
+
+        if (guestIncomeParking !== null && guestIncomeParking !== undefined) {
+            const parkingUpdateData = { "idParkingSpace": guestIncomeParking.idParkingSpace, "status": 'Active' };
+            const parkingUpdateUrl = 'https://apptowerbackend.onrender.com/api/parkingSpaces';
+
+            try {
+                const parkingResponse = await useFetchForFile(parkingUpdateUrl, parkingUpdateData, 'PUT');
+                console.log(parkingResponse);
+            } catch (error) {
+                console.error('Error al actualizar el estado del espacio de estacionamiento:', error);
+                // Manejar el error si es necesario
+            }
+        }
+
+        const guestIncomeUpdateUrl = 'https://apptowerbackend.onrender.com/api/guestIncome';
+        try {
+            const guestIncomeResponse = await useFetchForFile(guestIncomeUpdateUrl, dataToUpdate, 'PUT');
+            setShowModaload(false);
+            Swal.fire({
+                icon: 'success',
+                title: 'Salida registrada con éxito.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setDepartureDate(dataToUpdate.departureDate);
+        } catch (error) {
+            setShowModaload(false);
+            console.error('Error al actualizar los datos del ingreso del huésped:', error);
+            // Manejar el error si es necesario
+        }
+    }
 
 
 
@@ -159,7 +211,7 @@ const GuestIncomeDetails = () => {
                             status={'Active'}
 
                             actionOnClick2='Marcar salida'
-                            onClick2={() => console.log('marcar salida')}
+                            onClick2={() => {handleEditClick({ idGuest_income: idGuest_income, departureDate: new Date().toISOString() })}}
                         // // A7={pdf}
                         // status={state}
                         // onClick2={EqualUser ? openModalChangePassword : null}
@@ -187,9 +239,9 @@ const GuestIncomeDetails = () => {
                                 <li>Se dirige a: <Link to={`/admin/apartments/details/${asociatedApartment?.idApartment}`}>{`apartamento ${asociatedApartment?.apartmentName}`}</Link> </li>
                                 <br />
                                 <li>Autoriza: {personAllowsAccess} </li>
-                                <li>{observations} el dia {startingDate}</li>
+                                <li>{observations} el dia {dateFormater(startingDate)}</li>
                                 <br />
-                                <li>Fecha y hora de salida: {departureDate ? departureDate : ''} </li>
+                                <li>Fecha y hora de salida: {departureDate ? dateFormater(departureDate) : 'No registrada'} </li>
 
 
                             </ul>
@@ -233,6 +285,27 @@ const GuestIncomeDetails = () => {
                 </InfoDetails>
 
             </Details >
+            {showModaload &&
+                    createPortal(
+                        <>
+                            <ModalContainerload ShowModal={setShowModaload}>
+                                <Modaload
+                                    showModal={setShowModaload}
+                                >
+                                    <div className='d-flex justify-content-center'>
+                                        <l-dot-spinner
+                                            size="50"
+                                            speed="2"
+                                            color="black"
+                                        ></l-dot-spinner>
+                                    </div>
+
+
+                                </Modaload>
+                            </ModalContainerload>
+                        </>,
+                        document.getElementById("modalRender")
+                    )}
 
 
             {/* {addProofFilesModal &&
@@ -271,7 +344,7 @@ const GuestIncomeDetails = () => {
     //     const objeto2 = JSON.parse(decodeURIComponent(details));
     //     // console.log(objeto, 'objeto');
     //     const [objeto, setObjeto] = useState(objeto2);
-    //     const [showModaload, setShowModaload] = useState(false);
+
     //     const navigate = useNavigate();
     //     const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({guestIncomeParking:[]});
     //     const {data} = useFetchget("guestIncomeParking");
@@ -331,19 +404,7 @@ const GuestIncomeDetails = () => {
     //                         <div className="mt-5">
     //                         <p><strong className='text-secondary'>Apartamento:</strong> {objeto.asociatedApartment.apartmentName}</p>
     //                         <p><strong className='text-secondary'>Visitante: </strong>{objeto.asociatedVisitor.name+" "+objeto.asociatedVisitor.lastname}</p>
-    //                         <p><strong className='text-secondary'>Fecha de ingreso: </strong>{(() => {
-    //                                     let startingDate = new Date(objeto.startingDate).toLocaleDateString('es-CO', {
-    //                                         weekday: 'long',
-    //                                         day: 'numeric',
-    //                                         month: 'short',
-    //                                         year: 'numeric',
-    //                                         hour: 'numeric',
-    //                                         minute: 'numeric',
-
-
-    //                                     });
-    //                                     return startingDate;
-    //                                 })()}</p>
+    //                         <p><strong className='text-secondary'>Fecha de ingreso: </strong>{}</p>
     //                         <div className='header'>
     //                         <p><strong className='text-secondary'>Fecha de salida: </strong>{objeto.departureDate == null ? "Sin registrar" : (() => {
     //                                     let departureDate = new Date(objeto.departureDate ).toLocaleDateString('es-CO', {
@@ -369,27 +430,7 @@ const GuestIncomeDetails = () => {
 
     //         </InfoDetails>
     //       </Details>
-    //       {showModaload &&
-    //                 createPortal(
-    //                     <>
-    //                         <ModalContainerload ShowModal={setShowModaload}>
-    //                             <Modaload
-    //                                 showModal={setShowModaload}
-    //                             >
-    //                                 <div className='d-flex justify-content-center'>
-    //                                     <l-dot-spinner
-    //                                         size="50"
-    //                                         speed="2"
-    //                                         color="black"
-    //                                     ></l-dot-spinner>
-    //                                 </div>
 
-
-    //                             </Modaload>
-    //                         </ModalContainerload>
-    //                     </>,
-    //                     document.getElementById("modalRender")
-    //                 )}
     //     </>
     //   );
 };

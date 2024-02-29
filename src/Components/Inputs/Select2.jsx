@@ -1,135 +1,165 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
-import 'select2'; // Importa Select2
-// import './Inputs.css';
-import './Select2.css';
-function Select2({ id, options, name, onChange, value, validate, voidmessage = "No hay datos", readOnly = false, inputStyle, defaultOption = false }) {
-  const inputRef = useRef(null);
-  const labelRef = useRef(null);
-  const [selectedValue, setSelectedValue] = useState(value || '');
-  const [selectError, setSelectError] = useState(null);
+import styles from './Select2.module.css'
+import {useCallback, useEffect, useRef, useState} from "react";
 
+export function Select2({value, options, identifier, errors, onChange, placeholder, className, voidmessage = "No hay datos"}) {
 
-  useLayoutEffect(() => {
-    // Inicializa Select2 en el elemento select
-    $(inputRef.current).select2();
+    const [isOpen, setIsOpen] = useState(false)
+    const [highLightedIndex, setHighLightedIndex] = useState(0)
+    const [search, setSearch] = useState('')
+    const containerRef = useRef(null)
+    const [errorMessageToShow, setErrorMessageToShow] = useState(null);
 
-    // Asegúrate de destruir Select2 al desmontar el componente
-    return () => {
-      $(inputRef.current).select2('destroy');
-    };
-  }, []);
+    const clearOptions = () => onChange(undefined)
 
+    const isOptionSelected = (option) => value?.value === option.value
 
-  useEffect(() => {
-    // Si el select ya tiene un valor al cargar el componente, agrega la clase 'active' a la etiqueta
-    if ($(inputRef.current).val()) {
-      labelRef.current.classList.add('active');
+    let optionsFiltered = []
+
+    if(search !== ''){
+        optionsFiltered = options.filter(option => {
+            return option?.label.toLowerCase().includes(search.toLowerCase())
+        })
+    }else{
+        optionsFiltered = options
     }
 
-    $(inputRef.current).on('select2:open', () => {
-      labelRef.current.classList.add('active');
-    });
+    const selectOption = useCallback((option) => {
+        if(option !== value) {
+            onChange(option)
+        }
+        else {
+            onChange(undefined)
+        }
+    }, [value, onChange, optionsFiltered])
 
-    $(inputRef.current).on('select2:close', () => {
-      if (!$(inputRef.current).val()) {
-        labelRef.current.classList.remove('active');
-      }
-    });
-
-    return () => {
-      $(inputRef.current).off('select2:open');
-      $(inputRef.current).off('select2:close');
-    };
-  }, []);
-
-  useEffect(() => {
-    if ($(inputRef.current).val()) {
-      labelRef.current.classList.add('active');
+    const toggleIsOpen = () => {
+        setSearch('')
+        setIsOpen(prev => !prev)
     }
-
-    $(inputRef.current).on('select2:open', () => {
-      labelRef.current.classList.add('active');
-    });
-
-    $(inputRef.current).on('select2:close', () => {
-      if (!$(inputRef.current).val()) {
-        labelRef.current.classList.remove('active');
+    const organizarErrores = ()=>{
+        if (errors){
+          return errors?.errors?.reduce((a,b)=>{
+            a[b.field] = b.message;
+            if (b.field === identifier){
+              className = "border boder-danger";
+            }
+            return a;
+          }, {})
+        }
       }
-    });
 
-    return () => {
-      $(inputRef.current).off('select2:open');
-      $(inputRef.current).off('select2:close');
-    };
-  }, []);
-
-
-
-
-  $('.select2').select2(
-    {
-      theme: 'bootstrap4',
-      width: '100%',
-    });
-
-  useEffect(() => {
-    $(inputRef.current).on('change', (event) => {
-      const newValue = event.target.value;
-      setSelectedValue(newValue);
-
-      // Llama a la función onChange del componente padre y pasa el nuevo valor seleccionado
-      if (onChange) {
-        onChange(newValue);
+      useEffect(()=>{
+        if(errors){
+        setErrorMessageToShow(organizarErrores());
       }
-    });
+        console.log("errors en el input:", errors)
+       
+      }, [errors])
 
-    return () => {
-      $(inputRef.current).off('change');
-    };
-  }, [onChange]);
+    useEffect(() => {
+        setHighLightedIndex(0)
+    }, [isOpen]);
 
-  useEffect(() => {
-    if (validate && !selectedValue) {
-      setSelectError("Seleccione una opción*");
-    } else {
-      setSelectError(null);
-    }
-  }, [selectedValue, validate]);
+    useEffect(() => {
+        const handler = (e) => {
+            if (e.target != containerRef.current) return;
+            switch (e.code) {
+                case "Enter":
+                case "Space":
+                    setIsOpen(prev => !prev);
+                    if (isOpen) selectOption(options[highLightedIndex])
+                    break;
+                case "ArrowUp":
+                case "ArrowDown": {
+                    if (!isOpen) {
+                        setIsOpen(true);
+                        break;
+                    }
+                    const newValue = highLightedIndex + (e.code === "ArrowUp" ? -1 : 1);
+                    if (newValue < 0 || newValue >= options.length) return;
+                    setHighLightedIndex(newValue);
+                    break;
+                }
+                case "Escape":
+                    setIsOpen(false);
+                    break;
+            }
+        }
 
-  return (
-    <>
-      <div className='selectContainer mb-3'>
-        <span className='inputSpan'>
-          <select
-            id={id}
-            value={selectedValue}
-            className='selectComponent select2 form-control'
-            ref={inputRef}
-            disabled={readOnly}
-            style={inputStyle}
+        containerRef.current?.addEventListener('keydown', handler);
+        return () => {
+            containerRef.current?.removeEventListener('keydown', handler);
+        }
+    }, [isOpen, highLightedIndex, options, selectOption]);
 
-          >
-            <option value='' disabled>
+    return (
+        <>
+        
+        <div
+            onBlur={(e) => {
+                if(e.relatedTarget === null){
+                    setSearch('')
+                    setIsOpen(false)
+                }
+            }}
+            onClick={toggleIsOpen}
+            className={`${styles.container} ${className} ${errorMessageToShow != null && errorMessageToShow[identifier] != null ? "border-danger" : "mb-3"}`}
+            ref={containerRef}
+            tabIndex={0}
+        >
+            <span className={styles.borderAnimation}></span>
+            <div className={`${styles.label} ${value ? styles.label__active : ''}`}>{placeholder || ''}</div>
+            <span className={`${styles.value}`}>
+                {value?.label}
+            </span>
+            {
+                value && (
+                    <button className={`${styles.clear__button}`} onClick={e=>{
+                        e.stopPropagation();
+                        clearOptions();
+                    }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                )
+            }
+            <div className={`${styles.caret} ${isOpen ? styles.caret__active : ''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <ul className={`${styles.options} ${isOpen ? styles.options__show : ''}`}>
+                <div className={`${styles.inputContainer}`} onClick={e => e.stopPropagation()} onFocus={() => setIsOpen(true)}>
+                    <input className={`${styles.input} form-control`} type="text" value={search} onChange={e => {
+                        setSearch(e.target.value)
+                        setIsOpen(false)
+                        setIsOpen(true)
+                    }}
 
-            </option>
-            {defaultOption && <option value='' disabled>Seleccione una opción</option>}
-            {options?.length > 0 ? null : <option value='' disabled>{voidmessage}</option>}
-
-            {options && options.map((opcion) => (
-              <option className='' key={opcion.value} value={opcion.value}>
-                {opcion.label}
-              </option>
-            ))}
-          </select>
-        </span>
-        <label htmlFor={name} className='form-label ' ref={labelRef}>
-          {name}
-        </label>
-        {selectError && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingBottom: '1.4px' }}>{selectError}</div>}
-
-      </div>
-    </>
-  );
+                    />
+                </div>
+                {
+                    optionsFiltered?.map((option, index) => (
+                        <li
+                            key={index}
+                            onClick={e => {
+                                e.stopPropagation();
+                                selectOption(option);
+                                toggleIsOpen();
+                            }}
+                            onMouseEnter={()=> setHighLightedIndex(index)}
+                            className={`${styles.option} ${isOptionSelected(option) ? styles.selected : ''} ${index === highLightedIndex ? styles.highlighted : ''}`}
+                        >
+                            {option.label}
+                        </li>
+                    ))
+                }
+            </ul>
+            
+        </div>
+        {errors && errorMessageToShow != null  && 
+         <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
+        
+        
+        </>
+        
+    );
 }
-
 export default Select2;
