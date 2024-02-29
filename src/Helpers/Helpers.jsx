@@ -143,7 +143,7 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
 };
 
 
-export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message, navigate, socket) => {
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url, errors, navigate, socket) => {
 
 
   try {
@@ -155,7 +155,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 
       Swal.fire({
         title: 'Éxito',
-        text: message ? message : response.message,
+        text: response.message,
         icon: 'success',
       }).then(() => {
 
@@ -179,12 +179,12 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         text: error.errors[0].message,
         icon: 'error',
       });
-
-      return { success: false, error:  error.errors };
+      errors(error)
+      return { success: false, error:  error };
     }
   } catch (error) {
     console.error('Error inesperado:', error);
-    return { success: false, response: error };
+    return { success: false, error: error };
   }
 };
 

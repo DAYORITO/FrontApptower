@@ -18,6 +18,7 @@ import Inputs from "../../../Components/Inputs/Inputs";
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
 import Cookies from 'js-cookie'
 import { Paginator } from "../../../Components/Paginator/Paginator";
+import { set } from "date-fns";
 
 export const Spaces = () => {
   const token = Cookies.get('token');
@@ -26,6 +27,7 @@ export const Spaces = () => {
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
+  console.log(spaces, 'spaces')
 
   //Consulta Privilegios
 
@@ -66,6 +68,9 @@ export const Spaces = () => {
   const [area, setArea] = useState('');
   const [capacity, setCapacity] = useState('');
 
+  const [startHour, setStartHour] = useState('');
+  const [endHour, setEndHour] = useState('');
+
   const [status, setStatus] = useState('');
 
   const [modalSpace, setModalSpace] = useState(false);
@@ -79,6 +84,9 @@ export const Spaces = () => {
 
     setArea(data.area)
     setCapacity(data.capacity)
+
+    setStartHour(data?.schedule?.startHour)
+    setEndHour(data?.schedule?.endHour)
 
     setStatus(data.status)
 
@@ -139,7 +147,7 @@ export const Spaces = () => {
                   key={space.idSpace}
                   title={space.spaceName}
                   img={space.image}
-                  A1={"Reservas: 50"}
+                  A1={'Hora de cierre: ' + space?.schedule?.endHour}
                   status={space.status}
                   to={`/admin/booking/calendar/${space.idSpace}`}
                 >

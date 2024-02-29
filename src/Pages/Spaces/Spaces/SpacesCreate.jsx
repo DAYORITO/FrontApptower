@@ -20,6 +20,10 @@ export const SpacesCreate = () => {
   const [spaceType, setSpaceType] = useState("");
   const [image, setImage] = useState("");
   const [spaceName, setSpaceName] = useState("");
+
+  const [startHour, setStartHour] = useState("");
+  const [endHour, setEndHour] = useState("");
+
   const [area, setArea] = useState("");
   const [capacity, setCapacity] = useState("");
   const [status, setStatus] = useState("Active");
@@ -33,6 +37,11 @@ export const SpacesCreate = () => {
 
       spaceName: spaceName,
       image: image,
+
+      schedule: {
+        startHour: startHour,
+        endHour: endHour
+      },
       area: area,
       capacity: capacity,
       status: status
@@ -46,6 +55,8 @@ export const SpacesCreate = () => {
     navigate(-1)
 
   };
+
+
 
   return (
     <>
@@ -61,6 +72,7 @@ export const SpacesCreate = () => {
 
         </FormColumn>
         <FormColumn>
+
           <h6 className='mb-4 text-muted'>Información zona común</h6>
 
           <InputsSelect name={"Tipo de espacio"} options={spacesTypes}
@@ -75,6 +87,12 @@ export const SpacesCreate = () => {
           <Inputs name="Capacidad" type="number"
             value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
 
+          <h6 className='mb-4 text-muted'>Horario de zona comun</h6>
+
+          <Inputs name="Hora inicial" type="time"
+            value={startHour} onChange={e => setStartHour(e.target.value)}></Inputs>
+          <Inputs name="Hora final" type="time"
+            value={endHour} onChange={e => setEndHour(e.target.value)}></Inputs>
         </FormColumn>
 
         {/* <Inputs name="Estado"

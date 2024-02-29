@@ -196,9 +196,10 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.log('Error data:', errorData);
             const error = new Error(`HTTP error! status: ${response.status}`);
             error.errorData = errorData; // Agrega errorData al objeto de error para nuestras validaciones
+            console.log('Error data:', errorData);
+
             throw errorData;
             // return { response: null, error: errorData };
         }

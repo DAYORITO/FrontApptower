@@ -26,6 +26,7 @@ import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissio
 
 import Cookies from 'js-cookie'
 import { Paginator } from "../../../Components/Paginator/Paginator"
+import { set } from "date-fns"
 
 
 
@@ -49,6 +50,7 @@ export const Towers = () => {
 
     const openTowerModalForm = (data) => {
 
+        setErrorList('')
         console.log(data)
 
         if (data == null) {
@@ -123,8 +125,7 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        const { error } = await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url, null, null, null)
-        setErrorList(error)
+        await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url, setErrorList, null, null)
         getTowers('towers')
 
     };
@@ -140,14 +141,9 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        const { error } = await postRequest(event, 'towers', 'POST', setTowerFormModal, data, url, null, null, null)
-        console.log(error, 'Errores in the function')
-        setErrorList(error)
-        getTowers('towers')
+        await postRequest(event, 'towers', 'POST', setTowerFormModal, data, url, setErrorList, null, null, null)
 
     };
-
-    console.log(errorList, 'errors out of te function')
 
 
     //paginator
@@ -215,7 +211,10 @@ export const Towers = () => {
                                 <Uploader name="img" label="Foto del bloque" onChange={e => setTowerImg(e.target.files[0])} />
 
                                 <Inputs name="Nombre del bloque" type={"text"} identifier={"towerName"} errors={errorList}
-                                    value={towerName} onChange={e => setTowerName(e.target.value)}></Inputs>
+                                    value={towerName} onChange={e => {
+                                        setTowerName(e.target.value); setErrorList('')
+                                            (e.target.value)
+                                    }}></Inputs>
 
                                 {
 

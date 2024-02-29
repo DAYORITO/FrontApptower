@@ -186,7 +186,9 @@ function FinesCreate() {
         icon: "error",
       });
       const errorData = error.errorData;
-      setErrors(errorData);
+
+      console.log(error, 'erropooooor')
+      setErrors(error);
 
     }
   };
