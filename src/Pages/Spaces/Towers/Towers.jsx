@@ -121,7 +121,7 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url)
+        await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url, null, null, null)
 
         getTowers('towers')
 
@@ -138,8 +138,7 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'towers', 'POST', {}, data, url)
-        setTowerFormModal(false)
+        await postRequest(event, 'towers', 'POST', setTowerFormModal, data, url, null, null, null)
         getTowers('towers')
 
     };
