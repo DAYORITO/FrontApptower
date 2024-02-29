@@ -180,7 +180,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'error',
       });
 
-      return { success: false, response };
+      return { success: false, error:  error.errors };
     }
   } catch (error) {
     console.error('Error inesperado:', error);

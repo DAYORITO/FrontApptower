@@ -54,6 +54,7 @@ export const EnterpriceSecurity = () => {
 
     const [IsEditedEnterprice, setIsEditedEnterprice] = useState(true);
     const [EnterpriceFormModal, setEnterpriceFormModal] = useState(false);
+    const [errors, setErrors] = useState([]);
 
     const openEnterpriceModal = (data) => {
 

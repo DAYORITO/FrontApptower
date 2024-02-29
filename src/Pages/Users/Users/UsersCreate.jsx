@@ -39,7 +39,8 @@ export const UsersCreate = () => {
     const [residentType, setResidentType] = useState("");
     const [dateOfbirth, setDateOfBirth] = useState("");
     const [idApartment, setIdApartment] = useState("");
-
+    const [errors, setErrors] = useState({});
+    console.log(errors, "errors daata")
 
     const birthDate = new Date(dateOfbirth || birthday);
 
@@ -239,6 +240,7 @@ export const UsersCreate = () => {
                         text: 'Error al crear el rol del usuario',
                         icon: 'error',
                     });
+                    setErrors(userResponse?.errorData);
                 }
             } else {
                 Swal.fire({
@@ -246,6 +248,7 @@ export const UsersCreate = () => {
                     text: 'Error al crear usuario',
                     icon: 'error',
                 });
+                setErrors(userResponse?.errorData);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -478,9 +481,10 @@ export const UsersCreate = () => {
                                         type='number'
                                         value={document}
                                         onChange={e => setDocument(e.target.value)}
-                                        inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
-                                        errorMessage={isDocumentTaken ? "El documento ya existe" : null}
-                                        validate={shouldValidate}
+                                        // inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
+                                        // errorMessage={isDocumentTaken ? "El documento ya existe" : null}
+                                        identifier={"document"}
+                                        errors={errors}
                                         required={true}
                                     />
                                 </FormColumn>

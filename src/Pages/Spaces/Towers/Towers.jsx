@@ -44,6 +44,8 @@ export const Towers = () => {
 
     const [isEditTower, setIsEditTower] = useState(true);
     const [towerFormModal, setTowerFormModal] = useState(false);
+    const [errorList, setErrorList] = useState([]);
+
 
     const openTowerModalForm = (data) => {
 
@@ -121,8 +123,8 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url, null, null, null)
-
+        const { error } = await postRequest(event, 'towers', 'PUT', setTowerFormModal, data, url, null, null, null)
+        setErrorList(error)
         getTowers('towers')
 
     };
@@ -138,10 +140,14 @@ export const Towers = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'towers', 'POST', setTowerFormModal, data, url, null, null, null)
+        const { error } = await postRequest(event, 'towers', 'POST', setTowerFormModal, data, url, null, null, null)
+        console.log(error, 'Errores in the function')
+        setErrorList(error)
         getTowers('towers')
 
     };
+
+    console.log(errorList, 'errors out of te function')
 
 
     //paginator
@@ -208,7 +214,7 @@ export const Towers = () => {
 
                                 <Uploader name="img" label="Foto del bloque" onChange={e => setTowerImg(e.target.files[0])} />
 
-                                <Inputs name="Nombre del bloque" type={"text"}
+                                <Inputs name="Nombre del bloque" type={"text"} identifier={"towerName"} errors={errorList}
                                     value={towerName} onChange={e => setTowerName(e.target.value)}></Inputs>
 
                                 {
