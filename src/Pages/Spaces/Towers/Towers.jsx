@@ -139,9 +139,8 @@ export const Towers = () => {
 
         }
 
-        console.log("edit data", data)
-
         await postRequest(event, 'towers', 'POST', setTowerFormModal, data, url, setErrorList, null, null, null)
+        getTowers('towers')
 
     };
 

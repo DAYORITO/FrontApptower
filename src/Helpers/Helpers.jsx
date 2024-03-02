@@ -27,7 +27,7 @@ export const useUserLogged = () => {
 // Use capitalize first letter
 
 export const useCapitalizeFirstLetter = (text) => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  return text.charAt(0).toUpperCase() + text.slice(1);
 
 }
 
