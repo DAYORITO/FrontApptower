@@ -63,7 +63,7 @@ export const Rols = () => {
                     </Thead>
                     <Tbody>
                         {loading ?
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '50%', top: '56%', transform: 'translate(-50%, -50%)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
                                 <Spinner style={{ color: 'blue' }} />
                             </div>
                             : rolsList.length == 0 || currentPage >= totalPages ?

@@ -176,7 +176,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
       console.error('Hubo un error:', error);
       Swal.fire({
         title: 'Error',
-        text: 'Error al realizar la operación',
+        text: error.errors[0].message,
         icon: 'error',
       });
 

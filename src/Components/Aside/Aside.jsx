@@ -17,6 +17,7 @@ import { id } from 'date-fns/locale';
 import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
 import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
 import { SocketContext } from '../../Context/SocketContext';
+import LogoApptower from '../../assets/Logodomus.png';
 
 export const Aside = () => {
 
@@ -141,8 +142,10 @@ export const Aside = () => {
                         onClick={toggleSidebar}
 
                     >
+
                         <i className="fe fe-menu fe-16 navbar-toggler-icon"></i>
                     </button>
+
                 </div>
                 {/* Mover la tarjeta de usuario fuera del contenedor 'myNav-links' */}
                 <CardUserNav

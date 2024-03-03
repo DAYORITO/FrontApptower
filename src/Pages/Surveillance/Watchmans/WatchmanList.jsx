@@ -326,7 +326,7 @@ export const Watchman = () => {
 
                         {
                             loading ?
-                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '56%', transform: 'translate(-50%, -50%)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '59%', top: '45%', transform: 'translate(-50%, -24%)' }}>
                                     <Spinner style={{ color: 'blue' }} />
                                 </div>
                                 : watchmanData.length == 0 || currentPage >= totalPages ?
