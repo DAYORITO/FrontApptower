@@ -19,8 +19,6 @@ import { RolsCreate } from "./Pages/Rols/RolsCreate";
 import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
 import { UsersEdit } from "./Pages/Users/Users/UserEdit";
-import { ModifyProfile } from "./Pages/Users/Users/ModifyProfile";
-import { ModifyProfileList } from "./Pages/Users/Users/ModifyProfileList";
 import Visitors from "./Pages/Residential/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
@@ -29,7 +27,6 @@ import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
 import { UsersDetails } from "./Pages/Users/Users/UsersDetails";
 import { Booking } from "./Pages/Booking/Booking/booking";
-import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
@@ -43,7 +40,6 @@ import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
 import { EnterpriceSecurity } from "./Pages/Surveillance/Watchmans/EnterpriceSecurity";
-import { EnterpriceSecurityCreate } from "./Pages/Surveillance/Watchmans/EnterpriceSecurityCreate";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
@@ -383,10 +379,6 @@ const App = () => {
                                         <Booking /> : <NotFound />
                                 } />
 
-                                <Route path='booking/create' element={
-                                    allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Crear') ?
-                                        <BookingCreate /> : <NotFound />
-                                } />
 
 
                                 <Route path='booking/calendar/:id?' element={
