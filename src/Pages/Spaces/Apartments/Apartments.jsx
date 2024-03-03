@@ -47,8 +47,6 @@ export const Apartments = () => {
 
   }, [])
 
-
-
   // Apartment information
 
   const { id } = useParams()
@@ -58,11 +56,15 @@ export const Apartments = () => {
   const [idApartment, setIdApartment] = useState("");
   const [apartmentName, setApartmentName] = useState('');
 
+  const [errorList, setErrorList] = useState([]);
+
   console.log(tower)
 
   const [showModal, setShowModal] = useState(false);
 
   const handleModal = (data) => {
+
+    setErrorList('')
 
     setIdApartment(data.idApartment)
     setApartmentName(data.apartmentName)
@@ -91,7 +93,7 @@ export const Apartments = () => {
 
     }
 
-    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url)
+    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url, setErrorList, null, null)
     getApartments('apartments')
 
   };
@@ -220,8 +222,6 @@ export const Apartments = () => {
                 >
 
                   <Actions accion='Ver detalle' icon='eye' href={`/admin/apartments/details/${apartment.idApartment}`} ></Actions>
-
-
                   {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? (
                     <Actions accion='Editar apartamento' onClick={() => handleModal(apartment)}></Actions>
                   ) : null}
@@ -246,18 +246,21 @@ export const Apartments = () => {
                 title={`Editar apartamento ${apartmentName}`}
               >
 
-
                 <InputsSelect id={"select"} options={towerList} name={"Torre"}
+                  identifier={'idTower'} errors={errorList}
                   value={tower} onChange={e => setTower(e.target.value)}
                 ></InputsSelect>
 
                 <Inputs name="Numero apartamento " type={"text"}
+                  identifier={'apartmentName'} errors={errorList}
                   value={apartmentName} onChange={e => setApartmentName(e.target.value)}></Inputs>
 
                 <Inputs name="Area del apartamento " type={"text"}
+                  identifier={'area'} errors={errorList}
                   value={area} onChange={e => setArea(e.target.value)}></Inputs>
 
                 <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                  identifier={'status'} errors={errorList}
                   value={status} onChange={e => setStatus(e.target.value)}
                 ></InputsSelect>
 
