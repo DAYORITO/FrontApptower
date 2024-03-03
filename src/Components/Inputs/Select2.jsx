@@ -13,6 +13,11 @@ export function Select2({value, options, identifier, errors, onChange, placehold
 
     const isOptionSelected = (option) => value?.value === option.value
 
+    {
+        if (options.length === 0) {
+            options = [{label: voidmessage, value: ''}]
+        }
+    }
     let optionsFiltered = []
 
     if(search !== ''){

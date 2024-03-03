@@ -135,7 +135,7 @@ function FinesCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("antes de enviar: ", idApartment.value);
+    console.log("antes de enviar: ", idApartment?.value);
     // const url = 'https://apptowerbackend.onrender.com/api/fines';
     const url = "http://localhost:3000/api/fines";
     const data = {
@@ -145,10 +145,10 @@ function FinesCreate() {
       idUserLogged: idUserLogged,
 
       fineType: fineType,
-      idApartment: idApartment.value,
+      idApartment: idApartment?.value,
       incidentDate: incidentDate,
       paymentDate: limitDate,
-      amount: parseFloat(amount),
+      amount: Math.round(parseFloat(amount) * 100) / 100,
       details: description,
       state: "Pendiente",
       evidenceFiles: evidence,
@@ -184,8 +184,9 @@ function FinesCreate() {
         text: "Error al crear la multa",
         icon: "error",
       });
-      const errorData = error.errorData;
-      setErrors(errorData);
+      // const errorData = error.;
+      console.log("errosData pa enviar", error)
+      setErrors(error);
 
     }
   };

@@ -37,7 +37,7 @@ import Swal from 'sweetalert2'
 import ImageContainer from '../../Components/ImgContainer/imageContainer'
 import moment from 'moment';
 import { SocketContext } from '../../Context/SocketContext'
-import { ModalContainerload } from '../../Components/Modals/Modal'
+import { ModalContainerload, Modaload } from '../../Components/Modals/Modal'
 
 
 export const FinesDetail = () => {
@@ -243,7 +243,7 @@ export const FinesDetail = () => {
 
               {loadingFines ? <SmalSpinner /> :
                 evidenceFiles && evidenceFiles.length > 0 ? (
-                  evidenceFiles.map((evidence, index) => (
+                  evidenceFiles?.map((evidence, index) => (
 
                     <RowNotificactions
 
@@ -280,7 +280,7 @@ export const FinesDetail = () => {
 
               {loadingFines ? <SmalSpinner /> :
                 paymentproof && paymentproof.length > 0 ? (
-                  paymentproof.map((paymentproof, index) => (
+                  paymentproof?.map((paymentproof, index) => (
 
                     <RowNotificactions
 
@@ -290,7 +290,6 @@ export const FinesDetail = () => {
                       lastName={index + 1}
                       msg={'Comprobante de pago'}
                       icon="x-square"
-
 
                     ></RowNotificactions>
 
@@ -382,11 +381,6 @@ export const FinesDetail = () => {
                   }}
                 />
                 <ImageContainer urls={paymentproof} />
-
-
-
-
-
 
               </Modal>
             </ModalContainer>
