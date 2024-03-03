@@ -28,22 +28,20 @@ const LoginForm = ({ setShowLoginForm }) => {
 
 
     const handleLogin = async (event) => {
+        event.preventDefault();
         setShowModaload(true)
 
         if (!username || !loginPassword) {
-
             Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
-
+            setShowModaload(false);
             return;
         }
-        event.preventDefault();
 
 
         try {
             const token = await login(username, loginPassword);
 
             if (token) {
-                // Cookies.set('token', token);
                 const response = await fetch('http://localhost:3000/api/login/access', {
                     method: 'GET',
                     headers: {
@@ -53,62 +51,54 @@ const LoginForm = ({ setShowLoginForm }) => {
                     credentials: 'include',
                 });
 
-                console.log(token, 'token')
-
                 if (!response.ok) {
                     Swal.fire('Error de inicio de sesión.', 'El usuario o la contraseña son incorrectos.', 'error');
+                    setShowModaload(false);
+                    return;
                 }
 
                 const responseData = await response.json();
 
                 if (responseData.message === 'Acceso denegado') {
                     Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
+                    setShowModaload(false);
+                    return;
                 } else {
                     if (responseData.role) {
                         const role = responseData.role.toLowerCase();
 
                         if (role.includes('vigilante') || role.includes('seguridad') || role.includes('vigilantes')) {
-                            // navigate('/admin/watchman/shifts');
                             navigate(`admin/watchman/details/${responseData.user}`);
                             window.location.reload();
-
                         } else if (role.includes('administrador')) {
                             navigate('/admin/dashboard');
                             window.location.reload();
-
                         } else if (role.includes('residente')) {
                             navigate(`/admin/resident/details/${responseData.user}`);
                             window.location.reload();
-
-
                         } else {
                             navigate(`admin/users/details/${responseData.user}`);
                             window.location.reload();
-
                         }
                     } else {
                         console.error('Error: role is undefined');
+                        setShowModaload(false);
+                        return;
                     }
                 }
             }
+            setShowModaload(false);
         } catch (error) {
             console.error('Error:', error);
+            setShowModaload(false);
         }
     }
 
-    // useEffect(() => {
-    //     // Cuando la carga está en progreso (load es true), activamos el modal de carga
-    //     if (data?.user?.length > 0) {
-    //         setTimeout(() => {
-    //             setShowModaload(false);
-    //         }, 700);
-    //     } else {
-    //         setTimeout(() => {
-    //             setShowModaload(false);
-    //         }, 2000);
-
-    //     }
-    // }, [data]);
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    }
 
     return (
         <div className="container-form login">
@@ -123,47 +113,29 @@ const LoginForm = ({ setShowLoginForm }) => {
                 <div className="form-information-childs">
                     <img src={ImageIcono} alt="" className='iconperson' />
                     <form className="form" onSubmit={handleLogin}>
-                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} />
-                        <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} />
+                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} onKeyPress={handleKeyPress} />
+                        <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} onKeyPress={handleKeyPress} />
 
                         <div>
                             <Link to="recoverpassword" className='buttonStyle'>¿Olvidaste la contraseña?</Link>
                         </div>
 
-                        <button className='boton-login'>Iniciar Sesión</button><br />
-
+                        <button className='boton-login' type="submit" disabled={showModaload}>
+                            {showModaload ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Ingresando...
+                                </>
+                            ) : (
+                                'Iniciar Sesión'
+                            )}
+                        </button>
 
                         {/* <Link className='buttonStyle' to='#' onClick={() => setShowLoginForm(false)}>
                             ¿No puedes acceder? Regístrate
                         </Link> */}
 
                     </form>
-                    {/*   {showModaload &&
-                        createPortal(
-                            <>
-                                <ModalContainerload ShowModal={setShowModaload}>
-                                    <Modaload
-                                        showModal={setShowModaload}
-                                    >
-                                        <div className='d-flex justify-content-center'>
-                                            <l-dot-spinner
-                                                size="50"
-                                                speed="2"
-                                                color="black"
-                                            ></l-dot-spinner>
-                                        </div>
-                                        <div className="d-flex justify-content-center">
-                                            <p> </p>
-                                            <p className="mt-2 text-muted">Cargando datos...</p>
-                                        </div>
 
-
-                                    </Modaload>
-                                </ModalContainerload>
-                            </>,
-                            document.getElementById("modalRender")
-                        )}
-                        */}
                 </div>
             </div>
         </div>
@@ -173,7 +145,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
 
 
-
+//Este ya no se esta utilizando pero si algo se deja 
 const RegisterForm = ({ setShowLoginForm }) => {
     const [documentType, setDocumentType] = useState('');
     const [name, setName] = useState('');

@@ -1,6 +1,6 @@
 import "../Rows/RowsStyle.css"
 
-export const Table = ({ name, opc1, opc2, opc3, icon = 'shield', status }) => {
+export const Table = ({ name, opc1, opc2, opc3, opc4, icon = 'shield', status }) => {
     return (
 
 
@@ -19,6 +19,7 @@ export const Table = ({ name, opc1, opc2, opc3, icon = 'shield', status }) => {
                 {opc1 != null ? <td className="text-secondary">{opc1}</td> : null}
                 {opc2 != null ? <td className="text-secondary">{opc2}</td> : null}
                 {opc3 != null ? <td className="text-secondary">{opc3}</td> : null}
+                {opc4 != null ? <td className="text-secondary">{opc4}</td> : null}
             </tr>
         </tbody>
 

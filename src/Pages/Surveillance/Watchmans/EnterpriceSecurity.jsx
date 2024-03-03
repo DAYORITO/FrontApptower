@@ -54,6 +54,7 @@ export const EnterpriceSecurity = () => {
 
     const [IsEditedEnterprice, setIsEditedEnterprice] = useState(true);
     const [EnterpriceFormModal, setEnterpriceFormModal] = useState(false);
+    const [errors, setErrors] = useState([]);
 
     const openEnterpriceModal = (data) => {
 
@@ -249,6 +250,8 @@ export const EnterpriceSecurity = () => {
 
                                     >
                                         <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
+                                        {enterprise.state === "Activo" ?
+                                            <Actions accion="Crear Vigilante" href={`/admin/watchman/create/${enterprise.idEnterpriseSecurity}`} /> : null}
                                     </Row>
                                 ))}
 

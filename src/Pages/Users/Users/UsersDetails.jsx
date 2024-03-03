@@ -172,7 +172,7 @@ export const UsersDetails = () => {
 
         await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoUsers, data, url, 'Informacion actualizada correctamente');
         getuser(`users/${id}`)
-        
+
 
     }
 
@@ -261,7 +261,7 @@ export const UsersDetails = () => {
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
-                            showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
+                        // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
                         // onClickEdit={setShowModalEditApartment}
                         />
 

@@ -374,7 +374,7 @@ export const ResidentDetails = () => {
                             A7={pdf}
                             status={statusResident}
                             onClick2={EqualUser ? openModalChangePassword : null}
-                            showBackButton={EqualUser ? false : true}
+                        // showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
 

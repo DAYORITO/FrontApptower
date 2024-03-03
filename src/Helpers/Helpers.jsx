@@ -27,7 +27,7 @@ export const useUserLogged = () => {
 // Use capitalize first letter
 
 export const useCapitalizeFirstLetter = (text) => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  return text.charAt(0).toUpperCase() + text.slice(1);
 
 }
 
@@ -143,7 +143,7 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
 };
 
 
-export const postRequest = async (event, endPoint, method = "POST", modal, data, url, message, navigate, socket) => {
+export const postRequest = async (event, endPoint, method = "POST", modal, data, url, errors, navigate, socket) => {
 
 
   try {
@@ -155,17 +155,17 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 
       Swal.fire({
         title: 'Éxito',
-        text: message ? message : response.message,
+        text: response.message,
         icon: 'success',
       }).then(() => {
 
-        if (socket) {socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket')}
-        
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') }
 
-        if (typeof modal === 'function') {modal(false)}
-        
-        if (navigate) {navigate(-1);}
-        
+
+        if (typeof modal === 'function') { modal(false) }
+
+        if (navigate) { navigate(-1); }
+
 
       });
 
@@ -179,12 +179,12 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         text: error.errors[0].message,
         icon: 'error',
       });
-
-      return { success: false, response };
+      errors(error)
+      return { success: false, error: error };
     }
   } catch (error) {
     console.error('Error inesperado:', error);
-    return { success: false, response: error };
+    return { success: false, error: error };
   }
 };
 

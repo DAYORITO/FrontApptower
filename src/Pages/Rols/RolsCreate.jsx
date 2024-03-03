@@ -162,7 +162,10 @@ export const RolsCreate = () => {
 
     return (
         <>
-            <FormContainer name='Crear Rol' onSubmit={handleSubmit} buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/rols' />}>
+            <FormContainer
+                name='Crear Rol'
+                buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/users/' onClick={handleSubmit} />}
+            >
                 <FormColumn>
                     <Inputs
                         name='Nombre Rol'
