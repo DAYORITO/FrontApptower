@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './BigCard.css';
 import imageNotImg from "../../assets/imgDontFound.png"
 
-export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children, accions = true }) => {
+export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children, accions = true, small = true }) => {
 
     console.log(img, 'img')
 
@@ -30,7 +30,7 @@ export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children, acci
                         </div>
                     </div>
                 </Link>
-                <div class="card-footer">
+                {small ? <div class="card-footer">
                     <div class="row" id='card-footer-down'>
                         <div class="col-auto">
                             <small>
@@ -56,7 +56,7 @@ export const BigCard = ({ img, title, A1, A2, A3, A4, status, to, children, acci
                             </div>
                         </div>
                     </div>
-                </div >
+                </div > : null}
             </div >
         </div >
 

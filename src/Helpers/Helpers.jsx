@@ -159,13 +159,13 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'success',
       }).then(() => {
 
-        if (socket) {socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket')}
-        
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') }
 
-        if (typeof modal === 'function') {modal(false)}
-        
-        if (navigate) {navigate(-1);}
-        
+
+        if (typeof modal === 'function') { modal(false) }
+
+        if (navigate) { navigate(-1); }
+
 
       });
 
@@ -180,7 +180,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'error',
       });
       errors(error)
-      return { success: false, error:  error };
+      return { success: false, error: error };
     }
   } catch (error) {
     console.error('Error inesperado:', error);

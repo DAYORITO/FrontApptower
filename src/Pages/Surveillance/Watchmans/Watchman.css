@@ -88,6 +88,14 @@
 }
 
 .dateShifts:focus {
-    border-color: #2564ad;
+    border-color: #99c9ff;
     outline: none;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+    margin-left: -200px;
+}
+
+.rbc-toolbar button {
+    z-index: 1;
 }

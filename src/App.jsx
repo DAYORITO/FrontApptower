@@ -68,6 +68,7 @@ import { BookingCalendar } from "./Pages/Booking/Booking/BookingCalendar";
 
 import { AuthProvider } from "./Context/AuthContext";
 import { SocketContext } from "./Context/SocketContext";
+import { AssignShiftsWatchman } from "./Pages/Surveillance/Watchmans/assignShiftsWatchman";
 
 
 const App = () => {
@@ -146,32 +147,21 @@ const App = () => {
 
 
                                 {/* Surveillance */}
+
                                 <Route path='watchman' element={
-                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
-                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
-                                            ? <Watchman />
-                                            : <NotFound />
-                                        : <NotFound />
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
+                                        <Watchman /> : <NotFound />
                                 } />
 
-                                <Route path='enterprice' element={
-                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
-                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
-                                            ? <EnterpriceSecurity />
-                                            : <NotFound />
-                                        : <NotFound />
+                                <Route path='watchman/enterprice' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
+                                        <EnterpriceSecurity /> : <NotFound />
                                 } />
 
-                                <Route path='watchman/shifts' element={
-                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
-                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'vigilante' || nameRole.toLocaleLowerCase() === 'vigilancia' || nameRole.toLocaleLowerCase() === 'seguridad'))
-                                            ? <WatchmanShifts />
-                                            : <NotFound />
-                                        : <NotFound />
-                                } />
+                                <Route path="watchman/assignshift/:id?" element={<AssignShiftsWatchman />} />
 
 
-                                <Route path='watchman/create' element={
+                                <Route path='watchman/create/:id?' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') ?
                                         <WatchmanCreate /> : <NotFound />
                                 } />

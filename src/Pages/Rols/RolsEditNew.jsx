@@ -253,7 +253,11 @@ export const RolsEditNew = () => {
 
     return (
         <>
-            <FormContainer name='Editar Rol' onSubmit={handleSaveChanges} buttons={<FormButton name='Editar' backButton='Cancelar' to='/admin/rols' />}>
+
+            <FormContainer
+                name='Editar Rol'
+                buttons={<FormButton name='Editar' backButton='Cancelar' to='/admin/users/' onClick={handleSaveChanges} />}
+            >
                 <FormColumn>
                     <Inputs
                         name="Nombre Rol"
@@ -308,7 +312,7 @@ export const RolsEditNew = () => {
                 </div>
 
 
-            </FormContainer>
+            </FormContainer >
         </>
     )
 

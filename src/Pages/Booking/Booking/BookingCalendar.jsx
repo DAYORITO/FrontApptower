@@ -22,7 +22,7 @@ dayjs.locale('es');
 
 export const BookingCalendar = () => {
 
-
+    // Configuración del calendario 
     const localizer = dayjsLocalizer(dayjs);
 
     const { id } = useParams();
@@ -119,6 +119,9 @@ export const BookingCalendar = () => {
     const nameSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(id))?.spaceName;
     const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols.namerole.toLowerCase() : undefined;
 
+    const selectedSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
+
+    console.log("Selected Space", selectedSpace)
 
 
 
@@ -254,6 +257,9 @@ export const BookingCalendar = () => {
 
     }
 
+
+
+
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <FormContainer name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`}
@@ -261,7 +267,7 @@ export const BookingCalendar = () => {
 
             >
                 <Calendar
-                    style={{ height: '61vh', width: '100%' }}
+                    style={{ height: '58vh', width: '100%' }}
                     localizer={localizer}
                     events={events}
                     selectable
@@ -328,10 +334,36 @@ export const BookingCalendar = () => {
                                 onChange={e => setSelectedDate(e.target.value)}
                                 readonly={true}
                             ></Inputs>
-                            <Inputs name="Hora de inicio" type="time" value={hourStart} onChange={e => setHourStart(e.target.value)} />
-                            <Inputs name="Fecha de fin" type="date" value={dateEnd ? new Date(dateEnd).toISOString().split('T')[0] : ''} onChange={e => setDateEnd(e.target.value)} />
-                            <Inputs name="Hora de fin" type="time" value={hourEnd} onChange={e => setHourEnd(e.target.value)} />
-                            <Inputs name={'Cantidad de personas'} type={'number'} value={amountPeople} onChange={e => setAmountPeople(e.target.value)} />
+                            <Inputs
+                                name="Hora de inicio"
+                                type="time"
+                                value={hourStart}
+                                onChange={e => setHourStart(e.target.value)}
+                            />
+
+                            <Inputs
+                                name="Fecha de fin"
+                                type="date"
+                                value={dateEnd ? new Date(dateEnd).toISOString().split('T')[0] : ''}
+                                onChange={e => setDateEnd(e.target.value)}
+                            />
+
+                            <Inputs
+                                name="Hora de fin"
+                                type="time"
+                                value={hourEnd}
+                                onChange={e => setHourEnd(e.target.value)}
+                                min={selectedSpace ? selectedSpace.schedule.startHour : ""}
+                                max={selectedSpace ? selectedSpace.schedule.endHour : ''}
+                            />
+
+                            <Inputs
+                                name={'Cantidad de personas'}
+                                type={'number'}
+                                value={amountPeople}
+                                onChange={e => setAmountPeople(e.target.value)}
+                                min={0}
+                            />
 
 
                             {

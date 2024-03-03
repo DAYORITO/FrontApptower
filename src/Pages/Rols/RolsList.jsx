@@ -46,7 +46,7 @@ export const Rols = () => {
 
     //paginator
 
-    const { totalPages, currentPage, nextPage, previousPage, filteredData: RolsInfo } = usePaginator(rolsList, 10);
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: RolsInfo } = usePaginator(rolsList, 4);
 
     return (
         <>

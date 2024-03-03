@@ -271,27 +271,26 @@ export const UsersCreate = () => {
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
 
 
-    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
-        value: enterprice.idEnterpriseSecurity,
-        label: enterprice.nameEnterprice
-    })) : [];
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
+        ? dataEnterprice.enterpriseSecurity
+            .filter(enterprice => enterprice.state === "Activo")
+            .map(enterprice => ({
+                value: enterprice.idEnterpriseSecurity,
+                label: enterprice.nameEnterprice
+            }))
+        : [];
 
 
-    const handleEnterpriceSecurity = (selectedValue) => {
-        const selectedValueAsNumber = Number(selectedValue);
-        console.log("Selected Value:", selectedValueAsNumber);
-        setEnterprice(selectedValueAsNumber);
+    const defaultOption = enterpriceOptions.find(option => option.value === Number(id));
 
-        const selectedEnterprice = dataEnterprice.enterpriseSecurity.find(
-            enterprice => enterprice.idEnterpriseSecurity === selectedValueAsNumber
-        );
-
-        if (selectedEnterprice) {
-            setSelectedEnterprice(selectedEnterprice.idEnterpriseSecurity);
-        } else {
-
-            console.error("Selected Enterprice not found or undefined");
-            setSelectedEnterprice(null);
+    const handleEnterpriceSecurity = (selectedOption) => {
+        console.log("Selected Option:", selectedOption);
+        if (selectedOption) {
+            setEnterprice(selectedOption.value);
+            setSelectedEnterprice(selectedOption);
+        } else if (defaultOption) {
+            setEnterprice(defaultOption.value);
+            setSelectedEnterprice(defaultOption);
         }
     };
     return (
@@ -433,10 +432,8 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <div className="mr-1" style={{ width: '100%' }}>
+                                    <Select2 placeholder={'Empresa de Seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
 
-                                        <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate} ></Select2>
-                                    </div>
                                 </FormColumn>
 
 
