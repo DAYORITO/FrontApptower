@@ -29,7 +29,7 @@ export const ResidentCreate = (props) => {
 
   // User logged
 
-  const idUserLogged = useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
   const [userImg, setUserImg] = useState("");
   const [pdf, setPdf] = useState("");

@@ -42,6 +42,10 @@ export const ApartmentCreate = () => {
   const [area, setArea] = useState("");
   const [status, setStatus] = useState("Active");
 
+  const [errorList, setErrorList] = useState([]);
+
+
+
   const navigate = useNavigate();
 
 
@@ -61,15 +65,13 @@ export const ApartmentCreate = () => {
       apartmentsFloor: parseInt(apartmentsFloor),
       idTower: parseInt(tower),
       rangeStart: parseInt(rangeStart),
-      rangeEnd  : parseInt(rangeEnd),
+      rangeEnd: parseInt(rangeEnd),
       area: parseFloat(area)
     };
 
-    console.log(data, "data pa crear")
 
-    await postRequest(event, 'apartments', 'POST', {}, data, url);
+    await postRequest(event, 'apartments', 'POST', null, data, url, setErrorList, navigate, null);
 
-    navigate(-1)
 
   };
 
@@ -84,20 +86,27 @@ export const ApartmentCreate = () => {
 
         {/* <FormColumn> */}
         <InputsSelect id={"select"} options={towerList} name={"Torre"}
+          identifier={'idTower'} errors={errorList}
           value={tower} onChange={e => setTower(e.target.value)}
         ></InputsSelect>
+
         <Inputs name="Numero de apartamentos por piso " type={"number"}
+          identifier={'apartmentsFloor'} errors={errorList}
           value={apartmentsFloor} onChange={e => setApartmentsFloor(e.target.value)}></Inputs>
 
         <Inputs name="Planta o piso inicial" type={"number"}
+          identifier={'rangeStart'} errors={errorList}
           value={rangeStart} onChange={e => setRangeStart(e.target.value)}></Inputs>
 
         <Inputs name="Planta o piso final " type={"number"}
+          identifier={'rangeEnd'} errors={errorList}
           value={rangeEnd} onChange={e => setRangeEnd(e.target.value)}></Inputs>
+
         {/* </FormColumn> */}
         {/* <FormColumn> */}
 
         <Inputs name="Area" type="number"
+          identifier={'area'} errors={errorList}
           value={area} onChange={e => setArea(e.target.value)}></Inputs>
         {/* </FormColumn> */}
 

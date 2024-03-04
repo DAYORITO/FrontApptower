@@ -47,7 +47,7 @@ export const UsersDetails = () => {
 
     const { id } = useParams();
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged } = useUserLogged()
 
     const [idUser, setIdUser] = useState(id)
     const [userImg, setUserImg] = useState("")

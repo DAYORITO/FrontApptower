@@ -21,7 +21,7 @@ export const useUserLogged = () => {
     }
   }, []);
 
-  return idUserLogged;
+  return {idUserLogged, idRolLogged};
 };
 
 // Use capitalize first letter
@@ -116,17 +116,16 @@ export const filterPerSelect = (search, myData, searcher) => {
 
 
 
-
-export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {
+export const showConfirmationDialog = async (deleteFunction, modal) => {
   try {
     const result = await Swal.fire({
-      title: title,
-      text: message,
+      title: '¿Estas seguro?',
+      text: 'Esta acción no es reversible',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#007bff',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: confirmButtonText
+      confirmButtonText: 'Eliminar'
     });
 
     if (result.isConfirmed) {
@@ -135,12 +134,20 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
         'Eliminado',
         'Eliminaste correctamente',
         'success'
-      );
+      ).then(() => {
+        modal(false);
+      });
     }
   } catch (error) {
     console.error("Error al eliminar:", error);
+    Swal.fire(
+      'Error',
+      'Ocurrió un error al eliminar.',
+      'error'
+    );
   }
 };
+
 
 
 export const postRequest = async (event, endPoint, method = "POST", modal, data, url, errors, navigate, socket) => {

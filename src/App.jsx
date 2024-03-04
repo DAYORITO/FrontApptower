@@ -269,8 +269,9 @@ const App = () => {
                                 } />
 
                                 <Route path='apartments/details/:id' element={
-                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
-                                        <ApartmentDetails /> : <NotFound />
+                                    // allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
+                                    <ApartmentDetails />
+                                    // : <NotFound />
                                 } />
 
 
@@ -388,6 +389,10 @@ const App = () => {
 
                                 {/* Vehicles */}
                                 <Route path='vehicle/:id' element={
+                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Listar') ?
+                                        <Vehicle /> : <NotFound />
+                                } />
+                                <Route path='vehicle/:foreingidApartment' element={
                                     allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Listar') ?
                                         <Vehicle /> : <NotFound />
                                 } />

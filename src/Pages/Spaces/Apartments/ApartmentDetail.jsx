@@ -44,7 +44,8 @@ export const ApartmentDetails = (props) => {
 
     // User logged
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
 
 
     const [area, setArea] = useState('');
@@ -66,7 +67,7 @@ export const ApartmentDetails = (props) => {
     // Apartments relations
 
     const { data: apartment, put: putApartment, get: getApartment, loading: loadingApartment } = useFetch(url)
-    const { data: apartmentResidents, put: putApartmentResidents, get: getApartmentResidents, del: delApartmentResidents, loading: loadingApartmentResidents } = useFetch(url)
+    const { data: apartmentResidents, put: putApartmentResidents, get: getApartmentResidents, del: delApartmentResidents, loading: loadingApartmentResidents, error: errorApartmentResidents } = useFetch(url)
     const { data: apartmentOwners, put: putApartmentOwner, get: getApartmentOwners, del: delApartmentOwners, loading: loadingApartmentOwners } = useFetch(url)
     const { data: assignedParkingSpaces, put: putAssignedParkingSpaces, get: getAssignedParkingSpaces, del: delAssignedParkingSpaces, loading: loadingAssignedParkingSpaces } = useFetch(url)
     const { data: guestIncomes, get: getGuestIncomes, loading: loadingGuestIncomes } = useFetch(url)
@@ -106,8 +107,12 @@ export const ApartmentDetails = (props) => {
     const [idApartmentOwner, setIdApartmentOwner] = useState("");
     const [idOwner, setIdOwner] = useState("");
     const [OwnershipStartDate, setOwnershipStartDate] = useState("");
-    const [OwnershipEndDate, setOwnershipEndDate] = useState("");
+    const [OwnershipEndDate, setOwnershipEndDate] = useState('');
     const [statusApartmentOwner, setStatusApartmentOwner] = useState("");
+
+    // Errors
+
+    const [errorList, setErrorList] = useState([]);
 
 
     // Searcher icnomes
@@ -188,14 +193,15 @@ export const ApartmentDetails = (props) => {
 
     const handleModalEditApartmentResident = (data) => {
 
-
+        setErrorList('')
         console.log(data)
         setIdApartmentResident(data.idApartmentResident)
         setIdResident(data.idResident)
         setIdApartment(data.idApartment)
         setResidentStartDate(format(new Date(data.residentStartDate), 'yyyy-MM-dd'))
         setResidentEndDate(data.residentEndDate ? format(new Date(data.residentEndDate), 'yyyy-MM-dd') : "")
-        setStateApartmentResident(data.status)
+        // setStateApartmentResident(data.status)
+        setStateApartmentResident('Inactive')
         setShowApartmentResidentEditModal(true)
 
     }
@@ -203,13 +209,15 @@ export const ApartmentDetails = (props) => {
 
     const handleModalEditApartmentOwner = (data) => {
 
+        setErrorList('')
         console.log(data, "datica")
         setIdApartmentOwner(data.idApartmentOwner)
         setIdApartment(data.idApartment)
         setIdOwner(data.idOwner)
         setOwnershipStartDate(format(new Date(data.OwnershipStartDate), 'yyyy-MM-dd'))
-        setOwnershipEndDate(format(new Date(data.OwnershipEndDate), 'yyyy-MM-dd'))
-        setStatusApartmentOwner(data.status)
+        setOwnershipEndDate(data.OwnershipEndDate ? format(new Date(data.OwnershipEndDate), 'yyyy-MM-dd') : '')
+        // setStatusApartmentOwner(data.status)
+        setStatusApartmentOwner('Inactive')
 
         setShowApartmentOwnermODAL(true)
 
@@ -248,6 +256,8 @@ export const ApartmentDetails = (props) => {
 
     // Modal create apartmentresident
     const handleApartmentResidentsModal = () => {
+
+        setErrorList('')
         setShowApartmentResidentsModal(true)
 
     }
@@ -264,25 +274,57 @@ export const ApartmentDetails = (props) => {
             }))
         : [];
 
-    // List apartmentsOwners
 
-    const apartmentOwnersList = apartmentOwners?.data && Array.isArray(apartmentOwners?.data?.apartmentOwners)
-        ? apartmentOwners.data.apartmentOwners
-            // .filter(apartmentOwner => apartmentOwner.status === 'Active')
-            .map(apartmentOwner => ({
-                ...apartmentOwner,
-            }))
-        : [];
 
-    // List apartmentsResidents
 
-    const apartmentResidentsList = apartmentResidents?.data && Array.isArray(apartmentResidents?.data?.apartmentResidents)
-        ? apartmentResidents.data.apartmentResidents
-            // .filter(resident => resident.status === 'Active')
-            .map(resident => ({
-                ...resident,
-            }))
-        : [];
+    let apartmentOwnersList = []
+    let apartmentResidentsList = []
+
+    if (idRolLogged == 1) { // 1 is admin rol
+
+        // List apartmentsOwners
+
+        apartmentOwnersList = apartmentOwners?.data && Array.isArray(apartmentOwners?.data?.apartmentOwners)
+            ? apartmentOwners.data.apartmentOwners
+                // .filter(apartmentOwner => apartmentOwner.status === 'Active')
+                .map(apartmentOwner => ({
+                    ...apartmentOwner,
+                }))
+            : [];
+
+        apartmentResidentsList = apartmentResidents?.data && Array.isArray(apartmentResidents?.data?.apartmentResidents)
+            ? apartmentResidents.data.apartmentResidents
+                // .filter(resident => resident.status === 'Active')
+                .map(resident => ({
+                    ...resident,
+                }))
+            : [];
+    }
+
+    else {
+
+        // List apartmentsOwners
+
+        apartmentOwnersList = apartmentOwners?.data && Array.isArray(apartmentOwners?.data?.apartmentOwners)
+            ? apartmentOwners.data.apartmentOwners
+                .filter(apartmentOwner => apartmentOwner.status === 'Active')
+                .map(apartmentOwner => ({
+                    ...apartmentOwner,
+                }))
+            : [];
+
+        // List apartmentsResidents
+
+        apartmentResidentsList = apartmentResidents?.data && Array.isArray(apartmentResidents?.data?.apartmentResidents)
+            ? apartmentResidents.data.apartmentResidents
+                .filter(resident => resident.status === 'Active')
+                .map(resident => ({
+                    ...resident,
+                }))
+            : [];
+    }
+
+
 
     // List assigned parking spaces
 
@@ -317,7 +359,6 @@ export const ApartmentDetails = (props) => {
 
     // List ParkingSpaces
 
-
     const parkingSpacesList = parkingSpaces.data && parkingSpaces.data.parkingSpaces
         ? parkingSpaces.data.parkingSpaces
             .filter(parking => parking.parkingType === 'Private')
@@ -328,7 +369,7 @@ export const ApartmentDetails = (props) => {
         : [];
 
 
-    // List ParkingSpaces
+    // List vehicles
 
     const vehiclesList = vehicles?.data && Array.isArray(vehicles?.data?.vehicle)
         ? vehicles?.data?.vehicle
@@ -362,9 +403,10 @@ export const ApartmentDetails = (props) => {
             // Add other properties as needed for different requests
         };
 
-        await postRequest(event, 'aparmentResidents', 'POST', setShowApartmentResidentsModal, data, url, null, null, socket);
-
+        await postRequest(event, 'aparmentResidents', 'POST', setShowApartmentResidentsModal, data, url, setErrorList, null, socket);
         getApartmentResidents(`aparmentResidents/${id}`)
+
+
     };
 
     // create assignedparkingspace 
@@ -381,7 +423,7 @@ export const ApartmentDetails = (props) => {
 
         };
 
-        await postRequest(event, 'assignedParkingSpaces', 'POST', setShowParkingSpacesModal, data, url, null, null, socket);
+        await postRequest(event, 'assignedParkingSpaces', 'POST', setShowParkingSpacesModal, data, url, setErrorList, null, socket);
 
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
 
@@ -397,7 +439,7 @@ export const ApartmentDetails = (props) => {
 
 
             idApartment: idApartment,
-            tower: idTower,
+            idTower: parseInt(idTower),
             apartmentName: apartmentName,
             area: area,
             status: status
@@ -406,9 +448,8 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'apartments', 'PUT', {}, data, url);
+        await postRequest(event, 'apartments', 'PUT', setShowModalEditApartment, data, url, setErrorList, null, null);
 
-        setShowModalEditApartment(false)
 
 
     };
@@ -431,11 +472,8 @@ export const ApartmentDetails = (props) => {
 
         }
 
-        console.log(idApartmentOwner, "idÑaña")
 
-        console.log("edit data", data)
-
-        await postRequest(event, 'apartmentOwners', 'PUT', setShowApartmentOwnermODAL, data, url, null, null, socket);
+        await postRequest(event, 'apartmentOwners', 'PUT', setShowApartmentOwnermODAL, data, url, setErrorList, null, socket);
         getApartmentOwners(`apartmentOwners/${id}`)
 
     };
@@ -461,7 +499,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'aparmentResidents', 'PUT', setShowApartmentResidentEditModal, data, url);
+        await postRequest(event, 'aparmentResidents', 'PUT', setShowApartmentResidentEditModal, data, url, setErrorList, null, socket);
         getApartmentResidents(`aparmentResidents/${id}`)
 
 
@@ -486,7 +524,7 @@ export const ApartmentDetails = (props) => {
 
         // console.log("edit data", data)
 
-        await postRequest(event, 'assignedParkingSpaces', `PUT`, setShowParkingSpacesModal, data, url);
+        await postRequest(event, 'assignedParkingSpaces', `PUT`, setShowParkingSpacesModal, data, url, setErrorList, null, socket);
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
 
 
@@ -495,27 +533,29 @@ export const ApartmentDetails = (props) => {
     // Delete apartmentresident
 
     const deleteResidentApartment = async (id) => {
+
         const deleteFunction = async () => {
             await delApartmentResidents('aparmentResidents', { idApartmentResident: id });
+
         };
 
-        showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
+        await showConfirmationDialog(deleteFunction, setShowApartmentResidentEditModal);
+        getApartmentResidents(`aparmentResidents/${idApartment}`)
 
-        getApartmentResidents(`aparmentResidents/${id}`)
 
     };
 
     // Delete apartmentowner
 
 
-    const deleteApartmentOwner = async (id, idApartment) => {
+    const deleteApartmentOwner = async (id) => {
         const deleteFunction = async () => {
             await delApartmentOwners('apartmentOwners', { idApartmentOwner: id });
         };
 
-        showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
+        await showConfirmationDialog(deleteFunction, setShowApartmentOwnermODAL);
 
-        getApartmentOwners(`apartmentOwners/${id}`)
+        getApartmentOwners(`apartmentOwners/${idApartment}`)
 
     };
 
@@ -686,7 +726,7 @@ export const ApartmentDetails = (props) => {
                                     <DropdownInfo
                                         name={`${vehiclesList.length} Vehiculos `}
                                         action1={`Agregar nuevo vehiculo`}
-                                        toAction1={`/admin/vehicle/create/${idApartment}`}>
+                                        toAction1={`/admin/vehicle/${idApartment}`}>
 
                                         {loadingVehicles ? <SmalSpinner /> :
                                             vehiclesList.length > 0 ? (
@@ -698,7 +738,6 @@ export const ApartmentDetails = (props) => {
 
                                                         // Details
                                                         to={`/admin/vehicle/${vehicle.licenseplate}`}
-                                                        status={vehicle.state}
                                                     // Funtions
 
                                                     >
@@ -821,20 +860,24 @@ export const ApartmentDetails = (props) => {
                             <Modal
                                 onClick={handleUpdateResident}
                                 showModal={setShowModalEditApartment}
-                                title={"Editar apartamento"}
+                                title={`Modificar apartamento ${apartmentName}`}
                             >
 
-                                <InputsSelect id={"select"} options={towerList} name={"Estado"}
+                                <InputsSelect id={"select"} options={towerList} name={"Torre"}
+                                    identifier={'idTower'} errors={errorList}
                                     value={idTower} onChange={e => setIdTower(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Numero apartamento " type={"text"}
+                                    identifier={'apartmentName'} errors={errorList}
                                     value={apartmentName} onChange={e => setApartmentName(e.target.value)}></Inputs>
 
                                 <Inputs name="Area del apartamento " type={"text"}
+                                    identifier={'area'} errors={errorList}
                                     value={area} onChange={e => setArea(e.target.value)}></Inputs>
 
                                 <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                    identifier={'status'} errors={errorList}
                                     value={status} onChange={e => setStatus(e.target.value)}
                                 ></InputsSelect>
 
@@ -854,21 +897,29 @@ export const ApartmentDetails = (props) => {
                             <Modal
                                 onClick={handleCreateApartmentPerResidentExist}
                                 showModal={setShowApartmentResidentsModal}
-                                title={"Agregar residente existente"}
-
+                                title={`Agregar residente existente al apartamento ${apartmentName}`}
 
                             >
-                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
-                                    value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
+                                {
+                                    loadingApartment ? <Spinner /> :
+                                        <>
+                                            <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
+                                                identifier={'idApartment'} errors={errorList}
+                                                value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
-                                <InputsSelect id={"select"} options={residentsList} name={"Residente"}
-                                    value={idResident} onChange={e => setIdResident(e.target.value)}></InputsSelect>
+                                            <InputsSelect id={"select"} options={residentsList} name={"Residente"}
+                                                identifier={'idResident'} errors={errorList}
+                                                value={idResident} onChange={e => setIdResident(e.target.value)}></InputsSelect>
 
-
-                                <Inputs name="Fecha de inicio de residencia" type={"date"}
-                                    value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
-                                {/* <Inputs name="Fecha de fin de residencia" type={"date"}
+                                            <Inputs name="Fecha de inicio de residencia" type={"date"}
+                                                identifier={'residentStartDate'} errors={errorList}
+                                                value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
+                                            {/* <Inputs name="Fecha de fin de residencia" type={"date"}
                                     value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs> */}
+
+                                        </>
+                                }
+
                             </Modal>
                         </ModalContainer>
                     </>,
@@ -886,9 +937,11 @@ export const ApartmentDetails = (props) => {
                                 buttonDelete={editingParkingSpace ? true : false}
                             >
                                 <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
+                                    identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
                                 <InputsSelect id={"select"} options={parkingSpacesList} name={"Parqueaderos"}
+                                    identifier={'idParkingSpace'} errors={errorList}
                                     value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}></InputsSelect>
 
                                 <Inputs type={"hidden"}
@@ -908,32 +961,49 @@ export const ApartmentDetails = (props) => {
                             <Modal
                                 onClick={handleUpdateApartmentOwner}
                                 showModal={setShowApartmentOwnermODAL}
-                                title={"Editar propietario por apartamento"}
-                                buttonDelete={true}
+                                title={`Propietario del apartamento ${apartmentName}`}
+                                onClickForDelete={() => deleteApartmentOwner(idApartmentOwner)}
 
                             >
-                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
+                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Propiedad"}
+                                    identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
                                 <InputsSelect disabled id={"select"} options={OwnersList} name={"Propietario"}
+                                    identifier={'idOwner'} errors={errorList}
                                     value={idOwner} onChange={e => setIdOwner(e.target.value)}></InputsSelect>
 
-                                <Inputs readonly name="Fecha de propiedad" type={"date"}
+
+                                <Inputs readonly name="Fecha desde cuando es propietario" type={"date"}
+                                    identifier={'OwnershipStartDate'} errors={errorList}
                                     value={OwnershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
 
+                                <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion de salida del conjunto</h6>
+
                                 <Inputs name="Fecha finalizacion de propiedad" type={"date"}
+                                    identifier={'OwnershipEndDate'} errors={errorList}
                                     value={OwnershipEndDate} onChange={e => setOwnershipEndDate(e.target.value)}></Inputs>
 
-                                <InputsSelect id={"select"} options={statusList} name={"Estado"}
-                                    value={statusApartmentOwner} onChange={e => setStatusApartmentOwner(e.target.value)}></InputsSelect>
+                                {
+                                    OwnershipEndDate ?
+
+                                        < InputsSelect id={"select"} options={statusList} name={"Estado de finalizacion de propiedad"}
+                                            identifier={'status'} errors={errorList}
+                                            value={statusApartmentOwner} onChange={e => setStatusApartmentOwner(e.target.value)}></InputsSelect>
+
+                                        : null
+                                }
+
 
                             </Modal>
-                        </ModalContainer>
+                        </ModalContainer >
                     </>,
                     document.getElementById("modalRender")
-                )}
+                )
+            }
 
-            {showApartmentResidentEditModal &&
+            {
+                showApartmentResidentEditModal &&
                 createPortal(
                     <>
                         <ModalContainer ShowModal={setShowApartmentResidentEditModal}>
@@ -941,23 +1011,40 @@ export const ApartmentDetails = (props) => {
                                 onClick={handleUpdateApartmentResident}
                                 showModal={setShowApartmentResidentEditModal}
                                 title={"Editar residente por apartamento"}
-                                buttonDelete={true}
+                                onClickForDelete={() => deleteResidentApartment(idApartmentResident)}
 
                             >
                                 <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
+                                    identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
                                 <InputsSelect disabled id={"select"} options={residentsList} name={"Residentes"}
+                                    identifier={'idResident'} errors={errorList}
                                     value={idResident} onChange={e => setIdResident(e.target.value)}></InputsSelect>
 
                                 <Inputs name="Fecha de inicio de residencia" type={"date"} readonly
+                                    identifier={'residentStartDate'} errors={errorList}
+
                                     value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
 
+                                <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion de salida del conjunto</h6>
+
                                 <Inputs name="Fecha finalizacion de residencia" type={"date"}
+                                    identifier={'residentEndDate'} errors={errorList}
+
                                     value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs>
 
-                                <InputsSelect id={"select"} options={statusList} name={"Estado"}
-                                    value={statusApartmentResident} onChange={e => setStateApartmentResident(e.target.value)}></InputsSelect>
+
+                                {
+                                    residentEndDate ?
+
+                                        <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                            identifier={'status'} errors={errorList}
+                                            value={statusApartmentResident} onChange={e => setStateApartmentResident(e.target.value)}></InputsSelect>
+
+                                        : null
+                                }
+
 
                                 <Inputs type={"hidden"}
                                     value={idApartmentResident} onChange={e => setIdApartmentResident(e.target.value)}></Inputs>
@@ -966,7 +1053,8 @@ export const ApartmentDetails = (props) => {
                         </ModalContainer>
                     </>,
                     document.getElementById("modalRender")
-                )}
+                )
+            }
         </>
     )
 }

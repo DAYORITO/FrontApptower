@@ -163,7 +163,6 @@ function GuestIncomeCreate() {
       // Se agrega el apartamento al array correspondiente a la torre
       apartmentsByTower[idTower].push({ value: idApartment, label: apartmentName });
     });
-    console.log("Apartamentos por torreprimero:", apartmentsByTower);
 
     const resultArray = [];
 
@@ -264,13 +263,12 @@ function GuestIncomeCreate() {
       setSelectedApartments(apartment)
     }
     setSelectedApartments(selectedTowerData ? selectedTowerData.apartments : []);
-    console.log('hola', selectedTowerData)
 
   };
   const handlePhoneSetted = (selectedValue) => {
-    selectedValue = selectedValue ? selectedValue : apartment;
-    console.log("Selected Value:", selectedValue);
-    setApartment(parseInt(selectedValue))
+    selectedValue = selectedValue?.value ? selectedValue?.value : apartment;
+    console.log("Selected Value nuevo:", selectedValue);
+    setApartment(parseInt(selectedValue?.value))
     console.log('este es mi apartamento ' + apartment)
     console.log('arrayapartmentresidents' + dataResidentApartment.data.apartmentResidents)
 
@@ -308,7 +306,7 @@ function GuestIncomeCreate() {
 
     if (dataVisitors && getNameVisitor) {
       const visitor = getNameVisitor.find(
-        (visitor) => visitor.idVisitor === parseInt(selectedValue)
+        (visitor) => visitor.idVisitor === parseInt(selectedValue?.value)
       );
 
       if (visitor) {
@@ -320,7 +318,7 @@ function GuestIncomeCreate() {
           setVisitorname("No existe el visitante.");
         }
       } else {
-        setVisitorname("Noexiste");
+        setVisitorname("No existe");
       }
     } else {
 
@@ -345,13 +343,14 @@ function GuestIncomeCreate() {
 
     try {
       // Crear el guestIncome
+      console.log("fecha de hoy: ", new Date());
       const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
         "startingDate": new Date(),
         "departureDate": null,
-        "idApartment": apartment,
+        "idApartment": apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
-        "idVisitor": visitor,
+        "idVisitor": visitor?.value,
       });
 
       if (guestIncomeError) {
@@ -414,7 +413,6 @@ function GuestIncomeCreate() {
   const handleSubmitVisitor = async (e) => {
     e.preventDefault();
     setShowModaload(true);
-    setShowModalvisitor(false);
     const { response, error } = await useFetchpost('visitors', {
       "name": name,
       "lastname": lastname,
@@ -435,6 +433,7 @@ function GuestIncomeCreate() {
       setVisitorsData((prevData) => [newVisitor, ...prevData]);
       setNameVisitor((prevData) => [response.visitor, ...prevData]);
       setShowModaload(false);
+      setShowModalvisitor(false);
 
       console.log('Respuesta exitosa:', response);
       Swal.fire({
@@ -446,7 +445,7 @@ function GuestIncomeCreate() {
 
 
     if (error) {
-      const errorData = guestIncomeError.errorData;
+      const errorData = error.errorData;
       setErrors(errorData);
       setShowModaload(false);
       Swal.fire({
@@ -473,11 +472,11 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect identifier={"idApartment"} errors={errors} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect errors={errors} identifier={"idApartment"}  inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
               :
               <Inputs
                 key={apartment}
-                name="Torre"
+                name="Torre" 
                 value={nameTower || ""}
                 type="text"
                 readonly={true}
@@ -489,7 +488,7 @@ function GuestIncomeCreate() {
           <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
             {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Apartamento*'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} value={apartment} placeholder={'Apartamento*'}  voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -509,10 +508,10 @@ function GuestIncomeCreate() {
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Select2 name={'Visitante*'} id={"select2"} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue) }} options={visitorsData}></Select2>
+            <Select2 errors={errors} identifier={"idVisitor"} placeholder={'Visitante*'} value={visitor} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue), console.log("valor selec",selectedValue) }} options={visitorsData}></Select2>
           </div>
           <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Inputs id={"nombre"} errors={errors} identifier={"idVisitor"} name='Nombre*' readonly={true} value={visitorname} ></Inputs>
+            <Inputs  name='Nombre*' readonly={true} value={visitorname} ></Inputs>
           </div>
 
         </div>
@@ -533,10 +532,10 @@ function GuestIncomeCreate() {
         createPortal(
           <ModalContainer showModal={setShowModalvisitor}>
             <Modal title={'Crear Visitante'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
-              <InputsSelect name="Tipo de documento*" errors={errors} identifier={"documentNumber"} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-              <Inputs name="Numero Documento*" errors={errors} onChange={(e) => setDocumentVisitor(e.target.value)} />
+              <InputsSelect name="Tipo de documento*" errors={errors} identifier={"documentType"} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+              <Inputs name="Numero Documento*" errors={errors} identifier={"documentNumber"} onChange={(e) => setDocumentVisitor(e.target.value)} />
               <Inputs name="Nombre*" errors={errors} identifier={"name"} onChange={(e) => setName(e.target.value)} />
-              <Inputs name="Apellido*" errors={errors} identifier={"lastName"} type="text" onChange={(e) => setLastName(e.target.value)} />
+              <Inputs name="Apellido*" errors={errors} identifier={"lastname"} type="text" onChange={(e) => setLastName(e.target.value)} />
               <InputsSelect name="Genero*" errors={errors} identifier={"genre"} options={sexs} onChange={(e) => setGenre(e.target.value)} />
             </Modal>
           </ModalContainer>,

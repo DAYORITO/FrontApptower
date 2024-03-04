@@ -23,6 +23,7 @@ import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { SocketContext } from '../../../Context/SocketContext'
+import InputTextArea from '../../../Components/Inputs/InputTextArea'
 
 
 export const Vehicle = () => {
@@ -33,7 +34,7 @@ export const Vehicle = () => {
 
   const { socket } = useContext(SocketContext)
 
-  const idUserLogged = useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
 
   const token = Cookies.get('token');
@@ -136,6 +137,7 @@ export const Vehicle = () => {
   const [idApartment, setIdApartment] = useState('');
   const [idvehicle, setIdVehicle] = useState('');
 
+  const [errorList, setErrorList] = useState([]);
 
   // List
 
@@ -161,7 +163,6 @@ export const Vehicle = () => {
 
   const editVehicle = async (event) => {
 
-    console.log('Le diste click')
     const data = {
 
       // User logged
@@ -175,8 +176,8 @@ export const Vehicle = () => {
 
     }
 
-    await postRequest(event, 'vehicle', 'PUT', setVehicleModalEdit, data, url, null, null, socket);
-    
+    await postRequest(event, 'vehicle', 'PUT', setVehicleModalEdit, data, url, setErrorList, null, socket);
+
     getVehicles('vehicle')
 
 
@@ -256,10 +257,26 @@ export const Vehicle = () => {
               >
 
 
-                <InputsSelect id={"select"} options={AparmetList} name={"Numero de aparmento"} value={idApartment} onChange={e => setIdApartment(e.target.value)} ></InputsSelect>
-                <Inputs name={"Placa"} value={plate} type="text" onChange={e => setPlate(e.target.value)}></Inputs>
-                <Inputs name={"Descripcion"} value={description} type="text" onChange={e => setDescription(e.target.value)}></Inputs>
+                <InputsSelect id={"select"} options={AparmetList} name={"Numero de aparmento"}
+                  identifier={'idApartment'} errors={errorList}
+                  value={idApartment} onChange={e => setIdApartment(e.target.value)}
+                  disabled={id ? idApartment : ''}>
 
+                </InputsSelect>
+                <Inputs name={"Placa"} value={plate}
+                  identifier={'licenseplate'} errors={errorList}
+                  type="text" onChange={e => setPlate(e.target.value)}>
+
+                </Inputs>
+                <InputTextArea
+                  name="Descripción"
+                  identifier={"details"}
+                  errors={errorList}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                  value={description}
+                ></InputTextArea>
                 <Inputs type={"hidden"}
                   value={idvehicle} onChange={e => setIdVehicle(e.target.value)}></Inputs>
 

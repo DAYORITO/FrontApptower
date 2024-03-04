@@ -5,6 +5,8 @@ import { RowNotificactions } from "../RowNotificacions/RowNotificactions";
 import "./ModalTwo.css";
 import { useEffect, useState } from "react";
 import { NotificationsAlert } from "../NotificationsAlert/NotificationsAlert";
+import { useAllowedPermissionsAndPrivileges } from "../../Hooks/useFetch";
+import { idToPermissionName, idToPrivilegesName } from "../../Hooks/permissionRols";
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -15,6 +17,8 @@ export const ModalContainer = ({ children, showModal }) => {
 };
 
 export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false }) => {
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
   const [loading, setLoading] = useState(false);
 
   const handleClick = async (e) => {
@@ -62,11 +66,17 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               >
                 Cerrar
               </button>
+
+
               {
-                buttonDelete ?
-                  <button type="button" onClick={onClickForDelete} className="btn mb-2 btn-danger">
-                    Desagregar
-                  </button> : null
+
+                allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
+                  onClickForDelete ?
+                    <button type="button" onClick={onClickForDelete} className="btn mb-2 btn-danger">
+                      Desagregar
+                    </button> : null
+                  : null
+
               }
               {
                 showSave ?
