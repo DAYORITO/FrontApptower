@@ -144,7 +144,7 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
           ))}
         </datalist>}
         {errorMessage &&
-          <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
+          <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
         {errors && errorMessageToShow != null &&
           <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
       </div>

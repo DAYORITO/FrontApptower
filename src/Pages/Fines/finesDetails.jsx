@@ -52,7 +52,7 @@ export const FinesDetail = () => {
 
   const { id } = useParams();
 
-  const idUserLogged = useUserLogged()
+  const {idUserLogged }= useUserLogged()
 
   // Socket
 
@@ -267,17 +267,14 @@ export const FinesDetail = () => {
           </Acordions>
 
           <Acordions>
-
             <DropdownInfo
-              name={`Comprobante de pago`}
+              name={'Comprobante de pago'}
               action1={'Agregar comporbante de pago'}
               onClickAction1={openProofFilesModal}
             >
-
-              {loadingFines ? <SmalSpinner /> : paymentproof ?
+              {loadingFines ? <SmalSpinner /> : paymentproof ? (
                 <>
                   <RowNotificactions
-
                     // Information
                     img={paymentproof}
                     to={paymentproof}
@@ -285,24 +282,15 @@ export const FinesDetail = () => {
                     lastName={amount}
                     msg={'Comprobante de pago'}
                     icon="file-plus"
-
-
-                    ></RowNotificactions>
-
-                <div className='mt-4 ml-2'>
-                  <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
-
-                </div>
-
-
-              }
-
+                  />
+                  <div className='mt-4 ml-2'>
+                    <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
+                  </div>
+                </>
+              ) : null}
             </DropdownInfo>
-
           </Acordions>
-
         </InfoDetails>
-
       </Details >
       {showModal &&
         createPortal(

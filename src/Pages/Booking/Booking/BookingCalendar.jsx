@@ -26,7 +26,7 @@ export const BookingCalendar = () => {
     const localizer = dayjsLocalizer(dayjs);
 
     const { id } = useParams();
-    const idUserLogged = useUserLogged();
+    const {idUserLogged} = useUserLogged();
     const navigate = useNavigate();
 
     //information Booking

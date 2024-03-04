@@ -48,7 +48,7 @@ export const OwnerDetail = () => {
 
   // User logged
 
-  const idUserLogged = useUserLogged()
+  const {idUserLogged }= useUserLogged()
 
   const [idOwner, setIdOwner] = useState(id)
   const [idUser, setIdUser] = useState("")

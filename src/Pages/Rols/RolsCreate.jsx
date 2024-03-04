@@ -3,13 +3,14 @@ import FormContainer from '../../Components/Forms/FormContainer';
 import FormColumn from '../../Components/Forms/FormColumn';
 import Inputs from '../../Components/Inputs/Inputs';
 import FormButton from '../../Components/Forms/FormButton';
-import { useFetchpost } from '../../Hooks/useFetch';
+import { useFetchForFile, useFetchpost } from '../../Hooks/useFetch';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import './Rols.css';
 import { Accordion } from '../../Components/Accordion/Accordion';
 import { Checkboxs } from '../../Components/Checkbox/Checkboxs';
 import { regexName } from '../../Hooks/regex';
+import { set } from 'date-fns';
 
 
 export const RolsCreate = () => {
@@ -17,6 +18,11 @@ export const RolsCreate = () => {
     const [permissionsList, setPermissionsList] = useState([]);
     const [permisos, setPermisos] = useState([]);
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+    const [errors, setErrors] = useState([{}]);
+
+    console.log(selectedCheckboxes, 'selectedCheckboxes')
+
+    console.log(errors, 'errors')
 
     useEffect(() => {
         async function fetchPrivileges() {
@@ -78,28 +84,9 @@ export const RolsCreate = () => {
 
 
 
-    const [shouldValidate, setShouldValidate] = useState(false);
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!namerole || !description) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, rellene todos los campos requeridos',
-                icon: 'error',
-            });
-            //Activa la validacion de los campos cuando se envia el formulario
-            setShouldValidate(true);
-            return;
-        }
 
-        if (selectedCheckboxes.length === 0) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, seleccione al menos un permiso',
-                icon: 'error',
-            });
-            return;
-        }
 
         if (isNameRoleTaken) {
             Swal.fire({
@@ -109,7 +96,7 @@ export const RolsCreate = () => {
             });
             return;
         }
-        const url = 'rols';
+        const url = "rols";
 
         const data = {
             namerole,
@@ -124,7 +111,7 @@ export const RolsCreate = () => {
             console.log('Response:', response);
             Swal.fire({
                 title: 'Éxito',
-                text: 'Rol creado exitosamente',
+                text: 'Rol creado exitosamente.',
                 icon: 'success',
             }).then(() => {
                 navigate('/admin/rols');
@@ -132,28 +119,52 @@ export const RolsCreate = () => {
         }
 
         if (error) {
-            console.log('Hubo un error');
+            console.log('Hubo un error', error);
             Swal.fire({
                 title: 'Error',
-                text: 'Error al crear rol',
+                text: 'Error al crear rol.',
                 icon: 'error',
             });
+            console.error('Error:', error);
+            setErrors(error);
+        }
+
+        if (!namerole || !description) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, rellene todos los campos requeridos',
+                icon: 'error',
+            });
+
+
+            return;
+        }
+
+        if (selectedCheckboxes.length === 0) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Por favor, seleccione al menos un permiso',
+                icon: 'error',
+            });
+            return;
         }
     };
 
     const handleDescriptionChange = (e) => {
         if (e.target.value.length <= 30) {
             setDescrption(e.target.value);
+            setErrors([{}]);
         }
     };
-
-    const [isNameRoleInvalid, setIsNameRoleInvalid] = useState(false);
 
     const handleNameRole = (e) => {
         const value = e.target.value;
         if (regexName.test(value) && value.length <= 20) {
             setNamerole(value);
+            setErrors([{}]);
             setIsNameRoleInvalid(false);
+            setIsNameRoleTaken(false);
+
         } else {
             setIsNameRoleInvalid(true);
         }
@@ -173,8 +184,9 @@ export const RolsCreate = () => {
                         onChange={handleNameRole}
                         type='text'
                         required={true}
-                        validate={shouldValidate}
-                        errorMessage={isNameRoleTaken ? "Este rol ya esta registrado" : isNameRoleInvalid ? "No puede contener números ni caracteres especiales" : null}
+                        errors={isNameRoleTaken ? null : errors}
+                        identifier={'namerole'}
+                        errorMessage={isNameRoleTaken ? "Este rol ya esta registrado" : (errors && errors.namerole)}
                     />
                 </FormColumn>
 
@@ -184,9 +196,9 @@ export const RolsCreate = () => {
                         value={description}
                         onChange={handleDescriptionChange}
                         type='text'
-                        validate={shouldValidate}
                         required={true}
-                        inputStyle={description.length > 30 ? { borderColor: 'red' } : null}
+                        errors={errors}
+                        identifier={'description'}
 
                     />
                 </FormColumn>

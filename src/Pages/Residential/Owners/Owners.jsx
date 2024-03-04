@@ -104,7 +104,7 @@ export const Owners = () => {
 
     }
 
-    const idUserLogged = useUserLogged()
+    const {idUserLogged} = useUserLogged()
 
 
     const CreateApartmentOwner = async (event) => {
