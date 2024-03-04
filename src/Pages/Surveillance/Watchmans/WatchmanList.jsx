@@ -265,6 +265,7 @@ export const Watchman = () => {
     // Traer empresas de seguridad
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
+    console.log("Selected Enterprice:", selectedEnterprice);
 
 
     const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
@@ -276,19 +277,29 @@ export const Watchman = () => {
             }))
         : [];
 
-    const selectedEnterpriceOption = editedWatchman && enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity)?.value;
 
-    const handleEnterpriceSecurity = (selectedValue) => {
-        const selectedValueAsNumber = Number(selectedValue);
-        console.log("Selected Value:", selectedValueAsNumber);
-        setSelectedEnterprice(selectedValueAsNumber);
-        setEditedWatchman({ ...editedWatchman, idEnterpriseSecurity: selectedValueAsNumber });
+
+    console.log("Enterprice Options:", enterpriceOptions);
+    const selectedEnterpriceOption = selectedEnterprice || enterpriceOptions.find(option => option.value === editedWatchman?.idEnterpriseSecurity);
+
+    console.log("Selected Enterprice Option:", selectedEnterpriceOption);
+
+    useEffect(() => {
+        if (editedWatchman) {
+            const initialEnterprice = enterpriceOptions.find(option => option.value === editedWatchman.idEnterpriseSecurity);
+            setSelectedEnterprice(initialEnterprice);
+        }
+    }, [editedWatchman, enterpriceOptions]);
+
+    const handleEnterpriceSecurity = (selectedEnterprice) => {
+        setSelectedEnterprice(selectedEnterprice);
+        setEditedWatchman({ ...editedWatchman, idEnterpriseSecurity: selectedEnterprice.value });
     };
 
 
     //paginator
 
-    const { totalPages, currentPage, nextPage, previousPage, filteredData: WatchmanInfo } = usePaginator(filterData, 10);
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: WatchmanInfo } = usePaginator(filterData, 5);
 
     return (
         <>
@@ -361,7 +372,7 @@ export const Watchman = () => {
                                                     }} />
                                                 )}
 
-                                                <Actions accion='Asignar Turno' href={`/admin/watchman/shift/${watchman.idwatchman}`} />
+                                                <Actions accion='Asignar Turno' href={`/admin/watchman/assignshift/${watchman?.user?.iduser}`} />
                                             </Row>
                                         );
                                     })}
@@ -378,19 +389,15 @@ export const Watchman = () => {
                                 showModal={setShowModal}
                                 title={"Editar Vigilante"}
                             >
-                                <div className="mr-1" style={{ width: '100%' }}>
-                                    <Select2
-                                        name={'Empresa de Seguridad'}
-                                        onChange={(newValue) => {
-                                            const setSelectedEnterprice = enterpriceOptions.find(option => option.value === Number(newValue));
-                                            const newNameEnterprice = setSelectedEnterprice ? setSelectedEnterprice.label : '';
-                                            handleEnterpriceSecurity(newValue);
-                                        }}
-                                        options={enterpriceOptions}
-                                        value={selectedEnterpriceOption}
-                                        validate={shouldValidate}
-                                    />
-                                </div>
+
+                                <Select2
+                                    placeholder={'Empresa de Seguridad'}
+                                    onChange={handleEnterpriceSecurity}
+                                    options={enterpriceOptions}
+                                    value={selectedEnterprice}
+                                    validate={shouldValidate}
+                                />
+
                                 <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.user.docType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, docType: e.target.value } })}
                                     validate={shouldValidate} required={true}></InputsSelect>
                                 <Inputs name="Documento" value={editedWatchman?.user.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, document: e.target.value } })}

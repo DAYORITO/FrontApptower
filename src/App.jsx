@@ -19,8 +19,6 @@ import { RolsCreate } from "./Pages/Rols/RolsCreate";
 import { RecoverPassword } from './Pages/Users/LogIn/RecoverPassword';
 import { UsersCreate } from "./Pages/Users/Users/UsersCreate";
 import { UsersEdit } from "./Pages/Users/Users/UserEdit";
-import { ModifyProfile } from "./Pages/Users/Users/ModifyProfile";
-import { ModifyProfileList } from "./Pages/Users/Users/ModifyProfileList";
 import Visitors from "./Pages/Residential/Visitors/Visitors";
 import GuestIncomeCreate from "./Pages/Booking/GuestIncome/GuestIncomeCreate";
 import GuestIncome from "./Pages/Booking/GuestIncome/GuestIncome";
@@ -29,7 +27,6 @@ import { WatchmanShifts } from "./Pages/Surveillance/Watchmans/WatchmanShifts";
 import { WatchmanDetails } from "./Pages/Surveillance/Watchmans/WatchmanDetails";
 import { UsersDetails } from "./Pages/Users/Users/UsersDetails";
 import { Booking } from "./Pages/Booking/Booking/booking";
-import { BookingCreate } from "./Pages/Booking/Booking/bookingCreate";
 import { OwnerDetail } from "./Pages/Residential/Owners/OwnersDetails";
 import { SpaceDetails } from "./Pages/Spaces/Spaces/SpaceDetails";
 import { Apartments } from "./Pages/Spaces/Apartments/Apartments";
@@ -43,7 +40,6 @@ import { ApartmentDetails } from "./Pages/Spaces/Apartments/ApartmentDetail";
 import { EnterRecoveryCode } from "./Pages/Users/LogIn/EnterRecoveryCode";
 import { ResetPassword } from "./Pages/Users/LogIn/ResetPassword ";
 import { EnterpriceSecurity } from "./Pages/Surveillance/Watchmans/EnterpriceSecurity";
-import { EnterpriceSecurityCreate } from "./Pages/Surveillance/Watchmans/EnterpriceSecurityCreate";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { Vehicle } from "./Pages/Residential/Vehicle/Vehicle";
@@ -68,6 +64,7 @@ import { BookingCalendar } from "./Pages/Booking/Booking/BookingCalendar";
 
 import { AuthProvider } from "./Context/AuthContext";
 import { SocketContext } from "./Context/SocketContext";
+import { AssignShiftsWatchman } from "./Pages/Surveillance/Watchmans/assignShiftsWatchman";
 
 
 const App = () => {
@@ -146,32 +143,21 @@ const App = () => {
 
 
                                 {/* Surveillance */}
+
                                 <Route path='watchman' element={
-                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
-                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
-                                            ? <Watchman />
-                                            : <NotFound />
-                                        : <NotFound />
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
+                                        <Watchman /> : <NotFound />
                                 } />
 
-                                <Route path='enterprice' element={
-                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
-                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'administrador'))
-                                            ? <EnterpriceSecurity />
-                                            : <NotFound />
-                                        : <NotFound />
+                                <Route path='watchman/enterprice' element={
+                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar') ?
+                                        <EnterpriceSecurity /> : <NotFound />
                                 } />
 
-                                <Route path='watchman/shifts' element={
-                                    allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Listar')
-                                        ? (nameRole && (nameRole.toLocaleLowerCase() === 'vigilante' || nameRole.toLocaleLowerCase() === 'vigilancia' || nameRole.toLocaleLowerCase() === 'seguridad'))
-                                            ? <WatchmanShifts />
-                                            : <NotFound />
-                                        : <NotFound />
-                                } />
+                                <Route path="watchman/assignshift/:id?" element={<AssignShiftsWatchman />} />
 
 
-                                <Route path='watchman/create' element={
+                                <Route path='watchman/create/:id?' element={
                                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear') ?
                                         <WatchmanCreate /> : <NotFound />
                                 } />
@@ -394,10 +380,6 @@ const App = () => {
                                         <Booking /> : <NotFound />
                                 } />
 
-                                <Route path='booking/create' element={
-                                    allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Crear') ?
-                                        <BookingCreate /> : <NotFound />
-                                } />
 
 
                                 <Route path='booking/calendar/:id?' element={

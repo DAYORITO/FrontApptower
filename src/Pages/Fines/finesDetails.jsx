@@ -37,7 +37,7 @@ import Swal from 'sweetalert2'
 import ImageContainer from '../../Components/ImgContainer/imageContainer'
 import moment from 'moment';
 import { SocketContext } from '../../Context/SocketContext'
-import { ModalContainerload } from '../../Components/Modals/Modal'
+import { ModalContainerload, Modaload } from '../../Components/Modals/Modal'
 
 
 export const FinesDetail = () => {
@@ -239,7 +239,7 @@ export const FinesDetail = () => {
 
               {loadingFines ? <SmalSpinner /> :
                 evidenceFiles && evidenceFiles.length > 0 ? (
-                  evidenceFiles.map((evidence, index) => (
+                  evidenceFiles?.map((evidence, index) => (
 
                     <RowNotificactions
 
@@ -287,9 +287,7 @@ export const FinesDetail = () => {
                     icon="file-plus"
 
 
-                  ></RowNotificactions>
-                </> :
-
+                    ></RowNotificactions>
 
                 <div className='mt-4 ml-2'>
                   <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
@@ -379,11 +377,6 @@ export const FinesDetail = () => {
                   }}
                 />
                 <ImageContainer urls={[paymentproof]} name='Comprobante' />
-
-
-
-
-
 
               </Modal>
             </ModalContainer>

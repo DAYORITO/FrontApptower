@@ -75,6 +75,12 @@ export const RecoverPassword = () => {
         }
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    }
+
     return (
         <div className='container-login'>
             <div className="container-form login">
@@ -91,7 +97,7 @@ export const RecoverPassword = () => {
 
                         <form className="form" onSubmit={handleEmailSubmit}>
                             {/* <p>Ingresa tu correo  </p> */}
-                            <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} />
+                            <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} onKeyPress={handleKeyPress} />
 
                             <button className='boton-login'>Enviar Código</button><br />
                             <div>

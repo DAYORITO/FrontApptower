@@ -7,6 +7,7 @@ export const InputsLogIn = ({
   value: propValue,
   onChange,
   placeholder,
+  onKeyPress,
   id,
 
 }) => {
@@ -41,6 +42,7 @@ export const InputsLogIn = ({
         name={name}
         value={inputValue}
         onChange={handleChange}
+        onKeyDown={onKeyPress}
         id="inputLogin"
 
         className={inputValue ? 'input-filled' : ''}

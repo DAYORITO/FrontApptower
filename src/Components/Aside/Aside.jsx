@@ -186,21 +186,17 @@ export const Aside = () => {
                                 )}
 
                                 {allowedPermissions.includes('Vigilantes') && (
-                                    nameRole && (nameRole.toLocaleLowerCase() === 'administrador')
-                                        ? <DropDownNav module={"Vigilancia"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
-                                            <>
-                                                {allowedPermissions.includes('Vigilantes') && (
-                                                    <DropDownList subprocess={"Empresas de Seguridad"} href='watchman/enterprice'></DropDownList>
-                                                )}
-                                                {allowedPermissions.includes('Vigilantes') && (
-                                                    <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
-                                                )}
+                                    <DropDownNav module={"Vigilancia"} icon='fe fe-shield fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
+                                        <>
+                                            {allowedPermissions.includes('Vigilantes') && (
+                                                <DropDownList subprocess={"Empresas de Seguridad"} href='watchman/enterprice'></DropDownList>
+                                            )}
+                                            {allowedPermissions.includes('Vigilantes') && (
+                                                <DropDownList subprocess={"Vigilantes"} href='watchman/'></DropDownList>
+                                            )}
 
-                                            </>
-                                        </DropDownNav>
-                                        : nameRole && (nameRole.toLocaleLowerCase() === 'vigilante' || nameRole.toLocaleLowerCase() === 'vigilancia' || nameRole.toLocaleLowerCase() === 'seguridad')
-                                            ? <ListNav module={'Vigilantes'} href='watchman/shifts' icon='fe fe-shield' />
-                                            : null
+                                        </>
+                                    </DropDownNav>
                                 )}
 
 

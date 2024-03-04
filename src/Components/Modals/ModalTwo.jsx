@@ -19,6 +19,19 @@ export const ModalContainer = ({ children, showModal }) => {
 export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false }) => {
 
   const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async (e) => {
+    setLoading(true);
+    try {
+      await onClick(e);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div onClick={(e) => e.stopPropagation()} className="divModal__Container">
@@ -49,7 +62,7 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"
-                onClick={() => { onClickClose, showModal(false) }}
+                onClick={() => { showModal(false); }}
               >
                 Cerrar
               </button>
@@ -67,9 +80,15 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               }
               {
                 showSave ?
-                  <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
-                    Guardar Cambios
-                  </button> : null
+                  loading ? (
+                    <button className="btn mb-2 btn-primary" type="button" disabled>
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...
+                    </button>
+                  ) : (
+                    <button type="button" onClick={handleClick} className="btn mb-2 btn-primary">
+                      Guardar Cambios
+                    </button>
+                  ) : null
               }
 
 

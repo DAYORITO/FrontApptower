@@ -33,7 +33,7 @@ function Visitors() {
   const url = "https://apptowerbackend.onrender.com/api/";
   // const token = Cookies.get('token');
 
-
+  const [errors, setErrors] = useState([{}]);
   const filterOptions = [{ label: 'Nombre', value: 'name' }, { label: 'Documento', value: 'documentNumber' }, { label: 'Acceso', value: 'access' }];
   const [selectedFilterParam, setSelectedFilterParam] = useState('name');
   const accessOptions = [{ label: 'Permitido', value: true }, { label: 'Denegado', value: false }];
@@ -123,10 +123,10 @@ function Visitors() {
   useEffect(() => {
     if (loadApartments || loadResidentApartment || loadParkingSpaces || loadTowers) {
       setLoadingSpine(true);
-      console.log(dataApartment, 'dataApartment')
+      
     }
     else {
-      console.log(dataApartment, 'dataApartment')
+     
       setLoadingSpine(false);
     }
   }, [loadApartments, loadResidentApartment, loadParkingSpaces, loadTowers])
@@ -160,7 +160,7 @@ function Visitors() {
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
     };
   });
-  console.log("Estas son las towers", towers)
+ 
 
   const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
@@ -209,7 +209,6 @@ function Visitors() {
     if (dataApartment.data.apartments) {
       console.log(dataApartment.data.apartments, 'dataApartment1')
       setTowerData(organizeApartmentsByTower(dataApartment))
-      console.log(TowerData, 'towerData')
     }
     else {
       console.log('No hay datos de apartamentos2', dataApartment.data.apartments)
@@ -238,9 +237,9 @@ function Visitors() {
 
   };
   const handlePhoneSetted = (selectedValue) => {
-    selectedValue = selectedValue ? selectedValue : apartment;
+    selectedValue = selectedValue?.value ? selectedValue?.value : apartment;
     console.log("Selected Value:", selectedValue);
-    setApartment(parseInt(selectedValue))
+    setApartment(parseInt(selectedValue?.value))
     console.log('este es mi apartamento ' + apartment)
 
     if (dataResidentApartment.data && dataResidentApartment.data.apartmentResidents) {
@@ -325,17 +324,20 @@ function Visitors() {
     setShowModaload(true);
 
     try {
+      console.log('Esta es la fecha de hoy', new Date());
       // Crear el guestIncome
       const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
-        "startingDate": new Date(),
+        "startingDate": new Date().toISOString(),
         "departureDate": null,
-        "idApartment": apartment,
+        "idApartment": apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor,
       });
 
       if (guestIncomeError) {
+        const errorData = guestIncomeError.errorData;
+        setErrors(errorData);
         throw new Error('Error al crear el ingreso de huésped');
       }
 
@@ -536,9 +538,9 @@ function Visitors() {
           <>
             <ModalContainer ShowModal={setShowmodal}>
               <Modal title={"Crear Ingreso"} showModal={setShowmodal} onClick={handleSubmit}>
-                <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+                <InputsSelect name={'Torre'}  onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
                 <div className="mb-4">
-                  <Select2 name={'Apartamento'} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+                  <Select2 placeholder={'Apartamento'} identifier={"idApartment"} errors={errors} value={apartment} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
                 </div>
 
                 <Inputs name='Teléfono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
@@ -551,6 +553,7 @@ function Visitors() {
                     <Inputs
                       name={"Visitante"}
                       value={documentNumber}
+                      readonly={true}
                     ></Inputs>
                   </div>
                   <div style={{ width: "100%" }}>
@@ -571,7 +574,7 @@ function Visitors() {
                 {/* <Inputs name="Apartamento" list={'opciones'} options={apartmentsOptions}></Inputs> */}
                 {check1 && (
                   <InputsSelect
-                    name="Parqueadero"
+                    name="Parqueadero*"
                     id={"tipoingreso"}
                     onChange={(e) => setParkingGuestIncoming(e.target.value)}
                     options={parkingSpots}
@@ -580,6 +583,8 @@ function Visitors() {
                 <Inputs
                   name="Persona que permite el acceso"
                   type="text"
+                  identifier={"personAllowsAccess"}
+                  errors={errors}
                   onChange={(e) => {
                     setPersonAllowsAccess(e.target.value);
                   }}

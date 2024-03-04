@@ -103,7 +103,7 @@ export const Booking = () => {
 
   // Paginator
 
-  const { totalPages, currentPage, nextPage, previousPage, filteredData: spacesInfo } = usePaginator(spacesList, 4);
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: spacesInfo } = usePaginator(spacesList, 8);
 
 
 
@@ -125,8 +125,10 @@ export const Booking = () => {
                     key={space.idSpace}
                     title={space.spaceName}
                     img={space.image}
-                    status={space.status}
+                    small={false}
                     accions={false}
+                    A1={`Hora de apertura: ${new Date(`1970-01-01T${space?.schedule?.startHour}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} - Hora de cierre: ${new Date(`1970-01-01T${space?.schedule?.endHour}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}
+
                     to={`/admin/booking/calendar/${space.idSpace}`}
                   /> : null
               ))}

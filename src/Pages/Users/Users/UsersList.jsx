@@ -53,7 +53,7 @@ export const Users = () => {
 
     //paginator
 
-    const { totalPages, currentPage, nextPage, previousPage, filteredData: UserInfo } = usePaginator(userList, 10);
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: UserInfo } = usePaginator(userList, 5);
 
     const roleOptions = [
         { value: "allUsers", label: "Todos los usuarios" },

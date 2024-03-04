@@ -250,6 +250,8 @@ export const EnterpriceSecurity = () => {
 
                                     >
                                         <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
+                                        {enterprise.state === "Activo" ?
+                                            <Actions accion="Crear Vigilante" href={`/admin/watchman/create/${enterprise.idEnterpriseSecurity}`} /> : null}
                                     </Row>
                                 ))}
 
