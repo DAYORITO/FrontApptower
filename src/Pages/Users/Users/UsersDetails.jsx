@@ -47,7 +47,7 @@ export const UsersDetails = () => {
 
     const { id } = useParams();
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged } = useUserLogged()
 
     const [idUser, setIdUser] = useState(id)
     const [userImg, setUserImg] = useState("")
@@ -172,7 +172,7 @@ export const UsersDetails = () => {
 
         await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoUsers, data, url, 'Informacion actualizada correctamente');
         getuser(`users/${id}`)
-        
+
 
     }
 

@@ -57,7 +57,7 @@ export const ParkingSpaces = () => {
 
   // User logged
 
-  const idUserLogged = useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
   const { id } = useParams()
 

@@ -21,7 +21,7 @@ export const useUserLogged = () => {
     }
   }, []);
 
-  return idUserLogged;
+  return {idUserLogged, idRolLogged};
 };
 
 // Use capitalize first letter
@@ -116,17 +116,16 @@ export const filterPerSelect = (search, myData, searcher) => {
 
 
 
-
-export const showConfirmationDialog = async (title, message, confirmButtonText, deleteFunction) => {
+export const showConfirmationDialog = async (deleteFunction, modal) => {
   try {
     const result = await Swal.fire({
-      title: title,
-      text: message,
+      title: '¿Estas seguro?',
+      text: 'Esta acción no es reversible',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#007bff',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: confirmButtonText
+      confirmButtonText: 'Eliminar'
     });
 
     if (result.isConfirmed) {
@@ -135,12 +134,20 @@ export const showConfirmationDialog = async (title, message, confirmButtonText, 
         'Eliminado',
         'Eliminaste correctamente',
         'success'
-      );
+      ).then(() => {
+        modal(false);
+      });
     }
   } catch (error) {
     console.error("Error al eliminar:", error);
+    Swal.fire(
+      'Error',
+      'Ocurrió un error al eliminar.',
+      'error'
+    );
   }
 };
+
 
 
 export const postRequest = async (event, endPoint, method = "POST", modal, data, url, errors, navigate, socket) => {
@@ -159,13 +166,13 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'success',
       }).then(() => {
 
-        if (socket) {socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket')}
-        
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') }
 
-        if (typeof modal === 'function') {modal(false)}
-        
-        if (navigate) {navigate(-1);}
-        
+
+        if (typeof modal === 'function') { modal(false) }
+
+        if (navigate) { navigate(-1); }
+
 
       });
 
@@ -180,7 +187,7 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
         icon: 'error',
       });
       errors(error)
-      return { success: false, error:  error };
+      return { success: false, error: error };
     }
   } catch (error) {
     console.error('Error inesperado:', error);

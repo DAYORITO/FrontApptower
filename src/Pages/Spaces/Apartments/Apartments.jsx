@@ -111,8 +111,6 @@ export const Apartments = () => {
     : [];
 
 
-
-
   // Funtionality to search
 
   const [search, setSearch] = useState('');
@@ -265,7 +263,7 @@ export const Apartments = () => {
                 ></InputsSelect>
 
                 <Inputs type={"hidden"}
-                  value={idApartment} onChange={e => setIdApartmentOwner(e.target.value)}></Inputs>
+                  value={idApartment} onChange={e => setIdApartment(e.target.value)}></Inputs>
 
               </Modal>
             </ModalContainer>

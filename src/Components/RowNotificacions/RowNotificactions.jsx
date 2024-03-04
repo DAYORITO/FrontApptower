@@ -28,7 +28,6 @@ export const RowNotificactions = ({
 
   moment.locale('es');
 
-  console.log(to, 'to')
   to =
     to.owner ? `/admin/owners/details/${to.owner.idOwner}` :
       to.resident ? `/admin/resident/details/${to.resident.iduser}` :

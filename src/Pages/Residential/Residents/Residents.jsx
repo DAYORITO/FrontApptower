@@ -82,7 +82,7 @@ export const Residents = () => {
 
     const { id } = useParams()
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged } = useUserLogged()
 
     const [idResident, setIdResident] = useState("");
 

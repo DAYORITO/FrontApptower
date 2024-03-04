@@ -57,7 +57,7 @@ export const UsersCreate = () => {
 
     const { data: roles } = useFetchget('rols');
 
-    const idUserLogged = useUserLogged()
+    const {idUserLogged} = useUserLogged()
 
     console.log(idUserLogged, 'usuario logueado')
 

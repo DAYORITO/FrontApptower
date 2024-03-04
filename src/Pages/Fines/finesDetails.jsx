@@ -122,8 +122,7 @@ export const FinesDetail = () => {
     sePaymentproof(fines?.data?.fines?.paymentproof)
 
     setUserTaxer(fines?.data?.fines?.user)
-    console.log('fines', fines?.data?.fines)
-    console.log('comprobante', paymentproof)
+
 
   }, [fines?.data?.fines])
 
@@ -146,32 +145,29 @@ export const FinesDetail = () => {
 
     console.log("respuesta de api holi", response)
     if (response.response != null) {
-        setShowModaload(false);
-        Swal.fire({
-            icon: 'success',
-            title: 'Archivo actualizado',
-            showConfirmButton: false,
-            timer: 1500
-        })
-        //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
-        setState(dataToUpdate.state);
-        sePaymentproof(dataToUpdate.paymentproof);
+      setShowModaload(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Archivo actualizado',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      //se crea una constante que va a actualizar los datos para que en el momento que se actualice el estado se actualice la tabla
+      setState(dataToUpdate.state);
+      sePaymentproof(dataToUpdate.paymentproof);
 
     } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Algo salió mal!',
-        });
-        setShowModaload(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Algo salió mal!',
+      });
+      setShowModaload(false);
 
     }
 
 
-};
-
-
-
+  };
 
 
   return (
@@ -190,7 +186,7 @@ export const FinesDetail = () => {
               A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
               A6={`Estado de pago: ${state}`}
               actionOnClick2='Agregar comprobante de pago'
-              onClick2={()=>{setShowModal(true)}}
+              onClick2={() => { setShowModal(true) }}
               // A7={pdf}
               status={state}
             // onClick2={EqualUser ? openModalChangePassword : null}
@@ -208,7 +204,7 @@ export const FinesDetail = () => {
 
             <DropdownInfo
               name={`Informacion de la multa`}
-              // action1={'Editar datos de la multa'}
+            // action1={'Editar datos de la multa'}
             // onClickAction1={openModalEdit}
             >
 
@@ -273,34 +269,35 @@ export const FinesDetail = () => {
           <Acordions>
 
             <DropdownInfo
-              name={`${paymentproof?.length == undefined ? 0 : paymentproof?.length} ${paymentproof?.length == 1 ? 'comprobante' : 'Comprobantes'}`}
+              name={`Comprobante de pago`}
               action1={'Agregar comporbante de pago'}
               onClickAction1={openProofFilesModal}
             >
 
-              {loadingFines ? <SmalSpinner /> :
-                paymentproof && paymentproof.length > 0 ? (
-                  paymentproof.map((paymentproof, index) => (
+              {loadingFines ? <SmalSpinner /> : paymentproof ?
+                <>
+                  <RowNotificactions
 
-                    <RowNotificactions
+                    // Information
+                    img={paymentproof}
+                    to={paymentproof}
+                    name={'Valor pagado: '}
+                    lastName={amount}
+                    msg={'Comprobante de pago'}
+                    icon="file-plus"
 
-                      // Information
-                      to={paymentproof}
-                      name={'Comprobante'}
-                      lastName={index + 1}
-                      msg={'Comprobante de pago'}
-                      icon="x-square"
+
+                  ></RowNotificactions>
+                </> :
 
 
-                    ></RowNotificactions>
+                <div className='mt-4 ml-2'>
+                  <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
 
-                  ))
-                ) : (
-                  <div className='mt-4 ml-2'>
-                    <NotificationsAlert onClick={() => console.log('hola')} msg={`agregar un comprobante.`} />
+                </div>
 
-                  </div>
-                )}
+
+              }
 
             </DropdownInfo>
 
@@ -310,59 +307,59 @@ export const FinesDetail = () => {
 
       </Details >
       {showModal &&
-                createPortal(
-                    <>
-                        <ModalContainer ShowModal={setShowModal}>
-                            <Modal
-                                showModal={setShowModal}
-                                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
-                                title={"Comprobante de pago"}
-                                
-                            >
-                                {
-                      
-                                        <div className="d-flex flex-column justify-content-center align-items-center">
-                                            <ImageContainer urls={paymentproof} />
-                                            <div style={{ width: "200px", height: "200px" }}>
-                                                <Uploader label={"Agregar archivo"}
-                                                    onChange={(e) => {
-                                                        setPaymentproofFiles(e.target.files[0]);
-                                                    }}
-                                                />
-                                            </div>
+        createPortal(
+          <>
+            <ModalContainer ShowModal={setShowModal}>
+              <Modal
+                showModal={setShowModal}
+                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
+                title={"Comprobante de pago"}
+
+              >
+                {
+
+                  <div className="d-flex flex-column justify-content-center align-items-center">
+                    <ImageContainer urls={paymentproof} />
+                    <div style={{ width: "200px", height: "200px" }}>
+                      <Uploader label={"Agregar archivo"}
+                        onChange={(e) => {
+                          setPaymentproofFiles(e.target.files[0]);
+                        }}
+                      />
+                    </div>
 
 
-                                        </div>
+                  </div>
 
-                                }
-                            </Modal>
-                        </ModalContainer>
-                    </>,
-                    document.getElementById("modalRender")
-                )
+                }
+              </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )
 
-            }
+      }
             // {showModaload &&
-                createPortal(
-                    <>
-                        <ModalContainerload ShowModal={setShowModaload}>
-                            <Modaload
-                                showModal={setShowModaload}
-                            >
-                                <div className='d-flex justify-content-center'>
-                                    <l-dot-spinner
-                                        size="50"
-                                        speed="2"
-                                        color="black"
-                                    ></l-dot-spinner>
-                                </div>
+        createPortal(
+          <>
+            <ModalContainerload ShowModal={setShowModaload}>
+              <Modaload
+                showModal={setShowModaload}
+              >
+                <div className='d-flex justify-content-center'>
+                  <l-dot-spinner
+                    size="50"
+                    speed="2"
+                    color="black"
+                  ></l-dot-spinner>
+                </div>
 
 
-                            </Modaload>
-                        </ModalContainerload>
-                    </>,
-                    document.getElementById("modalRender")
-                )}
+              </Modaload>
+            </ModalContainerload>
+          </>,
+          document.getElementById("modalRender")
+        )}
 
 
       {addProofFilesModal &&
@@ -371,7 +368,7 @@ export const FinesDetail = () => {
             <ModalContainer ShowModal={setAaddProofFilesModal}>
               <Modal
                 showModal={setAaddProofFilesModal}
-                onClick={() => console.log('Hola')}
+                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
                 title={"Agregar comprobante de pago"}
               // showSave={showevidences ? false : true}
               >
@@ -381,7 +378,7 @@ export const FinesDetail = () => {
                     setFile(e.target.files);
                   }}
                 />
-                <ImageContainer urls={paymentproof} />
+                <ImageContainer urls={[paymentproof]} name='Comprobante' />
 
 
 

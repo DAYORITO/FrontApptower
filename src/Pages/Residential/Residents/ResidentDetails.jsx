@@ -44,7 +44,7 @@ export const ResidentDetails = () => {
 
     const { id } = useParams();
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged } = useUserLogged()
 
     const [idResident, setIdResident] = useState('')
     const [idUser, setIdUser] = useState("")
