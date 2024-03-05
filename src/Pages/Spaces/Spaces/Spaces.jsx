@@ -33,7 +33,7 @@ export const Spaces = () => {
 
   // User logged
 
-  const idUserLogged = useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
   console.log(spaces, 'spaces')
@@ -92,7 +92,7 @@ export const Spaces = () => {
   const openModal = (data) => {
 
     setErrorList('')
-    
+
     console.log(data, 'data?.spaceType')
     setIdSpace(data?.idSpace)
     setSpaceType(data?.spaceType)

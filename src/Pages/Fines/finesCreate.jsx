@@ -30,7 +30,7 @@ function FinesCreate() {
 
   // User Logeed
 
-  const idUserLogged = useUserLogged()
+  const {idUserLogged} = useUserLogged()
 
   const { id } = useParams();
   const [fineType, setFineType] = useState("");

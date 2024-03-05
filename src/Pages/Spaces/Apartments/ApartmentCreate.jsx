@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router'
 import FormColumn from "../../../Components/Forms/FormColumn";
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import { handlePostRequest, postRequest } from '../../../Helpers/Helpers'
+import { bools } from '../../../Hooks/consts.hooks'
 
 
 export const ApartmentCreate = () => {
@@ -42,6 +43,14 @@ export const ApartmentCreate = () => {
   const [area, setArea] = useState("");
   const [status, setStatus] = useState("Active");
 
+  let [isUniqueTower, setIsUniqueTower] = useState('false');
+
+  const [lastApartmentNumber, setLastApartmentNumber] = useState(null);
+
+  const [errorList, setErrorList] = useState([]);
+
+
+
   const navigate = useNavigate();
 
 
@@ -58,21 +67,21 @@ export const ApartmentCreate = () => {
 
     const data = {
 
-      apartmentsFloor: parseInt(apartmentsFloor),
-      idTower: parseInt(tower),
-      rangeStart: parseInt(rangeStart),
-      rangeEnd  : parseInt(rangeEnd),
-      area: parseFloat(area)
+      apartmentsFloor: apartmentsFloor,
+      idTower: tower,
+      rangeStart: rangeStart,
+      rangeEnd: rangeEnd,
+      area: area,
+
+      isUniqueTower: isUniqueTower,
+      lastApartmentNumber: lastApartmentNumber
+
     };
 
-    console.log(data, "data pa crear")
+    await postRequest(event, 'apartments', 'POST', null, data, url, setErrorList, navigate, null);
 
-    await postRequest(event, 'apartments', 'POST', {}, data, url);
-
-    navigate(-1)
 
   };
-
 
 
 
@@ -82,24 +91,49 @@ export const ApartmentCreate = () => {
 
       <FormContainer name='Crear apartamento' buttons={<FormButton name='Crear apartamento' backButton='Regresar' to='/admin/apartaments/' onClick={handleCreateApartment} />}>
 
-        {/* <FormColumn> */}
-        <InputsSelect id={"select"} options={towerList} name={"Torre"}
-          value={tower} onChange={e => setTower(e.target.value)}
-        ></InputsSelect>
-        <Inputs name="Numero de apartamentos por piso " type={"number"}
-          value={apartmentsFloor} onChange={e => setApartmentsFloor(e.target.value)}></Inputs>
+          <InputsSelect id={"select"} options={towerList} name={"Torre"}
+            identifier={'idTower'} errors={errorList}
+            value={tower} onChange={e => setTower(e.target.value)}
+          ></InputsSelect>
 
-        <Inputs name="Planta o piso inicial" type={"number"}
-          value={rangeStart} onChange={e => setRangeStart(e.target.value)}></Inputs>
+          <InputsSelect
+            id={"select"}
+            options={bools}
+            name={"¿Numeración única?"}
+            identifier={'isUniqueTower'}
+            errors={errorList}
+            value={isUniqueTower}
+            onChange={e => setIsUniqueTower(e.target.value)}
+          ></InputsSelect>
 
-        <Inputs name="Planta o piso final " type={"number"}
-          value={rangeEnd} onChange={e => setRangeEnd(e.target.value)}></Inputs>
-        {/* </FormColumn> */}
-        {/* <FormColumn> */}
+          {
+            isUniqueTower == 'false' ? (
+              <Inputs
+                name="Último apartamento del bloque anterior."
+                type={"number"}
+                identifier={'lastApartmentNumber'}
+                errors={errorList}
+                value={lastApartmentNumber}
+                onChange={e => setLastApartmentNumber(e.target.value)}
+              ></Inputs>
+            ) : null
+          }
+          <Inputs name="Numero de apartamentos por piso " type={"number"}
+            identifier={'apartmentsFloor'} errors={errorList}
+            value={apartmentsFloor} onChange={e => setApartmentsFloor(e.target.value)}></Inputs>
 
-        <Inputs name="Area" type="number"
-          value={area} onChange={e => setArea(e.target.value)}></Inputs>
-        {/* </FormColumn> */}
+          <Inputs name="Planta o piso inicial" type={"number"}
+            identifier={'rangeStart'} errors={errorList}
+            value={rangeStart} onChange={e => setRangeStart(e.target.value)}></Inputs>
+
+          <Inputs name="Planta o piso final " type={"number"}
+            identifier={'rangeEnd'} errors={errorList}
+            value={rangeEnd} onChange={e => setRangeEnd(e.target.value)}></Inputs>
+
+
+          <Inputs name="Area" type="number"
+            identifier={'area'} errors={errorList}
+            value={area} onChange={e => setArea(e.target.value)}></Inputs>
 
       </FormContainer>
     </>)

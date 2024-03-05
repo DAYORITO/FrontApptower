@@ -48,7 +48,7 @@ export const OwnerDetail = () => {
 
   // User logged
 
-  const idUserLogged = useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
   const [idOwner, setIdOwner] = useState(id)
   const [idUser, setIdUser] = useState("")
@@ -79,6 +79,8 @@ export const OwnerDetail = () => {
 
   const [newPdf, setNewPdf] = useState("")
 
+  const [errorList, setErrorList] = useState([])
+
 
   // Owners relations
 
@@ -107,6 +109,7 @@ export const OwnerDetail = () => {
     setSex(owner?.data?.owner?.user?.sex)
     setEmail(owner?.data?.owner?.user?.email)
     setPhone(owner?.data?.owner?.user?.phone)
+
     setUserStatus(owner?.data?.owner?.user?.status)
 
     getOwners("owners")
@@ -189,7 +192,7 @@ export const OwnerDetail = () => {
 
     console.log("edit data", data)
 
-    await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoOwner, data, url, null, null, socket);
+    await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoOwner, data, url, setErrorList, null, socket);
     getOwner(`owners/${id}`)
 
   }
@@ -213,18 +216,36 @@ export const OwnerDetail = () => {
 
       idUserLogged: idUserLogged,
 
-      idApartment: parseInt(idApartment),
+      idApartment: idApartment,
       idOwner: idOwner,
       OwnershipStartDate: ownershipStartDate,
-      // status: "active"
 
     }
 
-    console.log(data)
 
-    await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, null, null, socket)
+    await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, setErrorList, null, socket)
 
     getOwner(`owners/${id}`)
+
+  };
+
+  // Change status owener
+
+  const ChangeStatusOwner = async (event) => {
+
+    const data = {
+
+      // User logged
+
+      idUserLogged: idUserLogged,
+      idOwner: idOwner,
+
+    }
+
+
+    await postRequest(event, 'owners', 'PUT', null, data, url, setErrorList, null, socket)
+
+    getOwner(`owners/${id}`);
 
   };
 
@@ -233,6 +254,7 @@ export const OwnerDetail = () => {
 
   const ownersList = owners && owners?.data?.owners
     ? owners?.data?.owners
+      .filter(owner => owner.status === 'Active')
       .map(owner => ({
         value: owner.idOwner,
         label: ` ${owner.user.name} ${owner.user.lastName} - ${owner.user.document}`
@@ -244,6 +266,7 @@ export const OwnerDetail = () => {
   const apartmentList = apartmentss?.data && apartmentss?.data?.apartments
 
     ? apartmentss.data.apartments
+      .filter(apartment => apartment.status === 'Active')
       .map(apartment => ({
         value: apartment.idApartment,
         label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
@@ -297,7 +320,8 @@ export const OwnerDetail = () => {
               A7={pdf}
               status={statusOwner}
               onClickEdit={openModalEdit}
-            // onClickEdit={setShowModalEditApartment}
+              actionOnClick2={statusOwner == 'Active' ? 'Desactivar' : 'Activar'}
+              onClick2={() => ChangeStatusOwner(event)}
             />
 
         }
@@ -372,15 +396,18 @@ export const OwnerDetail = () => {
 
               >
 
-                <InputsSelect id={"select"} options={ownersList} name={"Propietario"}
+                <InputsSelect disabled id={"select"} options={ownersList} name={"Propietario"}
+                  identifier={'idOwner'} errors={errorList}
                   value={idOwner} onChange={e => setIdOwner(e.target.value)}
                 ></InputsSelect>
 
                 <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}
+                  identifier={'idApartment'} errors={errorList}
                   value={idApartment} onChange={e => setIdApartment(e.target.value)}
                 ></InputsSelect>
 
                 <Inputs name="Fecha desde cuando es propietario" type={"date"}
+                  identifier={'OwnershipStartDate'} errors={errorList}
                   value={ownershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
 
 
@@ -404,29 +431,37 @@ export const OwnerDetail = () => {
                 <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
 
                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
+                  identifier={'docType'} errors={errorList}
                   value={docType} onChange={e => setDocType(e.target.value)}
                 ></InputsSelect>
 
                 <Inputs name="Numero de documento" type={"text"}
+                  identifier={'document'} errors={errorList}
                   value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
 
                 <Inputs name="Nombres" type={"text"}
+                  identifier={'name'} errors={errorList}
                   value={name} onChange={e => setName(e.target.value)}></Inputs>
 
                 <Inputs name="Apellidor" type={"text"}
+                  identifier={'lastName'} errors={errorList}
                   value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
 
                 <Inputs name="Fecha de cumpleaños" type={"date"}
+                  identifier={'birthday'} errors={errorList}
                   value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
 
                 <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+                  identifier={'sex'} errors={errorList}
                   value={sex} onChange={e => setSex(e.target.value)}
                 ></InputsSelect>
 
                 <Inputs name="Correo electronico" type={"text"}
+                  identifier={'email'} errors={errorList}
                   value={email} onChange={e => setEmail(e.target.value)}></Inputs>
 
                 <Inputs name="Numero de telefono" type={"text"}
+                  identifier={'phone'} errors={errorList}
                   value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
 
                 <Inputs type={"hidden"}
