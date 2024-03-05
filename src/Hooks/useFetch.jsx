@@ -246,10 +246,11 @@ export const useFetchpost = async (endpoint, data) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.log('Error data:', errorData);
             const error = new Error(`HTTP error! status: ${response.status}`);
             error.errorData = errorData; // Agrega errorData al objeto de error para nuestras validaciones
-            throw error;
+            console.log('Error data:', errorData);
+
+            throw errorData;
             // return { response: null, error: errorData };
         }
 
@@ -262,8 +263,6 @@ export const useFetchpost = async (endpoint, data) => {
             console.log('Error:', error);
         }
         return { response: null, error };
-    } finally {
-        abortController.abort();
     }
 
 

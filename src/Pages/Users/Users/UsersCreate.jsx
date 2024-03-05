@@ -39,7 +39,7 @@ export const UsersCreate = () => {
     const [residentType, setResidentType] = useState("");
     const [dateOfbirth, setDateOfBirth] = useState("");
     const [idApartment, setIdApartment] = useState("");
-    const [errors, setErrors] = useState([{}]);
+    const [errors, setErrors] = useState([]);
     console.log(errors, "errors daata")
 
 
@@ -287,7 +287,7 @@ export const UsersCreate = () => {
     return (
         <>
             <FormContainer
-                name='Crear Usuario'
+                name='Crear usuario'
                 buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/users/' onClick={handleSubmit} />}
             >
 
@@ -312,34 +312,34 @@ export const UsersCreate = () => {
                         {namerole === 'Residente' || namerole === 'Residentes' ? (
                             <>
 
-                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
+                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Información personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true}
+                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'} required={true}
                                     ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} errors={errors} identifier={'document'} required={true}></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} required={true}></Inputs>
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} required={true}></Inputs>
 
                                 </FormColumn>
 
-                                <FormColumn> <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                <FormColumn> <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'} required={true}
                                     inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                     errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
                                 /></FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} type='number' validate={shouldValidate} required={true}></Inputs>
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} type='number' errors={errors} identifier={'phone'} required={true}></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
@@ -349,7 +349,9 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <Inputs name="Fecha de nacimiento" type="date" value={birthday} onChange={e => setBirthday(e.target.value)}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
-                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
+                                        errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+                                        errors={errors} identifier={'birthday'}
+                                    ></Inputs>
                                 </FormColumn>
                                 <FormColumn>
                                     <InputsSelect
@@ -362,7 +364,7 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} errors={errors} identifier={''} required={true}></InputsSelect>
 
                                 </FormColumn>
                                 <FormColumn>
@@ -373,24 +375,21 @@ export const UsersCreate = () => {
 
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} required={true}></InputsSelect>
 
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
 
                                 </FormColumn>
-
-
-
 
                             </>
                         ) : namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad' ? (
                             <>
-                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
+                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Información personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} validate={shouldValidate} required={true} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'} required={true} ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
@@ -401,21 +400,22 @@ export const UsersCreate = () => {
                                         onChange={e => setDocument(e.target.value)}
                                         inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isDocumentTaken ? "El documento ya existe" : null}
-                                        validate={shouldValidate}
+                                        identifier={"document"}
+                                        errors={errors}
                                         required={true}
                                     />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} ></Inputs>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} required={true} ></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} required={true}></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'} required={true}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
@@ -423,18 +423,18 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Select2 placeholder={'Empresa de Seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
+                                    <Select2 placeholder={'Empresa de seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
 
                                 </FormColumn>
 
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'} required={true}></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
-                                        validate={shouldValidate} required={true}
+                                    <Inputs name="Fecha nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
+                                        errors={errors} identifier={'birthday'} required={true}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
                                 </FormColumn>
@@ -449,8 +449,8 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
-                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} validate={shouldValidate} required={true} />
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
                                 </FormColumn>
 
                             </>
@@ -459,7 +459,7 @@ export const UsersCreate = () => {
                             <>
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={''} required={true}></InputsSelect>
 
                                 </FormColumn>
 
@@ -478,15 +478,15 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} required={true} />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} required={true} />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'} required={true}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
@@ -494,13 +494,15 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true} />
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'} required={true} />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} validate={shouldValidate} required={true}
+                                    <Inputs name="Fecha de nacimiento" placeholder='Fecha de nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
+                                        errors={errors} identifier={'birthday'} required={true}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
+
                                     <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
                                         onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
 
@@ -508,16 +510,16 @@ export const UsersCreate = () => {
 
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} required={true} validate={shouldValidate} />
-                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true} validate={shouldValidate} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} required={true} errors={errors} identifier={'password'} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true} errors={errors} identifier={'password'} />
                                 </FormColumn>
 
                             </>
                         ) :
                             <>
-                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
+                                <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Información personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={'docType'} required={true}></InputsSelect>
 
                                 </FormColumn>
 
@@ -567,7 +569,7 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de Nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} required={true}
+                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} required={true}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
                                         errors={errors}
@@ -584,7 +586,7 @@ export const UsersCreate = () => {
                                         errors={errors}
                                         identifier={"password"}
                                     />
-                                    <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true}
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true}
                                         errors={errors}
                                         identifier={"password"}
                                     />

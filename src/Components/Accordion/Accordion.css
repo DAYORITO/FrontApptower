@@ -45,3 +45,8 @@
 .accordion-content.active {
     display: block;
 }
+
+.accordion-error {
+    border: 1px solid rgb(233, 0, 0);
+    border-radius: 13px;
+}

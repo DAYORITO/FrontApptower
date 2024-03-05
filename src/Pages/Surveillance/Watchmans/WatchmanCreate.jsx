@@ -30,6 +30,9 @@ export const WatchmanCreate = () => {
     const [nameEnterprice, setNameEnterprice] = useState(null)
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
     const [enterprice, setEnterprice] = useState(id || null);
+    const [errors, setErrors] = useState([]);
+
+    console.log(errors, 'errors')
 
 
 
@@ -151,17 +154,6 @@ export const WatchmanCreate = () => {
 
 
 
-        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, rellene todos los campos requeridos',
-                icon: 'error',
-            });
-            //Activa la validacion de los campos cuando se envia el formulario
-            setShouldValidate(true);
-            return;
-        }
-
         if (isDocumentTaken || isEmailTaken) {
             Swal.fire({
                 title: 'Error',
@@ -171,14 +163,14 @@ export const WatchmanCreate = () => {
             return;
         }
 
-        if (!enterprice) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, seleccione una empresa de seguridad',
-                icon: 'error',
-            });
-            return;
-        }
+        // if (!enterprice) {
+        //     Swal.fire({
+        //         title: 'Error',
+        //         text: 'Por favor, seleccione una empresa de seguridad',
+        //         icon: 'error',
+        //     });
+        //     return;
+        // }
 
         if (password !== confirmPassword) {
             Swal.fire({
@@ -186,17 +178,6 @@ export const WatchmanCreate = () => {
                 text: 'Las contraseñas no coinciden',
                 icon: 'error',
             });
-            return;
-        }
-
-        if (!documentType || !name || !email || !password || !document || !lastname || !phone || !confirmPassword || !dateOfbirth || !pdf) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, rellene todos los campos requeridos',
-                icon: 'error',
-            });
-            //Activa la validacion de los campos cuando se envia el formulario
-            setShouldValidate(true);
             return;
         }
 
@@ -258,6 +239,7 @@ export const WatchmanCreate = () => {
                 icon: 'error',
             });
         }
+        setErrors(userResponse.error);
     };
 
     return (
