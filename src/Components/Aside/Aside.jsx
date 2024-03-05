@@ -11,13 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { Modal, ModalContainer, ModalNotifications } from '../Modals/ModalTwo';
 import { useAllowedPermissions, useFetch, useFetchUserInformation, useFetchget } from '../../Hooks/useFetch';
-import { Spinner } from '../Spinner/Spinner';
-import { io } from 'socket.io-client';
-import { id } from 'date-fns/locale';
+
 import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
 import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
 import { SocketContext } from '../../Context/SocketContext';
-import LogoApptower from '../../assets/Logodomus.png';
 
 export const Aside = () => {
 
@@ -27,7 +24,8 @@ export const Aside = () => {
 
     // Socket
 
-    const { notifications, socket } = useContext(SocketContext)
+    const { notifications, socket, setNotifications } = useContext(SocketContext)
+
 
     //Consulta Permisos
 
@@ -74,13 +72,6 @@ export const Aside = () => {
     const rutadetailsapartment = `apartments/details/${idApartment}`
 
 
-
-
-    // Notifications
-
-    const [notificationsList, setNotificationsList] = useState(notifications)
-
-
     // Seen notification
 
     const [idnotification, setIdNotification] = useState('')
@@ -93,7 +84,7 @@ export const Aside = () => {
 
         socket.on('notifications-user', (notificationsUpdated) => {
 
-            setNotificationsList(notificationsUpdated)
+            setNotifications(notificationsUpdated)
 
         })
 
@@ -178,7 +169,7 @@ export const Aside = () => {
                                 )}
 
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav onClick={openNotifications} A1={notificationsList.filter(notification => !notification.seen).length} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
+                                    <ListNav onClick={openNotifications} A1={notifications?.filter(notification => !notification.seen).length} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (
@@ -310,8 +301,8 @@ export const Aside = () => {
                             <ModalNotifications showModal={setNotificationsModal}>
 
                                 {
-                                    notificationsList == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
-                                        notificationsList?.map((notification, index) => {
+                                    notifications?.length == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
+                                    notifications?.map((notification, index) => {
                                             return (
                                                 <RowNotificactions
                                                     isNotification={true}

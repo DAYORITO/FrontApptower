@@ -292,6 +292,7 @@ export const FinesDetail = () => {
           </Acordions>
         </InfoDetails>
       </Details >
+
       {showModal &&
         createPortal(
           <>

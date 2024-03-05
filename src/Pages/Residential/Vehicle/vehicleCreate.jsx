@@ -87,7 +87,7 @@ export const VehicleCreate = (props) => {
                 </InputsSelect>
                 <Inputs name={"Placa"} value={plate}
                     identifier={'licenseplate'} errors={errorList}
-                    type="text" onChange={e => setPlate(e.target.value)}>
+                    type="text" onChange={e => setPlate(e.target.value.toUpperCase())}>
 
                 </Inputs>
 
