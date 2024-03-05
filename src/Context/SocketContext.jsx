@@ -21,8 +21,10 @@ export const SocketProvider = ({ children }) => {
 
     }, [socket, notifications]);
 
+    console.log(notifications, 'notifications')
+
     return (
-        <SocketContext.Provider value={{ socket, online, notifications}} >
+        <SocketContext.Provider value={{ socket, online, notifications, setNotifications}} >
 
             {children}
 

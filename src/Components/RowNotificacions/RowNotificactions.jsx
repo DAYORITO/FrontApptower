@@ -40,6 +40,7 @@ export const RowNotificactions = ({
                   to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
                     to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
+  console.log(to, 'to')
   return (
 
     <Link onClick={onclick} to={to}>

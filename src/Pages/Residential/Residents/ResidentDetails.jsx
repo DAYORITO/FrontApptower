@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Details } from "../../../Components/Details/details"
 import Inputs from '../../../Components/Inputs/Inputs'
@@ -30,6 +30,7 @@ import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import Swal from 'sweetalert2'
+import { SocketContext } from '../../../Context/SocketContext'
 const token = Cookies.get('token');
 
 export const ResidentDetails = () => {
@@ -45,6 +46,10 @@ export const ResidentDetails = () => {
     const { id } = useParams();
 
     const { idUserLogged } = useUserLogged()
+
+    // Socket
+
+    const { socket } = useContext(SocketContext)
 
     const [idResident, setIdResident] = useState('')
     const [idUser, setIdUser] = useState("")
@@ -82,7 +87,7 @@ export const ResidentDetails = () => {
 
     const [age, setAge] = useState(null);
 
-
+    const [errorList, setErrorList] = useState([])
 
 
 
@@ -199,9 +204,8 @@ export const ResidentDetails = () => {
             phone: phone,
         }
 
-        console.log("edit data", data)
 
-        await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInforesident, data, url);
+        await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInforesident, data, url, setErrorList, null, socket);
         getResident(`residents/${id}`)
 
     }
@@ -212,7 +216,7 @@ export const ResidentDetails = () => {
 
     const openModalAssingApartmentToresident = () => {
 
-        setIdResident()
+        setIdResident(idResident)
         setModalAssigApartmentToresident(true)
 
     }
@@ -221,6 +225,10 @@ export const ResidentDetails = () => {
 
         const data = {
 
+            // User logged
+
+            idUserLogged: idUserLogged,
+            
             idApartment: parseInt(idApartment),
             idResident: parseInt(idResident),
             residentStartDate: residentStartDate,
@@ -228,11 +236,9 @@ export const ResidentDetails = () => {
 
         }
 
-        console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'POST', {}, data, url)
+        await postRequest(event, 'aparmentResidents', 'POST', setModalAssigApartmentToresident, data, url, setErrorList, null, socket)
 
-        setModalAssigApartmentToresident(false)
         getResident(`residents/${id}`)
 
     };
@@ -242,6 +248,7 @@ export const ResidentDetails = () => {
 
     const residentsList = residents && residents?.data?.residents
         ? residents?.data?.residents
+            .filter(resident => resident.status === 'Active')
             .map(resident => ({
                 value: resident.idResident,
                 label: ` ${resident.user.name} ${resident.user.lastName} - ${resident.user.document}`
@@ -253,6 +260,7 @@ export const ResidentDetails = () => {
     const apartmentList = apartmentss?.data && apartmentss?.data?.apartments
 
         ? apartmentss.data.apartments
+            .filter(apartment => apartment.status === 'Active')
             .map(apartment => ({
                 value: apartment.idApartment,
                 label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
@@ -348,6 +356,26 @@ export const ResidentDetails = () => {
 
     }
 
+    // Change status resident
+
+    const ChangeStatusResident = async (event) => {
+
+        const data = {
+
+            // User logged
+
+            idUserLogged: idUserLogged,
+            idResident: idResident,
+
+        }
+
+
+        await postRequest(event, 'residents/status', 'PUT', null, data, url, setErrorList, null, socket)
+
+        getResident(`residents/${id}`)
+
+    };
+
 
 
 
@@ -373,7 +401,8 @@ export const ResidentDetails = () => {
                             A6={`Teléfono: ${phone}`}
                             A7={pdf}
                             status={statusResident}
-                            onClick2={EqualUser ? openModalChangePassword : null}
+                            actionOnClick2={EqualUser ? 'Cambiar contraseña.' : statusResident == 'Active' ? 'Desactivar' : 'Activar'}
+                            onClick2={EqualUser ? openModalChangePassword : () => ChangeStatusResident(event)}
                         // showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
@@ -467,19 +496,22 @@ export const ResidentDetails = () => {
                             <Modal
                                 onClick={CreateApartmentresident}
                                 showModal={setModalAssigApartmentToresident}
-                                title={`Asignar propiedad`}
+                                title={`Asignar apartamento.`}
 
                             >
 
-                                <InputsSelect id={"select"} options={residentsList} name={"Propietario"}
+                                <InputsSelect disabled id={"select"} options={residentsList} name={"Residente"}
+                                    identifier={'idResident'} errors={errorList}
                                     value={idResident} onChange={e => setIdResident(e.target.value)}
                                 ></InputsSelect>
 
-                                <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}
+                                <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                                    identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Fecha desde cuando es propietario" type={"date"}
+                                    identifier={'residentStartDate'} errors={errorList}
                                     value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
 
 
@@ -502,33 +534,41 @@ export const ResidentDetails = () => {
                                 title={"Editar informacion "}
 
                             >
-                                <Uploader name="img" formatos={['pdf']} label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
+                                    identifier={'docType'} errors={errorList}
                                     value={docType} onChange={e => setDocType(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Numero de documento" type={"text"}
+                                    identifier={'document'} errors={errorList}
                                     value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
 
                                 <Inputs name="Nombres" type={"text"}
+                                    identifier={'name'} errors={errorList}
                                     value={name} onChange={e => setName(e.target.value)}></Inputs>
 
                                 <Inputs name="Apellidor" type={"text"}
+                                    identifier={'lastName'} errors={errorList}
                                     value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
 
                                 <Inputs name="Fecha de cumpleaños" type={"date"}
+                                    identifier={'birthday'} errors={errorList}
                                     value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
 
                                 <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+                                    identifier={'sex'} errors={errorList}
                                     value={sex} onChange={e => setSex(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Correo electronico" type={"text"}
+                                    identifier={'email'} errors={errorList}
                                     value={email} onChange={e => setEmail(e.target.value)}></Inputs>
 
                                 <Inputs name="Numero de telefono" type={"text"}
+                                    identifier={'phone'} errors={errorList}
                                     value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

@@ -726,7 +726,7 @@ export const ApartmentDetails = (props) => {
                                     <DropdownInfo
                                         name={`${vehiclesList.length} Vehiculos `}
                                         action1={`Agregar nuevo vehiculo`}
-                                        toAction1={`/admin/vehicle/${idApartment}`}>
+                                        toAction1={`/admin/vehicle/create/${id}`}>
 
                                         {loadingVehicles ? <SmalSpinner /> :
                                             vehiclesList.length > 0 ? (
@@ -744,7 +744,7 @@ export const ApartmentDetails = (props) => {
                                                     </Dropdownanchor>
                                                 ))
                                             ) : (
-                                                <NotificationsAlert to={`/admin/vehicle/create`} msg={` para agregar un vehiculo.`} />
+                                                <NotificationsAlert to={`/admin/vehicle/create/${id}`} msg={` para agregar un vehiculo.`} />
                                             )}
                                     </DropdownInfo>
 
