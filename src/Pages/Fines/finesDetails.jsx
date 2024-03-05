@@ -52,7 +52,7 @@ export const FinesDetail = () => {
 
   const { id } = useParams();
 
-  const idUserLogged = useUserLogged()
+  const {idUserLogged }= useUserLogged()
 
   // Socket
 
@@ -268,7 +268,7 @@ export const FinesDetail = () => {
 
           <Acordions>
             <DropdownInfo
-              name={`Comprobante de pago`}
+              name={'Comprobante de pago'}
               action1={'Agregar comporbante de pago'}
               onClickAction1={openProofFilesModal}
             >

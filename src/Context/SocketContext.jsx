@@ -10,7 +10,7 @@ export const SocketProvider = ({ children }) => {
 
     const [notifications, setNotifications] = useState([]);
 
-    const idUserLogged = useUserLogged()
+    const {idUserLogged} = useUserLogged()
 
     useEffect(() => {
 

@@ -66,7 +66,7 @@ const GuestIncomeDetails = () => {
     const { id } = useParams();
     dotSpinner.register();
 
-    const idUserLogged = useUserLogged()
+    const {idUserLogged} = useUserLogged()
 
     // Socket
 

@@ -28,7 +28,7 @@ export const OwnersCreate = () => {
 
   // User logged
 
-  const idUserLogged = useUserLogged()
+  const {idUserLogged} = useUserLogged()
 
 
   // const [userImg, setUserImg] = useState("");

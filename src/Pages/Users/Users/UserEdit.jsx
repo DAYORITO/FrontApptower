@@ -21,7 +21,7 @@ export const UsersEdit = () => {
 
     const { iduser } = useParams();
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged } = useUserLogged()
 
     const [editedUser, setEditedUser] = useState({});
     const [usersData, setUsersData] = useState([]);

@@ -86,13 +86,19 @@ export const SpacesCreate = () => {
           <Inputs name="Capacidad" type="number" identifier={'capacity'} errors={errorList}
             value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
 
-          <h6 className='mb-4 text-muted'>Disponibilidad de {spaceName}</h6>
+          {/* <h6 className='mb-4 text-muted'>Disponibilidad de {spaceName}</h6> */}
 
           <Inputs name="Hora inicial" type="time" identifier={'schedule'} errors={errorList}
             value={startHour} onChange={e => setStartHour(e.target.value)}></Inputs>
-
           <Inputs name="Hora final" type="time" identifier={'schedule'} errors={errorList}
             value={endHour} onChange={e => setEndHour(e.target.value)}></Inputs>
+
+          <FormColumn>
+
+          </FormColumn>
+
+
+
 
         </FormColumn>
 
@@ -104,6 +110,6 @@ export const SpacesCreate = () => {
 
         {/* <Inputs name="Estado"
           value={status} onChange={e => setStatus(e.target.value)}></Inputs> */}
-      </FormContainer>
+      </FormContainer >
     </>)
 }

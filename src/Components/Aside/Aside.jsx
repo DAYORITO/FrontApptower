@@ -203,6 +203,7 @@ export const Aside = () => {
                                         {allowedPermissions.includes('Propietarios') ||
                                             allowedPermissions.includes('Residentes') ||
                                             allowedPermissions.includes('Visitantes') ||
+                                            allowedPermissions.includes('Ingresos') ||
                                             allowedPermissions.includes('Vehiculos') ? (
                                             <DropDownNav module={"Residencial"} icon='fe fe-users fe-24' isNavClosed={isCloset ? 'expended' : 'collapsed'}>
 
