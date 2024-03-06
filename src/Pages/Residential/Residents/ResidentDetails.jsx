@@ -126,6 +126,9 @@ export const ResidentDetails = () => {
         setPhone(resident?.data?.resident?.user?.phone)
         setUserStatus(resident?.data?.resident?.user?.status)
 
+        setPdf(resident?.data?.resident?.user?.pdf)
+
+
         getResidents("residents")
         getApartments("apartments")
 
@@ -228,7 +231,7 @@ export const ResidentDetails = () => {
             // User logged
 
             idUserLogged: idUserLogged,
-            
+
             idApartment: parseInt(idApartment),
             idResident: parseInt(idResident),
             residentStartDate: residentStartDate,
@@ -534,6 +537,8 @@ export const ResidentDetails = () => {
                                 title={"Editar informacion "}
 
                             >
+
+                                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                                     identifier={'docType'} errors={errorList}

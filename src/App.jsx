@@ -66,7 +66,6 @@ import { AuthProvider } from "./Context/AuthContext";
 import { SocketContext } from "./Context/SocketContext";
 import { AssignShiftsWatchman } from "./Pages/Surveillance/Watchmans/assignShiftsWatchman";
 
-
 const App = () => {
 
     const { socket, online } = useContext(SocketContext)

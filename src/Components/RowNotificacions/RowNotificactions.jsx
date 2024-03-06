@@ -18,7 +18,8 @@ export const RowNotificactions = ({
   isNotification = false,
   who,
   img,
-  info
+  info,
+  toOpen = false
 
 
 
@@ -36,15 +37,24 @@ export const RowNotificactions = ({
             to.guest_income ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}` :
               to.space ? `/admin/spaces/` :
 
-                to?.idrole == 2 ? `/adm in/resident/details/${to.iduser}` :
+                to?.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
                   to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
                     to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
   console.log(to, 'to')
+
+  const handleLinkClick = (event) => {
+    event.preventDefault();
+    window.open(to, '_blank');
+
+    if (onclick) {
+      onclick();
+    }
+  };
   return (
 
-    <Link onClick={onclick} to={to}>
-      <div className={`list-group-item notification hoverable`} >
+    <Link to={toOpen ? '' : to} onClick={onclick}>
+      <div className={`list-group-item notification hoverable`} onClick={toOpen ? handleLinkClick : ''} >
         <div className="row">
           <div className="col-auto">
             <div className="circle circle-sm">

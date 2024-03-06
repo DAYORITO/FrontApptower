@@ -20,7 +20,7 @@ import { DropdownInfo } from "../../Components/DropdownInfo/DropdownInfo"
 import { Acordions } from "../../Components/Acordions/Acordions"
 import { RowNotificactions } from "../../Components/RowNotificacions/RowNotificactions"
 import { NotificationsAlert } from "../../Components/NotificationsAlert/NotificationsAlert"
-import { ModalContainer, Modal } from "../../Components/Modals/ModalTwo"
+import { ModalContainer, Modal, ModalImg } from "../../Components/Modals/ModalTwo"
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
 import { format, set } from 'date-fns';
@@ -52,7 +52,7 @@ export const FinesDetail = () => {
 
   const { id } = useParams();
 
-  const {idUserLogged }= useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
   // Socket
 
@@ -99,6 +99,8 @@ export const FinesDetail = () => {
   const [paymentproofFiles, setPaymentproofFiles] = useState([])
   const [userTaxer, setUserTaxer] = useState('')
 
+  const [evidenceImg, setEvidenceImg] = useState('')
+
 
   // Var to upload files in evidences and proof
 
@@ -125,6 +127,18 @@ export const FinesDetail = () => {
 
 
   }, [fines?.data?.fines])
+
+  // Modal img
+
+  const [modalImg, setModalImg] = useState(false)
+
+  const openModalImg = (data) => {
+
+    console.log('data: ', data)
+    setEvidenceImg(data)
+    setModalImg(true)
+
+  }
 
 
   // add proof modal
@@ -245,11 +259,13 @@ export const FinesDetail = () => {
 
                       // Information
                       img={evidence}
+                      toOpen={true}
                       to={evidence}
                       name={'Evidencia'}
                       lastName={index + 1}
                       msg={details}
                       icon="x-square"
+                      onclick={() => openModalImg(evidence)}
 
 
                     ></RowNotificactions>
@@ -368,6 +384,33 @@ export const FinesDetail = () => {
                 <ImageContainer urls={[paymentproof]} name='Comprobante' />
 
               </Modal>
+            </ModalContainer>
+          </>,
+          document.getElementById("modalRender")
+        )
+
+      }
+
+      {modalImg &&
+        createPortal(
+          <>
+            <ModalContainer ShowModal={setModalImg}>
+              <ModalImg
+                img={evidenceImg}
+                showModal={setModalImg}
+                onClick={() => alert('Aqui funciona algo')}
+                title={"Evidencia de multa."}
+              // showSave={showevidences ? false : true}
+              >
+
+                {/* <Uploader multiple label={"Agregar comprobante de pago"}
+                  onChange={(e) => {
+                    setFile(e.target.files);
+                  }}
+                />
+                <ImageContainer urls={[paymentproof]} name='Comprobante' /> */}
+
+              </ModalImg>
             </ModalContainer>
           </>,
           document.getElementById("modalRender")

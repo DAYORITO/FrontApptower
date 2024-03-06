@@ -415,7 +415,7 @@ export const Residents = () => {
                                 showModal={setModalAddChangeApartment}
                                 title={`${isCreateApartmentResident ? "Asignar apartamento" : "Modificar apartamento asignado"}`}
                                 buttonDelete={isCreateApartmentResident ? false : true}
-                                onClickForDelete={deleteApartmentResident}
+                                // onClickForDelete={deleteApartmentResident}
                             >
 
                                 <InputsSelect disabled id={"select"} options={residentsList} name={"Residente"}
