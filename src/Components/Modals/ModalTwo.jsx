@@ -131,44 +131,40 @@ export const ModalNotifications = ({ showModal, userId, children }) => {
   );
 };
 
-// export const Modal = ({ title, children, showModal}) => {
-//   return (
-//     <div onClick={(e) => e.stopPropagation()}>
 
-//           <div className="">
-//             <div className="modal-dialog">
-//               <div className="modal-content">
-//                 <div className="modal-header">
-//                   <h5 className="card-title">{title}</h5>
-// 				  <button
-//             type="button"
-//             classNameName="modal__close"
-//             onClick={() => showModal(false)}
-//           >
-//             x
-//           </button>
-//                 </div>
-//                 <div className="modal-body">
-//                   {children}
-//                 </div>
-//                 <div className="modal-footer">
-//                   <button
-//                     type="button"
-//                     className="btn mb-2 btn-secondary"
-//                     onClick={() => showModal(false)}
-//                   >
-//                     Close
-//                   </button>
-//                   <button type="button" className="btn mb-2 btn-primary">
-//                     Save changes
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//       ;
-//     </div>
-//   );
-// };
 
-//
+
+export const ModalImg = ({ img, title, showModal }) => {
+
+
+  return (
+
+      <div className="modal-content-img">
+        <div className="modal-header">
+          <h5 className="modal-title" id="verticalModalTitle">
+            {title}
+          </h5>
+          <button
+            type="button"
+            className="modal__close"
+            onClick={() => showModal(false)}
+          >
+            <i className="fe fe-16 fe-x"></i>
+          </button>
+        </div>
+        <div className="modal-body" style={{ overflow: 'hidden', overflowY: "auto", maxHeight: "30rem" }}>
+          <img src={img}></img>
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn mb-2 btn-secondary"
+            onClick={() => { showModal(false); }}
+          >
+            Cerrar
+          </button>
+
+        </div>
+      </div>
+  );
+};

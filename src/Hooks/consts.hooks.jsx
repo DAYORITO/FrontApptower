@@ -113,6 +113,10 @@ export const bools = [
 
 export const parkingTypes = [
     {
+        value: "",
+        label: "Todos"
+    },
+    {
         value: "Public",
         label: "Público"
     },
