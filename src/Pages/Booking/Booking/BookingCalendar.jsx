@@ -171,7 +171,7 @@ export const BookingCalendar = () => {
         if (dayjs(date).isBefore(dayjs(), 'day')) {
             return {
                 style: {
-                    backgroundColor: '#e0e0e0',
+                    backgroundColor: '#ebebeb',
                     opacity: 0.6
                 }
             };
@@ -265,15 +265,16 @@ export const BookingCalendar = () => {
 
 
 
-
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <FormContainer name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`}
-                ButtonBack={true}
+            <FormContainer
+
 
             >
+
+                {/* name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`} */}
                 <Calendar
-                    style={{ height: '58vh', width: '100%' }}
+                    style={{ height: '68vh', width: '100%' }}
                     localizer={localizer}
                     events={events}
                     selectable
@@ -282,6 +283,7 @@ export const BookingCalendar = () => {
                     dayPropGetter={dayPropGetter}
                     onSelectEvent={hadleSelectEvent}
                     onView={setCurrentView}
+                    popup
                     components={{
                         agenda: {
                             event: ({ event }) => (
@@ -311,9 +313,12 @@ export const BookingCalendar = () => {
                         time: 'Hora',
                         event: 'Evento',
                         noEventsInRange: 'No hay reservas en este rango',
+                        showMore: total => `+${total} más`,
 
                     }}
                 />
+
+
             </FormContainer>
             {showModal && selectedDate &&
                 createPortal(

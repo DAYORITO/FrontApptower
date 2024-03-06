@@ -39,8 +39,8 @@ export const UsersCreate = () => {
     const [residentType, setResidentType] = useState("");
     const [dateOfbirth, setDateOfBirth] = useState("");
     const [idApartment, setIdApartment] = useState("");
-    const [errors, setErrors] = useState([]);
-    console.log(errors, "errors daata")
+    const [errors, setErrors] = useState([{}]);
+    console.log(errors, "errors daata holaaa")
 
 
 
@@ -67,7 +67,7 @@ export const UsersCreate = () => {
             const selectedRole = roles.rols.find(rol => rol.idrole === Number(id));
             if (selectedRole) {
                 setIdRole(selectedRole.idrole);
-                setRole(selectedRole.namerole);
+                setRole(selectedRole.namerole.toLowerCase());
                 setShowForm(true);
             }
         }
@@ -238,7 +238,7 @@ export const UsersCreate = () => {
                     text: 'Error al crear usuario',
                     icon: 'error',
                 });
-                setErrors(userResponse?.errorData);
+                setErrors(userResponse?.error?.errors);
             }
 
         } catch (error) {
@@ -299,47 +299,48 @@ export const UsersCreate = () => {
                     onChange={(e) => {
                         setIdRole(e.target.value);
                         const selectedRole = roles.rols.find(rol => rol.idrole === Number(e.target.value));
-                        setRole(selectedRole ? selectedRole.namerole : "");
+                        setRole(selectedRole ? selectedRole.namerole.toLowerCase() : "");
                         setShowForm(true);
                     }}
                     StyleInput={{ width: '100%', marginRight: '3.8rem' }}
                     containerStyle={{ width: '97%', marginLeft: '0.9rem' }}
+                    required={false}
                 ></InputsSelect>
 
 
                 {showForm && (
                     <>
-                        {namerole === 'Residente' || namerole === 'Residentes' ? (
+                        {namerole.includes('residente') ? (
                             <>
 
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Información personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'} required={true}
+                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'}
                                     ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} errors={errors} identifier={'document'} required={true}></Inputs>
+                                    <Inputs name="Documento" type='number' value={document} onChange={e => setDocument(e.target.value)} errors={errors} identifier={'document'} ></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} required={true}></Inputs>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} ></Inputs>
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} required={true}></Inputs>
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} ></Inputs>
 
                                 </FormColumn>
 
-                                <FormColumn> <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'} required={true}
+                                <FormColumn> <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'}
                                     inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                     errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
                                 /></FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} type='number' errors={errors} identifier={'phone'} required={true}></Inputs>
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} type='number' errors={errors} identifier={'phone'} ></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
@@ -364,7 +365,7 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} errors={errors} identifier={''} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} errors={errors} identifier={''} ></InputsSelect>
 
                                 </FormColumn>
                                 <FormColumn>
@@ -375,21 +376,21 @@ export const UsersCreate = () => {
 
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} ></InputsSelect>
 
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
 
                                 </FormColumn>
 
                             </>
-                        ) : namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad' ? (
+                        ) : namerole.includes('vigilante') || namerole.includes('vigilancia') || namerole.includes('seguridad') ? (
                             <>
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Información personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'} required={true} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'}  ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
@@ -402,20 +403,20 @@ export const UsersCreate = () => {
                                         errorMessage={isDocumentTaken ? "El documento ya existe" : null}
                                         identifier={"document"}
                                         errors={errors}
-                                        required={true}
+
                                     />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} required={true} ></Inputs>
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'}  ></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} required={true}></Inputs>
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} ></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'} required={true}
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
@@ -423,18 +424,18 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Select2 placeholder={'Empresa de seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
+                                    <Select2 placeholder={'Empresa de seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions} ></Select2>
 
                                 </FormColumn>
 
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'} required={true}></Inputs>
+                                    <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'} ></Inputs>
                                 </FormColumn>
 
                                 <FormColumn>
                                     <Inputs name="Fecha nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
-                                        errors={errors} identifier={'birthday'} required={true}
+                                        errors={errors} identifier={'birthday'}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null} ></Inputs>
                                 </FormColumn>
@@ -449,17 +450,17 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} required={true} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
                                 </FormColumn>
 
                             </>
-                        ) : namerole === 'Admin' || namerole === 'Administrador' || namerole === 'Super Administrador' ? (
+                        ) : namerole.includes('admin') ? (
 
                             <>
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={''} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={''} ></InputsSelect>
 
                                 </FormColumn>
 
@@ -471,22 +472,23 @@ export const UsersCreate = () => {
                                         onChange={e => setDocument(e.target.value)}
                                         // inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
                                         // errorMessage={isDocumentTaken ? "El documento ya existe" : null}
-                                        identifier={"document"}
                                         errors={errors}
-                                        required={true}
+                                        identifier={'document'}
+
+
                                     />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} required={true} />
+                                    <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} required={true} />
+                                    <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'} />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'} required={true}
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
@@ -494,12 +496,12 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'} required={true} />
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'} />
                                 </FormColumn>
 
                                 <FormColumn>
                                     <Inputs name="Fecha de nacimiento" placeholder='Fecha de nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
-                                        errors={errors} identifier={'birthday'} required={true}
+                                        errors={errors} identifier={'birthday'}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
 
@@ -510,8 +512,8 @@ export const UsersCreate = () => {
 
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} required={true} errors={errors} identifier={'password'} />
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true} errors={errors} identifier={'password'} />
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
                                 </FormColumn>
 
                             </>
@@ -519,7 +521,7 @@ export const UsersCreate = () => {
                             <>
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Información personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={'docType'} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={'docType'}></InputsSelect>
 
                                 </FormColumn>
 
@@ -533,7 +535,7 @@ export const UsersCreate = () => {
                                         errorMessage={isDocumentTaken ? "El documento ya existe" : null}
                                         identifier={"document"}
                                         errors={errors}
-                                        required={true}
+
                                     />
                                 </FormColumn>
 
@@ -541,18 +543,18 @@ export const UsersCreate = () => {
                                     <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)}
                                         errors={errors}
                                         identifier={"name"}
-                                        required={true} />
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
                                     <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)}
                                         errors={errors}
                                         identifier={"lastName"}
-                                        required={true} />
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} required={true}
+                                    <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={isEmailTaken ? "El correo ya existe" : null}
                                         errors={errors}
@@ -562,14 +564,14 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)} required={true}
+                                    <Inputs name="Teléfono" value={phone} onChange={e => setPhone(e.target.value)}
                                         errors={errors}
                                         identifier={"phone"}
                                     />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} required={true}
+                                    <Inputs name="Fecha de Nacimiento" placeholder='Fecha de nacimiento' type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
                                         errors={errors}
@@ -582,11 +584,11 @@ export const UsersCreate = () => {
 
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} required={true}
+                                    <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)}
                                         errors={errors}
                                         identifier={"password"}
                                     />
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={true}
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
                                         errors={errors}
                                         identifier={"password"}
                                     />

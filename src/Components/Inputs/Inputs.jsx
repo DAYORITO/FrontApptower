@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage, className, validate = false, required = false, errors, min, max }) {
+function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage, className, validate = false, required = true, errors, min, max }) {
   const [internalErrorMessage, setInternalErrorMessage] = useState(null);
   const [labelText, setLabelText] = useState(name);
   const [passwordShown, setPasswordShown] = useState(false);
@@ -16,7 +16,8 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
     if (value !== '') {
       labelRef.current.classList.add('lleno');
     } else {
-      labelRef.current.classList.remove('lleno');
+      labelRef.current.classList.add('lleno');
+      required && setLabelText(`${name} <span style="color: red; margin-left: 2px;">*</span>`);
     }
   }, [value]);
 
@@ -28,7 +29,7 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
       if (required) {
-        setLabelText(name + '*');
+        setLabelText(`${name}<span style="margin-left: 2px;">*</span>`)
       }
     });
 
@@ -37,11 +38,11 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
       if (inputRef.current.value !== '') {
         labelRef.current.classList.add('lleno');
       } else {
-        labelRef.current.classList.remove('lleno');
+        labelRef.current.classList.add('lleno');
       }
       labelRef.current.classList.remove('active');
       if (required) {
-        setLabelText(name);
+        setLabelText(`${name}<span style="color: red; margin-left: 2px;">*</span>`);
       }
 
     });
@@ -137,7 +138,7 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
 
 
         </span>
-        <label htmlFor={name} className='form-label' ref={labelRef}>{labelText}</label>
+        <label htmlFor={name} className='form-label' ref={labelRef} dangerouslySetInnerHTML={{ __html: labelText }} />
         {list && <datalist className='custom-datalist' id={list}>
           {options?.map((opcion) => (
             <option value={opcion.value} label={opcion.label} />
