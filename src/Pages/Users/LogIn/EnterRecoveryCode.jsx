@@ -57,6 +57,12 @@ export const EnterRecoveryCode = () => {
         }
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    }
+
     return (
         <div className='container-login'>
             <div className="container-form login">
@@ -73,7 +79,7 @@ export const EnterRecoveryCode = () => {
 
                         <form className="form" onSubmit={handleSubmit}>
 
-                            <InputsLogIn placeholder='Codigo' type='text' value={recoveryCode} onChange={(newValue) => setRecoveryCode(newValue)} />
+                            <InputsLogIn placeholder='Codigo' type='text' value={recoveryCode} onChange={(newValue) => setRecoveryCode(newValue)} onKeyPress={handleKeyPress} />
 
                             <button className='boton-login' type='submit'>Enviar Codigo</button><br />
                             <Link to="/recoverpassword" class="buttonStyle" id="sign-up">Regresar</Link>

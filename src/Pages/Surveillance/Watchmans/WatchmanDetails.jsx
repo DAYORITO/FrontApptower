@@ -24,7 +24,7 @@ import Cookies from 'js-cookie';
 import './Watchman.css'
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 import { Uploader } from '../../../Components/Uploader/Uploader'
@@ -32,6 +32,7 @@ import { postRequest } from '../../../Helpers/Helpers'
 import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
 import Swal from 'sweetalert2'
+import { Th } from '../../../Components/Th/Th'
 const token = Cookies.get('token');
 
 export const WatchmanDetails = () => {
@@ -44,9 +45,8 @@ export const WatchmanDetails = () => {
 
     // watchman information
 
+    const [idWatchman, setIdWatchman] = useState("")
     const { id } = useParams();
-
-    const [idWatchman, setidWatchman] = useState(id)
     const [idUser, setIdUser] = useState("")
     const [userImg, setUserImg] = useState("")
     const [docType, setDocType] = useState("")
@@ -63,15 +63,20 @@ export const WatchmanDetails = () => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
-
-
-
     // Watchman relations
 
     const { data: watchmans, get: getWatchmans, loading: loadingWatchmans } = useFetch(url)
     const { data: watchman, get: getWatchman, loading: loadingWatchman } = useFetch(url)
     const { data: user, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
+    const { data: shifts, get: getShifts, loading: loadingShifts } = useFetch(url)
 
+    useEffect(() => {
+        setIdWatchman(watchman?.data?.watchman?.idwatchman);
+
+        if (watchman?.data?.watchman?.idwatchman) {
+            getShifts(`guardshifts/${watchman.data.watchman.idwatchman}`);
+        }
+    }, [watchman?.data?.watchman]);
 
     useEffect(() => {
 
@@ -111,7 +116,7 @@ export const WatchmanDetails = () => {
 
         try {
 
-            getWatchman(`watchman/${idWatchman}`)
+            getWatchman(`watchman/${Number(id)}`)
 
 
         } catch (error) {
@@ -120,9 +125,7 @@ export const WatchmanDetails = () => {
 
         }
 
-
-
-    }, [])
+    }, [id])
 
 
     // Edit personal information watchman
@@ -147,14 +150,6 @@ export const WatchmanDetails = () => {
 
     }
 
-    // // List watchman
-
-    // const watchmanList = Array.isArray(watchman?.data?.watchman)
-    //     ? watchman?.data?.watchman.map(watchman => ({
-    //         value: watchman.idwatchman,
-    //         label: `${watchman.user.name} ${watchman.user.lastName} - ${watchman.user.document}`
-    //     }))
-    //     : [];
 
 
 
@@ -182,7 +177,7 @@ export const WatchmanDetails = () => {
 
         await postRequest(event, 'users/img', 'PUT', {}, data, url);
         setModalEditImg(false)
-        getWatchman(`watchman/${idWatchman}`)
+        getWatchman(`watchman/${Number(id)}`)
         window.location.reload()
 
     }
@@ -193,7 +188,7 @@ export const WatchmanDetails = () => {
 
         const data = {
 
-            iduser: idWatchman,
+            iduser: Number(id),
             docType: docType,
             document: docNumber,
             name: name,
@@ -207,7 +202,7 @@ export const WatchmanDetails = () => {
         console.log("edit data", data)
 
         await postRequest(event, 'users/personalInfo', 'PUT', {}, data, url, 'Informacion actualizada correctamente');
-        getWatchman(`watchman/${idWatchman}`)
+        getWatchman(`watchman/${Number(id)}`)
         setModalPersonalInfoWatchman(false)
 
     }
@@ -246,7 +241,7 @@ export const WatchmanDetails = () => {
 
         await postRequest(event, 'users/password', 'PUT', {}, data, url, 'Contraseña actualizada correctamente');
         setModalChangePassword(false)
-        getWatchman(`watchman/${idWatchman}`)
+        getWatchman(`watchman/${Number(id)}`)
 
     }
 
@@ -258,54 +253,6 @@ export const WatchmanDetails = () => {
     };
 
 
-
-    const [guardshifts, setGuardshifts] = useState([]); // Define guardshifts utilizando useState
-
-    const fetchGuardshifsforwatchman = async () => {
-        const response = await fetch(`https://apptowerbackend.onrender.com/api/guardshifts/${idWatchman}`);
-        const data = await response.json();
-        setGuardshifts(data.shifts); // Utiliza setGuardshifts para actualizar guardshifts con los datos recibidos
-        console.log(data.shifts, "guardshifts");
-    };
-
-
-
-    useEffect(() => {
-        fetchGuardshifsforwatchman();
-    }
-        , []);
-
-
-    const [searchDate, setSearchDate] = useState(null);
-
-    const [filteredShifts, setFilteredShifts] = useState([]);
-
-    const handleSearch = (event) => {
-        const date = event.target.value;
-        setSearchDate(date);
-    };
-
-
-    useEffect(() => {
-        if (searchDate) {
-            const filtered = guardshifts.filter(shift => {
-                const shiftDate = new Date(shift.start);
-                const searchDateObj = new Date(searchDate);
-                searchDateObj.setUTCHours(0, 0, 0, 0);
-
-                return shiftDate.getUTCFullYear() === searchDateObj.getUTCFullYear() &&
-                    shiftDate.getUTCMonth() === searchDateObj.getUTCMonth() &&
-                    shiftDate.getUTCDate() === searchDateObj.getUTCDate();
-            });
-            setFilteredShifts(filtered);
-        } else {
-            setFilteredShifts(guardshifts);
-        }
-    }, [searchDate, guardshifts]);
-
-
-
-
     const EqualUser = user?.user?.document === docNumber;
 
 
@@ -313,6 +260,17 @@ export const WatchmanDetails = () => {
 
     const FindNameEnterprice = dataEnterprice?.enterpriseSecurity?.find(enterprices => enterprices.idEnterpriseSecurity === enterprice);
     const nameEnterpriseSecurity = FindNameEnterprice ? FindNameEnterprice.nameEnterprice : 'Empresa no encontrada';
+
+
+    const [searchDate, setSearchDate] = useState(null);
+
+    const handleSearch = (event) => {
+        if (event.target.value) {
+            setSearchDate(new Date(event.target.value));
+        } else {
+            setSearchDate(null);
+        }
+    };
 
     return (
         <>
@@ -327,7 +285,6 @@ export const WatchmanDetails = () => {
                             img={userImg}
                             to={EqualUser ? null : '/admin/watchman/'}
                             icon='user'
-
                             A1={`Vigilante ${name}`}
                             A2={`${lastName}`}
                             A5={`Correo electronico: ${email}`}
@@ -335,7 +292,7 @@ export const WatchmanDetails = () => {
                             // A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
-                            showBackButton={EqualUser ? false : true}
+                        // showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
                         />
 
@@ -369,49 +326,62 @@ export const WatchmanDetails = () => {
 
                         {/* Poner los turnos aquiiiiiiiiii */}
 
-                        {!EqualUser ? <DropdownInfo
-                            name={'Turnos'}
-                            initiallyOpen={false}>
+                        {<DropdownInfo
+                            name={'Turnos'}>
 
 
 
-                            <input
+                            {!EqualUser ? <input
                                 type="date"
                                 name="searchDate"
                                 className='dateShifts'
-                                value={searchDate || ""}
                                 onChange={handleSearch}
-                            />
+                            /> : null}
 
                             <TablePerson id={'tableguards'} >
 
 
                                 <ThInfo />
+                                <ThInfo name='Dias de la semana' />
                                 <ThInfo name='Fecha' />
                                 <ThInfo name='Hora inicio' />
                                 <ThInfo name='Hora fin' />
 
-                                {filteredShifts.length === 0 ? (
+                                {(shifts.data.shifts || []).length === 0 ? (
                                     <tr>
                                         <td colSpan="4">No se encontraron turnos</td>
                                     </tr>
                                 ) : (
-                                    filteredShifts.map(shift => {
-                                        const startDate = new Date(shift.start);
-                                        const endDate = new Date(shift.end);
-                                        const date = startDate.toLocaleDateString(undefined, { timeZone: 'UTC' });
-                                        const startTime = startDate.toLocaleTimeString();
-                                        const endTime = endDate.toLocaleTimeString();
-                                        return (
-                                            <Table
-                                                key={shift.id}
-                                                opc1={date}
-                                                opc2={startTime}
-                                                opc3={endTime}
-                                                status={userStatus}
-                                            />
-                                        );
-                                    })
+                                    (shifts.data.shifts || [])
+                                        .filter(shift => {
+                                            if (!searchDate) return true;
+                                            const shiftDate = new Date(shift.date);
+                                            return shiftDate.toDateString() === searchDate.toDateString();
+                                        })
+                                        .slice(0, 7)
+                                        .map(shift => {
+                                            if (shift.date && shift.start && shift.end) {
+                                                const startDate = new Date(`${shift.date}T${shift.start}`);
+                                                const endDate = new Date(`${shift.date}T${shift.end}`);
+                                                const date = startDate.toLocaleDateString();
+                                                const startTime = startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                                                const endTime = endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+                                                const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                                                const dayOfWeek = days[startDate.getDay()];
+
+                                                return (
+                                                    <Table
+                                                        key={shift.idshifts}
+                                                        opc1={dayOfWeek}
+                                                        opc2={date}
+                                                        opc3={startTime}
+                                                        opc4={endTime}
+                                                        status={userStatus}
+                                                    />
+                                                );
+                                            }
+                                        })
                                 )}
 
                             </TablePerson>
@@ -419,7 +389,7 @@ export const WatchmanDetails = () => {
 
 
 
-                        </DropdownInfo> : null}
+                        </DropdownInfo>}
 
                     </Acordions>
 

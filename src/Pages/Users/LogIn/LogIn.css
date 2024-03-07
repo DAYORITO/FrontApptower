@@ -22,7 +22,10 @@
     text-decoration: none;
 }
 
-
+.boton-login:disabled {
+    background-color: rgb(56, 68, 77);
+    cursor: not-allowed;
+}
 
 
 

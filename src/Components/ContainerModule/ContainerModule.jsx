@@ -86,7 +86,7 @@ export const ContainerModule = ({
                                 {/* <button onClick={onClick2} className={`btn btn-light mr-2`}>Editar</button> */}
                             </>
                             : null}
-                        {showBackButton && <button onClick={() => { navigate(-1); if (regresar) regresar(); }} className={`btn btn-light`}>Regresar</button>}
+                        {showBackButton && <button onClick={() => { navigate(-1); }} className={`btn btn-light`}>Regresar</button>}
 
                     </div>
                 </div>

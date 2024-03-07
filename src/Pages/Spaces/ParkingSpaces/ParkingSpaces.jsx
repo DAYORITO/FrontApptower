@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from "../../../Hooks/useFetch";
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
@@ -21,6 +21,7 @@ import Inputs from "../../../Components/Inputs/Inputs";
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
 import { Paginator } from "../../../Components/Paginator/Paginator";
+import { SocketContext } from "../../../Context/SocketContext";
 
 
 export const ParkingSpaces = () => {
@@ -50,6 +51,13 @@ export const ParkingSpaces = () => {
 
   }, [])
 
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
+  // User logged
+
+  const { idUserLogged } = useUserLogged()
 
   const { id } = useParams()
 
@@ -102,10 +110,14 @@ export const ParkingSpaces = () => {
   const [parkingType, setParkingType] = useState('Public');
   const [status, setStatus] = useState('');
 
+  const [errorList, setErrorList] = useState([]);
+
   const [idApartment, setIdApartment] = useState("");
 
 
   const openModal = (data) => {
+
+    setErrorList('')
 
     setIdParkingSpace(data.idParkingSpace)
     setParkingName(data.parkingName)
@@ -129,7 +141,7 @@ export const ParkingSpaces = () => {
 
     }
 
-    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url)
+    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url, setErrorList, null, null)
 
     getParkingSpace('parkingSpaces')
 
@@ -146,8 +158,11 @@ export const ParkingSpaces = () => {
 
   const openModalAsignedApartment = (data) => {
 
-    console.log(data)
+    setErrorList('')
+    setIdApartment('')
+
     setIdParkingSpace(data.idParkingSpace)
+
     setModalAsignedApartment(true)
 
   }
@@ -179,15 +194,17 @@ export const ParkingSpaces = () => {
 
     const data = {
 
-      idApartment,
-      idParkingSpace
+      // User logged
+      idUserLogged: idUserLogged,
+
+      idApartment: parseInt(idApartment),
+      idParkingSpace: parseInt(idParkingSpace)
 
     };
 
-    await postRequest(event, 'assignedParkingSpaces', 'POST', {}, data, url);
+    await postRequest(event, 'assignedParkingSpaces', 'POST', setModalAsignedApartment, data, url, setErrorList, null, socket);
 
     getParkingSpace(`parkingSpaces`)
-    setModalAsignedApartment(false)
 
   };
 
@@ -290,14 +307,14 @@ export const ParkingSpaces = () => {
               >
 
 
-                <InputsSelect id={"select"} options={parkingTypes} name={"Torre"}
+                <InputsSelect id={"select"} options={parkingTypes} name={"Torre"} identifier={'parkingType'} errors={errorList}
                   value={parkingType} onChange={e => setParkingType(e.target.value)}
                 ></InputsSelect>
 
-                <Inputs name="Nombre parqueadero" type={"text"}
+                <Inputs name="Nombre parqueadero" type={"text"} identifier={'parkingName'} errors={errorList}
                   value={parkingName} onChange={e => setParkingName(e.target.value)}></Inputs>
 
-                <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                <InputsSelect id={"select"} options={statusList} name={"Estado"} identifier={'status'} errors={errorList}
                   value={status} onChange={e => setStatus(e.target.value)}
                 ></InputsSelect>
 
@@ -322,11 +339,13 @@ export const ParkingSpaces = () => {
 
               >
 
-                <InputsSelect id={"select"} options={parkingSpacesList} name={"Apartamento"}
+                <InputsSelect id={"select"} options={parkingSpacesList} name={"Parqueadero"}
+                  identifier={'idParkingSpace'} errors={errorList} disabled
                   value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}
                 ></InputsSelect>
 
                 <InputsSelect id={"select"} options={apartmentList} name={"Apartamento"}
+                  identifier={'idApartment'} errors={errorList}
                   value={idApartment} onChange={e => setIdApartment(e.target.value)}
                 ></InputsSelect>
 

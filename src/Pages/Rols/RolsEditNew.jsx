@@ -20,6 +20,9 @@ export const RolsEditNew = () => {
     const navigate = useNavigate();
     const { isLoggedIn, user, isLoading } = useAuth();
     const [editedRols, setEditedRols] = useState(null);
+    const [error, setError] = useState([{}]);
+
+    console.log(error, 'error')
 
 
     useEffect(() => {
@@ -109,15 +112,15 @@ export const RolsEditNew = () => {
     const handleSaveChanges = async (event) => {
         event.preventDefault();
 
-        if (!editedRols?.namerole || !editedRols?.description) {
+        if (selectedPermissions.length === 0) {
             Swal.fire({
                 title: 'Error',
-                text: 'Por favor, Ingrese todos los campos requeridos',
+                text: 'Por favor, seleccione al menos un permiso',
                 icon: 'error',
             });
-            setShouldValidate(true);
             return;
         }
+
 
         if (editedRols?.namerole !== originalRoleName.current && isNameRoleTaken) {
             Swal.fire({
@@ -178,7 +181,20 @@ export const RolsEditNew = () => {
                         text: 'Error al modificar el rol',
                         icon: 'error',
                     });
+                    setError(errorResponse);
                 }
+
+                if (!editedRols?.namerole || !editedRols?.description) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Por favor, Ingrese todos los campos requeridos',
+                        icon: 'error',
+                    });
+                    setShouldValidate(true);
+                    return;
+                }
+
+
             } catch (error) {
                 console.error('Error al procesar la solicitud:', error);
             }
@@ -253,17 +269,21 @@ export const RolsEditNew = () => {
 
     return (
         <>
-            <FormContainer name='Editar Rol' onSubmit={handleSaveChanges} buttons={<FormButton name='Editar' backButton='Cancelar' to='/admin/rols' />}>
+
+            <FormContainer
+                name='Editar Rol'
+                buttons={<FormButton name='Editar' backButton='Cancelar' to='/admin/users/' onClick={handleSaveChanges} />}
+            >
                 <FormColumn>
                     <Inputs
                         name="Nombre Rol"
                         placeholder='Nombre Rol'
                         value={editedRols?.namerole || ''}
-                        onChange={handleNameRole}
-                        validate={shouldValidate}
+                        onChange={(event) => { handleNameRole(event); setError(''); }}
                         required={true}
-                        // editedRols?.namerole !== originalRoleName.current && isNameRoleTaken ? "Este rol ya esta registrado" :
-                        errorMessage={isNameRoleInvalid ? "El nombre no puede contener números ni caracteres especiales" : null}
+                        errors={editedRols?.namerole !== originalRoleName.current && isNameRoleTaken ? null : error}
+                        identifier={'namerole'}
+                        errorMessage={editedRols?.namerole !== originalRoleName.current && isNameRoleTaken ? "Este rol ya esta registrado" : (error && error.namerole)}
                         inputStyle={editedRols?.namerole !== originalRoleName.current && isNameRoleTaken ? { borderColor: 'red' } : null}
                     />
 
@@ -282,9 +302,10 @@ export const RolsEditNew = () => {
                         name='Descripción'
                         placeholder='Descripción'
                         value={editedRols?.description || ''}
-                        onChange={handleDescriptionChange}
+                        onChange={(event) => { handleDescriptionChange(event); setError(''); }}
                         type='text'
-                        validate={shouldValidate}
+                        errors={error}
+                        identifier={'description'}
                         required={true}
                     />
                 </FormColumn>
@@ -308,7 +329,7 @@ export const RolsEditNew = () => {
                 </div>
 
 
-            </FormContainer>
+            </FormContainer >
         </>
     )
 

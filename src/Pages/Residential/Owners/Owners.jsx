@@ -76,10 +76,14 @@ export const Owners = () => {
     const [ownershipStartDate, setOwnershipStartDate] = useState("")
     const [ownershipEndDate, setOwnershipEndDate] = useState("")
 
+    const [errorList, setErrorList] = useState([])
+
+
     // List owners
 
     const ownersList = owners && owners?.data?.owners
         ? owners?.data?.owners
+            .filter(owner => owner.status === 'Active')
             .map(owner => ({
                 value: owner.idOwner,
                 label: ` ${owner.user.name} ${owner.user.lastName} - ${owner.user.document}`
@@ -91,6 +95,7 @@ export const Owners = () => {
     const apartmentList = apartments?.data && apartments?.data?.apartments
 
         ? apartments.data.apartments
+            .filter(apartment => apartment.status === 'Active')
             .map(apartment => ({
                 value: apartment.idApartment,
                 label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
@@ -99,13 +104,14 @@ export const Owners = () => {
 
     const openModalAssingApartmentToOwner = (data) => {
 
+        setErrorList('')
+
         setIdOwner(data.idOwner)
         setModalAssigApartmentToOwner(true)
 
     }
 
-    const idUserLogged = useUserLogged()
-
+    const { idUserLogged } = useUserLogged()
 
     const CreateApartmentOwner = async (event) => {
 
@@ -124,8 +130,8 @@ export const Owners = () => {
 
         console.log(socket)
 
-        
-        await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, null, null, socket)
+
+        await postRequest(event, 'apartmentOwners', 'POST', setModalAssigApartmentToOwner, data, url, setErrorList, null, socket)
 
         getOwners('Owners')
 
@@ -263,16 +269,20 @@ export const Owners = () => {
                             // onClickForDelete={deleteApartmentResident}
                             >
 
-                                <InputsSelect disabled id={"select"} options={ownersList} name={"Propietario"}
+                                <InputsSelect disabled id={"select"} options={ownersList} name={"Propietario activo"}
+                                    identifier={'idOwner'} errors={errorList}
                                     value={idOwner} onChange={e => setIdOwner(e.target.value)}
                                 ></InputsSelect>
 
                                 <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}
+                                    identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Fecha desde cuando es propietario" type={"date"}
-                                    value={ownershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
+                                    identifier={'OwnershipStartDate'} errors={errorList}
+                                    value={ownershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}>
+                                </Inputs>
 
 
                             </Modal>

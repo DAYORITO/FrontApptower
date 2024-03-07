@@ -28,18 +28,19 @@ export const RowNotificactions = ({
 
   moment.locale('es');
 
-  console.log(to, 'to')
   to =
     to.owner ? `/admin/owners/details/${to.owner.idOwner}` :
       to.resident ? `/admin/resident/details/${to.resident.iduser}` :
         to.apartment ? `/admin/apartments/details/${to.apartment.idApartment}` :
           to.fine ? `/admin/fines/details/${to.fine?.idFines}` :
-          to.guest_income? `/admin/guest_income/details/${to.guest_income?.idGuest_income}` :
+            to.guest_income ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}` :
+              to.space ? `/admin/spaces/` :
 
-            to?.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
-              to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
-                to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
+                to?.idrole == 2 ? `/adm in/resident/details/${to.iduser}` :
+                  to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
+                    to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
 
+  console.log(to, 'to')
   return (
 
     <Link onClick={onclick} to={to}>

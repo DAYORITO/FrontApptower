@@ -16,6 +16,8 @@ export const ParkingSpacesCreate = () => {
   const [parkingPerFloor, setParkingPerFloor] = useState("");
   const [parkingType, setParkingType] = useState("");
 
+  const [errorList, setErrorList] = useState([]);
+
   const navigate = useNavigate();
 
   const createParking = async (event) => {
@@ -23,17 +25,15 @@ export const ParkingSpacesCreate = () => {
     const data = {
 
       floor: floor,
-      parkingPerFloor: parseInt(parkingPerFloor) ,
+      parkingPerFloor: parseInt(parkingPerFloor),
       parkingType: parkingType,
 
 
     };
 
-    console.log(data, "data pa crear")
 
-    await postRequest(event, 'parkingSpaces', 'POST', {}, data, url);
+    await postRequest(event, 'parkingSpaces', 'POST', null, data, url, setErrorList, navigate, null);
 
-    navigate(-1)
 
   };
 
@@ -45,14 +45,15 @@ export const ParkingSpacesCreate = () => {
       buttons={<FormButton onClick={createParking} name='Crear parqueaderos' backButton='Regresar' />}>
       {/* <FormColumn> */}
 
-      <InputsSelect id={"select"} options={parkingTypes} name={"Tipo de parqueaderos"}
+      <InputsSelect id={"select"}
+        options={parkingTypes} name={"Tipo de parqueaderos"} identifier={"parkingType"} errors={errorList}
         value={parkingType} onChange={e => setParkingType(e.target.value)}></InputsSelect>
 
-      <Inputs name="Nombre del piso" type={"text"} placeholder={"S1"}
+      <Inputs name="Nombre del piso" identifier={"floor"} errors={errorList} type={"text"} placeholder={"S1"}
         value={floor} onChange={e => setFloor(e.target.value)}
       ></Inputs>
 
-      <Inputs name="Parqueaderos por piso" type={"text"}
+      <Inputs name="Parqueaderos por piso" type={"text"} identifier={"parkingPerFloor"} errors={errorList}
         value={parkingPerFloor} onChange={e => setParkingPerFloor(e.target.value)}
       ></Inputs>
 

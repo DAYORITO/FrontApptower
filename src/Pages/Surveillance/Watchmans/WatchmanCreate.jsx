@@ -9,10 +9,11 @@ import Swal from 'sweetalert2'
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
 import { Uploader } from '../../../Components/Uploader/Uploader'
 import Select2 from '../../../Components/Inputs/Select2'
-import { is } from 'date-fns/locale'
+import { useParams } from 'react-router-dom'
 
 
 export const WatchmanCreate = () => {
+    const { id } = useParams();
     const [documentType, setDocumentType] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,12 +26,12 @@ export const WatchmanCreate = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [pdf, setPdf] = useState("");
     const [showForm, setShowForm] = useState(false);
-    console.log(pdf, 'aqui estoy file')
     const [dateOfbirth, setDateOfBirth] = useState("");
     const [nameEnterprice, setNameEnterprice] = useState(null)
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
-    const [enterprice, setEnterprice] = useState(null);
-    console.log(enterprice, 'aqui estoy enterprice')
+    const [enterprice, setEnterprice] = useState(id || null);
+
+
 
 
     const navigate = useNavigate();
@@ -101,14 +102,18 @@ export const WatchmanCreate = () => {
         : [];
 
 
-    const handleEnterpriceSecurity = (selectedValue) => {
-        const selectedValueAsNumber = Number(selectedValue);
-        console.log("Selected Value:", selectedValueAsNumber);
-        setEnterprice(selectedValueAsNumber);
+    const defaultOption = enterpriceOptions.find(option => option.value === Number(id));
 
-        setSelectedEnterprice(selectedValueAsNumber);
+    const handleEnterpriceSecurity = (selectedOption) => {
+        console.log("Selected Option:", selectedOption);
+        if (selectedOption) {
+            setEnterprice(selectedOption.value);
+            setSelectedEnterprice(selectedOption);
+        } else if (defaultOption) {
+            setEnterprice(defaultOption.value);
+            setSelectedEnterprice(defaultOption);
+        }
     };
-
 
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
@@ -255,7 +260,6 @@ export const WatchmanCreate = () => {
         }
     };
 
-    console.log(opcionesRols, 'opcionesRols')
     return (
         <>
 
@@ -315,10 +319,8 @@ export const WatchmanCreate = () => {
                         </FormColumn>
 
                         <FormColumn>
-                            <div className="mr-1" style={{ width: '100%' }}>
 
-                                <Select2 name={'Empresa de Seguridad'} onChange={handleEnterpriceSecurity} options={enterpriceOptions} validate={shouldValidate} defaultOption={true}></Select2>
-                            </div>
+                            <Select2 placeholder={'Empresa de Seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions}></Select2>
                         </FormColumn>
                         <FormColumn>
                             <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>

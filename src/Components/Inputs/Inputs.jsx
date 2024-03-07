@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage,className, validate = false, required = false, errors }) {
+function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage, className, validate = false, required = false, errors, min, max }) {
   const [internalErrorMessage, setInternalErrorMessage] = useState(null);
   const [labelText, setLabelText] = useState(name);
   const [passwordShown, setPasswordShown] = useState(false);
@@ -60,9 +60,9 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
     }
   }, [])
 
-  const organizarErrores = ()=>{
-    if (errors){
-      return errors?.errors?.reduce((a,b)=>{
+  const organizarErrores = () => {
+    if (errors) {
+      return errors?.errors?.reduce((a, b) => {
         a[b.field] = b.message;
         // if (b.field === identifier){
         //   setErrorStyle("boder-danger");
@@ -71,7 +71,7 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
       }, {})
     }
   }
-  
+
 
   //Aqui esta utilizando el prop validate para validar si el campo esta vacio y mostrar un mensaje de error
   useEffect(() => {
@@ -87,15 +87,15 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
 
   const errorMessage = externalErrorMessage || internalErrorMessage;
 
-  useEffect(()=>{
-    if(errors){
-    setErrorMessageToShow(organizarErrores());
-  }
+  useEffect(() => {
+    if (errors) {
+      setErrorMessageToShow(organizarErrores());
+    }
     console.log("errors en el input:", errors)
-   
+
   }, [errors])
-  
-  
+
+
 
 
   const togglePasswordVisibility = () => {
@@ -121,7 +121,8 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
             readOnly={readonly}
             list={list}
             style={inputStyle}
-            min={type === 'number' ? 0 : null}
+            min={type === 'number' ? 0 : min}
+            max={max}
           />
           {type === 'password' && (
             <span
@@ -142,10 +143,10 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
             <option value={opcion.value} label={opcion.label} />
           ))}
         </datalist>}
-        {errorMessage && 
-        <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
-        {errors && errorMessageToShow != null  &&
-         <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
+        {errorMessage &&
+          <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
+        {errors && errorMessageToShow != null &&
+          <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
       </div>
     </>
   )

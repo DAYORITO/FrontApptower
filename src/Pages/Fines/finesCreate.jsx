@@ -29,8 +29,8 @@ function FinesCreate() {
   const { socket } = useContext(SocketContext)
 
   // User Logeed
-  
-  const idUserLogged = useUserLogged()
+
+  const {idUserLogged} = useUserLogged()
 
   const { id } = useParams();
   const [fineType, setFineType] = useState("");
@@ -44,6 +44,7 @@ function FinesCreate() {
   const [apartmets, setApartments] = useState({ apartments: [] });
   const [showModal, setShowmodal] = useState(false);
   const [errors, setErrors] = useState([{}])
+  console.log("Errores", errors);
 
   const { data, load, error } = useFetchget("apartments");
   // console.log(data);

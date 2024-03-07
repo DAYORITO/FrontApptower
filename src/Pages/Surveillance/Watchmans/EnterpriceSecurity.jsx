@@ -54,9 +54,11 @@ export const EnterpriceSecurity = () => {
 
     const [IsEditedEnterprice, setIsEditedEnterprice] = useState(true);
     const [EnterpriceFormModal, setEnterpriceFormModal] = useState(false);
+    const [errorList, setErrorList] = useState([]);
 
     const openEnterpriceModal = (data) => {
 
+        setErrorList('')
         console.log(data)
 
         if (data == null) {
@@ -151,7 +153,7 @@ export const EnterpriceSecurity = () => {
 
         console.log("edit data", data)
 
-        await postRequest(event, `enterpricesecurity`, 'PUT', setEnterpriceFormModal, data, url, 'Empresa actualizada correctamente')
+        await postRequest(event, `enterpricesecurity`, 'PUT', setEnterpriceFormModal, data, url, setErrorList, null, null)
         setShouldValidate(true)
         getEnterprice('enterpricesecurity')
 
@@ -172,7 +174,7 @@ export const EnterpriceSecurity = () => {
         console.log("edit data", data)
 
         try {
-            await postRequest(event, 'enterpricesecurity', 'POST', setEnterpriceFormModal, data, url, 'Empresa creada correctamente')
+            await postRequest(event, 'enterpricesecurity', 'POST', setEnterpriceFormModal, data, url, setErrorList, null, null, null)
             setShouldValidate(true)
             getEnterprice('enterpricesecurity')
         } catch (error) {
@@ -249,6 +251,8 @@ export const EnterpriceSecurity = () => {
 
                                     >
                                         <Actions onClick={() => openEnterpriceModal(enterprise)} accion='Editar Empresa' icon="edit" />
+                                        {enterprise.state === "Activo" ?
+                                            <Actions accion="Crear Vigilante" href={`/admin/watchman/create/${enterprise.idEnterpriseSecurity}`} /> : null}
                                     </Row>
                                 ))}
 
@@ -267,13 +271,34 @@ export const EnterpriceSecurity = () => {
                                 title={IsEditedEnterprice ? `Editar empresa` : 'Crear nueva empresa'}
                             >
 
-                                <Inputs name="NIT" type='number' value={NIT} onChange={e => setNIT(e.target.value)} validate={shouldValidate} required={true}
+                                <Inputs
+                                    name="NIT"
+                                    type='number'
+                                    value={NIT}
+                                    onChange={e => {
+                                        setNIT(e.target.value);
+                                        setErrorList([]);
+                                    }}
+                                    required={true}
+                                    errors={errorList}
+                                    identifier={'NIT'}
+                                />
+                                <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => { setNameEnterprice(e.target.value); setErrorList([]); (e.target.value) }} required={true}
+                                    errors={errorList}
+                                    identifier={'nameEnterprice'}
                                 ></Inputs>
-                                <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => setNameEnterprice(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-                                <Inputs name="Dirección" type='text' value={address} onChange={e => setAddress(e.target.value)} validate={shouldValidate} required={true}></Inputs>
-                                <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} validate={shouldValidate} required={true}
+                                <Inputs name="Dirección" type='text' value={address} onChange={e => { setAddress(e.target.value); setErrorList([]); }} required={true}
+                                    errors={errorList}
+                                    identifier={'address'}
                                 ></Inputs>
-                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} validate={shouldValidate} required={true}></Inputs>
+                                <Inputs name="Correo" type='email' value={email} onChange={e => { setEmail(e.target.value); setErrorList([]); }} required={true}
+                                    errors={errorList}
+                                    identifier={'email'}
+                                ></Inputs>
+                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => { setPhone(e.target.value); setErrorList([]); }} required={true}
+                                    errors={errorList}
+                                    identifier={'phone'}
+                                ></Inputs>
 
 
                                 {

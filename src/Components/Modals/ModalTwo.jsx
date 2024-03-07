@@ -5,6 +5,8 @@ import { RowNotificactions } from "../RowNotificacions/RowNotificactions";
 import "./ModalTwo.css";
 import { useEffect, useState } from "react";
 import { NotificationsAlert } from "../NotificationsAlert/NotificationsAlert";
+import { useAllowedPermissionsAndPrivileges } from "../../Hooks/useFetch";
+import { idToPermissionName, idToPrivilegesName } from "../../Hooks/permissionRols";
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -15,6 +17,22 @@ export const ModalContainer = ({ children, showModal }) => {
 };
 
 export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false }) => {
+
+  const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async (e) => {
+    setLoading(true);
+    try {
+      await onClick(e);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <div onClick={(e) => e.stopPropagation()} className="divModal__Container">
       <div
@@ -44,21 +62,33 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"
-                onClick={() => { onClickClose, showModal(false) }}
+                onClick={() => { showModal(false); }}
               >
                 Cerrar
               </button>
+
+
               {
-                buttonDelete ?
-                  <button type="button" onClick={onClickForDelete} className="btn mb-2 btn-danger">
-                    Desagregar
-                  </button> : null
+
+                allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
+                  onClickForDelete ?
+                    <button type="button" onClick={onClickForDelete} className="btn mb-2 btn-danger">
+                      Desagregar
+                    </button> : null
+                  : null
+
               }
               {
                 showSave ?
-                  <button type="button" onClick={onClick} className="btn mb-2 btn-primary">
-                    Guardar Cambios
-                  </button> : null
+                  loading ? (
+                    <button className="btn mb-2 btn-primary" type="button" disabled>
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...
+                    </button>
+                  ) : (
+                    <button type="button" onClick={handleClick} className="btn mb-2 btn-primary">
+                      Guardar Cambios
+                    </button>
+                  ) : null
               }
 
 

@@ -62,6 +62,12 @@ export const ResetPassword = () => {
             }
         }
     }
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    }
+
     return (
         <div className='container-login'>
             <div className="container-form login">
@@ -82,14 +88,17 @@ export const ResetPassword = () => {
                                 type='password'
                                 value={password}
                                 onChange={(newValue) => setPassword(newValue)}
+                                onKeyPress={handleKeyPress}
                             />
 
 
                             <InputsLogIn
                                 placeholder='Confirma tu contraseña'
                                 type='password'
+                                onKeyPress={handleKeyPress}
                                 value={confirmPassword}
                                 onChange={(newValue) => setConfirmPassword(newValue)}
+
                             />
                             <button className='boton-login' type='submit'>Restablecer contraseña</button>
                         </form>

@@ -46,7 +46,7 @@ export const Rols = () => {
 
     //paginator
 
-    const { totalPages, currentPage, nextPage, previousPage, filteredData: RolsInfo } = usePaginator(rolsList, 10);
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: RolsInfo } = usePaginator(rolsList, 4);
 
     return (
         <>
@@ -68,7 +68,9 @@ export const Rols = () => {
                             </div>
                             : rolsList.length == 0 || currentPage >= totalPages ?
 
-                                <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" />
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', marginLeft: '9vw' }}>
+                                    <img className='dontFountData' src={dataNotFoundImg} alt="" srcset="" />
+                                </div>
                                 :
 
                                 RolsInfo()?.map(rols => (

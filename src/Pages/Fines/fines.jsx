@@ -22,6 +22,7 @@ import { idToPermissionName, idToPrivilegesName } from '../../Hooks/permissionRo
 import FileUploader from '../../Components/ImgContainer/FileSelector';
 import Inputs from '../../Components/Inputs/Inputs';
 import { Spinner } from '../../Components/Spinner/Spinner';
+import { fineTypes } from '../../Hooks/consts.hooks';
 
 
 
@@ -38,7 +39,7 @@ function Fines() {
     const [paymentproof, setPaymentproof] = useState();
     const [showevidences, setShowEvidences] = useState(true);
     const [id, setId] = useState();
-    const [selectedFilterParam, setSelectedFilterParam] = useState('date');
+    const [filterParam, setfilterParam] = useState('incidentDate');
     const [selectedFilterValue, setSelectedFilterValue] = useState('');
     const [originalFines, setOriginalFines] = useState([]);
 
@@ -46,16 +47,16 @@ function Fines() {
 
     const filterOptions = [{ label: 'Fecha incidente', value: "incidentDate" },
     { label: 'Fecha límite de pago', value: 'paymentDate' },
-    { label: 'Fecha de creación', value: "createdAt" },
+    // { label: 'Fecha de creación', value: "createdAt" },
     { label: 'Estado', value: "state" },
     { label: 'Tipo de multa', value: "fineType" },
     { label: 'Apartamento', value: "apartmentName" }
     ]
-    const [optionState, setOptionState] = useState('Por revisar');
+    const [optionState, setOptionState] = useState('pendiente');
     const typeOptions = [{ label: 'Pendiente', value: 'pendiente' }, { label: 'Por revisar', value: 'por revisar' }, { label: 'Pagada', value: 'pagada' }]
     // const [dateOption, setDateOption] = useState('incidentDate');
     const dateOptions = [{ label: 'Fecha incidente', value: 'incidentDate' }, { label: 'Fecha limite de pago', value: 'paymentDate' }, { label: 'Fecha de creacion', value: 'createdAt' }]
-    const [dateMarked, setDateMarked] = useState();
+    const [dateMarked, setDateMarked] = useState("date");
     useEffect(() => {
         // Cuando la carga está en progreso (load es true), activamos el modal de carga
         if (data?.fines?.length > 0) {
@@ -75,29 +76,64 @@ function Fines() {
     }, [data]);
 
     function handleChange(e) {
-        searcher(e);
+        console.log("hola console1")
+        setSelectedFilterValue(e.target.value);
+        searcher(e.target.value, filterParam);
     }
 
+    function handleChange2(e) {
+        setfilterParam(e.target.value);
+        if (e.target.value == "state") {
+            searcher("pendiente", e.target.value);
+        }else if((e.target.value == "incidentDate" || e.target.value == "paymentDate" || e.target.value == "createdAt") && isNaN(Date.parse(selectedFilterValue))){
+            searcher("", e.target.value);
 
-    function searcher(e) {
-        setSelectedFilterValue(e.target.value.toLowerCase());
+        } else{
+            searcher(selectedFilterValue, e.target.value);
+        }
+        
+    }
 
+    function handleChange3(e) {
+            handleChange2(e);
+            setfilterParam(e.target.value);
+            if (e.target.value == "incidentDate"
+                || e.target.value == "paymentDate"
+                || e.target.value == "createdAt"
+            ) { setDateMarked('date') } else { setDateMarked('text'), setSelectedFilterValue('') }
+    }
+
+    function searcher(searchValue, filterParam) {
+
+        console.log("valor de busqueda", searchValue, "valor de filtro", filterParam)
 
         let filteredFines = originalFines.filter((dato) => {
-            if (selectedFilterParam === "incidentDate") {
-                return dato.incidentDate.toString().toLowerCase().includes(e.target.value.toLowerCase())
+            if (filterParam === "incidentDate") {
+                return dato.incidentDate.toString().toLowerCase()
+                .includes(searchValue?.target?.value != undefined  ? searchValue.target.value.toLowerCase() : searchValue)
             }
-            if (selectedFilterParam === "state") {
-                console.log("estado", dato.state)
-                return dato.state.toString().toLowerCase().includes(e.target.value.toLowerCase())
+            if (filterParam === "paymentDate") {
+                return dato.paymentDate.toString().toLowerCase()
+                .includes(searchValue?.target?.value != undefined  ? searchValue.target.value.toLowerCase() : searchValue)
             }
-            if (selectedFilterParam === "fineType") {
-                return dato.fineType.toString().toLowerCase().includes(e.target.value.toLowerCase())
+            // if (filterParam === "createdAt") {
+            //     return dato.createdAt.toString().toLowerCase()
+            //     .includes(searchValue?.target?.value != undefined  ? searchValue.target.value.toLowerCase() : searchValue)
+            // }
+            if (filterParam === "state") {
+                return dato.state.toString().toLowerCase().includes(searchValue.toLowerCase())
             }
-            if (selectedFilterParam === "apartmentName") {
-                return dato.apartment.apartmentName.toString().toLowerCase().includes(e.target.value.toLowerCase())
+            if (filterParam === "fineType") {
+                return dato.fineType.toString().toLowerCase().includes(searchValue.toLowerCase())
+            }
+            if (filterParam === "apartmentName") {
+                return dato.apartment.apartmentName.toString().toLowerCase().includes(searchValue.toLowerCase())
+            }
+            if (searchValue === "") {
+                return originalFines;
             }
         })
+        console.log("lo que encontre", filteredFines.length, filteredFines)
         setFines(filteredFines);
 
     }
@@ -204,17 +240,9 @@ function Fines() {
         <>
             <ContainerTable title='Multas'
                 dropdown={<DropdownExcel />}
-                search2={<SearchSelect options={filterOptions} onChange={(e) => {
-                    setSelectedFilterParam(e.target.value);
-                    setSelectedFilterValue('');
-                    setFines(originalFines);
-                    if (e.target.value == "incidentDate"
-                        || e.target.value == "paymentDate"
-                        || e.target.value == "createdAt"
-                    ) { setDateMarked('date') } else { setDateMarked('text') }
-                }} />}
-                search={selectedFilterParam == "state" ? <SearchButton options={typeOptions} type={dateMarked} onChange={handleChange} />
-                    : <SearchButton value={selectedFilterValue} type={dateMarked} onChange={handleChange} placeholder='Buscar multa' />}
+                search2={<SearchSelect options={filterOptions} onChange={handleChange3} />}
+                search={filterParam == "state" ? <SearchButton options={typeOptions} type={dateMarked} onChange={handleChange} />
+                    : filterParam == "fineType" ? <SearchButton options={fineTypes} onChange={handleChange}/> : <SearchButton value={selectedFilterValue} type={dateMarked} onChange={handleChange} placeholder='Buscar multa' />}
                 buttonToGo={
                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear')
                         ? <ButtonGoTo value='Crear Multa' href='/admin/fines/create' />

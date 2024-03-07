@@ -21,7 +21,7 @@ export const UsersEdit = () => {
 
     const { iduser } = useParams();
 
-    const idUserLogged = useUserLogged()
+    const { idUserLogged } = useUserLogged()
 
     const [editedUser, setEditedUser] = useState({});
     const [usersData, setUsersData] = useState([]);
@@ -317,20 +317,33 @@ export const UsersEdit = () => {
     // Traer empresas de seguridad
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const { data: dataWatchman, load5, error5 } = useFetchget('watchman')
+    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
     const userWatchman = Array.isArray(dataWatchman.watchman) ? dataWatchman.watchman.find(watchman => watchman.iduser === editedUser.iduser) : null;
     const enterpriceWatchman = userWatchman ? userWatchman.idEnterpriseSecurity : null;
 
-    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity ? dataEnterprice.enterpriseSecurity.map(enterprice => ({
-        value: enterprice.idEnterpriseSecurity,
-        label: enterprice.nameEnterprice
-    })) : [];
+    const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
+        ? dataEnterprice.enterpriseSecurity
+            .filter(enterprice => enterprice.state === "Activo")
+            .map(enterprice => ({
+                value: enterprice.idEnterpriseSecurity,
+                label: enterprice.nameEnterprice
+            }))
+        : [];
 
-    const handleEnterpriceSecurity = (selectedValue) => {
-        const selectedValueAsNumber = Number(selectedValue);
-        console.log("Selected Value:", selectedValueAsNumber);
-        setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedValueAsNumber });
+    useEffect(() => {
+        if (userWatchman) {
+            const initialEnterprice = enterpriceOptions.find(option => option.value === userWatchman?.idEnterpriseSecurity);
+            setSelectedEnterprice(initialEnterprice);
+        }
+    }, [userWatchman]);
+
+
+    const handleEnterpriceSecurity = (selectedOption) => {
+        setSelectedEnterprice(selectedOption);
+        setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedOption.value });
     };
+
 
 
     //Traer tipo de residencia
@@ -542,21 +555,13 @@ export const UsersEdit = () => {
 
 
                                 <FormColumn>
-                                    <div className="mr-1" style={{ width: '100%' }}>
-                                        <Select2
-                                            key={enterpriceWatchman}
-                                            name={'Empresa de Seguridad'}
-                                            onChange={(newValue) => {
-                                                const setSelectedEnterprice = enterpriceOptions.find(option => option.value === Number(newValue));
-                                                const newNameEnterprice = setSelectedEnterprice ? setSelectedEnterprice.label : '';
-                                                handleEnterpriceSecurity(newValue);
-                                            }}
-                                            options={enterpriceOptions}
-                                            value={enterpriceWatchman}
-                                            validate={shouldValidate}
-
-                                        />
-                                    </div>
+                                    <Select2
+                                        placeholder={'Empresa de Seguridad'}
+                                        onChange={handleEnterpriceSecurity}
+                                        options={enterpriceOptions}
+                                        value={selectedEnterprice}
+                                        validate={shouldValidate}
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>

@@ -30,7 +30,7 @@ function GuestIncomeCreate() {
   const url = "http://localhost:3000/api/";
 
 
-  const idUserLogged = useUserLogged()
+  const {idUserLogged} = useUserLogged()
 
   // Socket
 
