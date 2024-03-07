@@ -62,7 +62,6 @@ export const UsersDetails = () => {
     const [age, setAge] = useState(null)
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-
     const [pdf, setPdf] = useState(null);
 
 

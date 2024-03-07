@@ -32,7 +32,7 @@ export const WatchmanCreate = () => {
     const [enterprice, setEnterprice] = useState(id || null);
     const [errors, setErrors] = useState([]);
 
-    console.log(errors, 'errors')
+    console.log(errors, 'errors holaaaaaaaa')
 
 
 
@@ -172,24 +172,7 @@ export const WatchmanCreate = () => {
         //     return;
         // }
 
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Las contraseñas no coinciden',
-                icon: 'error',
-            });
-            return;
-        }
 
-
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Las contraseñas no coinciden',
-                icon: 'error',
-            });
-            return;
-        }
 
         if (age < 18) {
             Swal.fire({
@@ -239,7 +222,7 @@ export const WatchmanCreate = () => {
                 icon: 'error',
             });
         }
-        setErrors(userResponse?.error?.errors);
+        setErrors(userResponse?.error);
     };
 
     return (

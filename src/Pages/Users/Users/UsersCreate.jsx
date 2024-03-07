@@ -144,14 +144,6 @@ export const UsersCreate = () => {
             return;
         }
 
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Las contraseñas no coinciden',
-                icon: 'error',
-            });
-            return;
-        }
 
         if (namerole === 'Vigilate' || namerole === 'Vigilantes' || namerole === 'Seguridad' && !enterprice) {
             Swal.fire({
@@ -223,6 +215,7 @@ export const UsersCreate = () => {
                     }).then(() => {
                         navigate('/admin/users');
                     });
+                    shouldValidate(true)
                 } else {
                     console.error('Error al crear el rol del usuario:');
                     Swal.fire({
@@ -238,7 +231,7 @@ export const UsersCreate = () => {
                     text: 'Error al crear usuario',
                     icon: 'error',
                 });
-                setErrors(userResponse?.error?.errors);
+                setErrors(userResponse?.error);
             }
 
         } catch (error) {
@@ -344,7 +337,7 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={sexs} name={"Género"} value={sex} onChange={e => setSex(e.target.value)} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={sexs} name={"Género"} value={sex} onChange={e => setSex(e.target.value)} required={false} ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
@@ -361,11 +354,13 @@ export const UsersCreate = () => {
                                         name={"Apartamento"}
                                         value={idApartment}
                                         onChange={e => setIdApartment(e.target.value)}
+                                        errors={errors}
+                                        identifier={'idApartment'}
                                     ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} errors={errors} identifier={''} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} errors={errors} identifier={'residentType'} ></InputsSelect>
 
                                 </FormColumn>
                                 <FormColumn>
@@ -376,12 +371,11 @@ export const UsersCreate = () => {
 
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={residentsTypes} name={"Tipo residente"} value={residentType} onChange={e => setResidentType(e.target.value)} ></InputsSelect>
 
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
+                                    <Inputs name="Confirmar contraseña" type='passwordConfirm' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
 
                                 </FormColumn>
 
@@ -424,7 +418,8 @@ export const UsersCreate = () => {
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Select2 placeholder={'Empresa de seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions} ></Select2>
+                                    <Select2 placeholder={'Empresa de seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions} identifier={"idEnterpriseSecurity"}
+                                        errors={errors}></Select2>
 
                                 </FormColumn>
 
@@ -450,8 +445,9 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'passwordConfirm'} />
+
                                 </FormColumn>
 
                             </>
@@ -460,7 +456,7 @@ export const UsersCreate = () => {
                             <>
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={''} ></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo documento"} onChange={e => setDocumentType(e.target.value)} value={documentType} errors={errors} identifier={'docType'} ></InputsSelect>
 
                                 </FormColumn>
 
@@ -513,7 +509,7 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <h6 className='mb-4 text-muted'>Datos de acceso</h6>
                                     <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
-                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'password'} />
+                                    <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={'passwordConfirm'} />
                                 </FormColumn>
 
                             </>
@@ -578,7 +574,7 @@ export const UsersCreate = () => {
                                         identifier={"birthday"}
                                     ></Inputs>
                                     <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
-                                        onChange={e => setPdf(e.target.files[0])} />
+                                        onChange={e => setPdf(e.target.files[0])} validate={shouldValidate} />
 
                                 </FormColumn>
 
@@ -590,7 +586,7 @@ export const UsersCreate = () => {
                                     />
                                     <Inputs name="Confirmar contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
                                         errors={errors}
-                                        identifier={"password"}
+                                        identifier={"passwordConfirm"}
                                     />
                                 </FormColumn>
 

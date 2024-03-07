@@ -1,14 +1,17 @@
 .rbc-btn-group {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
+    margin-right: 7.3vw;
 }
 
 .rbc-btn-group button {
     background-color: #ffffff;
-    color: #000;
+    color: rgb(83, 83, 83);
     font-size: 16px;
-    border-radius: 7%;
+    border-radius: 0%;
+    border-top-right-radius: 1% !important;
+    border-bottom-right-radius: 1% !important;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
@@ -22,7 +25,7 @@
 
 .rbc-header {
     /* background: linear-gradient(to right, #e6e6e6e3, #ebebebe8); */
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     color: #000;
     font-weight: 700;
     text-align: center;
@@ -46,47 +49,62 @@
 
 .rbc-toolbar-label {
     font-size: 1.3rem;
-    font-weight: 700;
+    font-weight: 560;
     color: #000000dc;
     margin-bottom: 20px;
 }
 
+.btnregresar {
+    background-color: #dfdfdf;
+    outline: none;
+    padding: 10px 20px;
+    width: 100px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
+
+}
 
 
 .rbc-toolbar-label {
     text-transform: lowercase;
+    color: #313131;
+    /* margin-top: 20px !important; */
 }
 
 .rbc-toolbar-label::before {
     content: "Reserva / ";
-    margin-left: 150px;
+    margin-left: 8vw;
     text-transform: capitalize;
 
 }
 
 .rbc-button-link {
-    color: #000000c0;
+    color: rgb(117, 117, 117);
     font-weight: 700;
     text-transform: capitalize;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.rbc-btn-group .rbc-active {
-    height: 32px;
+.rbc-toolbar .rbc-btn-group .rbc-active {
+    background-color: #ffffff !important;
+    border: #6d6d6d44 1px solid !important;
+
 
 }
 
 .rbc-header span[role="columnheader"] {
     font-size: 0.8rem;
     font-weight: bold;
-    color: #000000;
+    color: rgb(117, 117, 117);
     text-transform: capitalize;
 }
 
 
 .rbc-day-bg.rbc-today {
-    background-color: #c4dce0;
+    background-color: #d6ecf0;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.308);
 }
 
@@ -102,4 +120,9 @@
     background-color: white;
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.rbc-calendar {
+    margin-left: 1.5vw;
+    margin-top: 13vh;
 }

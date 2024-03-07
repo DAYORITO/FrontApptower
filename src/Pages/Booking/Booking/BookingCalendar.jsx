@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, dayjsLocalizer, Views, Navigate } from 'react-big-calendar';
+import { Calendar, dayjsLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import dayjs from 'dayjs';
+import { Navigate } from 'react-big-calendar';
 import FormContainer from '../../../Components/Forms/FormContainer';
 import 'dayjs/locale/es';
 import './BookingCalendar.css';
@@ -18,8 +19,11 @@ import { BookingTypes } from '../../../Hooks/consts.hooks';
 import { Actions } from '../../../Components/Actions/Actions';
 import InputsSelect from '../../../Components/Inputs/InputsSelect';
 import { da } from 'date-fns/locale';
+import { ContainerCalendar } from '../../../Components/ContainerCalendar/ContainerCalendar';
+import { set } from 'date-fns';
 
 dayjs.locale('es');
+
 
 export const BookingCalendar = () => {
 
@@ -124,23 +128,38 @@ export const BookingCalendar = () => {
 
     console.log("Selected Space", selectedSpace)
 
+    const spaceColorMap = {};
+
+    function getRandomNeutralColor(idSpace) {
+        if (spaceColorMap[idSpace]) {
+            return spaceColorMap[idSpace];
+        }
+
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = 25;
+        const lightness = 50;
+        const neutralColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
 
+        spaceColorMap[idSpace] = neutralColor;
+
+        return neutralColor;
+    }
     const [events, setEvents] = useState([]);
+
+
+
+
 
     // se encarga de actualizar el calendario con las reservas y conversión de fechas
     useEffect(() => {
         if (BookingData && BookingData.data && Array.isArray(BookingData.data.booking)) {
             const bookings = BookingData.data.booking;
             const events = bookings
-                .filter(booking => booking.Space.idSpace === idSpace)
+                .filter(booking => idSpace ? booking.Space.idSpace === idSpace : true)
                 .map(booking => {
-
                     const startDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.StartTimeBooking}`);
                     const endDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.EndTimeBooking}`);
-                    // const startHour = startDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-                    // const endHour = endDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-
                     return {
                         ...booking,
                         id: booking.idbooking,
@@ -148,6 +167,7 @@ export const BookingCalendar = () => {
                         end: endDate,
                         title: `Reserva de ${(booking?.Space?.spaceName).toLowerCase()} para ${booking.amountPeople} personas `,
                         status: `Estado: ${booking.status}`,
+                        color: getRandomNeutralColor(booking.Space.idSpace),
                     };
                 });
             setEvents(events);
@@ -171,7 +191,7 @@ export const BookingCalendar = () => {
         if (dayjs(date).isBefore(dayjs(), 'day')) {
             return {
                 style: {
-                    backgroundColor: '#ebebeb',
+                    backgroundColor: '#ececec',
                     opacity: 0.6
                 }
             };
@@ -263,18 +283,29 @@ export const BookingCalendar = () => {
 
     }
 
+    useEffect(() => {
+        if (showModal === false) {
+
+            setHourEnd(null)
+            setHourStart(null)
+            setAmountPeople(null)
+            setIdResident(null)
+
+        }
+
+    }, [showModal])
 
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <FormContainer
+            <ContainerCalendar
 
 
             >
 
                 {/* name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`} */}
                 <Calendar
-                    style={{ height: '68vh', width: '100%' }}
+                    style={{ height: '75vh', width: '96%' }}
                     localizer={localizer}
                     events={events}
                     selectable
@@ -284,6 +315,13 @@ export const BookingCalendar = () => {
                     onSelectEvent={hadleSelectEvent}
                     onView={setCurrentView}
                     popup
+                    eventPropGetter={(event, start, end, isSelected) => {
+                        return {
+                            style: {
+                                backgroundColor: event.color,
+                            }
+                        }
+                    }}
                     components={{
                         agenda: {
                             event: ({ event }) => (
@@ -319,7 +357,7 @@ export const BookingCalendar = () => {
                 />
 
 
-            </FormContainer>
+            </ContainerCalendar>
             {showModal && selectedDate &&
                 createPortal(
                     <ModalContainer ShowModal={showModal} >
