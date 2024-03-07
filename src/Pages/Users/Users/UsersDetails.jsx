@@ -62,7 +62,9 @@ export const UsersDetails = () => {
     const [age, setAge] = useState(null)
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [pdf, setPdf] = useState(null);
+    const [pdf, setPdf] = useState("")
+    const [newPdf, setNewPdf] = useState("")
+    const [errorList, setErrorList] = useState([])
 
 
 
@@ -164,12 +166,14 @@ export const UsersDetails = () => {
             birthday: birthday,
             email: email,
             phone: phone,
-            status: userStatus
+            status: userStatus,
+            pdf: pdf,
+            newPdf: newPdf
 
         }
 
 
-        await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoUsers, data, url, 'Informacion actualizada correctamente');
+        await postRequest(event, 'users/personalInfo', 'PUT', setModalPersonalInfoUsers, data, url, setErrorList, null, null);
         getuser(`users/${id}`)
 
 
@@ -233,7 +237,7 @@ export const UsersDetails = () => {
             return
         }
 
-        await postRequest(event, 'users/password', 'PUT', {}, data, url, 'Contraseña actualizada correctamente');
+        await postRequest(event, 'users/password', 'PUT', {}, data, url, setErrorList, null, null);
         setModalChangePassword(false)
         getuser(`users/${id}`)
 
@@ -257,7 +261,7 @@ export const UsersDetails = () => {
                             A2={`${lastName}`}
                             A5={`Correo electrónico: ${email}`}
                             A6={`Teléfono: ${phone}`}
-                            A7={pdf}
+                            A7={`pdf: ${pdf}`}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
@@ -275,7 +279,8 @@ export const UsersDetails = () => {
                         <DropdownInfo
                             name={`Informacion personal`}
                             action1={'Editar informacion personal'}
-                            onClickAction1={openModalEdit}
+                            onClickAction1={EqualUser ? openModalEdit : null}
+                            toAction1={!EqualUser ? `/admin/users/edit/${id}` : null}
                         >
 
                             <ul className='list-unstyled'>
@@ -309,28 +314,29 @@ export const UsersDetails = () => {
                                 title={"Editar informacion "}
 
                             >
-                                {EqualUser ? null : <Uploader name="img" formatos='.pdf' label="Documento de Identidad" onChange={e => setPdf(e.target.files[0])} />}
+
+                                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
-                                    value={docType} onChange={e => setDocType(e.target.value)}
+                                    value={docType} onChange={e => setDocType(e.target.value)} identifier={"docType"} errors={errorList}
                                 ></InputsSelect>
 
                                 <Inputs name="Numero de documento" type={"text"}
-                                    value={docNumber} onChange={e => setDocNumber(e.target.value)}></Inputs>
+                                    value={docNumber} onChange={e => setDocNumber(e.target.value)} identifier={'document'} errors={errorList}></Inputs>
 
-                                <Inputs name="Nombres" type="text" value={name} onChange={e => setName(e.target.value)} />
+                                <Inputs name="Nombres" type="text" value={name} onChange={e => setName(e.target.value)} errors={errorList} identifier={"name"} />
 
                                 <Inputs name="Apellidos" type={"text"}
-                                    value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
+                                    value={lastName} onChange={e => setLastName(e.target.value)} errors={errorList} identifier={'lastName'}></Inputs>
 
                                 <Inputs name="Fecha de Nacimiento" type={"date"}
-                                    value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+                                    value={birthday} onChange={e => setBirthday(e.target.value)} identifier={"birthday"} errors={errorList}></Inputs>
 
                                 <Inputs name="Correo electronico" type={"text"}
-                                    value={email} onChange={e => setEmail(e.target.value)}></Inputs>
+                                    value={email} onChange={e => setEmail(e.target.value)} identifier={'email'} errors={errorList}></Inputs>
 
                                 <Inputs name="Numero de telefono" type={"text"}
-                                    value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+                                    value={phone} onChange={e => setPhone(e.target.value)} identifier={'phone'} errors={errorList}></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

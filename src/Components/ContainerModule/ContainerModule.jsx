@@ -17,7 +17,7 @@ export const ContainerModule = ({
     A4,
     A5,
     A6,
-    A7,
+    A7 = "",
 
     onClick,
 

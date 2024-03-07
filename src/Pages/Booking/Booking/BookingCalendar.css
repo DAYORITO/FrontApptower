@@ -7,7 +7,7 @@
 
 .rbc-btn-group button {
     background-color: #ffffff;
-    color: rgb(83, 83, 83);
+    color: rgb(97, 97, 97);
     font-size: 16px;
     border-radius: 0%;
     border-top-right-radius: 1% !important;
@@ -81,7 +81,7 @@
 }
 
 .rbc-button-link {
-    color: rgb(117, 117, 117);
+    color: rgb(97, 97, 97);
     font-weight: 700;
     text-transform: capitalize;
     cursor: pointer;

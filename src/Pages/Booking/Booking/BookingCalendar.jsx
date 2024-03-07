@@ -128,23 +128,35 @@ export const BookingCalendar = () => {
 
     console.log("Selected Space", selectedSpace)
 
+    const colors = [
+        'hsl(60, 50%, 45%)',  // darker yellow
+        'hsl(90, 50%, 45%)',  // darker light green
+        'hsl(120, 50%, 45%)', // darker green
+        'hsl(150, 50%, 45%)', // darker teal
+        'hsl(180, 50%, 45%)', // darker cyan
+        'hsl(210, 50%, 45%)', // darker light blue
+        'hsl(240, 50%, 45%)', // darker blue
+        'hsl(270, 50%, 45%)', // darker purple
+        'hsl(300, 50%, 45%)', // darker magenta
+        'hsl(330, 50%, 45%)'  // darker rose
+    ];
+
     const spaceColorMap = {};
 
-    function getRandomNeutralColor(idSpace) {
+    function getColorForSpace(idSpace) {
         if (spaceColorMap[idSpace]) {
             return spaceColorMap[idSpace];
         }
 
-        const hue = Math.floor(Math.random() * 360);
-        const saturation = 25;
-        const lightness = 50;
-        const neutralColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        // Asigna un color del array de colores de forma rotativa
+        const color = colors[Object.keys(spaceColorMap).length % colors.length];
 
+        spaceColorMap[idSpace] = color;
 
-        spaceColorMap[idSpace] = neutralColor;
-
-        return neutralColor;
+        return color;
     }
+
+
     const [events, setEvents] = useState([]);
 
 
@@ -167,7 +179,7 @@ export const BookingCalendar = () => {
                         end: endDate,
                         title: `Reserva de ${(booking?.Space?.spaceName).toLowerCase()} para ${booking.amountPeople} personas `,
                         status: `Estado: ${booking.status}`,
-                        color: getRandomNeutralColor(booking.Space.idSpace),
+                        color: getColorForSpace(booking.Space.idSpace),
                     };
                 });
             setEvents(events);
