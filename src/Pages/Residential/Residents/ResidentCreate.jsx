@@ -5,7 +5,7 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router'
-import { docTypes, sexs } from '../../../Hooks/consts.hooks'
+import { docTypes, residentsTypes, sexs } from '../../../Hooks/consts.hooks'
 import FormColumn from "../../../Components/Forms/FormColumn";
 import { useFetch } from '../../../Hooks/useFetch'
 import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
@@ -41,9 +41,14 @@ export const ResidentCreate = (props) => {
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [residentType, setResidentType] = useState("tenant");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [idRol, setIdRol] = useState(2)
+
+  const [errorList, setErrorList] = useState([])
 
   // const [status, setStatus] = useState("");
 
@@ -107,7 +112,10 @@ export const ResidentCreate = (props) => {
       sex: sex,
       email: email,
       phone: phone,
+      residentType: residentType,
       password: password,
+      passwordConfirm: passwordConfirm,
+
 
       idrole: parseInt(idRol),
       idApartment: parseInt(idApartment),
@@ -116,7 +124,7 @@ export const ResidentCreate = (props) => {
 
     }
 
-    await postRequest(event, 'residents', 'POST', null, data, url, null, navigate, socket)
+    await postRequest(event, 'residents', 'POST', null, data, url, setErrorList, navigate, socket)
 
 
   };
@@ -146,47 +154,63 @@ export const ResidentCreate = (props) => {
 
         <FormColumn>
           <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
+            identifier={'docType'} errors={errorList}
             value={docType} onChange={e => setDocType(e.target.value)}></InputsSelect>
         </FormColumn>
 
         <FormColumn>
           <Inputs name="Numero de documento" placeholder="1000000007"
+            identifier={'document'} errors={errorList}
             value={document} onChange={e => setDocument(e.target.value)}></Inputs>
         </FormColumn>
 
         <FormColumn>
           <Inputs name="Nombre"
+            identifier={'name'} errors={errorList}
             value={name} onChange={e => setName(e.target.value)}></Inputs>
         </FormColumn>
 
         <FormColumn>
           <Inputs name="Apellido"
+            identifier={'lastName'} errors={errorList}
             value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
         </FormColumn>
 
         <FormColumn>
           <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+            identifier={'sex'} errors={errorList}
             value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
         </FormColumn>
 
         <FormColumn>
           <Inputs name="Fecha de nacimiento" type="Date"
+            identifier={'birthday'} errors={errorList}
             value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
         </FormColumn>
 
         <FormColumn>
           <Inputs name="Correo" type="email"
+            identifier={'email'} errors={errorList}
             value={email} onChange={e => setEmail(e.target.value)}></Inputs>
         </FormColumn>
 
         <FormColumn>
           <Inputs name="Numero de telefono"
+            identifier={'phone'} errors={errorList}
             value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
+        </FormColumn>
+
+        <FormColumn>
+          <InputsSelect id={"select"} options={residentsTypes} name={"Tipo de residente"}
+            identifier={'residentType'} errors={errorList}
+            value={residentType} onChange={e => setResidentType(e.target.value)}></InputsSelect>
+
         </FormColumn>
 
         <FormColumn>
           <InputsSelect
             id={"select"}
+            identifier={'idApartment'} errors={errorList}
             options={apartmentList}
             name={"Apartamento"}
             value={idApartment}
@@ -201,6 +225,7 @@ export const ResidentCreate = (props) => {
             <>
               <Inputs
                 name="Fecha de inicio de residencia"
+                identifier={'residentStartDate'} errors={errorList}
                 type={"date"}
                 value={residentStartDate}
                 onChange={e => setResidentStartDate(e.target.value)}
@@ -208,6 +233,15 @@ export const ResidentCreate = (props) => {
 
             </>
           )}
+
+          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
+
+          <Inputs name="Contraseña"
+            identifier={'password'} errors={errorList} type='password' value={password} onChange={e => setPassword(e.target.value)} />
+
+          <Inputs name="Confirmar Contraseña"
+            identifier={'passwordConfirm'} errors={errorList} type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} />
+
         </FormColumn>
 
 
@@ -222,11 +256,6 @@ export const ResidentCreate = (props) => {
         </FormColumn>
 
         <FormColumn>
-          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-
-          <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} />
-
-          <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
 
         </FormColumn>
 

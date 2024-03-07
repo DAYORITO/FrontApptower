@@ -49,7 +49,7 @@ export const docTypes = [
 
 
 export const residentsTypes = [
-
+    
     {
         value: "owner",
         label: "Propietario"
