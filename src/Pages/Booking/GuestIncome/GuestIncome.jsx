@@ -39,6 +39,8 @@ function GuestIncome() {
     const [showModaload, setShowModaload] = useState(false);
     const { data, load, error } = useFetchget('guestIncome')
     const { data: data2, load: load2, error: error2 } = useFetchget('guestincomeparking')
+    const [originalGuestIncomeData, setOriginalGuestIncomeData] = useState([]);
+
 
 
 
@@ -55,6 +57,7 @@ function GuestIncome() {
     useEffect(() => {
         if (data && data.guestIncome) {
             setGuestIncomeData(data.guestIncome);
+            setOriginalGuestIncomeData(data.guestIncome);
         }
     }, [data])
 
@@ -137,7 +140,7 @@ function GuestIncome() {
 
     const filteredDataguestIncome = () => {
         if (data && data.guestIncome) {
-            return data.guestIncome.slice(currentPage, currentPage + 8);
+            return guestIncomeData.slice(currentPage, currentPage + 8);
         } else {
             return [];
         }
@@ -152,6 +155,27 @@ function GuestIncome() {
         if (currentPage > 0)
             setCurrentPage(currentPage - 8)
     }
+    function handleChange(e) {
+        searcher(e.target.value);
+    }
+
+    function searcher(searchValue) {
+        if (!searchValue) {
+            setGuestIncomeData(originalGuestIncomeData);
+            return;
+        }
+    
+        searchValue = searchValue.trim().toLowerCase();
+    
+        let filteredData = originalGuestIncomeData.filter((dato) => {
+            const apartmentName = dato?.asociatedApartment?.apartmentName.toString().toLowerCase();
+            const guestFullName = (dato?.asociatedVisitor.name + " " + dato?.asociatedVisitor.lastname).toLowerCase();
+            return apartmentName.includes(searchValue) || guestFullName.includes(searchValue);
+        })
+        console.log(filteredData.length, "Datos filtrados:", filteredData);
+        setGuestIncomeData(filteredData);
+    }
+    
 
     return (
         <>
@@ -159,7 +183,7 @@ function GuestIncome() {
             <ContainerTable
                 title='Ingresos'
                 dropdown={<DropdownExcel />}
-                search={<SearchButton />}
+                search={<SearchButton type='text' onChange={handleChange} />}
 
                 buttonToGo={
                     allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Crear')
