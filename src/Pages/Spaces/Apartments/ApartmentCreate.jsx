@@ -45,7 +45,7 @@ export const ApartmentCreate = () => {
 
   let [isUniqueTower, setIsUniqueTower] = useState('false');
 
-  const [lastApartmentNumber, setLastApartmentNumber] = useState(null);
+  const [lastApartmentNumber, setLastApartmentNumber] = useState(0);
 
   const [errorList, setErrorList] = useState([]);
 
