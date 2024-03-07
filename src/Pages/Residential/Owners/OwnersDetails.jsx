@@ -451,7 +451,7 @@ export const OwnerDetail = () => {
                   identifier={'birthday'} errors={errorList}
                   value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
 
-                <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+                <InputsSelect id={"select"} options={sexs} name={"Genero"}
                   identifier={'sex'} errors={errorList}
                   value={sex} onChange={e => setSex(e.target.value)}
                 ></InputsSelect>

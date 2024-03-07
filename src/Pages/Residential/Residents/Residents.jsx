@@ -63,8 +63,6 @@ export const Residents = () => {
 
     let residentList = filter(search, residents?.data?.residents, "user", "name")
 
-    residentList = residentList.sort((a, b) => a.idResident - b.idResident);
-
 
     const searcher = (e) => {
 
@@ -116,14 +114,19 @@ export const Residents = () => {
     const [residentStartDate, setResidentStartDate] = useState("")
     const [residentEndDate, setResidentEndDate] = useState("")
 
+    // Error list
+
+    const [errorList, setErrorList] = useState("")
+
 
     const [isCreateApartmentResident, setIsCreateApartmentResident] = useState(false)
 
-    // List apartments
+    // List active apartments
 
     const apartmentList = apartments?.data && apartments?.data?.apartments
 
         ? apartments.data.apartments
+            .filter(apartment => apartment.status == 'Active')
             .map(apartment => ({
                 value: apartment.idApartment,
                 label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
@@ -141,7 +144,7 @@ export const Residents = () => {
 
     const openModal = (data) => {
 
-        console.log(data)
+        console.log(data, 'DATAA')
         !data.apartments.length == 0 ? setIdApartment(data.apartments[0].idApartment) : setIdApartment("")
 
         setIdResident(data.idResident)
@@ -219,9 +222,8 @@ export const Residents = () => {
         }
         console.log(data)
 
-        await postRequest(event, 'aparmentResidents', 'PUT', {}, data, url)
+        await postRequest(event, 'aparmentResidents', 'PUT', setModalAddChangeApartment, data, url, setErrorList, null, socket)
 
-        setModalAddChangeApartment(false)
         getResidents('residents')
 
     };
@@ -243,7 +245,7 @@ export const Residents = () => {
 
         }
 
-        await postRequest(event, 'aparmentResidents', 'POST', setModalAddChangeApartment, data, url, null, null, socket)
+        await postRequest(event, 'aparmentResidents', 'POST', setModalAddChangeApartment, data, url, setErrorList, null, socket)
 
         getResidents('residents')
 
@@ -297,7 +299,7 @@ export const Residents = () => {
 
         }
 
-        await postRequest(event, 'residents', 'PUT', setModalResident, data, url, null, null, socket)
+        await postRequest(event, 'residents', 'PUT', setModalResident, data, url, setErrorList, null, socket)
 
         getResidents('residents')
 
@@ -318,7 +320,7 @@ export const Residents = () => {
 
     // Paginator
 
-    const { totalPages, currentPage, nextPage, previousPage, filteredData: residentsInto } = usePaginator(residentList, 6);
+    const { totalPages, currentPage, nextPage, previousPage, filteredData: residentsInto } = usePaginator(residentList, 4);
 
 
     return (
@@ -415,18 +417,21 @@ export const Residents = () => {
                                 showModal={setModalAddChangeApartment}
                                 title={`${isCreateApartmentResident ? "Asignar apartamento" : "Modificar apartamento asignado"}`}
                                 buttonDelete={isCreateApartmentResident ? false : true}
-                                onClickForDelete={deleteApartmentResident}
+                            // onClickForDelete={deleteApartmentResident}
                             >
 
                                 <InputsSelect disabled id={"select"} options={residentsList} name={"Residente"}
+                                    identifier={'idResident'} errors={errorList}
                                     value={idResident} onChange={e => setIdApartmentResident(e.target.value)}
                                 ></InputsSelect>
 
                                 <InputsSelect disabled={!isCreateApartmentResident} id={"select"} options={apartmentList} name={"Apartamento"}
+                                    identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Fecha de residencia de apartamento" type={"date"}
+                                    identifier={'residentStartDate'} errors={errorList}
                                     value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
 
                                 {
@@ -434,9 +439,11 @@ export const Residents = () => {
                                         <>
 
                                             <Inputs name="Fecha de modificacion residencia de apartamento " type={"date"}
+                                                identifier={'residentEndDate'} errors={errorList}
                                                 value={residentEndDate} onChange={e => setResidentEndDate(e.target.value)}></Inputs>
 
                                             <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                                identifier={'status'} errors={errorList}
                                                 value={status} onChange={e => setStatus(e.target.value)}
                                             ></InputsSelect>
 
@@ -469,18 +476,21 @@ export const Residents = () => {
 
                             >
 
-
                                 <InputsSelect id={"select"} options={residentsTypes} name={"Tipo de residente"}
+                                    identifier={'residentType'} errors={errorList}
                                     value={residentType} onChange={e => setResidentType(e.target.value)}
                                 ></InputsSelect>
 
                                 <Inputs name="Fecha de inicio de residencia " type={"date"}
+                                    identifier={'createdAt'} errors={errorList} readonly required={false}
                                     value={createdAt} onChange={e => setCreatedAt(e.target.value)}></Inputs>
 
                                 <Inputs name="Fecha de modificacion de residencia " type={"date"}
+                                    identifier={'updatedAt'} errors={errorList} readonly required={false}
                                     value={updatedAt} onChange={e => setUpdatedAt(e.target.value)}></Inputs>
 
                                 <InputsSelect id={"select"} options={statusList} name={"Estado"}
+                                    identifier={'status'} errors={errorList}
                                     value={status} onChange={e => setStatus(e.target.value)}
                                 ></InputsSelect>
 

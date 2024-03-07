@@ -258,7 +258,7 @@ export const UsersDetails = () => {
                             A2={`${lastName}`}
                             A5={`Correo electrónico: ${email}`}
                             A6={`Teléfono: ${phone}`}
-                            // A7={pdf}
+                            A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}

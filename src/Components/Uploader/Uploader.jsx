@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onChange, validate, fileUrl, multiple = false }) => {
+export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onChange, validate, fileUrl, multiple = false, required = true }) => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState(null);
     const [fileError, setFileError] = useState(null);
@@ -53,13 +53,22 @@ export const Uploader = ({ label, formatos = ['png', 'jpg', 'jpeg'], name, onCha
 
     return (
         <div className="card-body" id="uploader">
-            <label>{label}</label>
+            <label>
+                {required ? (
+                    <span style={{ color: '#5B5B5B', fontWeight: 'bold', fontSize: '13px' }}>
+                        {label}
+                        <span style={{ color: 'red' }}> *</span>
+                    </span>
+                ) : (
+                    label
+                )}
+            </label>
             <div className="dropzone bg-light rounded-lg" id="tinydash-dropzone">
                 <div className="dz-message needsclick">
                     {!file && (
                         <div className="circle circle-lg bg-primary">
                             <i className="fe fe-upload fe-24 text-white" />
-                            <input type="file" name={name} aria-label="Archivo" onChange={handleFileChange} accept={formatos} multiple  />
+                            <input type="file" name={name} aria-label="Archivo" onChange={handleFileChange} accept={formatos} multiple />
                         </div>
                     )}
                 </div>

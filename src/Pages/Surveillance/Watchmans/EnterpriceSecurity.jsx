@@ -283,19 +283,19 @@ export const EnterpriceSecurity = () => {
                                     errors={errorList}
                                     identifier={'NIT'}
                                 />
-                                <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => { setNameEnterprice(e.target.value); setErrorList([]); (e.target.value) }} required={true}
+                                <Inputs name="Nombre Empresa" type='text' value={nameEnterprice} onChange={e => { setNameEnterprice(e.target.value); setErrorList([]); (e.target.value) }}
                                     errors={errorList}
                                     identifier={'nameEnterprice'}
                                 ></Inputs>
-                                <Inputs name="Dirección" type='text' value={address} onChange={e => { setAddress(e.target.value); setErrorList([]); }} required={true}
+                                <Inputs name="Dirección" type='text' value={address} onChange={e => { setAddress(e.target.value); setErrorList([]); }} required={false}
                                     errors={errorList}
                                     identifier={'address'}
                                 ></Inputs>
-                                <Inputs name="Correo" type='email' value={email} onChange={e => { setEmail(e.target.value); setErrorList([]); }} required={true}
+                                <Inputs name="Correo" type='email' value={email} onChange={e => { setEmail(e.target.value); setErrorList([]); }}
                                     errors={errorList}
                                     identifier={'email'}
                                 ></Inputs>
-                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => { setPhone(e.target.value); setErrorList([]); }} required={true}
+                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => { setPhone(e.target.value); setErrorList([]); }} required={false}
                                     errors={errorList}
                                     identifier={'phone'}
                                 ></Inputs>

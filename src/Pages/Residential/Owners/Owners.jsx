@@ -57,9 +57,9 @@ export const Owners = () => {
 
     const [search, setSearch] = useState('');
 
-    let ownerList = filter(search, owners?.data?.owners, "user", "name")
 
-    ownerList = ownerList.sort((a, b) => a.idOwner - b.idOwner);
+
+    let ownerList = filter(search, owners?.data?.owners, "user", "name")
 
 
     const searcher = (e) => {

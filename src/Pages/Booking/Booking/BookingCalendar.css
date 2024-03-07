@@ -5,24 +5,24 @@
 }
 
 .rbc-btn-group button {
-    background-color: #e4e4e4;
+    background-color: #ffffff;
     color: #000;
     font-size: 16px;
-    border-radius: 0%;
+    border-radius: 7%;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
 }
 
-.rbc-btn-group button:hover {
+/* .rbc-btn-group button:hover {
     background-color: rgba(2, 45, 73, 0.781);
     color: #f5f5f5;
     box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.2);
-}
+} */
 
 .rbc-header {
-    /* background: linear-gradient(to right, #c5d7dfe3, #ebebebe8); */
-    background-color: #c5d7dfe3;
+    /* background: linear-gradient(to right, #e6e6e6e3, #ebebebe8); */
+    background-color: #f0f0f0;
     color: #000;
     font-weight: 700;
     text-align: center;
@@ -37,11 +37,11 @@
 
 }
 
-.rbc-day-bg {
+/* .rbc-day-bg {
     background-color: #ffffff;
     margin: 1px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.308);
-}
+} */
 
 
 .rbc-toolbar-label {
@@ -51,8 +51,17 @@
     margin-bottom: 20px;
 }
 
+
+
 .rbc-toolbar-label {
+    text-transform: lowercase;
+}
+
+.rbc-toolbar-label::before {
+    content: "Reserva / ";
+    margin-left: 150px;
     text-transform: capitalize;
+
 }
 
 .rbc-button-link {
@@ -81,3 +90,16 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.308);
 }
 
+
+.rbc-event {
+    background-color: #3472d4;
+    color: white;
+}
+
+.rbc-overlay {
+    width: 260px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

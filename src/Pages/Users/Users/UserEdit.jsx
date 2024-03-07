@@ -196,7 +196,7 @@ export const UsersEdit = () => {
 
                     Swal.fire({
                         title: 'Éxito',
-                        text: 'Usuario modificado exitosamente',
+                        text: 'Usuario modificado exitosamente.',
                         icon: 'success',
                     }).then(() => {
                         navigate('/admin/users');
@@ -207,7 +207,7 @@ export const UsersEdit = () => {
                     console.error('Error al guardar los cambios:', response.status, errorResponse);
                     Swal.fire({
                         title: 'Error',
-                        text: 'Error al modificar usuario',
+                        text: 'Error al modificar usuario.',
                         icon: 'error',
                     });
                 }
@@ -287,7 +287,7 @@ export const UsersEdit = () => {
             ...opcionesRols,
             {
                 value: rolDesactivado.idrole.toString(),
-                label: `${rolDesactivado.namerole} (Rol Inactivo)`
+                label: `${rolDesactivado.namerole} (Rol inactivo)`
             }
         ];
     }
@@ -381,8 +381,8 @@ export const UsersEdit = () => {
 
         <>
             <FormContainer
-                name='Editar Usuario'
-                buttons={<FormButton name='Guardar Cambios' backButton='Cancelar' to='/admin/users/' onClick={handleSaveChanges} />}
+                name='Editar usuario'
+                buttons={<FormButton name='Guardar cambios' backButton='Cancelar' to='/admin/users/' onClick={handleSaveChanges} />}
             >
 
                 <InputsSelect
