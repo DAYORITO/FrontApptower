@@ -66,6 +66,8 @@ export const UsersDetails = () => {
     const [newPdf, setNewPdf] = useState("")
     const [errorList, setErrorList] = useState([])
 
+    console.log(pdf, 'pdf')
+    console.log(newPdf, 'newPdf')
 
 
 
@@ -87,16 +89,19 @@ export const UsersDetails = () => {
         setIdUser(users?.data.user?.iduser)
 
         setUserImg(users?.data?.user?.userImg)
-        setPdf(users?.data.user?.pdf)
+        setPdf(users?.data?.user?.pdf)
         setDocType(users?.data?.user?.docType)
         setDocNumber(users?.data?.user?.document)
         setName(users?.data.user?.name)
         setLastName(users?.data?.user?.lastName)
+        setPdf(users?.data?.user?.pdf)
         setBirthday(users?.data?.user?.birthday)
         // setSex(users?.data?.users?.user?.sex)
         setEmail(users?.data?.user?.email)
         setPhone(users?.data?.user?.phone)
+        setPdf(users?.data?.user?.pdf)
         setUserStatus(users?.data?.user?.status)
+
 
         getusers("users")
 
@@ -159,6 +164,8 @@ export const UsersDetails = () => {
             idUserLogged: idUserLogged,
 
             iduser: idUser,
+            pdf: pdf,
+            newFile: newPdf,
             docType: docType,
             document: docNumber,
             name: name,
@@ -167,8 +174,7 @@ export const UsersDetails = () => {
             email: email,
             phone: phone,
             status: userStatus,
-            pdf: pdf,
-            newPdf: newPdf
+
 
         }
 
@@ -243,6 +249,8 @@ export const UsersDetails = () => {
 
     }
 
+    console.log(pdf, 'pdf')
+
     return (
         <>
             <Details>
@@ -261,7 +269,7 @@ export const UsersDetails = () => {
                             A2={`${lastName}`}
                             A5={`Correo electrónico: ${email}`}
                             A6={`Teléfono: ${phone}`}
-                            A7={`pdf: ${pdf}`}
+                            A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
@@ -315,7 +323,8 @@ export const UsersDetails = () => {
 
                             >
 
-                                <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setNewPdf(e.target.files[0])} />
+                                <Uploader name="img" formatos='.pdf' label="Carga de documento" onChange={e => setNewPdf(e.target.files[0])} />
+
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                                     value={docType} onChange={e => setDocType(e.target.value)} identifier={"docType"} errors={errorList}

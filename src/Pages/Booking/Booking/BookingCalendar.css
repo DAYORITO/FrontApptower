@@ -1,3 +1,8 @@
+.rbc-month-view {
+    border-radius: 4px;
+
+}
+
 .rbc-btn-group {
     display: flex;
     justify-content: center;
@@ -125,4 +130,12 @@
 .rbc-calendar {
     margin-left: 1.5vw;
     margin-top: 13vh;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody>tr>td+td {
+    background-color: #ffffff !important;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody>tr>td {
+    background-color: #ffffff !important;
 }

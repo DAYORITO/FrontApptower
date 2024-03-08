@@ -30,7 +30,7 @@ export const WatchmanCreate = () => {
     const [nameEnterprice, setNameEnterprice] = useState(null)
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
     const [enterprice, setEnterprice] = useState(id || null);
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState([{}]);
 
     console.log(errors, 'errors holaaaaaaaa')
 
@@ -191,7 +191,7 @@ export const WatchmanCreate = () => {
             password,
             idrole: Number(idrole),
             document,
-            birthday: dateOfbirth,
+            birthday: new Date(dateOfbirth),
             lastName: lastname,
             phone,
             pdf,
@@ -222,6 +222,8 @@ export const WatchmanCreate = () => {
                 icon: 'error',
             });
         }
+
+        console.log('userResponse:', userResponse?.error);
         setErrors(userResponse?.error);
     };
 
@@ -250,7 +252,7 @@ export const WatchmanCreate = () => {
                     <>
                         <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                         <FormColumn>
-                            <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={error} identifier={'docType'}></InputsSelect>
+                            <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={documentType} onChange={e => setDocumentType(e.target.value)} errors={errors} identifier={'docType'}></InputsSelect>
 
                         </FormColumn>
 
@@ -263,21 +265,21 @@ export const WatchmanCreate = () => {
                                 inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
                                 errorMessage={isDocumentTaken ? "El documento ya existe" : null}
 
-                                errors={error} identifier={'document'}
+                                errors={errors} identifier={'document'}
                             />
                         </FormColumn>
 
                         <FormColumn>
-                            <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={error} identifier={'name'} ></Inputs>
+                            <Inputs name="Nombre" type='text' value={name} onChange={e => setName(e.target.value)} errors={errors} identifier={'name'} ></Inputs>
                         </FormColumn>
 
                         <FormColumn>
-                            <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={error} identifier={'lastName'}></Inputs>
+                            <Inputs name="Apellido" type='text' value={lastname} onChange={e => setLastName(e.target.value)} errors={errors} identifier={'lastName'}></Inputs>
                         </FormColumn>
 
 
                         <FormColumn>
-                            <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={error} identifier={'email'}
+                            <Inputs name="Correo" type='email' value={email} onChange={e => setEmail(e.target.value)} errors={errors} identifier={'email'}
                                 inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
                                 errorMessage={isEmailTaken ? "El correo ya existe" : null}
 
@@ -286,22 +288,24 @@ export const WatchmanCreate = () => {
 
                         <FormColumn>
 
-                            <Select2 placeholder={'Empresa de Seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions} errors={error} identifier={'idEnterpriseSecurity'}></Select2>
+                            <Select2 placeholder={'Empresa de Seguridad'} value={selectedEnterprice || defaultOption} onChange={handleEnterpriceSecurity} options={enterpriceOptions} errors={errors} identifier={'idEnterpriseSecurity'}></Select2>
                         </FormColumn>
                         <FormColumn>
-                            <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} errors={error} identifier={'phone'}></Inputs>
+                            <Inputs name="Teléfono" type='number' value={phone} onChange={e => setPhone(e.target.value)} errors={errors} identifier={'phone'}></Inputs>
                             <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
                                 onChange={e => setPdf(e.target.files[0])} />
                         </FormColumn>
 
                         <FormColumn>
 
-                            <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)} errors={error} identifier={'birthday'}
+                            <Inputs name="Fecha Nacimiento" type="date" value={dateOfbirth} onChange={e => setDateOfBirth(e.target.value)}
+                                errors={errors} identifier={'birthday'}
                                 inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                 errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
                             <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-                            <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={error} identifier={'password'} />
-                            <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={error} identifier={''} />
+                            <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
+                            <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={"passwordConfirm"} />
+
 
 
 

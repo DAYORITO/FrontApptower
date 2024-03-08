@@ -129,15 +129,11 @@ export const BookingCalendar = () => {
     console.log("Selected Space", selectedSpace)
 
     const colors = [
-        'hsl(60, 50%, 45%)',  // darker yellow
-        'hsl(90, 50%, 45%)',  // darker light green
-        'hsl(120, 50%, 45%)', // darker green
-        'hsl(150, 50%, 45%)', // darker teal
-        'hsl(180, 50%, 45%)', // darker cyan
-        'hsl(210, 50%, 45%)', // darker light blue
+        'hsl(210, 70%, 60%)', // darker light blue
+        'hsl(150, 50%, 55%)', // darker teal
+        'hsl(300, 80%, 67%)', // darker magenta
+        'hsl(270, 60%, 60%)', // darker purple
         'hsl(240, 50%, 45%)', // darker blue
-        'hsl(270, 50%, 45%)', // darker purple
-        'hsl(300, 50%, 45%)', // darker magenta
         'hsl(330, 50%, 45%)'  // darker rose
     ];
 
@@ -217,6 +213,12 @@ export const BookingCalendar = () => {
 
     };
 
+    const hadleSpace = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue.value);
+        console.log("Selected Value:", selectedValueAsNumber);
+        setIdSpace(selectedValueAsNumber);
+
+    };
 
     console.log(ResidentData?.data?.residents, "Resident Data")
 
@@ -231,6 +233,17 @@ export const BookingCalendar = () => {
         : [];
 
     const selectedResident = residentsOptions.find(option => option.value === idResident);
+
+    const spacesOptions = spaces && spaces?.data?.spaces
+        ? spaces?.data?.spaces
+            .filter(space => space?.status === "Active")
+            .map(space => ({
+                value: space.idSpace,
+                label: space.spaceName
+            }))
+        : [];
+
+    const selectedSpaceCreate = spacesOptions.find(option => option.value === Number(idSpace));
 
 
     const createBooking = async (event) => {
@@ -269,7 +282,7 @@ export const BookingCalendar = () => {
 
             idbooking: idbooking,
             idResident: idResident,
-            StartDateBooking: dateStart,
+            StartDateBooking: selectedDate,
             StartTimeBooking: hourStart,
             EndDateBooking: ('00-00-0000'),
             EndTimeBooking: hourEnd,
@@ -278,9 +291,9 @@ export const BookingCalendar = () => {
 
         }
 
-        console.log("edit data", data)
+        console.log("edit data holaaaaaaa", data)
 
-        await postRequest(event, `booking`, 'PUT', setShowModal, data, url, 'Reserva actualizada correctamente.')
+        await postRequest(event, `booking`, 'PUT', setShowModal, data, url, null, null)
         getBooking('booking')
 
     };
@@ -376,7 +389,15 @@ export const BookingCalendar = () => {
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
                             showModal={handleSelectSlot}
                             title={IsEditedBooking ? `Editar reserva` : 'Crear nueva reserva'}>
-                            <Inputs name="Zona común" value={nameSpace} />
+                            {id ? <Inputs name="Zona común" value={nameSpace} /> :
+                                <Select2
+                                    placeholder={'Zona común'}
+                                    onChange={hadleSpace}
+                                    options={spacesOptions}
+                                    value={selectedSpaceCreate ? selectedSpaceCreate : ''}
+                                    defaultOption={true}
+                                />
+                            }
 
                             {nameRole?.includes('residente') ? <Inputs
                                 name={'Reservado por'}
@@ -392,12 +413,20 @@ export const BookingCalendar = () => {
                                 />
                             }
 
-                            <Inputs name="Fecha de inicio"
+                            {IsEditedBooking ? <Inputs name="Fecha de inicio"
                                 type="date"
                                 value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
                                 onChange={e => setSelectedDate(e.target.value)}
-                                readonly={true}
-                            ></Inputs>
+                            ></Inputs> :
+                                <Inputs name="Fecha de inicio"
+                                    type="date"
+                                    value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
+                                    onChange={e => selectedDate(e.target.value)}
+                                    readonly={true}
+                                ></Inputs>}
+
+
+
 
                             <Inputs
                                 name="Hora de inicio"

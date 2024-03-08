@@ -140,7 +140,7 @@ function GuestIncome() {
 
     const filteredDataguestIncome = () => {
         if (data && data.guestIncome) {
-            return guestIncomeData.slice(currentPage, currentPage + 8);
+            return guestIncomeData?.slice(currentPage, currentPage + 8);
         } else {
             return [];
         }
@@ -164,9 +164,9 @@ function GuestIncome() {
             setGuestIncomeData(originalGuestIncomeData);
             return;
         }
-    
+
         searchValue = searchValue.trim().toLowerCase();
-    
+
         let filteredData = originalGuestIncomeData.filter((dato) => {
             const apartmentName = dato?.asociatedApartment?.apartmentName.toString().toLowerCase();
             const guestFullName = (dato?.asociatedVisitor.name + " " + dato?.asociatedVisitor.lastname).toLowerCase();
@@ -175,7 +175,7 @@ function GuestIncome() {
         console.log(filteredData.length, "Datos filtrados:", filteredData);
         setGuestIncomeData(filteredData);
     }
-    
+
 
     return (
         <>
@@ -235,12 +235,12 @@ function GuestIncome() {
                         </div> : filteredDataguestIncome().map(Income => (
                             <Row
                                 A3="Apto visitado"
-                                A4={Income.asociatedApartment.apartmentName}
-                                A1={Income.asociatedVisitor.name}
-                                A2={Income.asociatedVisitor.lastname}
+                                A4={Income.asociatedApartment?.apartmentName}
+                                A1={Income.asociatedVisitor?.name}
+                                A2={Income.asociatedVisitor?.lastname}
                                 A7={Income.departureDate == null ? 'No registrada' : formatDate(Income.departureDate)}
-                                A6={formatDate(Income.startingDate)}
-                                to={`details/${Income.idGuest_income}`}
+                                A6={formatDate(Income?.startingDate)}
+                                to={`details/${Income?.idGuest_income}`}
                             >
                                 {Income.departureDate == null ?
                                     <Actions accion='Registrar salida' onClick={() => {

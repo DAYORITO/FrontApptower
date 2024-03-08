@@ -19,6 +19,7 @@ function FormContainer({ name, children, buttons, modalButton, ButtonBack, onSub
 
           {/* <p>Buenos diasBuenos diasBuenos diasBuenos diasBuenos diasBuenos dias</p> */}
           {ButtonBack ? <button className="btn btn-light botonregresso " style={{ marginRight: '50px', width: '110px', }} onClick={() => navigate(-1)} >Regresar</button> : null}
+          {modalButton}
         </div>
         <div className="card-body" id='form'>
           <form onSubmit={onSubmit} encType="multipart/form-data">

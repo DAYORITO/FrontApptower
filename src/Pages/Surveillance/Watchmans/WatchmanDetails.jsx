@@ -198,7 +198,7 @@ export const WatchmanDetails = () => {
             email: email,
             phone: phone,
             pdf: pdf,
-            newPdf: pdfNew
+            newFile: pdfNew
 
         }
 
