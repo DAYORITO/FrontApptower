@@ -237,6 +237,7 @@ export const Vehicle = () => {
                     {allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Editar') ? (
                       <Actions onClick={() => openVehicleModalEdit(vehicle)} accion='Editar' />
                     ) : null}
+                    <Actions href={`/admin/apartments/details/${vehicle.Apartment.idApartment}`} accion='Ir a ver apartamento' />
                   </Row>
 
                 ))

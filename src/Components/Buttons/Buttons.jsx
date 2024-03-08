@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import './Dropdowns.css';
 
 const ButtonGoTo = ({ value = 'New module', href, modalButton, onClick }) => {
     return (
@@ -20,7 +21,8 @@ const DropdownExcel = ({ downloadExcel }) => {
                 className="btn  ext-muted"
                 onClick={() => alert('Aqui se descargan los archivos.')}
             >
-                 <i className="fe fe-download-cloud fe-16 ml-0"></i>
+                <img className='icon-excel fe-16 ml-0' src='https://icons.veryicon.com/png/o/file-type/file-type-icon-library/xlm-1.png'></img>
+                {/* <i className="fe fe-download-cloud fe-16 ml-0"></i> */}
                 <span className="text-muted sr-only">Action</span>
 
             </button>
