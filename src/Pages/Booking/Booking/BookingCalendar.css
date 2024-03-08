@@ -10,6 +10,11 @@
     margin-right: 7.3vw;
 }
 
+.rbc-agenda-date-cell {
+    border: #dddddd 1px solid;
+
+}
+
 .rbc-btn-group button {
     background-color: #ffffff;
     color: rgb(97, 97, 97);

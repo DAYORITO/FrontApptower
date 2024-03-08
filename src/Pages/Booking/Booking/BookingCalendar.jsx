@@ -282,9 +282,9 @@ export const BookingCalendar = () => {
 
             idbooking: idbooking,
             idResident: idResident,
-            StartDateBooking: selectedDate,
+            StartDateBooking: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : null,
             StartTimeBooking: hourStart,
-            EndDateBooking: ('00-00-0000'),
+            EndDateBooking: new Date().toISOString().split('T')[0],
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
             status: status
@@ -383,7 +383,7 @@ export const BookingCalendar = () => {
 
 
             </ContainerCalendar>
-            {showModal && selectedDate &&
+            {showModal &&
                 createPortal(
                     <ModalContainer ShowModal={showModal} >
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
