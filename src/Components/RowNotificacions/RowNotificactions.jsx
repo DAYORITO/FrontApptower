@@ -39,7 +39,7 @@ export const RowNotificactions = ({
 
                 to?.idrole == 2 ? `/admin/resident/details/${to.iduser}` :
                   to?.idrole == 1 ? `/admin/users/details/${to.iduser}` :
-                    to?.idrole == 3 ? `/admin/watchmans/details/${to.iduser}` : to
+                    to?.idrole == 3 ? `/admin/watchman/details/${to.iduser}` : to
 
   const handleLinkClick = (event) => {
     event.preventDefault();
