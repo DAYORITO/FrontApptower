@@ -10,21 +10,49 @@ export const SocketProvider = ({ children }) => {
 
     const [notifications, setNotifications] = useState([]);
 
-    const {idUserLogged} = useUserLogged()
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+    console.log(idRolLogged, 'idRolLogged')
 
     useEffect(() => {
 
-        socket.on('notifications-user', (notifications) => {
-            setNotifications(notifications);
-        })
+        if (idRolLogged === 3) {
+
+            socket.on('watchman-notifications', (notifications) => {
+
+                setNotifications(notifications)
+
+            })
+        } else if (idRolLogged === 2) {
+
+            // socket.on('watchman-notifications', (notifications) => {
+
+            //     setNotifications(notifications)
+
+            // })
+
+            socket.on('resident-notifications', (notifications) => {
+
+                setNotifications(notifications)
+
+            })
+
+        }
+        else if (idRolLogged === 1) {
+
+            socket.on('all-notifications', (notifications) => {
+
+                setNotifications(notifications)
+            })
+
+        }
+
+    }, [socket, idRolLogged]);
 
 
-    }, [socket, notifications]);
-
-    console.log(notifications, 'notifications')
 
     return (
-        <SocketContext.Provider value={{ socket, online, notifications, setNotifications}} >
+        <SocketContext.Provider value={{ socket, online, notifications, setNotifications }} >
 
             {children}
 

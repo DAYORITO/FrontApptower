@@ -198,19 +198,16 @@ export const Apartments = () => {
                   A3={apartment.Tower.towerName}
                   A4={`Area: ${apartment.area} m² `}
 
-                  A8='Residentes'
-                  A9={apartment.residents}
+                  A8='Ingresos'
+                  A9={apartment.guestIncomes}
 
-                  A10='Ingresos'
-                  A11={apartment.guestIncomes}
+                  // A13='Vehiculos'
+                  // A12={apartment.vehicles}
 
-                  A13='Vehiculos'
-                  A12={apartment.vehicles}
+                  A10='Multas pendientes'
+                  A11={apartment.fines}
 
-                  A14='Multas'
-                  A15={apartment.fines}
-
-                  A16={apartment.residents}
+                  A16={apartment.fines}
 
                   status={apartment.status}
                   icon='home'

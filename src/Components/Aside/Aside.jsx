@@ -15,6 +15,7 @@ import { useAllowedPermissions, useFetch, useFetchUserInformation, useFetchget }
 import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
 import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
 import { SocketContext } from '../../Context/SocketContext';
+import { useUserLogged } from '../../Helpers/Helpers';
 
 export const Aside = () => {
 
@@ -117,6 +118,24 @@ export const Aside = () => {
 
     };
 
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+    const filteredNotifications = notifications.filter((notification) => {
+
+        let notificationToSee;
+
+        if (notification.iduser == idUserLogged) {
+
+            notificationToSee = !notification.seen
+        } else {
+
+            notificationToSee = !notification.seen && notification.iduser !== idUserLogged
+        }
+        return notificationToSee;
+        // return !notification.seen && notification.iduser !== idUserLogged;
+    });
+
+
     return (
         <>
 
@@ -169,7 +188,9 @@ export const Aside = () => {
                                 )}
 
                                 {allowedPermissions.includes('Notificaciones') && (
-                                    <ListNav onClick={openNotifications} A1={notifications?.filter(notification => !notification.seen).length} module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
+                                    <ListNav onClick={openNotifications}
+                                        A1={filteredNotifications?.length}
+                                        module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (
@@ -302,7 +323,7 @@ export const Aside = () => {
 
                                 {
                                     notifications?.length == 0 ? <NotificationsAlert msg={'No tienes notificaciones.'} /> :
-                                    notifications?.map((notification, index) => {
+                                        notifications?.map((notification, index) => {
                                             return (
                                                 <RowNotificactions
                                                     isNotification={true}
