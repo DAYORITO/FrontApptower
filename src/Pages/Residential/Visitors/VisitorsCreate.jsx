@@ -54,8 +54,8 @@ function VisitorsCreate() {
                 text: 'Error al crear el visitante',
                 icon: 'error',
             });
-            const errorData = error.errorData;
-            setErrors(errorData);
+            setErrors(error);
+            console.log("Errores front:", error);
     }
   };
 
