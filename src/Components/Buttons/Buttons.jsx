@@ -12,20 +12,21 @@ const ButtonGoTo = ({ value = 'New module', href, modalButton, onClick }) => {
     );
 };
 
-const DropdownExcel = () => {
+const DropdownExcel = ({ downloadExcel }) => {
     return (
-        <div className="file-action mr-4">
-            <button type="button" className="btn btn-link dropdown-toggle more-vertical p-0 text-muted mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div className="file-action mr-2   ">
+            <button
+                type="button"
+                className="btn  ext-muted"
+                onClick={() => alert('Aqui se descargan los archivos.')}
+            >
+                 <i className="fe fe-download-cloud fe-16 ml-0"></i>
                 <span className="text-muted sr-only">Action</span>
+
             </button>
-            <div className="dropdown-menu m-2">
-
-                <Link to="#"><i className="fe fe-download-cloud fe-12 mr-4"></i>Download excel</Link>
-            </div>
         </div>
-
-    )
-}
+    );
+};
 
 
 const SearchButton = ({ value, onChange, type = 'text', id, options, placeholder = "Buscar" }) => {
@@ -37,11 +38,11 @@ const SearchButton = ({ value, onChange, type = 'text', id, options, placeholder
                         <span className="fe fe-24 fe-search" style={{ color: 'gray' }}></span>
                     </button> */}
                     <label htmlFor="search" className="sr-only">Buscar</label>
-                    
+
                     {options?.length > 0 ? <SearchSelect options={options} value={value} onChange={onChange} /> :
-                    <input type={type} value={value} onChange={onChange} placeholder={placeholder} className="form-control" />
+                        <input type={type} value={value} onChange={onChange} placeholder={placeholder} className="form-control" />
                     }
-                    
+
 
                 </div>
             </div>
@@ -73,7 +74,7 @@ const SearchSelect = ({ options, value, onChange }) => {
                 // console.log(option.label)
                 <option key={option.value} value={option.value} onClick={() => console.log(option.label)}
                 >{option.label} </option>
-                
+
             ))}
 
         </select>)

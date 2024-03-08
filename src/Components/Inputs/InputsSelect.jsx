@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react'
 import './Inputs.css'
 
-function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay datos", onChange, value, errorMessage: externalErrorMessage, validate = false, required = false, inputStyle, StyleInput, containerStyle, errors, identifier, className}) {
+function InputsSelect({ id, disabled = false, options, name, voidmessage = "No hay datos", onChange, value, errorMessage: externalErrorMessage, validate = false, required = true, inputStyle, StyleInput, containerStyle, errors, identifier, className }) {
 
 
   const [valorSeleccionado, setValorSeleccionado] = useState(null);
@@ -15,7 +15,8 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
     if (value !== '') {
       labelRef.current.classList.add('lleno');
     } else {
-      labelRef.current.classList.remove('lleno');
+      labelRef.current.classList.add('lleno');
+      required && setLabelText(`${name} <span style="color: red; margin-left: 2px;">*</span>`);
     }
   }, [value]);
 
@@ -27,7 +28,7 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
     inputRef.current.addEventListener('focus', () => {
       labelRef.current.classList.add('active');
       if (required) {
-        setLabelText(name + '*');
+        setLabelText(`${name}<span style="margin-left: 2px;">*</span>`)
       }
     });
 
@@ -36,12 +37,10 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
       if (inputRef.current.value !== '') {
         labelRef.current.classList.add('lleno');
       } else {
-        labelRef.current.classList.remove('lleno');
+        labelRef.current.classList.add('lleno');
+        required && setLabelText(`${name}<span style="color: red; margin-left: 2px;">*</span>`);
       }
       labelRef.current.classList.remove('active');
-      if (required) {
-        setLabelText(name);
-      }
     });
 
 
@@ -58,11 +57,11 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
     }
   }, [])
 
-  const organizarErrores = ()=>{
-    if (errors){
-      return errors?.errors?.reduce((a,b)=>{
+  const organizarErrores = () => {
+    if (errors) {
+      return errors?.errors?.reduce((a, b) => {
         a[b.field] = b.message;
-        if (b.field === identifier){
+        if (b.field === identifier) {
           className = "border boder-danger";
         }
         return a;
@@ -74,12 +73,12 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
     setValorSeleccionado(value);
   }, []);
 
-  useEffect(()=>{
-    if(errors){
-    setErrorMessageToShow(organizarErrores());
-  }
+  useEffect(() => {
+    if (errors) {
+      setErrorMessageToShow(organizarErrores());
+    }
     console.log("errors en el input:", errors)
-   
+
   }, [errors])
 
 
@@ -108,13 +107,13 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
             onChange={onChange}
             disabled={disabled}
             style={StyleInput}
-            
+
           // onChange={(event) => setValorSeleccionado(event.target.value)}
           >
             {options?.length > 0 ? <option value='' selected disabled></option>
-            : 
-            (<><option value='' selected disabled></option><option value='' disabled>{voidmessage}</option></>)}
-            
+              :
+              (<><option value='' selected disabled></option><option value='' disabled>{voidmessage}</option></>)}
+
             {options.map((opcion) => (
 
               <option
@@ -124,10 +123,10 @@ function InputsSelect({ id, disabled = false, options, name,voidmessage="No hay 
             ))}
           </select>
         </span>
-        <label htmlFor={name} className='form-label' ref={labelRef}>{labelText}</label>
+        <label htmlFor={name} className='form-label' ref={labelRef} dangerouslySetInnerHTML={{ __html: labelText }}></label>
         {errorMessage && <div className="error-message" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessage}</div>}
-        {errors && errorMessageToShow != null  && 
-         <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
+        {errors && errorMessageToShow != null &&
+          <div className="error-message text-right" style={{ color: 'red', fontSize: '9px', paddingTop: '1.4px' }}>{errorMessageToShow[identifier]}</div>}
 
       </div>
     </>

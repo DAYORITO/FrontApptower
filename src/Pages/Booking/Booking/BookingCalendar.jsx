@@ -17,6 +17,7 @@ import { Accions } from '../../../Components/DropdownInfo/DropdownInfo';
 import { BookingTypes } from '../../../Hooks/consts.hooks';
 import { Actions } from '../../../Components/Actions/Actions';
 import InputsSelect from '../../../Components/Inputs/InputsSelect';
+import { da } from 'date-fns/locale';
 
 dayjs.locale('es');
 
@@ -26,7 +27,7 @@ export const BookingCalendar = () => {
     const localizer = dayjsLocalizer(dayjs);
 
     const { id } = useParams();
-    const {idUserLogged} = useUserLogged();
+    const { idUserLogged } = useUserLogged();
     const navigate = useNavigate();
 
     //information Booking
@@ -136,8 +137,7 @@ export const BookingCalendar = () => {
                 .map(booking => {
 
                     const startDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.StartTimeBooking}`);
-                    const endDate = new Date(`${booking.EndDateBooking.split('T')[0]}T${booking.EndTimeBooking}`);
-
+                    const endDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.EndTimeBooking}`);
                     // const startHour = startDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
                     // const endHour = endDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
 
@@ -171,7 +171,7 @@ export const BookingCalendar = () => {
         if (dayjs(date).isBefore(dayjs(), 'day')) {
             return {
                 style: {
-                    backgroundColor: '#e0e0e0',
+                    backgroundColor: '#ebebeb',
                     opacity: 0.6
                 }
             };
@@ -179,7 +179,7 @@ export const BookingCalendar = () => {
     };
 
     const hadleResidente = (selectedValue) => {
-        const selectedValueAsNumber = Number(selectedValue);
+        const selectedValueAsNumber = Number(selectedValue.value);
         console.log("Selected Value:", selectedValueAsNumber);
         setIdResident(selectedValueAsNumber);
 
@@ -187,6 +187,7 @@ export const BookingCalendar = () => {
 
 
     console.log(ResidentData?.data?.residents, "Resident Data")
+
 
     const residentsOptions = ResidentData && ResidentData?.data?.residents
         ? ResidentData?.data?.residents
@@ -197,6 +198,9 @@ export const BookingCalendar = () => {
             }))
         : [];
 
+    const selectedResident = residentsOptions.find(option => option.value === idResident);
+
+
     const createBooking = async (event) => {
 
         const data = {
@@ -205,10 +209,12 @@ export const BookingCalendar = () => {
             idResident: Number(idResident),
             StartDateBooking: selectedDate,
             StartTimeBooking: hourStart,
-            EndDateBooking: dateEnd,
+            EndDateBooking: Date('0000-00-00T00:00:00.000Z'),
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
         }
+
+
 
         console.log("Create data", data)
 
@@ -233,7 +239,7 @@ export const BookingCalendar = () => {
             idResident: idResident,
             StartDateBooking: dateStart,
             StartTimeBooking: hourStart,
-            EndDateBooking: dateEnd,
+            EndDateBooking: ('00-00-0000'),
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
             status: status
@@ -259,15 +265,16 @@ export const BookingCalendar = () => {
 
 
 
-
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <FormContainer name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`}
-                ButtonBack={true}
+            <FormContainer
+
 
             >
+
+                {/* name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`} */}
                 <Calendar
-                    style={{ height: '58vh', width: '100%' }}
+                    style={{ height: '68vh', width: '100%' }}
                     localizer={localizer}
                     events={events}
                     selectable
@@ -276,6 +283,7 @@ export const BookingCalendar = () => {
                     dayPropGetter={dayPropGetter}
                     onSelectEvent={hadleSelectEvent}
                     onView={setCurrentView}
+                    popup
                     components={{
                         agenda: {
                             event: ({ event }) => (
@@ -305,9 +313,12 @@ export const BookingCalendar = () => {
                         time: 'Hora',
                         event: 'Evento',
                         noEventsInRange: 'No hay reservas en este rango',
+                        showMore: total => `+${total} más`,
 
                     }}
                 />
+
+
             </FormContainer>
             {showModal && selectedDate &&
                 createPortal(
@@ -322,10 +333,13 @@ export const BookingCalendar = () => {
                                 value={`${userData?.data?.user?.name || ''} ${userData?.data?.user?.lastName || ''}`}
                             /> :
 
-                                <div className="mr-1" style={{ width: '100%' }}>
-
-                                    <Select2 name={'Reservado a'} onChange={hadleResidente} options={residentsOptions} value={idResident ? idResident : ''} defaultOption={true}></Select2>
-                                </div>
+                                <Select2
+                                    placeholder={'Reservado a'}
+                                    onChange={hadleResidente}
+                                    options={residentsOptions}
+                                    value={selectedResident ? selectedResident : ''}
+                                    defaultOption={true}
+                                />
                             }
 
                             <Inputs name="Fecha de inicio"
@@ -334,6 +348,7 @@ export const BookingCalendar = () => {
                                 onChange={e => setSelectedDate(e.target.value)}
                                 readonly={true}
                             ></Inputs>
+
                             <Inputs
                                 name="Hora de inicio"
                                 type="time"
@@ -341,12 +356,6 @@ export const BookingCalendar = () => {
                                 onChange={e => setHourStart(e.target.value)}
                             />
 
-                            <Inputs
-                                name="Fecha de fin"
-                                type="date"
-                                value={dateEnd ? new Date(dateEnd).toISOString().split('T')[0] : ''}
-                                onChange={e => setDateEnd(e.target.value)}
-                            />
 
                             <Inputs
                                 name="Hora de fin"
@@ -364,7 +373,6 @@ export const BookingCalendar = () => {
                                 onChange={e => setAmountPeople(e.target.value)}
                                 min={0}
                             />
-
 
                             {
 

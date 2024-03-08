@@ -190,9 +190,11 @@ export const RolsEditNew = () => {
                         text: 'Por favor, Ingrese todos los campos requeridos',
                         icon: 'error',
                     });
-                    setShouldValidate(true);
+
                     return;
                 }
+
+
 
 
             } catch (error) {
@@ -271,13 +273,13 @@ export const RolsEditNew = () => {
         <>
 
             <FormContainer
-                name='Editar Rol'
-                buttons={<FormButton name='Editar' backButton='Cancelar' to='/admin/users/' onClick={handleSaveChanges} />}
+                name='Editar rol'
+                buttons={<FormButton name='Guardar Cambios' backButton='Cancelar' to='/admin/users/' onClick={handleSaveChanges} />}
             >
                 <FormColumn>
                     <Inputs
-                        name="Nombre Rol"
-                        placeholder='Nombre Rol'
+                        name="Nombre rol"
+                        placeholder='Nombre rol'
                         value={editedRols?.namerole || ''}
                         onChange={(event) => { handleNameRole(event); setError(''); }}
                         required={true}
@@ -314,12 +316,15 @@ export const RolsEditNew = () => {
                 <div className='container-accordion'>
                     {permisos?.map((permiso, index) => (
                         <div className='accordion-item' key={index}>
-                            <Accordion title={permiso.label} isOpen={selectedPermissions[permiso.label]?.length > 0} >
+                            <Accordion title={permiso.label} isOpen={selectedPermissions[permiso.label]?.length > 0}
+                                error={error?.errors?.find(err => err.field === 'detailsRols')}
+                                isFirstAccordion={index === 0}
+                            >
                                 {permiso.options.map((opcion, optionIndex) => (
                                     <Checkboxs
                                         key={optionIndex}
                                         label={opcion}
-                                        onChange={(event) => handleCheckboxChange(event, permiso.label, opcion)}
+                                        onChange={(event) => { handleCheckboxChange(event, permiso.label, opcion); setError(''); }}
                                         value={selectedPermissions[permiso.label]?.includes(opcion)}
                                     />
                                 ))}

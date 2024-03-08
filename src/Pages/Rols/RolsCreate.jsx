@@ -174,12 +174,12 @@ export const RolsCreate = () => {
     return (
         <>
             <FormContainer
-                name='Crear Rol'
+                name='Crear rol'
                 buttons={<FormButton name='Crear' backButton='Cancelar' to='/admin/users/' onClick={handleSubmit} />}
             >
                 <FormColumn>
                     <Inputs
-                        name='Nombre Rol'
+                        name='Nombre rol'
                         value={namerole}
                         onChange={handleNameRole}
                         type='text'
@@ -208,13 +208,15 @@ export const RolsCreate = () => {
                     {permisos.map((permiso, index) => (
                         console.log(permiso, 'permiso'),
                         <div className='accordion-item' key={index}>
-                            <Accordion title={permiso.label}  >
+                            <Accordion title={permiso.label}
+                                error={errors?.errors?.find(err => err.field === 'detailsRols')}
+                                isFirstAccordion={index === 0} >
                                 {permiso.options.map((opcion, optionIndex) => (
                                     console.log(opcion, 'opcion'),
                                     <Checkboxs
                                         key={optionIndex}
                                         label={opcion}
-                                        onChange={(event) => handleCheckboxChange(event, permiso.label, opcion)}
+                                        onChange={(event) => { handleCheckboxChange(event, permiso.label, opcion); setErrors('') }}
                                         value={selectedCheckboxes.some(item => item.permiso === permiso.label && item.opcion === opcion)}
                                     />
                                 ))}

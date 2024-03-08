@@ -91,10 +91,76 @@
     /* Añade sombra si lo deseas */
 }
 
+.img-container {
+    
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Centra el elemento */
+    width: auto;
+    z-index: 1000;
+    /* Ajusta según sea necesario */
+    padding: 20px;
+    /* Ajusta el relleno según tus necesidades */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Añade sombra si lo deseas */
+}
+
+
+.img-container .modal-dialog {
+
+    width: 100% !important;
+    /* max-height: 80vh; */
+    /* Establece la altura máxima */
+    overflow-y: auto;
+}
+
 .notifications-modal-body {
     width: 100% !important;
-    max-height: 80vh; /* Establece la altura máxima */
-    overflow-y: auto; /* Habilita el desplazamiento vertical */
-  }
+    max-height: 80vh;
+    /* Establece la altura máxima */
+    overflow-y: auto;
+    /* Habilita el desplazamiento vertical */
+}
 
-.notifications-container #verticalModalTitle {}
+.modal-content-img {
+    
+    
+    width: 100% !important;
+    max-height: 80vh;
+    background-color: #fff;
+    
+}
+
+.modal-content-img {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 80vh; /* Ancho máximo igual a 80vh */
+    max-height: 80
+    vh; /* Altura máxima igual a 80vh */
+    overflow: hidden;
+}
+
+.modal-content-img .modal-header,
+.modal-content-img .modal-footer {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.modal-content-img .modal-body {
+    text-align: center;
+    overflow: auto;
+    max-height: calc(80vh - 100px); /* Resta el tamaño de los márgenes superior e inferior */
+}
+
+.modal-content-img img {
+    max-width: 100%;
+    height: auto;
+}

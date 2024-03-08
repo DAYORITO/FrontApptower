@@ -49,7 +49,7 @@ export const docTypes = [
 
 
 export const residentsTypes = [
-
+    
     {
         value: "owner",
         label: "Propietario"
@@ -112,6 +112,10 @@ export const bools = [
 ]
 
 export const parkingTypes = [
+    {
+        value: "",
+        label: "Todos"
+    },
     {
         value: "Public",
         label: "Público"

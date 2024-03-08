@@ -118,6 +118,20 @@ function GuestIncomeCreate() {
     return "";
   };
 
+  const getPhone = (id) => {
+    const resident = dataResidentApartment.data.apartmentResidents.find(resident => resident.idApartment == id);
+    console.log("id al buscar: ", id)
+    console.log("residente por apartemaneto: ", dataResidentApartment.data.apartmentResidents)
+    console.log("Resident encontrado:", resident)
+    if (resident) {
+      const user = resident.resident.user;
+      if (user && user.phone) {
+        return `${user.phone} - ${user.name} ${user.lastName}`;
+      }
+    }
+    return "No habita nadie";
+  }
+
   const getDataTowers = (idTower) => {
     const tower = dataTowers?.towers?.find(tower => tower.idTower === idTower);
     if (tower) {
@@ -131,6 +145,7 @@ function GuestIncomeCreate() {
     if (apartment) {
       const towerId = getTower(apartment);
       getDataTowers(towerId);
+      setPhone(getPhone(id != null ? id : apartment));
     }
   }, [apartment]);
 
@@ -215,8 +230,6 @@ function GuestIncomeCreate() {
   useEffect(() => {
     if (data.apartments)
       setTowerData(organizeApartmentsByTower(data))
-    console.log("Datos de las turres Xd", TowerData)
-    console.log("Datos de las turres", data)
   }, [data])
 
 
@@ -236,7 +249,6 @@ function GuestIncomeCreate() {
     if (!loadResidentsApartment && towers?.length > 0 && errordata == null
       // && dataTowers?.towers?.length > 0 && data?.apartments?.length > 0 && dataVisitors?.data?.visitors?.length > 0 && dataParkingSpaces?.data?.parkingSpaces?.length > 0 && dataTowers?.data?.towers?.length > 0
     ) {
-      console.log("Entre aqui:", dataVisitors, data, dataResidentApartment, dataParkingSpaces, dataTowers)
       setLoadingSpiner(false)
     }
     else if (errordata != null) {
@@ -246,7 +258,6 @@ function GuestIncomeCreate() {
     else {
       console.log("Error en la carga de datos:", errordata)
     }
-    console.log("Entre a dataResidentApartment:", dataResidentApartment?.data?.apartmentResidents?.length > 0)
 
   }, [loadResidentsApartment, towers, errordata])
 
@@ -332,7 +343,6 @@ function GuestIncomeCreate() {
       const apartment = data.apartments.find((apartment) => apartment.idApartment === Number(id));
       if (apartment) {
         setApartment(apartment.idApartment);
-        console.log(apartment.idApartment, "apartment.idApartment");
       }
     }
   }, [data, id]);
@@ -347,15 +357,14 @@ function GuestIncomeCreate() {
       const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
         "startingDate": new Date(),
         "departureDate": null,
-        "idApartment": apartment?.value,
+        "idApartment": id != null ? id :  apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor?.value,
       });
 
       if (guestIncomeError) {
-        const errorData = guestIncomeError.errorData;
-        setErrors(errorData);
+        setErrors(guestIncomeError);
         throw new Error('Error al crear el ingreso de huésped');
 
       }
@@ -378,7 +387,8 @@ function GuestIncomeCreate() {
         // Desactivar el espacio de estacionamiento
         const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
           "idParkingSpace": parkingGuestIncome,
-          "status": 'Inactive'
+          "status": 'Inactive',
+          "parkingType": "Public"
         }, 'PUT');
 
         if (parkingError) {
@@ -446,6 +456,7 @@ function GuestIncomeCreate() {
 
     if (error) {
       const errorData = error.errorData;
+      console.log("Errores front:", error);
       setErrors(errorData);
       setShowModaload(false);
       Swal.fire({
@@ -472,7 +483,7 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect errors={errors} identifier={"idApartment"}  inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+              <InputsSelect errors={errors} identifier={"idApartment"}  inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { {id != null ? handleChange(id) : handleTowerChange(e.target.value)} }} options={towers} />
               :
               <Inputs
                 key={apartment}
