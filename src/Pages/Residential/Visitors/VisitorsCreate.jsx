@@ -40,7 +40,7 @@ function VisitorsCreate() {
       console.log('Respuesta exitosa:', response);
             Swal.fire({
                 title: 'Éxito',
-                text: 'Usuario creado exitosamente',
+                text: 'Visitante creado exitosamente',
                 icon: 'success',
             }).then(() => {
 
@@ -51,11 +51,11 @@ function VisitorsCreate() {
     if (error) {
             Swal.fire({
                 title: 'Error',
-                text: 'Error al crear usuario',
+                text: 'Error al crear el visitante',
                 icon: 'error',
             });
-            const errorData = error.errorData;
-            setErrors(errorData);
+            setErrors(error);
+            console.log("Errores front:", error);
     }
   };
 
@@ -70,12 +70,10 @@ function VisitorsCreate() {
       buttons={<FormButton name={"Crear"} backButton={"regresar"} onClick={handleSubmit} />}
       >
         <InputsSelect name="Tipo de documento" identifier={"documentType"} errors={errors} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-        <Inputs name="Numero Documento" identifier={"documentNumber"} errors={errors} onChange={(e) => setDocument(e.target.value)} />
+        <Inputs name="Numero Documento" min={8} identifier={"documentNumber"} errors={errors} onChange={(e) => setDocument(e.target.value)} />
         <Inputs name="Nombre" identifier={"name"} errors={errors} onChange={(e) => setName(e.target.value)} />
         <Inputs name="Apellido" identifier={"lastname"} errors={errors} type="text" onChange={(e) => setLastName(e.target.value)} />
         <InputsSelect name="Genero" identifier={"genre"} errors={errors} options={sexs} onChange={(e) => setGenre(e.target.value)} />
-        
-
       </FormContainer>
     </>
   );
