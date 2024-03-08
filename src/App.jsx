@@ -65,6 +65,7 @@ import { BookingCalendar } from "./Pages/Booking/Booking/BookingCalendar";
 import { AuthProvider } from "./Context/AuthContext";
 import { SocketContext } from "./Context/SocketContext";
 import { AssignShiftsWatchman } from "./Pages/Surveillance/Watchmans/assignShiftsWatchman";
+import { BookingDetails } from "./Pages/Booking/Booking/BookingDetails";
 
 const App = () => {
 
@@ -379,7 +380,10 @@ const App = () => {
                                         <Booking /> : <NotFound />
                                 } />
 
-
+                                <Route path='booking/details/:id' element={
+                                    allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Listar') ?
+                                        <BookingDetails /> : <NotFound />
+                                } />
 
                                 <Route path='booking/calendar/:id?' element={
                                     <BookingCalendar />
