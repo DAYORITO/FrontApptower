@@ -197,6 +197,7 @@ export const WatchmanCreate = () => {
             pdf,
             state: 'Activo',
             idEnterpriseSecurity: enterprice,
+            
         });
 
         if (userResponse.response) {
@@ -210,7 +211,7 @@ export const WatchmanCreate = () => {
                 text: 'Vigilante creado exitosamente',
                 icon: 'success',
             }).then(() => {
-                navigate('/admin/watchman');
+                { id ? navigate('/admin/watchman/enterprice') : navigate('/admin/watchman'); }
             });
         }
 
@@ -304,9 +305,7 @@ export const WatchmanCreate = () => {
                                 errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}></Inputs>
                             <h6 className='mb-4 text-muted'>Datos de acceso</h6>
                             <Inputs name="Contraseña" type='password' value={password} onChange={e => setPassword(e.target.value)} errors={errors} identifier={'password'} />
-                            <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={"passwordConfirm"} />
-
-
+                            <Inputs name="Confirmar Contraseña" type='password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} errors={errors} identifier={""} />
 
 
                         </FormColumn>
