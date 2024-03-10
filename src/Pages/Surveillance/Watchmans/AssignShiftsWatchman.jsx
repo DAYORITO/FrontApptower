@@ -11,6 +11,7 @@ import { useFetch } from '../../../Hooks/useFetch';
 import FormContainer from '../../../Components/Forms/FormContainer';
 import Inputs from '../../../Components/Inputs/Inputs';
 import './Watchman.css'
+import { ContainerCalendar } from '../../../Components/ContainerCalendar/ContainerCalendar';
 
 dayjs.locale('es');
 
@@ -110,9 +111,9 @@ export const AssignShiftsWatchman = () => {
 
     return (
         <>
-            <FormContainer name={`Asignación de turnos`} ButtonBack={true}>
+            <ContainerCalendar>
                 <Calendar
-                    style={{ height: '58vh', width: '100%' }}
+                    style={{ height: '74vh', width: '96%' }}
                     localizer={localizer}
                     events={events}
                     selectable
@@ -130,11 +131,13 @@ export const AssignShiftsWatchman = () => {
                         time: 'Hora',
                         event: 'Evento',
                         noEventsInRange: 'No hay turnos en este rango',
+                        showMore: total => `+ Ver más (${total})`
+
                     }}
                 // onView={handleView}
 
                 />
-            </FormContainer>
+            </ContainerCalendar>
             {showModal && selectedDate && createPortal(
                 <ModalContainer ShowModal={showModal}>
                     <Modal onClick={createShifts} showModal={handleSelectSlot} title={`Asignar turno día ${dayjs(selectedDate).format('dddd')}`}>

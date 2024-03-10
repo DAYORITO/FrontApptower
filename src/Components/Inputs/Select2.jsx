@@ -114,7 +114,7 @@ export function Select2({ value, options, identifier, errors, onChange, placehol
             >
                 <span className={styles.borderAnimation}></span>
                 <div className={`${styles.label} ${value ? styles.label__active : ''}`}>
-                    {required ? `${placeholder} *` : placeholder || ''}
+                    {required ? <><span>{placeholder}</span><span className={styles.red}> *</span></> : placeholder || ''}
                 </div>
                 <span className={`${styles.value}`}>
                     {value?.label}

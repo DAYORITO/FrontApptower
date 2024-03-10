@@ -237,7 +237,7 @@ export const EnterpriceSecurity = () => {
 
                                 EnterpriceInfo().map(enterprise => (
                                     <Row
-                                        icon='command'
+                                        img='https://icons.veryicon.com/png/o/miscellaneous/menu-basic-linearity/enterprise-certification-6.png'
                                         key={enterprise.idEnterpriseSecurity}
                                         A3={'NIT'}
                                         A4={enterprise.NIT}

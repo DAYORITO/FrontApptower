@@ -421,7 +421,9 @@ export const ResidentDetails = () => {
                         <DropdownInfo
                             name={`Informacion personal`}
                             action1={'Editar informacion personal'}
-                            onClickAction1={openModalEdit}
+                            onClickAction1={EqualUser ? openModalEdit : null}
+                            toAction1={!EqualUser ? `/admin/users/edit/${id}` : null}
+
                         >
 
                             <ul className='list-unstyled'>

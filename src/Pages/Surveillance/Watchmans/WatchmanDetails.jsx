@@ -60,6 +60,7 @@ export const WatchmanDetails = () => {
     const [enterprice, setEnterprice] = useState("")
     const [age, setAge] = useState(null);
     const [pdf, setPdf] = useState(null);
+    const [pdfNew, setPdfNew] = useState(null);
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
@@ -196,6 +197,8 @@ export const WatchmanDetails = () => {
             birthday: birthday,
             email: email,
             phone: phone,
+            pdf: pdf,
+            newFile: pdfNew
 
         }
 
@@ -289,7 +292,7 @@ export const WatchmanDetails = () => {
                             A2={`${lastName}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
-                            // A7={pdf}
+                            A7={pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser ? false : true}
@@ -307,7 +310,8 @@ export const WatchmanDetails = () => {
                         <DropdownInfo
                             name={`Informacion personal`}
                             action1={'Editar informacion personal'}
-                            onClickAction1={openModalEdit}
+                            onClickAction1={EqualUser ? openModalEdit : null}
+                            toAction1={!EqualUser ? `/admin/users/edit/${id}` : null}
                         >
 
                             <ul className='list-unstyled'>
@@ -407,7 +411,7 @@ export const WatchmanDetails = () => {
                                 title={"Editar informacion "}
 
                             >
-                                {EqualUser ? null : <Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdf(e.target.files[0])} />}
+                                {<Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdfNew(e.target.files[0])} />}
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
                                     value={docType} onChange={e => setDocType(e.target.value)}

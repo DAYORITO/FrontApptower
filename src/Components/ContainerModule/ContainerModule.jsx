@@ -17,12 +17,14 @@ export const ContainerModule = ({
     A4,
     A5,
     A6,
-    A7,
+    A7 = "",
 
     onClick,
 
     onClick2,
     actionOnClick2 = 'Cambiar Contraseña',
+    onClick3,
+    actionOnClick3 = 'Cambiar Contraseña',
     status,
     showBackButton = true,
 
@@ -78,6 +80,7 @@ export const ContainerModule = ({
 
                     <div className="file-action text-right m-4">
 
+                    {onClick3 && <button onClick={onClick3} className={`btn btn-light mr-2`}>{actionOnClick3}</button>}
 
                         {onClick2 && <button onClick={onClick2} className={`btn btn-light mr-2`}>{actionOnClick2}</button>}
                         {A7 ?

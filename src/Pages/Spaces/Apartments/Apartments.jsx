@@ -6,7 +6,7 @@ import { TablePerson } from "../../../Components/Tables/Tables"
 import { Thead } from '../../../Components/Thead/Thead'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { usePaginator, filter, postRequest, useUserLogged, filterPerSelect } from '../../../Helpers/Helpers'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
@@ -19,16 +19,23 @@ import { Spinner } from '../../../Components/Spinner/Spinner'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie'
 import { Paginator } from '../../../Components/Paginator/Paginator'
+import { SocketContext } from '../../../Context/SocketContext'
 
 
 
 
 export const Apartments = () => {
+  
   const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
   // const url = "https://apptowerbackend.onrender.com/api/"
 
+
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
 
   // Get Data
 
@@ -93,7 +100,7 @@ export const Apartments = () => {
 
     }
 
-    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url, setErrorList, null, null)
+    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url, setErrorList, null, socket)
     getApartments('apartments')
 
   };
@@ -161,7 +168,7 @@ export const Apartments = () => {
 
   // Paginator
 
-  const { totalPages, currentPage, nextPage, previousPage, filteredData: apartmentInfo } = usePaginator(apartmentList, 4);
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: apartmentInfo } = usePaginator(apartmentList, 20);
 
 
 
@@ -198,19 +205,16 @@ export const Apartments = () => {
                   A3={apartment.Tower.towerName}
                   A4={`Area: ${apartment.area} m² `}
 
-                  A8='Residentes'
-                  A9={apartment.residents}
+                  A8='Ingresos'
+                  A9={apartment.guestIncomes}
 
-                  A10='Ingresos'
-                  A11={apartment.guestIncomes}
+                  // A13='Vehiculos'
+                  // A12={apartment.vehicles}
 
-                  A13='Vehiculos'
-                  A12={apartment.vehicles}
+                  A10='Multas pendientes'
+                  A11={apartment.fines}
 
-                  A14='Multas'
-                  A15={apartment.fines}
-
-                  A16={apartment.residents}
+                  A16={apartment.fines}
 
                   status={apartment.status}
                   icon='home'
