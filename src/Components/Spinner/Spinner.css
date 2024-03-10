@@ -1,6 +1,6 @@
 .container-spinner {
   height: 50vh; /* Utiliza el 100% de la altura de la ventana */
-  width: 100%; /* Utiliza el 100% del ancho del contenedor */
+  width: 100% !important; /* Utiliza el 100% del ancho del contenedor */
   display: flex;
   align-items: center; /* Centra verticalmente */
   justify-content: center; /* Centra horizontalmente */

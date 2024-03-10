@@ -9,10 +9,13 @@ export const SocketProvider = ({ children }) => {
     const { socket, online } = useSocket()
 
     const [notifications, setNotifications] = useState([]);
+    const [dashboarsdData, setDashboardData] = useState([]);
 
     const { idUserLogged, idRolLogged } = useUserLogged()
 
     console.log(idRolLogged, 'idRolLogged')
+
+    // Notifications
 
     useEffect(() => {
 
@@ -50,9 +53,23 @@ export const SocketProvider = ({ children }) => {
     }, [socket, idRolLogged]);
 
 
+    // Dashboard iformation
+
+
+    useEffect(() => {
+
+        socket.on('dashboard-information', (dashboarsdData) => {
+
+            setDashboardData(dashboarsdData)
+        });
+
+
+    }, [socket]);
+
+
 
     return (
-        <SocketContext.Provider value={{ socket, online, notifications, setNotifications }} >
+        <SocketContext.Provider value={{ socket, online, notifications, setNotifications , dashboarsdData}} >
 
             {children}
 

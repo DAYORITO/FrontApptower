@@ -1,0 +1,33 @@
+.container-dashboard {
+
+    margin: 2% 4% 3% 6% !important; 
+
+    
+}
+
+.effect-hover:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+/* Definimos una animación de fade in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Definimos una animación de slide down */
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

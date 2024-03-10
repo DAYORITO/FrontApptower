@@ -2,15 +2,20 @@ import FormContainer from '../../../Components/Forms/FormContainer'
 import Inputs from '../../../Components/Inputs/Inputs'
 import FormButton from '../../../Components/Forms/FormButton'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { parkingTypes } from '../../../Hooks/consts.hooks';
 import { useNavigate } from 'react-router'
 import { postRequest } from '../../../Helpers/Helpers';
+import { SocketContext } from '../../../Context/SocketContext';
 
 export const ParkingSpacesCreate = () => {
 
   // const url = 'https://apptowerbackend.onrender.com/api/';
   const url = 'http://localhost:3000/api/';
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
 
   const [floor, setFloor] = useState("");
   const [parkingPerFloor, setParkingPerFloor] = useState("");
@@ -32,7 +37,7 @@ export const ParkingSpacesCreate = () => {
     };
 
 
-    await postRequest(event, 'parkingSpaces', 'POST', null, data, url, setErrorList, navigate, null);
+    await postRequest(event, 'parkingSpaces', 'POST', null, data, url, setErrorList, navigate, socket);
 
 
   };

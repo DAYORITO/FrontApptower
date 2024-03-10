@@ -161,7 +161,7 @@ export const Apartments = () => {
 
   // Paginator
 
-  const { totalPages, currentPage, nextPage, previousPage, filteredData: apartmentInfo } = usePaginator(apartmentList, 4);
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: apartmentInfo } = usePaginator(apartmentList, 20);
 
 
 

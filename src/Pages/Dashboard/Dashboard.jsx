@@ -1,290 +1,147 @@
 import { Details } from '../../Components/Details/details';
 import { ContainerDashboard } from '../../Components/ContainerDashboard/ContainerDashboard';
 import { ContentInfoDashboard } from '../../Components/ContentInfoDashboard/ContentInfoDashboard';
-import { Row } from '../../Components/Rows/Row'
-
 import './dashboard.css';
-import { RowNotificactions } from '../../Components/RowNotificacions/RowNotificactions';
-import { Acordions } from '../../Components/Acordions/Acordions';
-import { DropdownInfo } from '../../Components/DropdownInfo/DropdownInfo';
 import { useContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { SocketContext } from '../../Context/SocketContext';
+import { Spinner } from '../../Components/Spinner/Spinner'
 
 export const Dashboard = () => {
 
-    const [data, setData] = useState([]);
+    const { dashboarsdData } = useContext(SocketContext);
 
-    const [apartments, setApartments] = useState([])
-    const [guestIncomes, setGuestIncomes] = useState([])
-    const [fines, setFines] = useState([])
-    const [bookings, setBookings] = useState([])
-    const [guardShifts, setGuardShifts] = useState([])
-    const [notifications, setNotifications] = useState([])
-
-    const [users, setUsers] = useState([])
-
-    const { socket } = useContext(SocketContext)
-
+    const [guestIncomes, setGuestIncomes] = useState([]);
+    const [fines, setFines] = useState([]);
+    const [apartments, setApartments] = useState([]);
+    const [parkingSpacesPrivate, setParkingSpacesPrivate] = useState([]);
+    const [parkingSpacesPublic, setParkingSpacesPublic] = useState([]);
+    const [bookings, setBookings] = useState([]);
+    const [guardShifts, setGuardShifts] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        if (dashboarsdData?.length !== 0) {
+            setGuestIncomes(dashboarsdData.guestIncomes);
+            setFines(dashboarsdData.fines);
+            setBookings(dashboarsdData.bookings);
+            setApartments(dashboarsdData.apartments);
+            setParkingSpacesPrivate(dashboarsdData.parkingSpacesPrivate);
+            setParkingSpacesPublic(dashboarsdData.parkingSpacesPublic);
+            setGuardShifts(dashboarsdData.guardShifts);
+            setNotifications(dashboarsdData.notifications);
+            setUsers(dashboarsdData.users);
+            setIsLoading(false);
+        }
+    }, [dashboarsdData]);
 
-        socket.on('dashboard-information', (data) => {
-
-            setApartments(data?.apartments)
-            setGuestIncomes(data?.guestIncomes)
-            setFines(data?.fines)
-            setBookings(data?.bookings)
-            // setGuardShifts(data.guardShifts)
-            // setNotifications(data.notifications)
-
-            setUsers(data?.users)
-            console.log(data);
-        });
-
-        socket.emit('dashboard-information', data)
-
-    
-    }, [socket]);
-
-    // console.log(users)
-
-    // users?.map((user) => {
-
-    //     // console.log(user?.name)
-
-    // })
+    console.log(dashboarsdData, 'dashboarsdData')
 
     return (
-
         <Details>
+            {isLoading ? <Spinner /> : (
+                <>
+                    <ContainerDashboard>
 
-            <ContainerDashboard>
+                        <ContentInfoDashboard
+                            mt={true}
+                            count={fines?.fines?.length}
+                            dataLabel='Multas'
+                            activeCount={`${fines?.paidFines?.length} Pagadas`}
+                            neutralCount={`${fines?.finesToReview?.length} Por revisar`}
+                            warningCount={`${fines?.pendingFines?.length} Pendientes`}
+                            icon='file-plus'
+                            to='/admin/fines'
+                        />
+                        <ContentInfoDashboard
 
-                {/* <div className="col-md-12 mb-4">
-                    <h3>Accesos directos</h3>
-                </div> */}
-                <ContentInfoDashboard
-                    module='Ingresos activos'
-                    icon='arrow-up-right'
-                    to='/admin/guest_income'
-                    count={guestIncomes.length}
-                />
-                <ContentInfoDashboard
-                    module='Multas impuestas'
-                    icon='dollar-sign'
-                    to='/admin/fines'
-                    count={fines.length}
+                            mt={true}
+                            count={bookings?.bookings?.length}
+                            dataLabel='Reservas'
+                            neutralCount={`${bookings?.bookingsApproved?.length} Aprobadas`}
+                            inactiveCount={`${bookings?.bookingsCancelled?.length} Canceladas`}
+                            warningCount={`${bookings?.bookingsToReview?.length} Por revisar`}
+                            icon='calendar'
+                            to='/admin/booking'
 
-                />
-                <ContentInfoDashboard
-                    module='Reservas pendientes'
-                    icon='calendar'
-                    to='/admin/booking'
-                    count={bookings.length}
+                        />
 
-                />
-                <ContentInfoDashboard
-                    module='Apartamentos desocupados'
-                    to='/admin/apartments'
-                    count={apartments.length}
-                />
-                <ContentInfoDashboard
-                    module='Turnos de hoy'
+                        <ContentInfoDashboard
+                            count={apartments?.apartments?.length}
+                            dataLabel='Apartamentos'
+                            neutralCount={`${apartments?.apartmentsActives?.length} Ocupados`}
+                            warningCount={`${apartments?.apartmentsInActives?.length} Inactivos`}
+                            to='/admin/apartments'
+                        />
+                        <ContentInfoDashboard
+                            count={guestIncomes?.guestIncome?.length}
+                            dataLabel='Ingresos'
+                            neutralCount={`${guestIncomes?.inGuestIncome?.length} Sin marcar salida`}
+                            icon='arrow-up-right'
+                            to='/admin/guest_income'
+                        />
+
+                        <ContentInfoDashboard
+                            count={parkingSpacesPrivate?.parkingSpacesPrivate?.length}
+                            icon='map-pin'
+                            dataLabel='Parqueaderos'
+                            label='Parqueaderos privados'
+                            neutralCount={`${parkingSpacesPrivate?.parkingSpacesPrivateActive?.length} Ocupados`}
+                            activeCount={`${parkingSpacesPrivate?.parkingSpacesPrivateInactive?.length} Disponibles`}
+                            to='/admin/parkingSpaces'
+
+                        />
+
+                        <ContentInfoDashboard
+                            count={parkingSpacesPublic?.parkingSpacesPublic?.length}
+                            icon='map-pin'
+                            dataLabel='Parqueaderos'
+                            label='Parqueaderos publicos'
+                            activeCount={`${parkingSpacesPublic?.parkingSpacesPublicActive?.length} Disponibles`}
+                            neutralCount={`${parkingSpacesPublic?.parkingSpacesPublicInactive?.length} Ocupados`}
+                            to='/admin/parkingSpaces'
+                        />
+
+                        {/* <ContentInfoDashboard
+                    dataLabel='Turnos'
+                    activeCount=''
+                    inactiveCount=''
+                    warningCount=''
                     icon='shield'
                     to='/admin/guest_income'
                 // count={ guardShift.length}
 
 
-                />
-                <ContentInfoDashboard
-                    module='Nuevas notificaciones'
-                    icon='message-circle'
-                // count={ notifications.length }
+                /> */}
+                        <ContentInfoDashboard
+                            count={notifications?.notifications?.length}
+                            dataLabel='Notificaciones'
+                            neutralCount={`${notifications?.notificationsSees?.length} Vistas`}
+                            warningCount={`${notifications?.notificationsNoSees?.length} No Vistas`}
 
-                />
+                            icon='message-circle'
+                        // size={8}
 
-                {/* <Acordions>
-                    <DropdownInfo name={'Ultimas reservas'}>
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
+                        />
 
-                    </DropdownInfo>
+                        <ContentInfoDashboard
+                            count={users?.users?.length}
+                            dataLabel='Usuarios'
+                            neutralCount={`${users?.usersActives?.length} Activos`}
+                            warningCount={`${users?.usersInactives?.length} Inactivos`}
 
-                </Acordions>
-                <Acordions>
-                    <DropdownInfo name={'Ultimos usuarios registrados'}>
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
+                            icon='message-circle'
+                            to='/admin/users'
 
-                    </DropdownInfo>
+                        // size={8}
 
-                </Acordions>
-                <Acordions>
-                    <DropdownInfo name={'Reservas'}>
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
-                        <RowNotificactions />
+                        />
+                    </ContainerDashboard>
+                </>
+            )}
 
-                    </DropdownInfo>
-
-                </Acordions> */}
-
-
-
-
-
-                <h4 className='m-4 w-100'>Reservas</h4>
-
-                <div class="col-md-4">
-                    <div class="card shadow eq-card timeline">
-                        <div class="card-header">
-                            <h3 class="h6 mb-0 text-secondary">Últimas reservas</h3>
-                            <a class="float-right small text-muted" href="#!">Ver todo</a>
-                        </div>
-                        <div class="card-body" data-simplebar >
-
-                            <div class="pb-3 timeline-item item-primary">
-                                <div class="pl-5">
-                                    <div class="mb-1 small"><strong>@Brown Asher</strong><span class="text-muted mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
-                                    <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="pb-3 timeline-item item-success">
-                                <div class="pl-5">
-                                    <div class="mb-2 small"><strong>@Kelley Sonya</strong><span class="text-muted mx-2">has commented on</span><strong>Advanced table</strong></div>
-                                    <div class="card d-inline-flex mb-2">
-                                        <div class="card-body bg-light small py-2 px-3"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </div>
-                                    </div>
-                                    <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* <h4 className='m-4 w-50'>Ultimos usuarios</h4> */}
-
-                <div class="col-md-8">
-                    <div class="card shadow mb-12">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h3 class="h6 mb-0 text-secondary">Últimos usuarios registrados</h3>
-                                </div>
-                                <div class="col-auto">
-                                    <a class="small text-muted" href="#!">Ver todo</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body my-n2">
-
-                            {
-                                users?.map((user) => (
-                                    <RowNotificactions
-                                        name={user?.name}
-                                        lastName={user?.lastName}
-                                        date={user?.createdAt}
-                                        icon='user'
-                                    />
-                                ))
-                            }
-
-
-
-                            {/* <div class="row align-items-center my-2">
-                                <div class="col">
-                                    <strong>Paris</strong>
-                                    <div class="my-0 text-muted small">France</div>
-                                </div>
-                                <div class="col-auto">
-                                    <strong>+85%</strong>
-                                </div>
-                                <div class="col-3">
-                                    <div class="progress" >
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center my-2">
-                                <div class="col">
-                                    <strong>Amsterdam</strong>
-                                    <div class="my-0 text-muted small">Netherlands</div>
-                                </div>
-                                <div class="col-auto">
-                                    <strong>+75%</strong>
-                                </div>
-                                <div class="col-3">
-                                    <div class="progress" >
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center my-2">
-                                <div class="col">
-                                    <strong>Venice</strong>
-                                    <div class="my-0 text-muted small">Italy</div>
-                                </div>
-                                <div class="col-auto">
-                                    <strong>+62%</strong>
-                                </div>
-                                <div class="col-3">
-                                    <div class="progress" >
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center my-2">
-                                <div class="col">
-                                    <strong>Barcelona</strong>
-                                    <div class="my-0 text-muted small">Spain</div>
-                                </div>
-                                <div class="col-auto">
-                                    <strong>+24%</strong>
-                                </div>
-                                <div class="col-3">
-                                    <div class="progress" >
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center my-2">
-                                <div class="col">
-                                    <strong>Sydney</strong>
-                                    <div class="my-0 text-muted small">Australia</div>
-                                </div>
-                                <div class="col-auto">
-                                    <strong>+20%</strong>
-                                </div>
-                                <div class="col-3">
-                                    <div class="progress" >
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div> */}
-                        </div>
-                    </div>
-                </div>
-            </ContainerDashboard>
-
-
-
-
-
-
-        </Details >
-
+        </Details>
     );
 };
 
