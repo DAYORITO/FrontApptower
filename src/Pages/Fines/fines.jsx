@@ -83,8 +83,8 @@ function Fines() {
 
     function handleChange2(e) {
         setfilterParam(e.target.value);
-        if (e.target.value == "state") {
-            searcher("pendiente", e.target.value);
+        if (e.target.value == "apartmentName") {
+            searcher("");
         }else if((e.target.value == "incidentDate" || e.target.value == "paymentDate" || e.target.value == "createdAt") && isNaN(Date.parse(selectedFilterValue))){
             searcher("", e.target.value);
 
@@ -96,6 +96,7 @@ function Fines() {
 
     function handleChange3(e) {
             handleChange2(e);
+            
             setfilterParam(e.target.value);
             if (e.target.value == "incidentDate"
                 || e.target.value == "paymentDate"
@@ -106,7 +107,6 @@ function Fines() {
     function searcher(searchValue, filterParam) {
 
         console.log("valor de busqueda", searchValue, "valor de filtro", filterParam)
-
         let filteredFines = originalFines.filter((dato) => {
             if (filterParam === "incidentDate") {
                 return dato.incidentDate.toString().toLowerCase()
