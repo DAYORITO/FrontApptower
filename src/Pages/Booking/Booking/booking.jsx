@@ -1,5 +1,5 @@
 import { BigCard } from "../../../Components/BigCard/BigCard";
-import { SearchButton } from "../../../Components/Buttons/Buttons";
+import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
 import Cookies from 'js-cookie'
 import { Paginator } from "../../../Components/Paginator/Paginator";
+import { name } from "dayjs/locale/es";
 
 export const Booking = () => {
   const token = Cookies.get('token');
@@ -113,6 +114,7 @@ export const Booking = () => {
         title='Reservas'
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona común' />}
         showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
+        buttonToGo={<ButtonGoTo value='Todas las reservas' href='calendar/' />}
 
       >
         <TablePerson>
