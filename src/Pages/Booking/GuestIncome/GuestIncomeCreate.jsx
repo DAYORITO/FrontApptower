@@ -145,7 +145,9 @@ function GuestIncomeCreate() {
     if (apartment) {
       const towerId = getTower(apartment);
       getDataTowers(towerId);
+      if(id!=null && id!=undefined){
       setPhone(getPhone(id != null ? id : apartment));
+      }
     }
   }, [apartment]);
 
