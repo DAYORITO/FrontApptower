@@ -17,7 +17,7 @@ import {
 import { useFetchForFile } from "../../../Hooks/useFetch";
 
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 import { dotSpinner } from "ldrs";
@@ -28,8 +28,19 @@ import {
   idToPrivilegesName,
 } from "../../../Hooks/permissionRols";
 import { Spinner } from "../../../Components/Spinner/Spinner";
+import { SocketContext } from "../../../Context/SocketContext";
+import { useUserLogged } from "../../../Helpers/Helpers";
 
 function GuestIncome() {
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
+
+  // User logged
+
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
   const [LoadingSpiner, setLoadingSpiner] = useState(true);
   const token = Cookies.get("token");
   // const {permisos} = useAuth()
@@ -88,13 +99,13 @@ function GuestIncome() {
     setShowModaload(true);
 
     console.log("Datos a actualizar:", dataToUpdate);
-  
+
     try {
       const verify = guestIncomeParkingData?.find(
         (guestIncomeParking) =>
           guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income
       );
-  
+
       if (verify !== null && verify !== undefined) {
         const parkingUpdateData = {
           idParkingSpace: verify.idParkingSpace,
@@ -103,7 +114,7 @@ function GuestIncome() {
         };
         const parkingUpdateUrl =
           "http://localhost:3000/api/parkingSpaces";
-  
+
         const parkingResponse = await useFetchForFile(
           parkingUpdateUrl,
           parkingUpdateData,
@@ -115,10 +126,10 @@ function GuestIncome() {
           throw new Error(parkingResponse.error);
         }
       }
-  
+
       const guestIncomeUpdateUrl =
         "http://localhost:3000/api/guestIncome";
-  
+
       const { response: guestIncomeResponse, error } = await useFetchForFile(
         guestIncomeUpdateUrl,
         dataToUpdate,
@@ -127,26 +138,26 @@ function GuestIncome() {
 
       console.log("Respuesta del ingreso", guestIncomeResponse);
       console.log("Error del ingreso", error);
-  
-      if (error!=null && error !== undefined) {
+
+      if (error != null && error !== undefined) {
         console.log("Error al actualizar los datos del ingreso2:", error);
         throw new Error(error);
       }
-  
+
       Swal.fire({
         icon: "success",
         title: "Salida registrada con éxito.",
         showConfirmButton: false,
         timer: 1500,
       });
-  
+
       const updatedGuestIncome = guestIncomeData.map((guestIncome) => {
         if (guestIncome.idGuest_income === dataToUpdate.idGuest_income) {
           guestIncome.departureDate = dataToUpdate.departureDate;
         }
         return guestIncome;
       });
-  
+
       setGuestIncomeData(updatedGuestIncome);
     } catch (error) {
       console.error(
@@ -232,7 +243,7 @@ function GuestIncome() {
         search={<SearchButton type="text" onChange={handleChange} />}
         buttonToGo={
           allowedPermissions["Ingresos"] &&
-          allowedPermissions["Ingresos"].includes("Crear") ? (
+            allowedPermissions["Ingresos"].includes("Crear") ? (
             <ButtonGoTo value="Crear Ingreso" href="create" />
           ) : null
         }
@@ -254,9 +265,8 @@ function GuestIncome() {
               {pageNumbers.map((pageNumber) => (
                 <li
                   key={pageNumber}
-                  className={`page-item ${
-                    currentPage + 1 === pageNumber ? "active" : ""
-                  }`}
+                  className={`page-item ${currentPage + 1 === pageNumber ? "active" : ""
+                    }`}
                 >
                   <a
                     className="page-link"

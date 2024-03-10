@@ -6,7 +6,7 @@ import { TablePerson } from "../../../Components/Tables/Tables"
 import { Thead } from '../../../Components/Thead/Thead'
 import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { usePaginator, filter, postRequest, useUserLogged, filterPerSelect } from '../../../Helpers/Helpers'
 import Inputs from '../../../Components/Inputs/Inputs'
 import { Modal, ModalContainer } from '../../../Components/Modals/ModalTwo'
@@ -19,16 +19,23 @@ import { Spinner } from '../../../Components/Spinner/Spinner'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import Cookies from 'js-cookie'
 import { Paginator } from '../../../Components/Paginator/Paginator'
+import { SocketContext } from '../../../Context/SocketContext'
 
 
 
 
 export const Apartments = () => {
+  
   const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
   // const url = "https://apptowerbackend.onrender.com/api/"
 
+
+
+  // Socket
+
+  const { socket } = useContext(SocketContext)
 
   // Get Data
 
@@ -93,7 +100,7 @@ export const Apartments = () => {
 
     }
 
-    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url, setErrorList, null, null)
+    await postRequest(event, 'apartments', 'PUT', setShowModal, data, url, setErrorList, null, socket)
     getApartments('apartments')
 
   };
