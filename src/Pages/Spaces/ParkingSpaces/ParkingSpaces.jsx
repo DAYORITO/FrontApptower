@@ -141,7 +141,7 @@ export const ParkingSpaces = () => {
 
     }
 
-    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url, setErrorList, null, null)
+    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url, setErrorList, null, socket)
 
     getParkingSpace('parkingSpaces')
 
@@ -267,15 +267,15 @@ export const ParkingSpaces = () => {
                         icon="home"
                         href={`/admin/apartments/details/${parking.apartmentAssigned.apartmentInfo.idApartment}`}
                       />
-                    ) : parking.parkingType == "Public" ? (
+                    ) : parking.parkingType == "Public" && !parking.vehicleAssigned ? (
                       <>
                         <Actions
                           accion="Asignar vehiculo"
                           icon="map-pin"
-                          href={`/admin/guest_income/create/${parking.idParkingSpace}`}
+                          href={`/admin/guest_income/create/`}
                         />
                       </>
-                    ) : <Actions accion="Asignar apartamento" onClick={() => openModalAsignedApartment(parking)} icon="home" />
+                    ) : parking.parkingType == "Private" ? <Actions accion="Asignar apartamento" onClick={() => openModalAsignedApartment(parking)} icon="home" /> : null
 
                   }
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, dayjsLocalizer, Views, Navigate } from 'react-big-calendar';
+import { Calendar, dayjsLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import dayjs from 'dayjs';
+import { Navigate } from 'react-big-calendar';
 import FormContainer from '../../../Components/Forms/FormContainer';
 import 'dayjs/locale/es';
 import './BookingCalendar.css';
@@ -18,8 +19,11 @@ import { BookingTypes } from '../../../Hooks/consts.hooks';
 import { Actions } from '../../../Components/Actions/Actions';
 import InputsSelect from '../../../Components/Inputs/InputsSelect';
 import { da } from 'date-fns/locale';
+import { ContainerCalendar } from '../../../Components/ContainerCalendar/ContainerCalendar';
+import { set } from 'date-fns';
 
 dayjs.locale('es');
+
 
 export const BookingCalendar = () => {
 
@@ -124,23 +128,46 @@ export const BookingCalendar = () => {
 
     console.log("Selected Space", selectedSpace)
 
+    const colors = [
+        'hsl(210, 70%, 60%)', // darker light blue
+        'hsl(150, 50%, 55%)', // darker teal
+        'hsl(300, 80%, 67%)', // darker magenta
+        'hsl(270, 60%, 60%)', // darker purple
+        'hsl(240, 50%, 45%)', // darker blue
+        'hsl(330, 50%, 45%)'  // darker rose
+    ];
+
+    const spaceColorMap = {};
+
+    function getColorForSpace(idSpace) {
+        if (spaceColorMap[idSpace]) {
+            return spaceColorMap[idSpace];
+        }
+
+        // Asigna un color del array de colores de forma rotativa
+        const color = colors[Object.keys(spaceColorMap).length % colors.length];
+
+        spaceColorMap[idSpace] = color;
+
+        return color;
+    }
 
 
     const [events, setEvents] = useState([]);
+
+
+
+
 
     // se encarga de actualizar el calendario con las reservas y conversión de fechas
     useEffect(() => {
         if (BookingData && BookingData.data && Array.isArray(BookingData.data.booking)) {
             const bookings = BookingData.data.booking;
             const events = bookings
-                .filter(booking => booking.Space.idSpace === idSpace)
+                .filter(booking => idSpace ? booking.Space.idSpace === idSpace : true)
                 .map(booking => {
-
                     const startDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.StartTimeBooking}`);
                     const endDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.EndTimeBooking}`);
-                    // const startHour = startDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-                    // const endHour = endDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-
                     return {
                         ...booking,
                         id: booking.idbooking,
@@ -148,6 +175,7 @@ export const BookingCalendar = () => {
                         end: endDate,
                         title: `Reserva de ${(booking?.Space?.spaceName).toLowerCase()} para ${booking.amountPeople} personas `,
                         status: `Estado: ${booking.status}`,
+                        color: getColorForSpace(booking.Space.idSpace),
                     };
                 });
             setEvents(events);
@@ -171,7 +199,7 @@ export const BookingCalendar = () => {
         if (dayjs(date).isBefore(dayjs(), 'day')) {
             return {
                 style: {
-                    backgroundColor: '#ebebeb',
+                    backgroundColor: '#ececec',
                     opacity: 0.6
                 }
             };
@@ -185,6 +213,12 @@ export const BookingCalendar = () => {
 
     };
 
+    const hadleSpace = (selectedValue) => {
+        const selectedValueAsNumber = Number(selectedValue.value);
+        console.log("Selected Value:", selectedValueAsNumber);
+        setIdSpace(selectedValueAsNumber);
+
+    };
 
     console.log(ResidentData?.data?.residents, "Resident Data")
 
@@ -199,6 +233,17 @@ export const BookingCalendar = () => {
         : [];
 
     const selectedResident = residentsOptions.find(option => option.value === idResident);
+
+    const spacesOptions = spaces && spaces?.data?.spaces
+        ? spaces?.data?.spaces
+            .filter(space => space?.status === "Active")
+            .map(space => ({
+                value: space.idSpace,
+                label: space.spaceName
+            }))
+        : [];
+
+    const selectedSpaceCreate = spacesOptions.find(option => option.value === Number(idSpace));
 
 
     const createBooking = async (event) => {
@@ -237,18 +282,18 @@ export const BookingCalendar = () => {
 
             idbooking: idbooking,
             idResident: idResident,
-            StartDateBooking: dateStart,
+            StartDateBooking: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : null,
             StartTimeBooking: hourStart,
-            EndDateBooking: ('00-00-0000'),
+            EndDateBooking: new Date().toISOString().split('T')[0],
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
             status: status
 
         }
 
-        console.log("edit data", data)
+        console.log("edit data holaaaaaaa", data)
 
-        await postRequest(event, `booking`, 'PUT', setShowModal, data, url, 'Reserva actualizada correctamente.')
+        await postRequest(event, `booking`, 'PUT', setShowModal, data, url, null, null)
         getBooking('booking')
 
     };
@@ -263,18 +308,29 @@ export const BookingCalendar = () => {
 
     }
 
+    useEffect(() => {
+        if (showModal === false) {
+
+            setHourEnd(null)
+            setHourStart(null)
+            setAmountPeople(null)
+            setIdResident(null)
+
+        }
+
+    }, [showModal])
 
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <FormContainer
+            <ContainerCalendar
 
 
             >
 
                 {/* name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`} */}
                 <Calendar
-                    style={{ height: '68vh', width: '100%' }}
+                    style={{ height: '75vh', width: '96%' }}
                     localizer={localizer}
                     events={events}
                     selectable
@@ -284,6 +340,13 @@ export const BookingCalendar = () => {
                     onSelectEvent={hadleSelectEvent}
                     onView={setCurrentView}
                     popup
+                    eventPropGetter={(event, start, end, isSelected) => {
+                        return {
+                            style: {
+                                backgroundColor: event.color,
+                            }
+                        }
+                    }}
                     components={{
                         agenda: {
                             event: ({ event }) => (
@@ -319,14 +382,22 @@ export const BookingCalendar = () => {
                 />
 
 
-            </FormContainer>
-            {showModal && selectedDate &&
+            </ContainerCalendar>
+            {showModal &&
                 createPortal(
                     <ModalContainer ShowModal={showModal} >
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
                             showModal={handleSelectSlot}
                             title={IsEditedBooking ? `Editar reserva` : 'Crear nueva reserva'}>
-                            <Inputs name="Zona común" value={nameSpace} />
+                            {id ? <Inputs name="Zona común" value={nameSpace} /> :
+                                <Select2
+                                    placeholder={'Zona común'}
+                                    onChange={hadleSpace}
+                                    options={spacesOptions}
+                                    value={selectedSpaceCreate ? selectedSpaceCreate : ''}
+                                    defaultOption={true}
+                                />
+                            }
 
                             {nameRole?.includes('residente') ? <Inputs
                                 name={'Reservado por'}
@@ -342,12 +413,20 @@ export const BookingCalendar = () => {
                                 />
                             }
 
-                            <Inputs name="Fecha de inicio"
+                            {IsEditedBooking ? <Inputs name="Fecha de inicio"
                                 type="date"
                                 value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
                                 onChange={e => setSelectedDate(e.target.value)}
-                                readonly={true}
-                            ></Inputs>
+                            ></Inputs> :
+                                <Inputs name="Fecha de inicio"
+                                    type="date"
+                                    value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
+                                    onChange={e => selectedDate(e.target.value)}
+                                    readonly={true}
+                                ></Inputs>}
+
+
+
 
                             <Inputs
                                 name="Hora de inicio"

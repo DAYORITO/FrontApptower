@@ -30,7 +30,7 @@ function GuestIncomeCreate() {
   const url = "http://localhost:3000/api/";
 
 
-  const {idUserLogged} = useUserLogged()
+  const { idUserLogged } = useUserLogged()
 
   // Socket
 
@@ -357,9 +357,11 @@ function GuestIncomeCreate() {
       // Crear el guestIncome
       console.log("fecha de hoy: ", new Date());
       const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+        // User logged
+        "idUserLogged": idUserLogged,
         "startingDate": new Date(),
         "departureDate": null,
-        "idApartment": id != null ? id :  apartment?.value,
+        "idApartment": id != null ? id : apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor?.value,
@@ -485,11 +487,11 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect errors={errors} identifier={"idApartment"}  inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { {id != null ? handleChange(id) : handleTowerChange(e.target.value)} }} options={towers} />
+              <InputsSelect errors={errors} identifier={"idApartment"} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { { id != null ? handleChange(id) : handleTowerChange(e.target.value) } }} options={towers} />
               :
               <Inputs
                 key={apartment}
-                name="Torre" 
+                name="Torre"
                 value={nameTower || ""}
                 type="text"
                 readonly={true}
@@ -501,7 +503,7 @@ function GuestIncomeCreate() {
           <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
             {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} value={apartment} placeholder={'Apartamento*'}  voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} value={apartment} placeholder={'Apartamento'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -521,10 +523,10 @@ function GuestIncomeCreate() {
         </div>
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Select2 errors={errors} identifier={"idVisitor"} placeholder={'Visitante*'} value={visitor} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue), console.log("valor selec",selectedValue) }} options={visitorsData}></Select2>
+            <Select2 errors={errors} identifier={"idVisitor"} placeholder={'Visitante'} value={visitor} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue), console.log("valor selec", selectedValue) }} options={visitorsData}></Select2>
           </div>
           <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-            <Inputs  name='Nombre*' readonly={true} value={visitorname} ></Inputs>
+            <Inputs name='Nombre' readonly={true} value={visitorname} ></Inputs>
           </div>
 
         </div>
@@ -533,10 +535,10 @@ function GuestIncomeCreate() {
         </div>
         {
           check1 &&
-          <InputsSelect name="Parqueadero*" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
+          <InputsSelect name="Parqueadero" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
         <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-          <Inputs name="Persona que permite el acceso*" type="text" errors={errors} identifier={"personAllowsAccess"} onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
+          <Inputs name="Persona que permite el acceso" type="text" errors={errors} identifier={"personAllowsAccess"} onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
           <Inputs name="Observaciones" type="text" errors={errors} identifier={"observations"} onChange={(e) => { setObservations(e.target.value) }}></Inputs>
         </div>
       </FormContainer>
@@ -545,11 +547,11 @@ function GuestIncomeCreate() {
         createPortal(
           <ModalContainer showModal={setShowModalvisitor}>
             <Modal title={'Crear Visitante'} showModal={setShowModalvisitor} onClick={handleSubmitVisitor}>
-              <InputsSelect name="Tipo de documento*" errors={errors} identifier={"documentType"} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-              <Inputs name="Numero Documento*" errors={errors} identifier={"documentNumber"} onChange={(e) => setDocumentVisitor(e.target.value)} />
-              <Inputs name="Nombre*" errors={errors} identifier={"name"} onChange={(e) => setName(e.target.value)} />
-              <Inputs name="Apellido*" errors={errors} identifier={"lastname"} type="text" onChange={(e) => setLastName(e.target.value)} />
-              <InputsSelect name="Genero*" errors={errors} identifier={"genre"} options={sexs} onChange={(e) => setGenre(e.target.value)} />
+              <InputsSelect name="Tipo de documento" errors={errors} identifier={"documentType"} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+              <Inputs name="Numero Documento" errors={errors} identifier={"documentNumber"} onChange={(e) => setDocumentVisitor(e.target.value)} />
+              <Inputs name="Nombre" errors={errors} identifier={"name"} onChange={(e) => setName(e.target.value)} />
+              <Inputs name="Apellido" errors={errors} identifier={"lastname"} type="text" onChange={(e) => setLastName(e.target.value)} />
+              <InputsSelect name="Genero" errors={errors} identifier={"genre"} options={sexs} onChange={(e) => setGenre(e.target.value)} />
             </Modal>
           </ModalContainer>,
           document.getElementById('modalRender')

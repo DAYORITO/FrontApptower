@@ -83,6 +83,7 @@ export const Users = () => {
 
             <ContainerTable title='Usuarios'
                 search={<SearchButton value={search} onChange={searcher} placeholder='Buscar usuario' />}
+                dropdown={<DropdownExcel />}
                 buttonToGo={<ButtonGoTo value='Crear usuario' href='create' />}
                 search2={<SearchSelect options={roleOptions} value={searchForSelect} onChange={searcherForSelect} ></SearchSelect>}
                 showPaginator={

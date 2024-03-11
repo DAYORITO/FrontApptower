@@ -154,7 +154,7 @@ export const FinesDetail = () => {
     setShowModaload(true);
 
     //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-    let response = await useFetchForFile('https://apptowerbackend.onrender.com/api/fines', dataToUpdate, 'PUT')
+    let response = await useFetchForFile('http://localhost:3000/api/fines', dataToUpdate, 'PUT')
     // .then((responseData) => {
 
     console.log("respuesta de api holi", response)
@@ -315,7 +315,7 @@ export const FinesDetail = () => {
             <ModalContainer ShowModal={setShowModal}>
               <Modal
                 showModal={setShowModal}
-                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
+                onClick={() => { setShowModal(false), handleEditClick({ idUserLogged: idUserLogged, idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
                 title={"Comprobante de pago"}
 
               >

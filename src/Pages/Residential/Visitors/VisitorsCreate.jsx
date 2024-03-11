@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {docTypes, sexs} from "../../../Hooks/consts.hooks";
+import { docTypes, sexs } from "../../../Hooks/consts.hooks";
 import Inputs from "../../../Components/Inputs/Inputs";
 import FormButton from "../../../Components/Forms/FormButton";
 import InputsSelect from "../../../Components/Inputs/InputsSelect";
@@ -32,7 +32,7 @@ function VisitorsCreate() {
       "genre": genre,
       "access": true
     });
-    console.log("Respuesta:",response,"Error:", error)
+    console.log("Respuesta:", response, "Error:", error)
 
     // Manejar la respuesta o el error según sea necesario
     if (response) {
@@ -44,8 +44,8 @@ function VisitorsCreate() {
                 icon: 'success',
             }).then(() => {
 
-                navigate('/admin/visitors');
-            });
+        navigate('/admin/visitors');
+      });
     }
 
     if (error) {
@@ -63,17 +63,19 @@ function VisitorsCreate() {
     <>
       <FormContainer
         name="Crear visitante"
-         
-      //   modalButton={
-      //   <ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />
-      // }
-      buttons={<FormButton name={"Crear"} backButton={"regresar"} onClick={handleSubmit} />}
+
+        //   modalButton={
+        //   <ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />
+        // }
+        buttons={<FormButton name={"Crear"} backButton={"regresar"} onClick={handleSubmit} />}
       >
-        <InputsSelect name="Tipo de documento" identifier={"documentType"} errors={errors} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
-        <Inputs name="Numero Documento" min={8} identifier={"documentNumber"} errors={errors} onChange={(e) => setDocument(e.target.value)} />
-        <Inputs name="Nombre" identifier={"name"} errors={errors} onChange={(e) => setName(e.target.value)} />
-        <Inputs name="Apellido" identifier={"lastname"} errors={errors} type="text" onChange={(e) => setLastName(e.target.value)} />
-        <InputsSelect name="Genero" identifier={"genre"} errors={errors} options={sexs} onChange={(e) => setGenre(e.target.value)} />
+        <InputsSelect name="Tipo de documento" identifier={"documentType"} value={documentType} errors={errors} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
+        <Inputs name="Numero Documento" identifier={"documentNumber"} value={document} errors={errors} onChange={(e) => setDocument(e.target.value)} />
+        <Inputs name="Nombre" identifier={"name"} value={name} errors={errors} onChange={(e) => setName(e.target.value)} />
+        <Inputs name="Apellido" identifier={"lastname"} value={lastname} errors={errors} type="text" onChange={(e) => setLastName(e.target.value)} />
+        <InputsSelect name="Genero" identifier={"genre"} value={genre} errors={errors} options={sexs} onChange={(e) => setGenre(e.target.value)} />
+
+
       </FormContainer>
     </>
   );
