@@ -5,10 +5,10 @@ const ImageContainer = ({ urls, name = 'Evidencia' }) => {
     <div className="container">
       <div className="row justify-content-center">
         {Array.isArray(urls) && urls[0] != null ? (
-          urls.map((url, index) => (
+          urls?.map((url, index) => (
             <div key={index} className="w-100">
               <div className="d-flex border">
-                {url && (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg')) ? (
+                {url && (url?.endsWith('.jpg') || url?.endsWith('.png') || url?.endsWith('.jpeg')) ? (
                   <div className="pdf-icon d-flex flex-column align-items-center justify-content-center">
                     <img src={url} className="img-fluid img-thumbnail" alt={`${name} ${index}`} style={{ maxHeight: '20vh' }} />
                   </div>

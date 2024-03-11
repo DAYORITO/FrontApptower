@@ -153,7 +153,7 @@ function FinesCreate() {
       details: description,
       state: "Pendiente",
       evidenceFiles: evidence,
-      idUser: parseInt(userData?.user.iduser),
+      iduser: parseInt(userData?.user.iduser),
     };
 
     console.log("Data:", data);
