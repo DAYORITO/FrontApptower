@@ -11,7 +11,9 @@ export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState(null);
+    const [error, setError] = useState([{}]);
 
+    console.log(error, 'error AuthContext');
 
     const login = async (usuario, password) => {
         try {
@@ -24,17 +26,24 @@ export const AuthProvider = ({ children }) => {
                 credentials: 'include',
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Usuario o contraseña incorrectos.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 setIsLoggedIn(false);
                 setUser(null);
+                setError(data.errors);
                 Cookies.set('isLoggedIn', false);
                 return;
             }
 
-            const data = await response.json();
-
-            console.log(data, 'data');
+            setError(response.errors);
 
             Cookies.set('token', data.token);
             if (data.user && typeof data.user === 'string') {
@@ -138,7 +147,7 @@ export const AuthProvider = ({ children }) => {
         });
     }
     return (
-        <AuthContext.Provider value={{ login, logout, isLoggedIn, isLoading }}>
+        <AuthContext.Provider value={{ login, logout, isLoggedIn, isLoading, error, setError }}>
             {children}
         </AuthContext.Provider>
     );

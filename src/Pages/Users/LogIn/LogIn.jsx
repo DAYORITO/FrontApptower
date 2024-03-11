@@ -6,12 +6,13 @@ import { InputsLogIn } from '../../../Components/Inputs/InputsLogIn';
 import { SelectInput } from '../../../Components/Inputs/selectLogIn';
 import { useFetchpost } from '../../../Hooks/useFetch';
 import Swal from 'sweetalert2';
-import { useAuth } from '../../../Context/AuthContext';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../Context/AuthContext';
 
 import { dotSpinner } from 'ldrs'
+import { set } from 'date-fns';
 
 
 const LoginForm = ({ setShowLoginForm }) => {
@@ -23,6 +24,8 @@ const LoginForm = ({ setShowLoginForm }) => {
     const token = Cookies.get('token');
     const navigate = useNavigate();
     dotSpinner.register()
+    const { error, setError } = useAuth();
+
 
 
 
@@ -31,11 +34,11 @@ const LoginForm = ({ setShowLoginForm }) => {
         event.preventDefault();
         setShowModaload(true)
 
-        if (!username || !loginPassword) {
-            Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
-            setShowModaload(false);
-            return;
-        }
+        // if (!username || !loginPassword) {
+        //     Swal.fire('Error', 'Por favor, completa todos los campos.', 'error');
+        //     setShowModaload(false);
+        //     return;
+        // }
 
 
         try {
@@ -63,7 +66,8 @@ const LoginForm = ({ setShowLoginForm }) => {
                     Swal.fire('Error de inicio de sesión', 'El usuario o la contraseña son incorrectos.', 'error');
                     setShowModaload(false);
                     return;
-                } else {
+                }
+                else {
                     if (responseData.role) {
                         const role = responseData.role.toLowerCase();
 
@@ -113,8 +117,8 @@ const LoginForm = ({ setShowLoginForm }) => {
                 <div className="form-information-childs">
                     <img src={ImageIcono} alt="" className='iconperson' />
                     <form className="form" onSubmit={handleLogin}>
-                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} onKeyPress={handleKeyPress} />
-                        <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} onKeyPress={handleKeyPress} />
+                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} onKeyPress={handleKeyPress} errors={error} identifier={'usuario'} />
+                        <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} onKeyPress={handleKeyPress} errors={error} identifier={'password'} />
 
                         <div>
                             <Link to="recoverpassword" className='buttonStyle'>¿Olvidaste la contraseña?</Link>

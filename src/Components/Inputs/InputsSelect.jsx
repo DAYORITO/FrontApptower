@@ -16,9 +16,13 @@ function InputsSelect({ id, disabled = false, options, name, voidmessage = "No h
       labelRef.current.classList.add('lleno');
     } else {
       labelRef.current.classList.add('lleno');
-      required && setLabelText(`${name} <span style="color: red; margin-left: 2px;">*</span>`);
     }
-  }, [value]);
+    if (required) {
+      setLabelText(`${name} <span style="color: red; margin-left: 2px;">*</span>`);
+    } else {
+      setLabelText(name);
+    }
+  }, [value, required]);
 
 
   useEffect(() => {
