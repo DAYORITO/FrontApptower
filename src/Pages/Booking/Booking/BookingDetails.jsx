@@ -16,11 +16,18 @@ import { createPortal } from 'react-dom'
 const token = Cookies.get('token');
 import Cookies from 'js-cookie';
 import moment from 'moment';
+import 'moment/locale/es';
 import { SocketContext } from '../../../Context/SocketContext'
 import { useUserLogged } from '../../../Helpers/Helpers'
+import Inputs from '../../../Components/Inputs/Inputs'
+import InputsSelect from '../../../Components/Inputs/InputsSelect'
 
+moment.updateLocale('es', {
+    months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_')
+});
 
 export const BookingDetails = () => {
+
     const token = Cookies.get('token');
     // API URL
 
@@ -45,6 +52,13 @@ export const BookingDetails = () => {
     const [EndTimeBooking, setEndTimeBooking] = useState('')
     const [amountPeople, setAmountPeople] = useState('')
     const [status, setStatus] = useState('')
+    const [idResident, setIdResident] = useState('')
+    const [idSpace, setIdSpace] = useState('')
+    const [dateStart, setDateStart] = useState('')
+    const [hourStart, setHourStart] = useState('')
+    const [dateEnd, setDateEnd] = useState('')
+    const [hourEnd, setHourEnd] = useState('')
+    const [errorList, setErrorList] = useState([])
 
     const [Resident, setResident] = useState({})
     const [Space, setSpace] = useState({})
@@ -108,6 +122,57 @@ export const BookingDetails = () => {
     }
 
 
+    const [showModal, setShowModal] = useState(false);
+
+    const openModalEdit = (data) => {
+
+
+
+        if (data) {
+
+            setIdBooking(data.idbooking)
+            setIdResident(data.idResident)
+            setIdSpace(data.idSpace)
+            setDateStart(data.StartDateBooking)
+            setHourStart(data.StartTimeBooking)
+            setDateEnd(data.EndDateBooking)
+            setHourEnd(data.EndTimeBooking)
+            setAmountPeople(data.amountPeople)
+            setStatus(data.status)
+        }
+
+        setShowModal(true)
+    }
+
+
+    const updateBooking = async (event) => {
+
+        const data = {
+
+            // User logged
+
+            idUserLogged: idUserLogged,
+
+            idbooking: idBooking,
+            idResident: idResident,
+            idSpace: idSpace,
+            StartDateBooking: StartDateBooking,
+            StartTimeBooking: StartTimeBooking,
+            EndDateBooking: StartTimeBooking,
+            EndTimeBooking: hourEnd,
+            amountPeople: amountPeople,
+            status: status
+
+
+
+        }
+
+
+        await postRequest(event, 'booking', 'PUT', setShowModal, data, url, setErrorList, null, null);
+        getuser(`booking`)
+
+
+    }
 
 
     return (
@@ -149,19 +214,19 @@ export const BookingDetails = () => {
 
                         <DropdownInfo
                             name={`Detalle de reserva`}
-                            action1={'Editar reserva.'}
-                        // onClickAction1={openModalEdit}
+                            action1={'Editar reserva'}
+                            onClickAction1={openModalEdit}
                         >
 
                             <ul className='list-unstyled'>
 
                                 <li>Reserva para: {amountPeople} personas</li>
                                 <br />
-                                <li>Fecha de reserva: {moment(StartDateBooking).format('MMMM Do')}</li>
-                                <li>De: {StartTimeBooking} a {EndTimeBooking}</li>
+                                <li>Fecha de reserva: {moment(StartDateBooking).locale('es').format('LL')}</li>
+                                <li>De: {moment(StartTimeBooking, "HH:mm:ss").format('h:mm A')} a {moment(EndTimeBooking, "HH:mm:ss").format('h:mm A')}</li>
                                 <br />
-                                <li>Reserva de: <Link to={`/admin/spaces/`}>{`${Space?.spaceName}`}</Link> </li>
-                                <li>Reservado por: <Link to={`/admin/residents/details/${Resident?.user?.iduser}`}>{`${Resident?.user?.name} ${Resident?.user?.lastName}`}</Link> </li>
+                                <li>Reserva de:{`${Space?.spaceName}`} </li>
+                                <li>Reservado por: <Link to={`/admin/resident/details/${Resident?.user?.iduser}`}>{`${Resident?.user?.name} ${Resident?.user?.lastName}`}</Link> </li>
                                 <br />
 
                                 <li className='text-dark'>Estado: {status}</li>
@@ -207,6 +272,65 @@ export const BookingDetails = () => {
                 </InfoDetails>
 
             </Details >
+
+            {showModal &&
+                createPortal(
+                    <>
+                        <ModalContainer ShowModal={setShowModal}>
+                            <Modal
+                                onClick={updateBooking}
+                                showModal={setShowModal}
+                                title={"Editar reserva"}
+                            >
+                                <Inputs
+                                    name="Fecha de inicio"
+                                    type="date"
+                                    identifier={"StartDateBooking"}
+                                    value={StartDateBooking}
+                                    onChange={(e) => setStartDateBooking(e.target.value)}
+                                ></Inputs>
+                                <Inputs
+                                    name="Hora de inicio"
+                                    type="time"
+                                    identifier={"StartTimeBooking"}
+                                    value={StartTimeBooking}
+                                    onChange={(e) => setStartTimeBooking(e.target.value)}
+                                ></Inputs>
+                                <Inputs
+                                    name="Fecha de fin"
+                                    type="date"
+                                    identifier={"EndDateBooking"}
+                                    value={EndDateBooking}
+                                    onChange={(e) => setEndDateBooking(e.target.value)}
+                                ></Inputs>
+                                <Inputs
+                                    name="Hora de fin"
+                                    type="time"
+                                    identifier={"EndTimeBooking"}
+                                    value={EndTimeBooking}
+                                    onChange={(e) => setEndTimeBooking(e.target.value)}
+                                ></Inputs>
+                                <Inputs
+                                    name="Cantidad de personas"
+                                    type="number"
+                                    identifier={"amountPeople"}
+                                    value={amountPeople}
+                                    onChange={(e) => setAmountPeople(e.target.value)}
+                                ></Inputs>
+                                <InputsSelect
+                                    name="Estado"
+                                    identifier={"status"}
+                                    value={status}
+                                    options={[{ label: 'Aprobado', value: 'Aprobado' }, { label: 'Pendiente', value: 'Pendiente' }, { label: 'Cancelado', value: 'Cancelado' }]}
+                                    onChange={(e) => setStatus(e.target.value)}
+                                ></InputsSelect>
+                            </Modal>
+                        </ModalContainer>
+                    </>,
+                    document.getElementById("modalRender")
+                )
+
+            }
 
             {modalImg &&
                 createPortal(

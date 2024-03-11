@@ -13,13 +13,19 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
   // const [errorStyle, setErrorStyle] = useState(null);
 
   useEffect(() => {
-    if (value !== '') {
-      labelRef.current.classList.add('lleno');
-    } else {
-      labelRef.current.classList.add('lleno');
-      required && setLabelText(`${name} <span style="color: red; margin-left: 2px;">*</span>`);
+    if (type !== 'hidden') {
+      if (value !== '') {
+        labelRef.current.classList.add('lleno');
+      } else {
+        labelRef.current.classList.add('lleno');
+      }
+      if (required) {
+        setLabelText(`${name} <span style="color: red; margin-left: 2px;">*</span>`);
+      } else {
+        setLabelText(name);
+      }
     }
-  }, [value]);
+  }, [value, required, type]);
 
   //Aqui esta utilizando el prop required para agregar un * al label si el campo es requerido
   useEffect(() => {

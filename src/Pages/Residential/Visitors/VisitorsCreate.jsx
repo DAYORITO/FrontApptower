@@ -38,24 +38,24 @@ function VisitorsCreate() {
     if (response) {
       // Manejar la respuesta exitosa
       console.log('Respuesta exitosa:', response);
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Visitante creado exitosamente',
-                icon: 'success',
-            }).then(() => {
+      Swal.fire({
+        title: 'Éxito',
+        text: 'Visitante creado exitosamente',
+        icon: 'success',
+      }).then(() => {
 
         navigate('/admin/visitors');
       });
     }
 
     if (error) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al crear el visitante',
-                icon: 'error',
-            });
-            setErrors(error);
-            console.log("Errores front:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al crear el visitante',
+        icon: 'error',
+      });
+      setErrors(error);
+      console.log("Errores front:", error);
     }
   };
 

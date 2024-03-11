@@ -27,6 +27,8 @@ export const UsersEdit = () => {
     const [usersData, setUsersData] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [namerole, setNamerole] = useState('');
+    const [errors, setErrors] = useState([]);
+
 
 
     const birthDate = new Date(editedUser.birthday);
@@ -66,7 +68,9 @@ export const UsersEdit = () => {
                 ...user,
                 idrole: user.idrole,
                 pdf: user.pdf,
-                status: user.status
+                newFile: user.pdf,
+                status: user.status,
+                userImg: null
             });
             setUsersData([user]);
         }
@@ -131,31 +135,30 @@ export const UsersEdit = () => {
 
 
     const handleSaveChanges = async (e) => {
+        setShouldValidate(true);
         e.preventDefault();
         console.log('Guardando cambios:', editedUser);
         if (editedUser) {
             try {
-                // const response = await fetch(`https://apptowerbackend.onrender.com/api/users/${iduser}`, {
-                const response = await fetch(`http://localhost:3000/api/users/${iduser}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(editedUser),
+                const formData = new FormData();
+                Object.keys(editedUser).forEach(key => {
+                    if (key === 'userImg' && editedUser[key] === null) {
+                        return;
+                    }
+                    if ((key === 'pdf' || key === 'newFile') && editedUser[key]) {
+                        formData.append(key, editedUser[key]);
+                    } else {
+                        formData.append(key, editedUser[key]);
+                    }
                 });
 
-                editedUser.pdf = editedUser.pdf ? editedUser.pdf : null;
+                const response = await fetch(`http://localhost:3000/api/users/${iduser}`, {
+                    method: 'PUT',
+                    body: formData,
+                });
 
-                if (!editedUser?.docType || !editedUser.name || !editedUser.email || !editedUser.password || !editedUser.document || !editedUser.lastName) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Por favor, rellene todos los campos requeridos',
-                        icon: 'error',
-                    });
-                    //Activa la validacion de los campos cuando se envia el formulario
-                    setShouldValidate(true);
-                    return;
-                }
+                console.log('response:', editedUser);
+
 
                 if (editedUser?.document !== originalDocument.current && isDocumentTaken) {
                     Swal.fire({
@@ -210,6 +213,7 @@ export const UsersEdit = () => {
                         text: 'Error al modificar usuario.',
                         icon: 'error',
                     });
+                    setErrors(errorResponse);
                 }
             } catch (error) {
                 console.error('Error al procesar la solicitud:', error);
@@ -340,6 +344,7 @@ export const UsersEdit = () => {
 
 
     const handleEnterpriceSecurity = (selectedOption) => {
+        setErrors([]);
         setSelectedEnterprice(selectedOption);
         setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedOption.value });
     };
@@ -352,7 +357,7 @@ export const UsersEdit = () => {
     const residentTypeUser = userResidente ? userResidente.residentType : null;
 
     //Traer Apartamentos
-    const ResidentApartament = userResidente && userResidente.apartments.length > 0 ? userResidente.apartments[0].idApartment : null;
+    const ResidentApartament = userResidente && userResidente.apartments.length > 0 ? userResidente.apartments[0]?.idApartment : null;
 
     const [residentType, setResidentType] = useState(residentTypeUser);
     const [idApartment, setApartment] = useState(ResidentApartament);
@@ -420,38 +425,56 @@ export const UsersEdit = () => {
 
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })}
-                                        validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => { setEditedUser({ ...editedUser, docType: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"docType"}
+                                    ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} validate={shouldValidate}
+                                    <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => { setEditedUser({ ...editedUser, document: e.target.value }); setErrors([]) }}
                                         inputStyle={editedUser?.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
                                         errorMessage={editedUser?.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
-                                        required={true} />
+
+                                        errors={errors}
+                                        identifier={"document"}
+
+                                    />
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
+                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => { setEditedUser({ ...editedUser, name: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"name"}
+                                    />
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => { setEditedUser({ ...editedUser, lastName: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"lastName"}
+                                    />
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                                    <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => { setEditedUser({ ...editedUser, email: e.target.value }); setErrors([]) }}
                                         inputStyle={editedUser?.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={editedUser?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
-                                        validate={shouldValidate} required={true} />
+
+                                        errors={errors}
+                                        identifier={"email"}
+                                    />
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Numero de telefono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} type='number' required={true} validate={shouldValidate}></Inputs>
+                                    <Inputs name="Numero de telefono" value={editedUser?.phone || ''} onChange={(e) => { setEditedUser({ ...editedUser, phone: e.target.value }); setErrors([]) }} type='number'
+                                        errors={errors}
+                                        identifier={"phone"}
+                                    ></Inputs>
 
                                 </FormColumn>
 
@@ -460,17 +483,22 @@ export const UsersEdit = () => {
                                         id="select"
                                         options={sexs}
                                         name="Género"
+                                        required={false}
                                         value={editedUser?.sex || ''}
                                         onChange={e => setEditedUser({ ...editedUser, sex: e.target.value })}
+                                        errors={errors}
+                                        identifier={'sex'}
                                     />
                                 </FormColumn>
 
                                 <FormColumn>
 
                                     <Inputs name="Fecha de nacimiento" type="date" value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
+                                        onChange={(e) => { setEditedUser({ ...editedUser, birthday: e.target.value }); setErrors([]) }}
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+                                        errors={errors}
+                                        identifier={"birthday"}
                                     ></Inputs>
 
 
@@ -481,8 +509,7 @@ export const UsersEdit = () => {
                                         name='pdf'
                                         label='Carga de documento'
                                         formatos='.pdf'
-                                        fileUrl={editedUser?.pdf}
-                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
+                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0], newFile: e.target.files[0] })}
                                         validate={shouldValidate}
                                     />
 
@@ -495,25 +522,30 @@ export const UsersEdit = () => {
                                         options={residentsTypes}
                                         name="Tipo residente"
                                         value={residentType || ''}
-                                        onChange={e => setResidentType(e.target.value)}
-                                        validate={shouldValidate}
-                                        required={true}
+                                        onChange={e => { setResidentType(e.target.value); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"residentType"}
                                     />
                                     <InputsSelect
                                         id="select"
                                         options={apartmentList}
                                         name="Apartamento"
                                         value={idApartment || ''}
-                                        onChange={e => setApartment(e.target.value)}
-                                        validate={shouldValidate}
-                                        required={true}
+                                        onChange={e => { setApartment(e.target.value); setErrors([]) }}
+
+
+                                        errors={errors}
+                                        identifier={"idApartment"}
                                     />
                                     <InputsSelect
                                         id={"select"}
                                         options={estado}
                                         name={"Estado"}
                                         value={editedUser?.status || ''}
-                                        onChange={e => setEditedUser({ ...editedUser, status: e.target.value })} />
+                                        onChange={e => { setEditedUser({ ...editedUser, status: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"status"}
+                                    />
 
                                 </FormColumn>
 
@@ -526,31 +558,46 @@ export const UsersEdit = () => {
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
 
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })}
-                                        validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => { setEditedUser({ ...editedUser, docType: e.target.value }); setErrors([]) }}
+
+                                        errors={errors}
+                                        identifier={"docType"}
+                                    ></InputsSelect>
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} validate={shouldValidate}
+                                    <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => { setEditedUser({ ...editedUser, document: e.target.value }); setErrors([]) }}
                                         inputStyle={editedUser?.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
                                         errorMessage={editedUser?.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
-                                        required={true} />
+
+                                        errors={errors}
+                                        identifier={"document"}
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => { setEditedUser({ ...editedUser, name: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"name"}
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => { setEditedUser({ ...editedUser, lastName: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"lastName"}
+                                    />
                                 </FormColumn>
 
 
                                 <FormColumn>
-                                    <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                                    <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => { setEditedUser({ ...editedUser, email: e.target.value }); setErrors([]) }}
                                         inputStyle={editedUser?.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={editedUser?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
-                                        validate={shouldValidate} required={true} />
+
+                                        errors={errors}
+                                        identifier={"email"}
+                                    />
                                 </FormColumn>
 
 
@@ -560,20 +607,25 @@ export const UsersEdit = () => {
                                         onChange={handleEnterpriceSecurity}
                                         options={enterpriceOptions}
                                         value={selectedEnterprice}
-                                        validate={shouldValidate}
+
+                                        errors={errors}
+                                        identifier={"idEnterpriseSecurity"}
                                     />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => { setEditedUser({ ...editedUser, phone: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"phone"}
+                                    />
 
                                     <Uploader
                                         name='pdf'
                                         label='Documento de Identidad'
                                         formatos='.pdf'
-                                        fileUrl={editedUser?.pdf}
-                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
+                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0], newFile: e.target.files[0] })}
                                         validate={shouldValidate}
+
                                     />
                                 </FormColumn>
 
@@ -584,11 +636,13 @@ export const UsersEdit = () => {
                                         name="Fecha Nacimiento"
                                         type="date"
                                         value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
-                                        required={true}
-                                        validate={shouldValidate}
+                                        onChange={(e) => { setEditedUser({ ...editedUser, birthday: e.target.value }); setErrors([]) }}
+
+
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+                                        errors={errors}
+                                        identifier={"birthday"}
 
                                     />
 
@@ -597,7 +651,10 @@ export const UsersEdit = () => {
                                         options={estado}
                                         name={"Estado"}
                                         value={editedUser?.status || ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
+                                        onChange={(e) => { setEditedUser({ ...editedUser, status: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"status"}
+                                    ></InputsSelect>
 
 
                                 </FormColumn>
@@ -613,37 +670,56 @@ export const UsersEdit = () => {
                             <>
                                 <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                                 <FormColumn>
-                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })} validate={shouldValidate} required={true}></InputsSelect>
+                                    <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => { setEditedUser({ ...editedUser, docType: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"docType"}
+                                    ></InputsSelect>
 
                                 </FormColumn>
 
                                 <FormColumn>
 
-                                    <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} validate={shouldValidate}
+                                    <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => { setEditedUser({ ...editedUser, document: e.target.value }); setErrors([]) }}
                                         inputStyle={editedUser?.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
                                         errorMessage={editedUser?.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
-                                        required={true} />
+
+                                        errors={errors}
+                                        identifier={"document"}
+                                    />
 
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => { setEditedUser({ ...editedUser, name: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"name"}
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => { setEditedUser({ ...editedUser, lastName: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"lastName"}
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
-                                    <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                                    <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => { setEditedUser({ ...editedUser, email: e.target.value }); setErrors([]) }}
                                         inputStyle={editedUser?.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
                                         errorMessage={editedUser?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
-                                        validate={shouldValidate} required={true} />
+
+                                        errors={errors}
+                                        identifier={"email"}
+
+                                    />
                                 </FormColumn>
 
                                 <FormColumn>
 
-                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} validate={shouldValidate} required={true} />
+                                    <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => { setEditedUser({ ...editedUser, phone: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"phone"}
+                                    />
 
                                 </FormColumn>
 
@@ -652,9 +728,9 @@ export const UsersEdit = () => {
                                         name='pdf'
                                         label='Carga de documento'
                                         formatos='.pdf'
-                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
+                                        onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0], newFile: e.target.files[0] })}
                                         validate={shouldValidate}
-                                        fileUrl={editedUser?.pdf}
+
                                     />
 
                                 </FormColumn>
@@ -665,11 +741,13 @@ export const UsersEdit = () => {
                                         name="Fecha Nacimiento"
                                         type="date"
                                         value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
-                                        required={true}
-                                        validate={shouldValidate}
+                                        onChange={(e) => { setEditedUser({ ...editedUser, birthday: e.target.value }); setErrors([]) }}
+
+
                                         inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                         errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+                                        errors={errors}
+                                        identifier={"birthday"}
 
                                     />
 
@@ -679,7 +757,10 @@ export const UsersEdit = () => {
                                         options={estado}
                                         name={"Estado"}
                                         value={editedUser?.status || ''}
-                                        onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
+                                        onChange={(e) => { setEditedUser({ ...editedUser, status: e.target.value }); setErrors([]) }}
+                                        errors={errors}
+                                        identifier={"status"}
+                                    ></InputsSelect>
 
 
 
@@ -688,37 +769,56 @@ export const UsersEdit = () => {
                         ) : <>
                             <h6 className='mb-4 w-100 text-muted' style={{ marginLeft: '1.1rem' }}>Informacion personal</h6>
                             <FormColumn>
-                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => setEditedUser({ ...editedUser, docType: e.target.value })} validate={shouldValidate} required={true}></InputsSelect>
+                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedUser?.docType || ''} onChange={(e) => { setEditedUser({ ...editedUser, docType: e.target.value }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"docType"}
+                                ></InputsSelect>
 
                             </FormColumn>
 
                             <FormColumn>
 
-                                <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => setEditedUser({ ...editedUser, document: e.target.value })} validate={shouldValidate}
+                                <Inputs name="Documento" value={editedUser?.document || ''} onChange={(e) => { setEditedUser({ ...editedUser, document: e.target.value }); setErrors([]) }}
                                     inputStyle={editedUser?.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
                                     errorMessage={editedUser?.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
-                                    required={true} />
+
+                                    errors={errors}
+                                    identifier={"document"}
+                                />
 
                             </FormColumn>
 
                             <FormColumn>
-                                <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} validate={shouldValidate} required={true} />
+                                <Inputs name="Nombre" value={editedUser?.name || ''} onChange={(e) => { setEditedUser({ ...editedUser, name: e.target.value }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"name"}
+                                />
                             </FormColumn>
 
                             <FormColumn>
-                                <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })} validate={shouldValidate} required={true} />
+                                <Inputs name="Apellido" value={editedUser?.lastName || ''} onChange={(e) => { setEditedUser({ ...editedUser, lastName: e.target.value }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"lastName"}
+                                />
                             </FormColumn>
 
                             <FormColumn>
-                                <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                                <Inputs name="Correo" value={editedUser?.email || ''} onChange={(e) => { setEditedUser({ ...editedUser, email: e.target.value }); setErrors([]) }}
                                     inputStyle={editedUser?.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
                                     errorMessage={editedUser?.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
-                                    validate={shouldValidate} required={true} />
+
+                                    errors={errors}
+                                    identifier={"email"}
+                                />
                             </FormColumn>
 
                             <FormColumn>
 
-                                <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} validate={shouldValidate} required={true} />
+                                <Inputs name="Teléfono" value={editedUser?.phone || ''} onChange={(e) => { setEditedUser({ ...editedUser, phone: e.target.value }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"phone"}
+
+                                />
 
                             </FormColumn>
 
@@ -729,7 +829,7 @@ export const UsersEdit = () => {
                                     formatos='.pdf'
                                     onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0] })}
                                     validate={shouldValidate}
-                                    fileUrl={editedUser?.pdf}
+
                                 />
 
                             </FormColumn>
@@ -740,11 +840,14 @@ export const UsersEdit = () => {
                                     name="Fecha Nacimiento"
                                     type="date"
                                     value={editedUser?.birthday ? new Date(editedUser.birthday).toISOString().split('T')[0] : ''}
-                                    onChange={(e) => setEditedUser({ ...editedUser, birthday: e.target.value })}
-                                    required={true}
-                                    validate={shouldValidate}
+                                    onChange={(e) => { setEditedUser({ ...editedUser, birthday: e.target.value }); setErrors([]) }}
+
+
                                     inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                     errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+
+                                    errors={errors}
+                                    identifier={"birthday"}
 
                                 />
 
@@ -754,7 +857,10 @@ export const UsersEdit = () => {
                                     options={estado}
                                     name={"Estado"}
                                     value={editedUser?.status || ''}
-                                    onChange={(e) => setEditedUser({ ...editedUser, status: e.target.value })} ></InputsSelect>
+                                    onChange={(e) => { setEditedUser({ ...editedUser, status: e.target.value }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"status"}
+                                ></InputsSelect>
 
 
 
