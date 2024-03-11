@@ -131,8 +131,8 @@ export const Aside = () => {
 
             notificationToSee = !notification.seen && notification.iduser !== idUserLogged
         }
-        return notificationToSee;
-        // return !notification.seen && notification.iduser !== idUserLogged;
+        // return notificationToSee;
+        return !notification.seen && notification.iduser !== idUserLogged;
     });
 
 

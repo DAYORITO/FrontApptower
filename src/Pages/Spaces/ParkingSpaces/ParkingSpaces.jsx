@@ -141,7 +141,7 @@ export const ParkingSpaces = () => {
 
     }
 
-    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url, setErrorList, null, null)
+    await postRequest(event, 'parkingSpaces', 'PUT', setModalParkin, data, url, setErrorList, null, socket)
 
     getParkingSpace('parkingSpaces')
 

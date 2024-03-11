@@ -5,7 +5,7 @@ import './Details.css'
 
 export const Details = ({ children }) => {
   return (
-    <div id='formContainer' className="card shadow"   >
+    <div id='formContainer' className="card shadow dashboard"   >
       <div className='row details'>
 
         {children}

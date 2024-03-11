@@ -145,7 +145,9 @@ function GuestIncomeCreate() {
     if (apartment) {
       const towerId = getTower(apartment);
       getDataTowers(towerId);
+      if(id!=null && id!=undefined){
       setPhone(getPhone(id != null ? id : apartment));
+      }
     }
   }, [apartment]);
 
@@ -355,9 +357,11 @@ function GuestIncomeCreate() {
       // Crear el guestIncome
       console.log("fecha de hoy: ", new Date());
       const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+        // User logged
+        "idUserLogged": idUserLogged,
         "startingDate": new Date(),
         "departureDate": null,
-        "idApartment": id != null ? id :  apartment?.value,
+        "idApartment": id != null ? id : apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor?.value,
@@ -483,7 +487,7 @@ function GuestIncomeCreate() {
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect errors={errors} identifier={"idApartment"}  inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { {id != null ? handleChange(id) : handleTowerChange(e.target.value)} }} options={towers} />
+              <InputsSelect errors={errors} identifier={"idApartment"} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { { id != null ? handleChange(id) : handleTowerChange(e.target.value) } }} options={towers} />
               :
               <Inputs
                 key={apartment}
