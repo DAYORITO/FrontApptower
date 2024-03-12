@@ -196,8 +196,8 @@ function GuestIncome() {
 
   function searcher(searchValue) {
     if (!searchValue) {
-      setGuestIncomeData(originalGuestIncomeData);
-      return;
+      
+      return setGuestIncomeData(originalGuestIncomeData);
     }
 
     searchValue = searchValue.trim().toLowerCase();
@@ -221,7 +221,7 @@ function GuestIncome() {
   }
 
 
-  const { totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataguestIncome } = usePaginator(originalGuestIncomeData, 4);
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataguestIncome } = usePaginator(guestIncomeData, 4);
 
 
   return (
