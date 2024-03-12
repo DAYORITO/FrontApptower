@@ -29,7 +29,7 @@ export const Watchman = () => {
     const [watchmanData, setWatchmanData] = useState([]);
     const { data, load: loading, error } = useFetchget('watchman')
     const { error: putError, load: putLoad, } = useFetchput('watchman', editedWatchman);
-
+    const [errors, setErrors] = useState([{}]);
 
     const birthDate = new Date(editedWatchman?.user?.birthday);
 
@@ -58,6 +58,7 @@ export const Watchman = () => {
     const handleModal = async (watchman) => {
         if (watchman.idEnterpriseSecurity) {
             setEditedWatchman({
+                idrole: watchman.user.idrole,
                 ...watchman,
                 idEnterpriseSecurity: watchman.idEnterpriseSecurity
             });
@@ -65,13 +66,7 @@ export const Watchman = () => {
         } else {
             console.error('ID de Empresa no encontrado en el vigilante:', watchman);
         }
-    };
-
-    useEffect(() => {
-        if (!putLoad && !putError) {
-            setShowModal(false);
-        }
-    }, [putLoad, putError]);
+    }
 
 
     const [isDocumentTaken, setIsDocumentTaken] = useState(false);
@@ -135,34 +130,6 @@ export const Watchman = () => {
                     dateOfbirth: editedWatchman.dateOfbirth ? new Date(editedWatchman.dateOfbirth).toISOString() : null
                 };
 
-                if (!editedWatchman.user.docType || !editedWatchman.user.name || !editedWatchman.user.email || !editedWatchman.user.document || !editedWatchman.user.lastName) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Por favor, rellene todos los campos requeridos',
-                        icon: 'error',
-                    });
-                    //Activa la validacion de los campos cuando se envia el formulario
-                    setShouldValidate(true);
-                    return;
-                }
-
-                if (editedWatchman?.user.document !== originalDocument.current && isDocumentTaken) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Este documento se encuentra registrado',
-                        icon: 'error',
-                    });
-                    return;
-                }
-
-                if (editedWatchman?.user.email !== originalEmail.current && isEmailTaken) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Este correo se encuentra registrado',
-                        icon: 'error',
-                    });
-                    return;
-                }
 
                 if (age < 18) {
                     Swal.fire({
@@ -174,7 +141,7 @@ export const Watchman = () => {
                 }
 
 
-                const response = await fetch('https://apptowerbackend.onrender.com/api/watchman', {
+                const response = await fetch('http://localhost:3000/api/watchman', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -205,6 +172,8 @@ export const Watchman = () => {
                         text: 'Error al modificar vigilante',
                         icon: 'error',
                     });
+                    console.error('Error al procesar la solicitud:', errorResponse);
+                    setErrors(errorResponse);
                 }
             } catch (error) {
                 console.error('Error al procesar la solicitud:', error);
@@ -242,7 +211,6 @@ export const Watchman = () => {
     const [search, setSearch] = useState('');
     const searcher = (e) => {
         setSearch(e.target.value)
-        console.log(e.target.value)
     }
     let filterData = [];
 
@@ -265,7 +233,6 @@ export const Watchman = () => {
     // Traer empresas de seguridad
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
-    console.log("Selected Enterprice:", selectedEnterprice);
 
 
     const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
@@ -279,10 +246,9 @@ export const Watchman = () => {
 
 
 
-    console.log("Enterprice Options:", enterpriceOptions);
+
     const selectedEnterpriceOption = selectedEnterprice || enterpriceOptions.find(option => option.value === editedWatchman?.idEnterpriseSecurity);
 
-    console.log("Selected Enterprice Option:", selectedEnterpriceOption);
 
     useEffect(() => {
         if (editedWatchman) {
@@ -294,6 +260,7 @@ export const Watchman = () => {
     const handleEnterpriceSecurity = (selectedEnterprice) => {
         setSelectedEnterprice(selectedEnterprice);
         setEditedWatchman({ ...editedWatchman, idEnterpriseSecurity: selectedEnterprice.value });
+        setErrors([])
     };
 
 
@@ -314,7 +281,7 @@ export const Watchman = () => {
                         : null
                 }
                 showPaginator={
-                    watchmanData && watchmanData.length > 0 ?
+                    watchmanData ?
                         <Paginator
                             totalPages={totalPages}
                             currentPage={currentPage}
@@ -395,41 +362,68 @@ export const Watchman = () => {
                                     onChange={handleEnterpriceSecurity}
                                     options={enterpriceOptions}
                                     value={selectedEnterprice}
-                                    validate={shouldValidate}
+
+                                    errors={errors}
+                                    identifier={"idEnterpriseSecurity"}
                                 />
 
-                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.user.docType || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, docType: e.target.value } })}
-                                    validate={shouldValidate} required={true}></InputsSelect>
-                                <Inputs name="Documento" value={editedWatchman?.user.document || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, document: e.target.value } })}
-                                    inputStyle={editedWatchman?.user.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
-                                    errorMessage={editedWatchman?.user.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
-                                    validate={shouldValidate} required={true}
+                                <InputsSelect id={"select"} options={opciones} name={"Tipo Documento"} value={editedWatchman?.user.docType || ''} onChange={(e) => { setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, docType: e.target.value } }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"docType"}
+
+                                ></InputsSelect>
+                                <Inputs name="Documento"
+                                    value={editedWatchman?.user.document || ''}
+                                    onChange={(e) => { setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, document: e.target.value } }); setErrors([]) }}
+                                    // inputStyle={editedWatchman?.user.document !== originalDocument.current && isDocumentTaken ? { borderColor: 'red' } : null}
+                                    // errorMessage={editedWatchman?.user.document !== originalDocument.current && isDocumentTaken ? "El documento ya existe" : null}
+                                    identifier={'document'}
+                                    errors={errors}
                                 />
-                                <Inputs name="Nombre" value={editedWatchman?.user.name || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, name: e.target.value } })}
-                                    validate={shouldValidate} required={true} />
-                                <Inputs name="Apellido" value={editedWatchman?.user.lastName || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, lastName: e.target.value } })}
-                                    validate={shouldValidate} required={true} />
 
-                                <Inputs name="Correo" value={editedWatchman?.user.email || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, email: e.target.value } })}
-                                    inputStyle={editedWatchman?.user.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
-                                    errorMessage={editedWatchman?.user.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
-                                    validate={shouldValidate} required={true} />
+                                <Inputs name="Nombre" value={editedWatchman?.user.name || ''} onChange={(e) => { setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, name: e.target.value } }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"name"}
+                                />
+                                <Inputs name="Apellido" value={editedWatchman?.user.lastName || ''} onChange={(e) => { setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, lastName: e.target.value } }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"lastName"}
+                                />
 
-                                <Inputs name="Teléfono" value={editedWatchman?.user.phone || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, phone: e.target.value } })} validate={shouldValidate} required={true} />
+
+                                <Inputs name="Correo"
+                                    value={editedWatchman?.user.email || ''}
+                                    onChange={(e) => { setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, email: e.target.value } }); setErrors([]) }}
+                                    // inputStyle={editedWatchman?.user.email !== originalEmail.current && isEmailTaken ? { borderColor: 'red' } : null}
+                                    // errorMessage={editedWatchman?.user.email !== originalEmail.current && isEmailTaken ? "El correo ya existe" : null}
+                                    errors={errors}
+                                    identifier={"email"}
+                                />
+
+                                <Inputs name="Teléfono" value={editedWatchman?.user.phone || ''} onChange={(e) => { setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, phone: e.target.value } }); setErrors([]) }}
+                                    errors={errors}
+                                    identifier={"phone"}
+                                />
                                 <Inputs
                                     type='date'
                                     name="Fecha Nacimiento"
                                     value={editedWatchman?.user.birthday ? new Date(editedWatchman.user.birthday).toISOString().split('T')[0] : ''}
                                     onChange={(e) => {
                                         const selectedDate = e.target.value;
-                                        setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, birthday: e.target.value } });
+                                        setEditedWatchman({ ...editedWatchman, user: { ...editedWatchman.user, birthday: e.target.value } }); setErrors([])
                                     }}
-                                    validate={shouldValidate} required={true}
+
                                     inputStyle={age < 18 ? { borderColor: 'red' } : null}
                                     errorMessage={age < 18 ? "Debe de ser mayor de edad" : null}
+                                    errors={errors}
+                                    identifier={"birthday"}
                                 />
 
-                                <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedWatchman?.state || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, state: e.target.value })}></InputsSelect>
+                                <InputsSelect id={"select"} options={estado} name={"Estado"} value={editedWatchman?.state || ''} onChange={(e) => setEditedWatchman({ ...editedWatchman, state: e.target.value })}
+                                    errors={errors}
+                                    identifier={"status"}
+
+                                ></InputsSelect>
 
 
                             </Modal>

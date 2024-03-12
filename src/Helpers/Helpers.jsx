@@ -21,7 +21,7 @@ export const useUserLogged = () => {
     }
   }, []);
 
-  return {idUserLogged, idRolLogged};
+  return { idUserLogged, idRolLogged };
 };
 
 // Use capitalize first letter
@@ -181,9 +181,10 @@ export const postRequest = async (event, endPoint, method = "POST", modal, data,
 
     if (error) {
       console.error('Hubo un error:', error);
+      const errorMessage = error.errors ? error.errors[0].message : error.error;
       Swal.fire({
         title: 'Error',
-        text: error.errors[0].message,
+        text: errorMessage,
         icon: 'error',
       });
       errors(error)

@@ -385,10 +385,16 @@ export const UsersDetails = () => {
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    onChange={e => setPassword(e.target.value)}></Inputs>
+                                    onChange={e => setPassword(e.target.value)}
+                                    errors={errorList}
+                                    identifier={'password'}
+                                ></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    onChange={e => setConfirmPassword(e.target.value)}></Inputs>
+                                    onChange={e => setConfirmPassword(e.target.value)}
+                                    errors={errorList}
+                                    identifier={'passwordConfirm'}
+                                ></Inputs>
 
                                 <Inputs type={"hidden"}
                                     value={idUser} onChange={e => setIdUser(e.target.value)}></Inputs>

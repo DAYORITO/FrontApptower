@@ -561,7 +561,7 @@ export const ResidentDetails = () => {
 
                                 <Inputs name="Fecha de cumpleaños" type={"date"}
                                     identifier={'birthday'} errors={errorList}
-                                    value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+                                    value={birthday ? new Date(birthday).toISOString().split('T')[0] : ''} onChange={e => setBirthday(e.target.value)}></Inputs>
 
                                 <InputsSelect id={"select"} options={sexs} name={"Sexo"}
                                     identifier={'sex'} errors={errorList}

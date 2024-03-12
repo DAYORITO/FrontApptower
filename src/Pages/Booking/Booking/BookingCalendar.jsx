@@ -36,7 +36,7 @@ export const BookingCalendar = () => {
 
     //information Booking
 
-    const [idSpace, setIdSpace] = useState(Number(id));
+    const [idSpace, setIdSpace] = useState(Number(id) || null);
     const [idResident, setIdResident] = useState(null);
     const [dateStart, setDateStart] = useState(null);
     const [hourStart, setHourStart] = useState(null)
@@ -45,6 +45,8 @@ export const BookingCalendar = () => {
     const [amountPeople, setAmountPeople] = useState(null);
     const [status, setStatus] = useState(null);
     const [idbooking, setIdBooking] = useState(null);
+    const [errors, setErrors] = useState([]);
+    console.log("Errors", errors)
 
 
     const [IsEditedBooking, setIsEditedBooking] = useState(false);
@@ -54,6 +56,8 @@ export const BookingCalendar = () => {
 
 
     const openBookingModal = (data) => {
+
+        setErrors('')
 
         console.log(data)
 
@@ -70,6 +74,8 @@ export const BookingCalendar = () => {
 
 
         } else {
+
+            console.log("Data", data)
 
             setIsEditedBooking(true)
             setIdBooking(data.idbooking)
@@ -228,7 +234,7 @@ export const BookingCalendar = () => {
             .filter(resident => resident?.status === "Active")
             .map(resident => ({
                 value: resident.idResident,
-                label: resident?.user?.name
+                label: resident?.user?.name + ' ' + resident?.user?.lastName
             }))
         : [];
 
@@ -251,7 +257,7 @@ export const BookingCalendar = () => {
         const data = {
 
             idSpace: idSpace,
-            idResident: Number(idResident),
+            idResident: idResident,
             StartDateBooking: selectedDate,
             StartTimeBooking: hourStart,
             EndDateBooking: Date('0000-00-00T00:00:00.000Z'),
@@ -264,7 +270,7 @@ export const BookingCalendar = () => {
         console.log("Create data", data)
 
         try {
-            await postRequest(event, 'booking', 'POST', setShowModal, data, url, 'Reserva creada correctamente.')
+            await postRequest(event, 'booking', 'POST', setShowModal, data, url, setErrors, 'Reserva creada correctamente.')
 
             getBooking('booking')
         } catch (error) {
@@ -282,7 +288,8 @@ export const BookingCalendar = () => {
 
             idbooking: idbooking,
             idResident: idResident,
-            StartDateBooking: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : null,
+            idSpace: idSpace,
+            StartDateBooking: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             StartTimeBooking: hourStart,
             EndDateBooking: new Date().toISOString().split('T')[0],
             EndTimeBooking: hourEnd,
@@ -293,7 +300,7 @@ export const BookingCalendar = () => {
 
         console.log("edit data holaaaaaaa", data)
 
-        await postRequest(event, `booking`, 'PUT', setShowModal, data, url, null, null)
+        await postRequest(event, `booking`, 'PUT', setShowModal, data, url, setErrors, null, null)
         getBooking('booking')
 
     };
@@ -308,27 +315,16 @@ export const BookingCalendar = () => {
 
     }
 
-    useEffect(() => {
-        if (showModal === false) {
+    const maxCapacity = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.capacity;
+    const isOverCapacity = amountPeople > maxCapacity;
 
-            setHourEnd(null)
-            setHourStart(null)
-            setAmountPeople(null)
-            setIdResident(null)
+    const HourStartSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.startHour;
 
-        }
-
-    }, [showModal])
-
+    const HourEndSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.endHour;
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <ContainerCalendar
-
-
-            >
-
-                {/* name={`Reserva de ${nameSpace ? nameSpace.toLowerCase() : ''}`} */}
+            <ContainerCalendar>
                 <Calendar
                     style={{ height: '75vh', width: '96%' }}
                     localizer={localizer}
@@ -383,7 +379,7 @@ export const BookingCalendar = () => {
 
 
             </ContainerCalendar>
-            {showModal &&
+            {showModal && selectedDate &&
                 createPortal(
                     <ModalContainer ShowModal={showModal} >
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
@@ -396,6 +392,8 @@ export const BookingCalendar = () => {
                                     options={spacesOptions}
                                     value={selectedSpaceCreate ? selectedSpaceCreate : ''}
                                     defaultOption={true}
+                                    errors={errors}
+                                    identifier={'idSpace'}
                                 />
                             }
 
@@ -410,6 +408,8 @@ export const BookingCalendar = () => {
                                     options={residentsOptions}
                                     value={selectedResident ? selectedResident : ''}
                                     defaultOption={true}
+                                    errors={errors}
+                                    identifier={'idResident'}
                                 />
                             }
 
@@ -417,6 +417,8 @@ export const BookingCalendar = () => {
                                 type="date"
                                 value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
                                 onChange={e => setSelectedDate(e.target.value)}
+                                errors={errors}
+                                identifier={'StartDateBooking'}
                             ></Inputs> :
                                 <Inputs name="Fecha de inicio"
                                     type="date"
@@ -427,30 +429,40 @@ export const BookingCalendar = () => {
 
 
 
-
                             <Inputs
                                 name="Hora de inicio"
                                 type="time"
-                                value={hourStart}
+                                value={hourStart ? hourStart : ''}
                                 onChange={e => setHourStart(e.target.value)}
+                                errors={errors}
+                                identifier={'StartTimeBooking'}
+                            // errorMessage={hourStart < HourStartSpace ? `La hora de inicio debe ser mayor a ${HourStartSpace}` : null}
+                            // inputStyle={hourStart < HourStartSpace ? { borderColor: 'red' } : null}
                             />
 
 
                             <Inputs
                                 name="Hora de fin"
                                 type="time"
-                                value={hourEnd}
+                                value={hourEnd ? hourEnd : ''}
                                 onChange={e => setHourEnd(e.target.value)}
                                 min={selectedSpace ? selectedSpace.schedule.startHour : ""}
                                 max={selectedSpace ? selectedSpace.schedule.endHour : ''}
+                                errors={errors}
+                                identifier={'EndTimeBooking'}
+                            // errorMessage={hourEnd > HourEndSpace ? `La hora de fin debe ser menor a ${HourEndSpace}` : null}
+
                             />
 
                             <Inputs
                                 name={'Cantidad de personas'}
                                 type={'number'}
-                                value={amountPeople}
-                                onChange={e => setAmountPeople(e.target.value)}
-                                min={0}
+                                value={amountPeople ? amountPeople : ''}
+                                onChange={e => { setAmountPeople(e.target.value); setErrors([]) }}
+                                errors={isOverCapacity ? isOverCapacity : errors}
+                                identifier={'amountPeople'}
+                                inputStyle={isOverCapacity ? { borderColor: 'red' } : null}
+                                errorMessage={isOverCapacity ? `La cantidad máxima de personas permitidas es ${maxCapacity}` : null}
                             />
 
                             {
@@ -458,18 +470,20 @@ export const BookingCalendar = () => {
                                 IsEditedBooking ?
                                     <>
                                         <InputsSelect id={"select"} options={BookingTypes} name={"Estado"}
-                                            value={status} onChange={e => setStatus(e.target.value)}
+                                            value={status ? status : null} onChange={e => setStatus(e.target.value)}
+                                            errors={errors} identifier={'status'}
                                         ></InputsSelect>
 
                                         <Inputs type={"hidden"}
-                                            value={idbooking} onChange={e => setIdBooking(e.target.value)}></Inputs>
+                                            value={idbooking || null} onChange={e => setIdBooking(e.target.value)}></Inputs>
                                     </>
                                     : null
                             }
                         </Modal>
                     </ModalContainer>,
                     document.getElementById('modalRender')
-                )}
-        </div>
+                )
+            }
+        </div >
     );
 };
