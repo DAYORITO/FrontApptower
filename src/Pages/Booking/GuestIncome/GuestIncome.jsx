@@ -41,6 +41,12 @@ function GuestIncome() {
 
   const { idUserLogged, idRolLogged } = useUserLogged()
 
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
+
   const [LoadingSpiner, setLoadingSpiner] = useState(true);
   const token = Cookies.get("token");
   // const {permisos} = useAuth()
@@ -239,7 +245,7 @@ function GuestIncome() {
     <>
       <ContainerTable
         title="Ingresos"
-        dropdown={<DropdownExcel />}
+        dropdown={nameRole && nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />}
         search={<SearchButton type="text" onChange={handleChange} />}
         buttonToGo={
           allowedPermissions["Ingresos"] &&
@@ -360,7 +366,6 @@ function GuestIncome() {
                     ""
                   )}
 
-                  <Actions accion="Detalles del Ingreso"></Actions>
                 </Row>
               ))
             )}

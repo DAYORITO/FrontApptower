@@ -46,7 +46,14 @@ function Fines() {
     const [originalFines, setOriginalFines] = useState([]);
 
     const { data, load, error } = useFetchget('fines')
-    const { idUserLogged } = useUserLogged()
+
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+    const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+    const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
 
     const filterOptions = [{ label: 'Fecha incidente', value: "incidentDate" },
     { label: 'Fecha límite de pago', value: 'paymentDate' },
@@ -88,23 +95,23 @@ function Fines() {
         setfilterParam(e.target.value);
         if (e.target.value == "apartmentName") {
             searcher("");
-        }else if((e.target.value == "incidentDate" || e.target.value == "paymentDate" || e.target.value == "createdAt") && isNaN(Date.parse(selectedFilterValue))){
+        } else if ((e.target.value == "incidentDate" || e.target.value == "paymentDate" || e.target.value == "createdAt") && isNaN(Date.parse(selectedFilterValue))) {
             searcher("", e.target.value);
 
-        } else{
+        } else {
             searcher(selectedFilterValue, e.target.value);
         }
-        
+
     }
 
     function handleChange3(e) {
-            handleChange2(e);
-            
-            setfilterParam(e.target.value);
-            if (e.target.value == "incidentDate"
-                || e.target.value == "paymentDate"
-                || e.target.value == "createdAt"
-            ) { setDateMarked('date') } else { setDateMarked('text'), setSelectedFilterValue('') }
+        handleChange2(e);
+
+        setfilterParam(e.target.value);
+        if (e.target.value == "incidentDate"
+            || e.target.value == "paymentDate"
+            || e.target.value == "createdAt"
+        ) { setDateMarked('date') } else { setDateMarked('text'), setSelectedFilterValue('') }
     }
 
     function searcher(searchValue, filterParam) {
@@ -113,11 +120,11 @@ function Fines() {
         let filteredFines = originalFines.filter((dato) => {
             if (filterParam === "incidentDate") {
                 return dato.incidentDate.toString().toLowerCase()
-                .includes(searchValue?.target?.value != undefined  ? searchValue.target.value.toLowerCase() : searchValue)
+                    .includes(searchValue?.target?.value != undefined ? searchValue.target.value.toLowerCase() : searchValue)
             }
             if (filterParam === "paymentDate") {
                 return dato.paymentDate.toString().toLowerCase()
-                .includes(searchValue?.target?.value != undefined  ? searchValue.target.value.toLowerCase() : searchValue)
+                    .includes(searchValue?.target?.value != undefined ? searchValue.target.value.toLowerCase() : searchValue)
             }
             // if (filterParam === "createdAt") {
             //     return dato.createdAt.toString().toLowerCase()
@@ -242,10 +249,12 @@ function Fines() {
     return (
         <>
             <ContainerTable title='Multas'
-                dropdown={<DropdownExcel />}
+                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+
+
                 search2={<SearchSelect options={filterOptions} onChange={handleChange3} />}
                 search={filterParam == "state" ? <SearchButton options={typeOptions} type={dateMarked} onChange={handleChange} />
-                    : filterParam == "fineType" ? <SearchButton options={fineTypes} onChange={handleChange}/> : <SearchButton value={selectedFilterValue} type={dateMarked} onChange={handleChange} placeholder='Buscar multa' />}
+                    : filterParam == "fineType" ? <SearchButton options={fineTypes} onChange={handleChange} /> : <SearchButton value={selectedFilterValue} type={dateMarked} onChange={handleChange} placeholder='Buscar multa' />}
                 buttonToGo={
                     allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Crear')
                         ? <ButtonGoTo value='Crear Multa' href='/admin/fines/create' />
@@ -317,22 +326,46 @@ function Fines() {
                                 A12={fine.state}
                                 to={`details/${fine.idFines}`}
                             >
-                                {fine.state != 'Pagada' ?
-                                    <Actions accion='Agregar Comprobante' onClick={() => {
-                                        setShowEvidences(false);
-                                        setId(fine.idFines);
-                                        console.log("Comprobante de pago1", fine.paymentproof);
+                                {
+                                    fine.state != 'Pagada'
+                                        ?
+                                        (
+                                            nameRole && !nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')
+                                                ?
+                                                <Actions accion='Agregar Comprobante' onClick={() => {
+                                                    setShowEvidences(false);
+                                                    setId(fine.idFines);
+                                                    console.log("Comprobante de pago1", fine.paymentproof);
 
-                                        setPaymentproof([fine.paymentproof]);
-                                        console.log("Comprobante de pago2", paymentproof);
-                                        setShowModal(true)
-                                    }} /> : ""}
+                                                    setPaymentproof([fine.paymentproof]);
+                                                    console.log("Comprobante de pago2", paymentproof);
+                                                    setShowModal(true)
+                                                }} />
+                                                :
+                                                ""
+                                        )
+                                        :
+                                        ""
+                                }
 
-                                {fine.paymentproof != null && fine.state != 'Pagada'
-                                    ?
-                                    <Actions accion='Aprobar pago' onClick={() => {
-                                        handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
-                                    }} /> : ""}
+                                {
+                                    fine.paymentproof != null && fine.state != 'Pagada'
+                                        ?
+                                        (
+                                            nameRole && !nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')
+                                                ?
+                                                <>
+                                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
+                                                    <Actions accion='Aprobar pago' onClick={() => {
+                                                        handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
+                                                    }} />
+                                                </>
+                                                :
+                                                null
+                                        )
+                                        :
+                                        ""
+                                }
 
                                 <Actions accion='Ver Evidencias'
                                     // href={`/admin/fines/details/${fine.idFines}`}

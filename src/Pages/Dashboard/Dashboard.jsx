@@ -45,12 +45,14 @@ export const Dashboard = () => {
                     <ContainerDashboard>
 
                         <ContentInfoDashboard
-                            mt={true}
                             count={fines?.fines?.length}
                             dataLabel='Multas'
-                            activeCount={`${fines?.paidFines?.length} Pagadas`}
-                            neutralCount={`${fines?.finesToReview?.length} Por revisar`}
-                            warningCount={`${fines?.pendingFines?.length} Pendientes`}
+
+                            activeCount={fines?.paidFines?.length !== 0 ? `${fines?.paidFines?.length} Pagadas` : null}
+                            neutralCount={fines?.finesToReview?.length !== 0 ? `${fines?.finesToReview?.length} Por revisar` : null}
+                            warningCount={fines?.pendingFines?.length !== 0 ? `${fines?.pendingFines?.length} Pendientes` : null}
+
+                            // warningCount={`${fines?.pendingFines?.length} Pendientes`}
                             icon='file-plus'
                             to='/admin/fines'
                         />
@@ -59,9 +61,9 @@ export const Dashboard = () => {
                             mt={true}
                             count={bookings?.bookings?.length}
                             dataLabel='Reservas'
-                            neutralCount={`${bookings?.bookingsApproved?.length} Aprobadas`}
-                            inactiveCount={`${bookings?.bookingsCancelled?.length} Canceladas`}
-                            warningCount={`${bookings?.bookingsToReview?.length} Por revisar`}
+                            neutralCount={bookings?.bookingsApproved?.length !== 0 ? `${bookings?.bookingsApproved?.length} Aprobadas` : null}
+                            inactiveCount={bookings?.bookingsCancelled?.length !== 0 ? `${bookings?.bookingsCancelled?.length} Canceladas` : null}
+                            warningCount={bookings?.bookingsToReview?.length !== 0 ? `${bookings?.bookingsToReview?.length} Por revisar` : null}
                             icon='calendar'
                             to='/admin/booking'
 
@@ -70,14 +72,14 @@ export const Dashboard = () => {
                         <ContentInfoDashboard
                             count={apartments?.apartments?.length}
                             dataLabel='Apartamentos'
-                            neutralCount={`${apartments?.apartmentsActives?.length} Ocupados`}
-                            warningCount={`${apartments?.apartmentsInActives?.length} Inactivos`}
+                            neutralCount={apartments?.apartmentsActives?.length !== 0 ? `${apartments?.apartmentsActives?.length} Ocupados` : null}
+                            warningCount={apartments?.apartmentsInActives?.length !== 0 ? `${apartments?.apartmentsInActives?.length} Inactivos` : null}
                             to='/admin/apartments'
                         />
                         <ContentInfoDashboard
                             count={guestIncomes?.guestIncome?.length}
                             dataLabel='Ingresos'
-                            neutralCount={`${guestIncomes?.inGuestIncome?.length} Sin marcar salida`}
+                            neutralCount={guestIncomes?.inGuestIncome?.length !== 0 ? `${guestIncomes?.inGuestIncome?.length} Sin marcar salida` : null}
                             icon='arrow-up-right'
                             to='/admin/guest_income'
                         />
@@ -87,8 +89,8 @@ export const Dashboard = () => {
                             icon='map-pin'
                             dataLabel='Parqueaderos'
                             label='Parqueaderos privados'
-                            neutralCount={`${parkingSpacesPrivate?.parkingSpacesPrivateActive?.length} Ocupados`}
-                            activeCount={`${parkingSpacesPrivate?.parkingSpacesPrivateInactive?.length} Disponibles`}
+                            neutralCount={parkingSpacesPrivate?.parkingSpacesPrivateActive?.length !== 0 ? `${parkingSpacesPrivate?.parkingSpacesPrivateActive?.length} Ocupados` : null}
+                            activeCount={parkingSpacesPrivate?.parkingSpacesPrivateInactive?.length !== 0 ? `${parkingSpacesPrivate?.parkingSpacesPrivateInactive?.length} Disponibles` : null}
                             to='/admin/parkingSpaces'
 
                         />
@@ -98,8 +100,8 @@ export const Dashboard = () => {
                             icon='map-pin'
                             dataLabel='Parqueaderos'
                             label='Parqueaderos publicos'
-                            activeCount={`${parkingSpacesPublic?.parkingSpacesPublicActive?.length} Disponibles`}
-                            neutralCount={`${parkingSpacesPublic?.parkingSpacesPublicInactive?.length} Ocupados`}
+                            activeCount={parkingSpacesPublic?.parkingSpacesPublicActive?.length !== 0 ? `${parkingSpacesPublic?.parkingSpacesPublicActive?.length} Disponibles` : null}
+                            neutralCount={parkingSpacesPublic?.parkingSpacesPublicInactive?.length !== 0 ? `${parkingSpacesPublic?.parkingSpacesPublicInactive?.length} Ocupados` : null}
                             to='/admin/parkingSpaces'
                         />
 
@@ -117,8 +119,8 @@ export const Dashboard = () => {
                         <ContentInfoDashboard
                             count={notifications?.notifications?.length}
                             dataLabel='Notificaciones'
-                            neutralCount={`${notifications?.notificationsSees?.length} Vistas`}
-                            warningCount={`${notifications?.notificationsNoSees?.length} No Vistas`}
+                            neutralCount={notifications?.notificationsSees?.length !== 0 ? `${notifications?.notificationsSees?.length} Vistas` : null}
+                            warningCount={notifications?.notificationsNoSees?.length !== 0 ? `${notifications?.notificationsNoSees?.length} No Vistas` : null}
 
                             icon='message-circle'
                         // size={8}
@@ -128,8 +130,8 @@ export const Dashboard = () => {
                         <ContentInfoDashboard
                             count={users?.users?.length}
                             dataLabel='Usuarios'
-                            neutralCount={`${users?.usersActives?.length} Activos`}
-                            warningCount={`${users?.usersInactives?.length} Inactivos`}
+                            neutralCount={users?.usersActives?.length !== 0 ? `${users?.usersActives?.length} Activos` : null}
+                            warningCount={users?.usersInactives?.length !== 0 ? `${users?.usersInactives?.length} Inactivos` : null}
 
                             icon='message-circle'
                             to='/admin/users'
@@ -144,4 +146,3 @@ export const Dashboard = () => {
         </Details>
     );
 };
-

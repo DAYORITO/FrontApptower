@@ -178,7 +178,6 @@ export const WatchmanDetails = () => {
         console.log("edit data", data)
 
         await postRequest(event, 'users/img', 'PUT', {}, data, url);
-        setModalEditImg(false)
         getWatchman(`watchman/${Number(id)}`)
         window.location.reload()
 
@@ -243,7 +242,6 @@ export const WatchmanDetails = () => {
         }
 
         await postRequest(event, 'users/password', 'PUT', setModalChangePassword, data, url, setErrors, null, null);
-        setModalChangePassword(false)
         getWatchman(`watchman/${Number(id)}`)
 
     }
@@ -292,7 +290,7 @@ export const WatchmanDetails = () => {
                             A2={`${lastName}`}
                             A5={`Correo electronico: ${email}`}
                             A6={`Telefono: ${phone}`}
-                            A7={pdf}
+                            A7={EqualUser ? null : pdf}
                             status={userStatus}
                             onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser ? false : true}
@@ -414,31 +412,31 @@ export const WatchmanDetails = () => {
                                 {<Uploader name="img" formatos='.pdf' label="Documento de identidad" onChange={e => setPdfNew(e.target.files[0])} />}
 
                                 <InputsSelect id={"select"} options={docTypes} name={"Tipo de documento"}
-                                    value={docType} onChange={e => setDocType(e.target.value)}
+                                    value={docType} onChange={e => { setDocType(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"docType"}
                                 ></InputsSelect>
 
                                 <Inputs name="Numero de documento" type={"text"}
-                                    value={docNumber} onChange={e => setDocNumber(e.target.value)}
+                                    value={docNumber} onChange={e => { setDocNumber(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"document"}
                                 ></Inputs>
 
                                 <Inputs name="Nombres" type={"text"}
-                                    value={name} onChange={e => setName(e.target.value)}
+                                    value={name} onChange={e => { setName(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"name"}
                                 ></Inputs>
 
                                 <Inputs name="Apellidos" type={"text"}
-                                    value={lastName} onChange={e => setLastName(e.target.value)}
+                                    value={lastName} onChange={e => { setLastName(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"lastName"}
                                 ></Inputs>
 
                                 <Inputs name="Fecha de Nacimiento" type={"date"}
-                                    value={birthday ? new Date(birthday).toISOString().split('T')[0] : ''} onChange={e => setBirthday(e.target.value)}
+                                    value={birthday ? new Date(birthday).toISOString().split('T')[0] : ''} onChange={e => { setBirthday(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"birthday"}
                                 ></Inputs>
@@ -448,13 +446,13 @@ export const WatchmanDetails = () => {
                                 ></InputsSelect> */}
 
                                 <Inputs name="Correo electronico" type={"text"}
-                                    value={email} onChange={e => setEmail(e.target.value)}
+                                    value={email} onChange={e => { setEmail(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"email"}
                                 ></Inputs>
 
                                 <Inputs name="Numero de telefono" type={"text"}
-                                    value={phone} onChange={e => setPhone(e.target.value)}
+                                    value={phone} onChange={e => { setPhone(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"phone"}
                                 ></Inputs>
@@ -497,13 +495,13 @@ export const WatchmanDetails = () => {
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    onChange={e => setPassword(e.target.value)}
+                                    onChange={e => { setPassword(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"password"}
                                 ></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    onChange={e => setConfirmPassword(e.target.value)}
+                                    onChange={e => { setConfirmPassword(e.target.value); setErrors([]) }}
                                     errors={errors}
                                     identifier={"passwordConfirm"}
                                 ></Inputs>

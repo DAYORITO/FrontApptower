@@ -1,4 +1,4 @@
-import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch'
 import { Actions } from "../../../Components/Actions/Actions"
 import { ButtonGoTo, DropdownExcel, SearchButton, SearchSelect } from "../../../Components/Buttons/Buttons"
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable"
@@ -25,7 +25,7 @@ import { SocketContext } from '../../../Context/SocketContext'
 
 
 export const Apartments = () => {
-  
+
   const token = Cookies.get('token');
 
   const url = "http://localhost:3000/api/"
@@ -36,6 +36,14 @@ export const Apartments = () => {
   // Socket
 
   const { socket } = useContext(SocketContext)
+
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
 
   // Get Data
 
@@ -176,7 +184,7 @@ export const Apartments = () => {
     <>
       <ContainerTable
         title='Apartamentos'
-        dropdown={<DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
         search2={<SearchSelect options={towerList} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar apartamentos' />}
         buttonToGo={

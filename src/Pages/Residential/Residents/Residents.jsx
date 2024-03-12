@@ -7,7 +7,7 @@ import { Tbody } from '../../../Components/Tbody/Tbody'
 import { Row } from '../../../Components/Rows/Row'
 import { Actions } from '../../../Components/Actions/Actions'
 import { useContext, useEffect, useState } from 'react'
-import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch'
 import { Spinner } from '../../../Components/Spinner/Spinner'
 import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
 
@@ -44,6 +44,13 @@ export const Residents = () => {
     const { data: apartments, get: getApartments, loading: loadingApartments } = useFetch(url)
     const { del: delApartmentResidents } = useFetch(url)
 
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+    const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+    const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
 
     //Consulta Privilegios
 
@@ -79,8 +86,6 @@ export const Residents = () => {
     // Apartment information
 
     const { id } = useParams()
-
-    const { idUserLogged } = useUserLogged()
 
     const [idResident, setIdResident] = useState("");
 
@@ -327,7 +332,7 @@ export const Residents = () => {
         <>
             <ContainerTable
                 title='Residentes'
-                dropdown={<DropdownExcel />}
+                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
                 search={<SearchButton value={search} onChange={searcher} />}
                 buttonToGo={
                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear')
@@ -392,9 +397,9 @@ export const Residents = () => {
                                         <Actions accion='Modificar datos de residencia' onClick={() => openModal(resident)}></Actions>
                                     ) : null}
 
-                                    {
+                                    {allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Editar') ? (
                                         resident.user.pdf ? <Actions accion='Documento' icon='file' href={resident.user.pdf} ></Actions> : null
-                                    }
+                                    ) : null}
 
                                     {/* <Actions accion='Ver detalle' icon='eye' href={`/admin/residents/details/${resident.idResident}`} ></Actions> */}
 

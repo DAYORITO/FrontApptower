@@ -34,7 +34,14 @@ export const Vehicle = () => {
 
   const { socket } = useContext(SocketContext)
 
-  const { idUserLogged } = useUserLogged()
+
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
 
 
   const token = Cookies.get('token');
@@ -191,14 +198,13 @@ export const Vehicle = () => {
 
       <ContainerTable
         title='Vehiculos'
-        dropdown={<DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
         search={<SearchButton value={search} onChange={searcher} />}
-        // buttonToGo={
-        //   allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
-        //     ? <ButtonGoTo value='Crear Vehiculo' href='create' />
-        //     : null
-        // }
-        buttonToGo={<ButtonGoTo value="Crear Vehiculo" href="/admin/vehicle/create" />}
+        buttonToGo={
+          allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
+            ? <ButtonGoTo value='Crear Vehiculo' href='create' />
+            : null
+        }
         showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
 
       >

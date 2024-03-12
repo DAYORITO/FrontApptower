@@ -6,7 +6,7 @@ const ImageContainer = ({ urls, name = 'Evidencia' }) => {
     <div className="container">
       <div className="row justify-content-center">
         {Array.isArray(urls) && urls[0] != null ? (
-          urls.map((url, index) => (
+          urls?.map((url, index) => (
             <div key={index} className="w-100">
               <div className="d-flex border mb-3">
                 {url && (url?.endsWith('.jpg') || url?.endsWith('.png') || url?.endsWith('.jpeg')) ? (
