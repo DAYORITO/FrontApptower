@@ -9,7 +9,7 @@ function FormContainer({ name, children, buttons, modalButton, ButtonBack, onSub
   return (
     <>
       <div div id="formContainer" className="card shadow">
-        <div className="d-flex justify-content-between " >
+        <div className="d-flex justify-content-between" style={{paddingRight: "3.8vw"}} >
           {name ? <strong>
             <h3 className="mb-2">{name}</h3>
           </strong>
