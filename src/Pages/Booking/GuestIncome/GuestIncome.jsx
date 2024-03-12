@@ -197,8 +197,8 @@ function GuestIncome() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const filteredDataguestIncome = () => {
-    if (data && data.guestIncome) {
-      return guestIncomeData.slice(currentPage, currentPage + 8);
+    if (data && data?.guestIncome) {
+      return guestIncomeData?.slice(currentPage, currentPage + 8);
     } else {
       return [];
     }
