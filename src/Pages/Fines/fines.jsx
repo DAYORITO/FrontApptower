@@ -23,6 +23,7 @@ import FileUploader from '../../Components/ImgContainer/FileSelector';
 import Inputs from '../../Components/Inputs/Inputs';
 import { Spinner } from '../../Components/Spinner/Spinner';
 import { fineTypes } from '../../Hooks/consts.hooks';
+import { useUserLogged } from '../../Helpers/Helpers';
 
 
 
@@ -37,6 +38,7 @@ function Fines() {
     const [showModal, setShowModal] = useState(false);
     const [evidenceFiles, setEvidenceFiles] = useState();
     const [paymentproof, setPaymentproof] = useState();
+    const [paymentprooftoSend, setPaymentprooftoSend] = useState();
     const [showevidences, setShowEvidences] = useState(true);
     const [id, setId] = useState();
     const [filterParam, setfilterParam] = useState('incidentDate');
@@ -44,6 +46,7 @@ function Fines() {
     const [originalFines, setOriginalFines] = useState([]);
 
     const { data, load, error } = useFetchget('fines')
+    const { idUserLogged } = useUserLogged()
 
     const filterOptions = [{ label: 'Fecha incidente', value: "incidentDate" },
     { label: 'Fecha límite de pago', value: 'paymentDate' },
@@ -161,7 +164,7 @@ function Fines() {
         setShowModaload(true);
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        let response = await useFetchForFile('https://apptowerbackend.onrender.com/api/fines', dataToUpdate, 'PUT')
+        let response = await useFetchForFile('http://localhost:3000/api/fines', dataToUpdate, 'PUT')
         // .then((responseData) => {
 
         console.log("respuesta de api holi", response)
@@ -331,7 +334,7 @@ function Fines() {
                                         handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
                                     }} /> : ""}
 
-                                <Actions accion='Ver detalles'
+                                <Actions accion='Ver Evidencias'
                                     // href={`/admin/fines/details/${fine.idFines}`}
                                     onClick={() => {
                                         setShowEvidences(true);
@@ -353,7 +356,7 @@ function Fines() {
                         <ModalContainer ShowModal={setShowModal}>
                             <Modal
                                 showModal={setShowModal}
-                                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproof }) }}
+                                onClick={() => { setShowModal(false), handleEditClick({ idUserLogged: idUserLogged, idfines: id, state: "Por revisar", paymentproof: paymentprooftoSend }) }}
                                 title={showevidences ? "Evidencias" : "Comprobante de pago"}
                                 onClickClose={() => { setEvidenceFiles([]); setPaymentproof([]) }}
                                 showSave={showevidences ? false : true}
@@ -367,7 +370,7 @@ function Fines() {
                                             <div style={{ width: "200px", height: "200px" }}>
                                                 <Uploader label={"Agregar archivo"}
                                                     onChange={(e) => {
-                                                        setPaymentproof(e.target.files[0]);
+                                                        setPaymentprooftoSend(e.target.files[0]);
                                                     }}
                                                 />
                                             </div>
