@@ -189,9 +189,10 @@ export const FinesDetail = () => {
             A2={`${fineType}`}
             A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
             A6={`Estado de pago: ${state}`}
-            actionOnClick2={
-              state !== "Pagada" ? "Agregar comprobante de pago" : undefined
-            }
+            actionOnClick2={ paymentproof ? 'Cambiar comprobante': 'Agregar comprobante de pago'}
+            // actionOnClick2={
+            //   state !== "Pagada" ? "Agregar comprobante de pago" : state !== "Pagada" && paymentproof !== null ? "Cambiar comprobante": undefined
+            // }
             onClick2={
               state !== "Pagada"
                 ? () => {
@@ -201,7 +202,7 @@ export const FinesDetail = () => {
             }
             actionOnClick3={
               state !== "Pendiente" && state !== "Pagada"
-                ? "Aprobar comprobante de pago"
+                ? "Aprobar pago"
                 : ""
             }
             onClick3={
