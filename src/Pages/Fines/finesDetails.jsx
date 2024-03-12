@@ -64,12 +64,8 @@ export const FinesDetail = () => {
 
   const { id } = useParams();
 
-  const { idUserLogged, idRolLogged } = useUserLogged()
-
-  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
-
-  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
-
+  const { idUserLogged } = useUserLogged();
+  dotSpinner.register();
 
   // Socket
 
@@ -183,87 +179,52 @@ export const FinesDetail = () => {
   return (
     <>
       <Details>
-
-        {
-
-
-          loadingFines ? <Spinner /> :
-            <ContainerModule
-              to={'/admin/fines/'}
-              icon='file-plus'
-              A1={`Multa por `}
-              A2={`${fineType}`}
-              A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
-              A6={`Estado de pago: ${state}`}
-              actionOnClick2={
-                nameRole
-                  ? (
-                    nameRole.toLowerCase().includes('vigilante')
-                      || nameRole.toLowerCase().includes('seguridad')
-                      || nameRole.toLowerCase().includes('vigilancia')
-                      ? null
-                      : paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'
-                  )
-                  : paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'
-              }
-              onClick2={() => setShowModal(true)}
-              actionOnClick3={
-                paymentproof && nameRole
-                  ? (
-                    nameRole.toLowerCase().includes('vigilante')
-                      || nameRole.toLowerCase().includes('seguridad')
-                      || nameRole.toLowerCase().includes('vigilancia')
-                      ? null
-                      : 'Marcar como pagada'
-                  )
-                  : null
-              }
-              onClick3={paymentproof ? () => alert('Aqui va la funcion Dani') : null}
-
-              // A7={pdf}
-              status={state}
+        {loadingFines ? (
+          <Spinner />
+        ) : (
+          <ContainerModule
+            to={"/admin/fines/"}
+            icon="file-plus"
+            A1={`Multa por `}
+            A2={`${fineType}`}
+            A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
+            A6={`Estado de pago: ${state}`}
+            actionOnClick2={
+              state !== "Pagada" ? "Agregar comprobante de pago" : undefined
+            }
+            onClick2={
+              state !== "Pagada"
+                ? () => {
+                    openProofFilesModal();
+                  }
+                : undefined
+            }
+            actionOnClick3={
+              state !== "Pendiente" && state !== "Pagada"
+                ? "Aprobar comprobante de pago"
+                : ""
+            }
+            onClick3={
+              state !== "Pendiente"
+                ? () => {
+                    handleEditClick({ idfines: id, state: "Pagada" });
+                  }
+                : ""
+            }
+            // A7={pdf}
+            status={state}
             // onClick2={EqualUser ? openModalChangePassword : null}
             // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
             // onClickEdit={setShowModalEditApartment}
-            />
+          />
+        )}
 
-        }
-
-
-
-        <InfoDetails><Acordions>
-          {nameRole && (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante'))
-            ?
-            null
-            : <DropdownInfo
-              name={'Comprobante de pago'}
-              action1={paymentproof ? 'Cambiar comprobante de pago' : 'Agregar comporbante de pago'}
-              onClickAction1={() => setShowModal(true)}
-            >
-              {loadingFines ? <SmalSpinner /> : paymentproof ? (
-                <>
-                  <RowNotificactions
-                    // Information
-                    img={paymentproof}
-                    to={paymentproof}
-                    name={'Valor pagado: '}
-                    lastName={amount}
-                    msg={'Comprobante de pago'}
-                    icon="file-plus"
-                  />
-
-                </>
-              ) : <div className='mt-4 ml-2'>
-                <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
-              </div>}
-            </DropdownInfo>}
-        </Acordions>
-
+        <InfoDetails>
           <Acordions>
             <DropdownInfo
               name={`Informacion de la multa`}
-            // action1={'Editar datos de la multa'}
-            // onClickAction1={openModalEdit}
+              // action1={'Editar datos de la multa'}
+              // onClickAction1={openModalEdit}
             >
               <ul className="list-unstyled">
                 <li>De: Administracion</li>
@@ -294,10 +255,11 @@ export const FinesDetail = () => {
 
           <Acordions>
             <DropdownInfo
-              name={`${evidenceFiles?.length} ${evidenceFiles?.length == 1 ? "Evidencia" : "Evidencias"
-                }`}
-            // action1={'Agregar evidencia'}
-            // onClickAction1={openEvidenceFilesModal}
+              name={`${evidenceFiles?.length} ${
+                evidenceFiles?.length == 1 ? "Evidencia" : "Evidencias"
+              }`}
+              // action1={'Agregar evidencia'}
+              // onClickAction1={openEvidenceFilesModal}
             >
               {loadingFines ? (
                 <SmalSpinner />
@@ -429,7 +391,7 @@ export const FinesDetail = () => {
                     });
                 }}
                 title={"Agregar comprobante de pago"}
-              // showSave={showevidences ? false : true}
+                // showSave={showevidences ? false : true}
               >
                 <Uploader
                   multiple
@@ -453,7 +415,7 @@ export const FinesDetail = () => {
                 showModal={setModalImg}
                 onClick={() => alert("Aqui funciona algo")}
                 title={"Evidencia de multa."}
-              // showSave={showevidences ? false : true}
+                // showSave={showevidences ? false : true}
               >
                 {/* <Uploader multiple label={"Agregar comprobante de pago"}
                   onChange={(e) => {
