@@ -18,6 +18,7 @@ import {
   useFetch,
   useFetchForFile,
   useFetchUserInformation,
+  useFetchget,
 } from "../../Hooks/useFetch";
 import {
   Dropdownanchor,
@@ -141,7 +142,7 @@ export const FinesDetail = () => {
 
   // add proof modal
 
-  // const [addProofFilesModal, setAaddProofFilesModal] = useState(false);
+  const [addProofFilesModal, setAaddProofFilesModal] = useState(false);
 
   const openProofFilesModal = () => {
     setAaddProofFilesModal(true);
