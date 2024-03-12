@@ -57,7 +57,13 @@ export const ParkingSpaces = () => {
 
   // User logged
 
-  const { idUserLogged } = useUserLogged()
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
 
   const { id } = useParams()
 
@@ -218,7 +224,7 @@ export const ParkingSpaces = () => {
     <>
       <ContainerTable
         title='Parqueaderos'
-        dropdown={<DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
         search2={<SearchSelect options={parkingTypes} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} />}
         buttonToGo={

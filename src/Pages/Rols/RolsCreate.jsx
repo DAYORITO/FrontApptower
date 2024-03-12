@@ -72,7 +72,7 @@ export const RolsCreate = () => {
     const [isNameRoleTaken, setIsNameRoleTaken] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/rols/namerole/${namerole}`)
+        fetch(`https://apptowerbackend.onrender.com/api/rols/namerole/${namerole}`)
             .then(response => response.json())
             .then(data => {
                 setIsNameRoleTaken(data && data.message ? true : false);

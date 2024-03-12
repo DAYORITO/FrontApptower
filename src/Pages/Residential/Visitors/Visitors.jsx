@@ -27,10 +27,20 @@ import { set } from "date-fns";
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import { Spinner } from "../../../Components/Spinner/Spinner";
+import { useUserLogged } from "../../../Helpers/Helpers";
 
 function Visitors() {
   const token = Cookies.get('token');
   const url = "https://apptowerbackend.onrender.com/api/";
+
+
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
   // const token = Cookies.get('token');
 
   const [errors, setErrors] = useState([{}]);
@@ -123,10 +133,10 @@ function Visitors() {
   useEffect(() => {
     if (loadApartments || loadResidentApartment || loadParkingSpaces || loadTowers) {
       setLoadingSpine(true);
-      
+
     }
     else {
-     
+
       setLoadingSpine(false);
     }
   }, [loadApartments, loadResidentApartment, loadParkingSpaces, loadTowers])
@@ -160,7 +170,7 @@ function Visitors() {
       label: matchingTower ? matchingTower.towerName : 'Torre no encontrada'
     };
   });
- 
+
 
   const organizeApartmentsByTower = (dataApartment) => {
     const apartmentsByTower = {};
@@ -428,7 +438,7 @@ function Visitors() {
     <>
       <ContainerTable
         title="Visitantes"
-        dropdown={<DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
         search2={<SearchSelect options={filterOptions} onChange={(e) => {
           setSelectedFilterParam(e.target.value);
           console.log(selectedFilterParam);
@@ -538,7 +548,7 @@ function Visitors() {
           <>
             <ModalContainer ShowModal={setShowmodal}>
               <Modal title={"Crear Ingreso"} showModal={setShowmodal} onClick={handleSubmit}>
-                <InputsSelect name={'Torre'}  onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
+                <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
                 <div className="mb-4">
                   <Select2 placeholder={'Apartamento'} identifier={"idApartment"} errors={errors} value={apartment} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
                 </div>

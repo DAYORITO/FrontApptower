@@ -12,7 +12,7 @@ export const ProtectedRoutes = () => {
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 
-    if (isLoading || loadingUser) {
+    if (loadingUser) {
         return <LoadingPage />;
     }
 

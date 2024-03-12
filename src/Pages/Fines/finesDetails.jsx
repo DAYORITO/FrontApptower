@@ -13,7 +13,7 @@ import { InfoDetails } from "../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../Components/DetailsActions/DetailsActions"
 import { idToPermissionName } from '../../Hooks/permissionRols'
-import { useAllowedPermissions, useFetch, useFetchForFile, useFetchUserInformation } from "../../Hooks/useFetch"
+import { useAllowedPermissions, useFetch, useFetchForFile, useFetchUserInformation, useFetchget } from "../../Hooks/useFetch"
 import { Dropdownanchor, Dropdownanchor2 } from "../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../Components/DropdownInfo/DropdownInfo"
@@ -52,7 +52,12 @@ export const FinesDetail = () => {
 
   const { id } = useParams();
 
-  const { idUserLogged } = useUserLogged()
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
 
   // Socket
 
@@ -199,9 +204,29 @@ export const FinesDetail = () => {
               A2={`${fineType}`}
               A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
               A6={`Estado de pago: ${state}`}
-              actionOnClick2={paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'}
+              actionOnClick2={
+                nameRole
+                  ? (
+                    nameRole.toLowerCase().includes('vigilante')
+                      || nameRole.toLowerCase().includes('seguridad')
+                      || nameRole.toLowerCase().includes('vigilancia')
+                      ? null
+                      : paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'
+                  )
+                  : paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'
+              }
               onClick2={() => setShowModal(true)}
-              actionOnClick3={paymentproof && 'Marcar como pagada'}
+              actionOnClick3={
+                paymentproof && nameRole
+                  ? (
+                    nameRole.toLowerCase().includes('vigilante')
+                      || nameRole.toLowerCase().includes('seguridad')
+                      || nameRole.toLowerCase().includes('vigilancia')
+                      ? null
+                      : 'Marcar como pagada'
+                  )
+                  : null
+              }
               onClick3={paymentproof ? () => alert('Aqui va la funcion Dani') : null}
 
               // A7={pdf}
@@ -216,28 +241,31 @@ export const FinesDetail = () => {
 
 
         <InfoDetails><Acordions>
-          <DropdownInfo
-            name={'Comprobante de pago'}
-            action1={paymentproof ? 'Cambiar comprobante de pago' : 'Agregar comporbante de pago'}
-            onClickAction1={() => setShowModal(true)}
-          >
-            {loadingFines ? <SmalSpinner /> : paymentproof ? (
-              <>
-                <RowNotificactions
-                  // Information
-                  img={paymentproof}
-                  to={paymentproof}
-                  name={'Valor pagado: '}
-                  lastName={amount}
-                  msg={'Comprobante de pago'}
-                  icon="file-plus"
-                />
+          {nameRole && (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante'))
+            ?
+            null
+            : <DropdownInfo
+              name={'Comprobante de pago'}
+              action1={paymentproof ? 'Cambiar comprobante de pago' : 'Agregar comporbante de pago'}
+              onClickAction1={() => setShowModal(true)}
+            >
+              {loadingFines ? <SmalSpinner /> : paymentproof ? (
+                <>
+                  <RowNotificactions
+                    // Information
+                    img={paymentproof}
+                    to={paymentproof}
+                    name={'Valor pagado: '}
+                    lastName={amount}
+                    msg={'Comprobante de pago'}
+                    icon="file-plus"
+                  />
 
-              </>
-            ) : <div className='mt-4 ml-2'>
-              <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
-            </div>}
-          </DropdownInfo>
+                </>
+              ) : <div className='mt-4 ml-2'>
+                <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
+              </div>}
+            </DropdownInfo>}
         </Acordions>
 
           <Acordions>

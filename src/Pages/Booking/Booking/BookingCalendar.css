@@ -80,13 +80,13 @@
 .rbc-toolbar-label {
     text-transform: lowercase;
     color: #313131;
-    margin-left: 20px !important;
+    margin-left: -49px !important;
     /* margin-top: 20px !important; */
 }
 
-.App:not(:has(.myNav.expanded)) .rbc-toolbar-label {
-    left: 1rem !important;
-}
+
+
+
 
 
 .rbc-toolbar-label::before {

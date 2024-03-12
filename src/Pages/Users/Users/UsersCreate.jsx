@@ -447,7 +447,7 @@ export const UsersCreate = () => {
                                         value={document}
                                         onChange={e => { setDocument(e.target.value); setErrors([]) }}
                                         inputStyle={isDocumentTaken ? { borderColor: 'red' } : null}
-                                        errorMessage={isDocumentTaken ? "El documento ya existe" : null}
+                                        errorMessage={isDocumentTaken ? "El documento ya se encuentra registrado" : null}
                                         errors={errors}
                                         identifier={'document'}
 
@@ -473,7 +473,7 @@ export const UsersCreate = () => {
                                 <FormColumn>
                                     <Inputs name="Correo" type='email' value={email} onChange={e => { setEmail(e.target.value); setErrors([]) }} errors={errors} identifier={'email'}
                                         inputStyle={isEmailTaken ? { borderColor: 'red' } : null}
-                                        errorMessage={isEmailTaken ? "El correo ya existe" : null}
+                                        errorMessage={isEmailTaken ? "El correo ya se encuentra registrado" : null}
 
                                     />
                                     <Inputs name="Teléfono" value={phone} onChange={e => { setPhone(e.target.value); setErrors([]) }} errors={errors} identifier={'phone'} />

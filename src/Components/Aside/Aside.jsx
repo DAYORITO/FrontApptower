@@ -211,13 +211,22 @@ export const Aside = () => {
                                     </DropDownNav>
                                 )}
 
+                                {
+                                    allowedPermissions && allowedPermissions.includes('Reservas')
+                                        ? (
+                                            <>
+                                                {
+                                                    allowedPermissions.includes('Apartamentos') &&
+                                                        (nameRole === 'Residente' || nameRole === 'Residentes')
+                                                        ? <ListNav module={'Reservas'} href='booking/calendar' icon='fe fe-calendar fe-24' />
+                                                        : <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24' />
 
 
-                                {allowedPermissions.includes('Reservas') && (
-                                    <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24'
-                                    />
-                                )}
-
+                                                }
+                                            </>
+                                        )
+                                        : null
+                                }
 
                                 {allowedPermissions && (
                                     <>
@@ -259,13 +268,14 @@ export const Aside = () => {
 
                                             {allowedPermissions.includes('Apartamentos') && (
 
-                                                (nameRole === 'Administrador' || nameRole === 'Admin' || nameRole === 'Super Administrador') ?
-                                                    < DropDownList subprocess={"Apartamentos"} href='apartments' />
-                                                    : (nameRole === 'Residente' || nameRole === 'Residentes') ?
-                                                        < DropDownList subprocess={"Apartamentos"} href={rutadetailsapartment} />
-                                                        : null
+                                                (nameRole === 'Residente' || nameRole === 'Residentes') ?
+                                                    < DropDownList subprocess={"Apartamentos"} href={rutadetailsapartment} />
+                                                    : <DropDownList subprocess={"Apartamentos"} href='apartments/' ></DropDownList>
+
 
                                             )}
+
+
 
                                             {allowedPermissions.includes('Apartamentos') && (
                                                 <DropDownList subprocess={"Bloques"} href='towers' ></DropDownList>
