@@ -201,13 +201,6 @@ export const ResidentCreate = (props) => {
         </FormColumn>
 
         <FormColumn>
-          <InputsSelect id={"select"} options={residentsTypes} name={"Tipo de residente"}
-            identifier={'residentType'} errors={errorList}
-            value={residentType} onChange={e => setResidentType(e.target.value)}></InputsSelect>
-
-        </FormColumn>
-
-        <FormColumn>
           <InputsSelect
             id={"select"}
             identifier={'idApartment'} errors={errorList}
@@ -217,6 +210,15 @@ export const ResidentCreate = (props) => {
             onChange={e => setIdApartment(e.target.value)}
             disabled={id ? idApartment : ''}
           ></InputsSelect>
+
+        </FormColumn>
+
+        <FormColumn>
+
+          <InputsSelect disabled id={"select"} options={residentsTypes} name={"Tipo de residente"}
+            identifier={'residentType'} errors={errorList}
+            value={residentType} onChange={e => setResidentType(e.target.value)}></InputsSelect>
+
 
         </FormColumn>
 
@@ -234,13 +236,13 @@ export const ResidentCreate = (props) => {
             </>
           )}
 
-          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
+          {/* <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
           <Inputs name="Contraseña"
             identifier={'password'} errors={errorList} type='password' value={password} onChange={e => setPassword(e.target.value)} />
 
           <Inputs name="Confirmar Contraseña"
-            identifier={'passwordConfirm'} errors={errorList} type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} />
+            identifier={'passwordConfirm'} errors={errorList} type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} /> */}
 
         </FormColumn>
 

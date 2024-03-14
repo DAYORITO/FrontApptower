@@ -270,7 +270,7 @@ export const ApartmentDetails = (props) => {
         ? apartments.data.apartments
             .map(apartment => ({
                 value: apartment.idApartment,
-                label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
+                label: `Apartamento ${apartment.apartmentName}`
             }))
         : [];
 
@@ -352,7 +352,7 @@ export const ApartmentDetails = (props) => {
         ? owners?.data?.owners
             .map(owner => ({
                 value: owner.idOwner,
-                label: ` ${owner.user.name} ${owner.user.lastName} - ${owner.user.document}`
+                label: `${owner.user.name} ${owner.user.lastName}`
             }))
         : [];
 
@@ -545,7 +545,7 @@ export const ApartmentDetails = (props) => {
 
     };
 
-    // Delete apartmentowner
+    // Delete apartment owner
 
 
     const deleteApartmentOwner = async (id) => {
@@ -962,10 +962,10 @@ export const ApartmentDetails = (props) => {
                                 onClick={handleUpdateApartmentOwner}
                                 showModal={setShowApartmentOwnermODAL}
                                 title={`Propietario del apartamento ${apartmentName}`}
-                                onClickForDelete={() => deleteApartmentOwner(idApartmentOwner)}
+                                onClickForDelete={statusApartmentOwner == 'Inactive' ? () => deleteApartmentOwner(idApartmentOwner) : null}
 
                             >
-                                <InputsSelect disabled id={"select"} options={apartmentList} name={"Propiedad"}
+                                <InputsSelect id={"select"} options={apartmentList} name={"Propiedad"}
                                     identifier={'idApartment'} errors={errorList}
                                     value={idApartment} onChange={e => setIdApartment(e.target.value)}></InputsSelect>
 
@@ -978,7 +978,6 @@ export const ApartmentDetails = (props) => {
                                     identifier={'OwnershipStartDate'} errors={errorList}
                                     value={OwnershipStartDate} onChange={e => setOwnershipStartDate(e.target.value)}></Inputs>
 
-                                <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion de salida del conjunto</h6>
 
                                 <Inputs name="Fecha finalizacion de propiedad" type={"date"}
                                     identifier={'OwnershipEndDate'} errors={errorList}
@@ -1027,7 +1026,6 @@ export const ApartmentDetails = (props) => {
 
                                     value={residentStartDate} onChange={e => setResidentStartDate(e.target.value)}></Inputs>
 
-                                <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion de salida del conjunto</h6>
 
                                 <Inputs name="Fecha finalizacion de residencia" type={"date"}
                                     identifier={'residentEndDate'} errors={errorList}
