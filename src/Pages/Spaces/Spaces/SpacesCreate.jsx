@@ -21,8 +21,12 @@ export const SpacesCreate = () => {
   const [image, setImage] = useState("");
   const [spaceName, setSpaceName] = useState("");
 
-  const [startHour, setStartHour] = useState("");
-  const [endHour, setEndHour] = useState("");
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+
+  const [maxTime, setMaxTime] = useState("");
+  const [minTime, setMinTime] = useState("");
+
 
   const [area, setArea] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -40,11 +44,10 @@ export const SpacesCreate = () => {
       spaceType: spaceType,
       spaceName: spaceName,
       image: image,
-
-      schedule: startHour && endHour && JSON.stringify({
-        startHour: startHour,
-        endHour: endHour
-      }),
+      openingTime: openingTime,
+      closingTime: closingTime,
+      minTime: minTime,
+      maxTime: maxTime,
 
       area: area,
       capacity: capacity,
@@ -88,10 +91,7 @@ export const SpacesCreate = () => {
 
           {/* <h6 className='mb-4 text-muted'>Disponibilidad de {spaceName}</h6> */}
 
-          <Inputs name="Hora inicial" type="time" identifier={'schedule'} errors={errorList}
-            value={startHour} onChange={e => setStartHour(e.target.value)}></Inputs>
-          <Inputs name="Hora final" type="time" identifier={'schedule'} errors={errorList}
-            value={endHour} onChange={e => setEndHour(e.target.value)}></Inputs>
+
 
           <FormColumn>
 
@@ -103,10 +103,25 @@ export const SpacesCreate = () => {
         </FormColumn>
 
         <FormColumn>
+          <h6 className='mb-4 text-muted'>Disponibilidad de zona comun {spaceName}</h6>
 
-          <Uploader label={'Foto de zona común'} name="img" onChange={e => setImage(e.target.files[0])} />
+
+          <Inputs name="Hora de apertura" type="time" identifier={'openingTime'} errors={errorList}
+            value={openingTime} onChange={e => setOpeningTime(e.target.value)}></Inputs>
+
+          <Inputs name="Hora de cierre" type="time" identifier={'closingTime'} errors={errorList}
+            value={closingTime} onChange={e => setClosingTime(e.target.value)}></Inputs>
+
+          <Inputs min={1} name="Tiempo minimo" type="number" identifier={'minTime'} errors={errorList}
+            value={minTime} onChange={e => setMinTime(e.target.value)}></Inputs>
+
+          <Inputs name="Tiempo maximo" type="number" identifier={'maxTime'} errors={errorList}
+            value={maxTime} onChange={e => setMaxTime(e.target.value)}></Inputs>
+
+
 
         </FormColumn>
+        <Uploader label={'Foto de zona común'} name="img" onChange={e => setImage(e.target.files[0])} />
 
         {/* <Inputs name="Estado"
           value={status} onChange={e => setStatus(e.target.value)}></Inputs> */}

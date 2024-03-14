@@ -77,8 +77,12 @@ export const Spaces = () => {
   const [area, setArea] = useState('');
   const [capacity, setCapacity] = useState('');
 
-  const [startHour, setStartHour] = useState('');
-  const [endHour, setEndHour] = useState('');
+
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+
+  const [maxTime, setMaxTime] = useState("");
+  const [minTime, setMinTime] = useState("");
 
   const [status, setStatus] = useState('');
 
@@ -102,8 +106,12 @@ export const Spaces = () => {
     setArea(data?.area)
     setCapacity(data?.capacity)
 
-    setStartHour(data?.schedule?.startHour)
-    setEndHour(data?.schedule?.endHour)
+    setOpeningTime(data?.openingTime)
+    setClosingTime(data?.closingTime)
+
+    setMinTime(data?.minTime)
+    setMaxTime(data?.maxTime)
+
     setStatus(data?.status)
 
     setModalSpace(true)
@@ -123,10 +131,11 @@ export const Spaces = () => {
       idSpace: idSpace,
       spaceName: spaceName,
       image: image,
-      schedule: JSON.stringify({
-        startHour: startHour,
-        endHour: endHour
-      }),
+      openingTime: openingTime,
+      closingTime: closingTime,
+      minTime: minTime,
+      maxTime: maxTime,
+
       area: area,
       capacity: capacity,
       status: status
@@ -169,9 +178,8 @@ export const Spaces = () => {
                   key={space.idSpace}
                   title={space.spaceName}
                   img={space.image}
-                  A1={''}
 
-                  A2={`Horario: ${space?.schedule?.startHour} a ${space?.schedule?.endHour}`}
+                  A2={`Horario: ${space?.openingTime} a ${space?.closingTime} Maximo: ${parseInt(space?.maxTime)} horas`}
 
                   status={space.status}
                   to={`/admin/booking/calendar/${space.idSpace}`}
@@ -203,11 +211,17 @@ export const Spaces = () => {
 
                 <h6 className='mb-4 text-muted'>Disponibilidad de {spaceName}</h6>
 
-                <Inputs name="Hora inicial" type="time" identifier={'schedule'} errors={errorList}
-                  value={startHour} onChange={e => setStartHour(e.target.value)}></Inputs>
+                <Inputs name="Hora de apertura" type="time" identifier={'openingTime'} errors={errorList}
+                  value={openingTime} onChange={e => setOpeningTime(e.target.value)}></Inputs>
 
-                <Inputs name="Hora final" type="time" identifier={'schedule'} errors={errorList}
-                  value={endHour} onChange={e => setEndHour(e.target.value)}></Inputs>
+                <Inputs name="Hora de cierre" type="time" identifier={'closingTime'} errors={errorList}
+                  value={closingTime} onChange={e => setClosingTime(e.target.value)}></Inputs>
+
+                <Inputs min={1} name="Tiempo minimo" type="number" identifier={'minTime'} errors={errorList}
+                  value={minTime} onChange={e => setMinTime(e.target.value)}></Inputs>
+
+                <Inputs name="Tiempo maximo" type="number" identifier={'maxTime'} errors={errorList}
+                  value={maxTime} onChange={e => setMaxTime(e.target.value)}></Inputs>
 
                 <InputsSelect id={"select"} options={statusList} name={"Estado"} identifier={'status'} errors={errorList}
                   value={status} onChange={e => setStatus(e.target.value)}
