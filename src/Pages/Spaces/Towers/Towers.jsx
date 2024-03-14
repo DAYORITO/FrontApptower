@@ -7,7 +7,7 @@ import { ContainerTable } from "../../../Components/ContainerTable/ContainerTabl
 import { TablePerson } from "../../../Components/Tables/Tables"
 import { useEffect, useState } from "react"
 
-import { useAllowedPermissionsAndPrivileges, useFetch } from '../../../Hooks/useFetch'
+import { useAllowedPermissionsAndPrivileges, useFetch, useFetchget } from '../../../Hooks/useFetch'
 
 
 import { usePaginator, filter, postRequest, useUserLogged } from '../../../Helpers/Helpers'
@@ -37,6 +37,13 @@ export const Towers = () => {
     // const url = "https://apptowerbackend.onrender.com/api/"
 
     // Tower information
+
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+    const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+    const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
 
     const [towerImg, setTowerImg] = useState('');
     const [idTower, setIdTower] = useState('');
@@ -182,10 +189,19 @@ export const Towers = () => {
                                     A1={`Apartamentos: ${tower.apartments}`}
                                     status={tower.status}
                                     to={`/admin/apartments/${tower.idTower}`}
+                                    small={allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? true : false}
 
                                 >
-                                    <Actions href={`/admin/apartments/create/${tower.idTower}`} accion='Agregar apartamentos' icon="home" />
-                                    <Actions onClick={() => openTowerModalForm(tower)} accion='Editar bloque' icon="edit" />
+                                    {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? (
+                                        <Actions onClick={() => openTowerModalForm(tower)} accion='Editar bloque' icon="edit" />
+                                    ) : null}
+
+                                    {allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Editar') ? (
+                                        <Actions href={`/admin/apartments/create/${tower.idTower}`} accion='Agregar apartamentos' icon="home" />
+
+                                    ) : null}
+
+
 
                                 </BigCard>
                             ))}

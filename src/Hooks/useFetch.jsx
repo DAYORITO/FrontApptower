@@ -36,14 +36,14 @@ export const useFetch = (baseUrl) => {
       const response =
         method !== MethodOptions.GET
           ? await fetch(config.url, {
-              method: config.method,
-              headers: config.headers,
-              body: config.body,
-            })
+            method: config.method,
+            headers: config.headers,
+            body: config.body,
+          })
           : await fetch(config.url, {
-              method: config.method,
-              headers: config.headers,
-            });
+            method: config.method,
+            headers: config.headers,
+          });
 
       const json = await response.json();
       setData({ data: json });
@@ -161,7 +161,7 @@ export const useFetchget = (endpoint) => {
 
 export const useFetchForFile = async (url, data, method = "POST") => {
   console.log("Data:", data);
-    
+
   console.log(data);
 
   const abortController = new AbortController();
@@ -212,8 +212,8 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 
 export const useFetchpost = async (endpoint, data) => {
   const url =
-    // 'https://apptowerbackend.onrender.com/api/'
-    "http://localhost:3000/api/";
+    'https://apptowerbackend.onrender.com/api/'
+  // "http://localhost:3000/api/";
 
   const abortController = new AbortController();
   const signal = abortController.signal;

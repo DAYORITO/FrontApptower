@@ -16,8 +16,8 @@ import { name } from "dayjs/locale/es";
 export const Booking = () => {
   const token = Cookies.get('token');
 
-  const url = "http://localhost:3000/api/"
-  // const url = "https://apptowerbackend.onrender.com/api/"
+  // const url = "http://localhost:3000/api/"
+  const url = "https://apptowerbackend.onrender.com/api/"
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
 

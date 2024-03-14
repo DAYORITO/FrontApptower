@@ -7,7 +7,7 @@ import { statusList } from "../../../Hooks/consts.hooks"
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails"
 import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons"
 import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions"
-import { useFetch } from "../../../Hooks/useFetch"
+import { useFetch, useFetchget } from "../../../Hooks/useFetch"
 import { Dropdownanchor } from "../../../Components/DropDownAnchor/Dropdownanchor"
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule"
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo"
@@ -45,6 +45,11 @@ export const ApartmentDetails = (props) => {
     // User logged
 
     const { idUserLogged, idRolLogged } = useUserLogged()
+
+    const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+    const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
 
 
 
@@ -596,7 +601,8 @@ export const ApartmentDetails = (props) => {
                                 A6={`Area: ${area} m²`}
 
                                 onClick2={setShowModalEditApartment}
-                                actionOnClick2='Editar apartamento'
+
+                                actionOnClick2={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : 'Editar apartamento') : 'Editar apartamento'}
                                 status={status}
                             />
                             <InfoDetails>
@@ -605,7 +611,21 @@ export const ApartmentDetails = (props) => {
 
                                     <DropdownInfo
                                         name={`${apartmentOwnersList.length} Propietarios `}
-                                        action1={apartmentOwnersList.length > 0 ? null : "Asignar propietario"}
+                                        action1={
+                                            apartmentOwnersList.length > 0
+                                                ? null
+                                                : (
+                                                    nameRole
+                                                        ? (
+                                                            nameRole.toLowerCase().includes('seguridad')
+                                                                || nameRole.toLowerCase().includes('vigilancia')
+                                                                || nameRole.toLowerCase().includes('vigilante')
+                                                                ? null
+                                                                : "Asignar Parqueadero"
+                                                        )
+                                                        : "Asignar Parqueadero"
+                                                )
+                                        }
                                         toAction1={`/admin/owners/create/${id}`}>
 
                                         {
@@ -620,17 +640,17 @@ export const ApartmentDetails = (props) => {
                                                             // Details
                                                             to={`/admin/owners/details/${owner.idOwner}`}
                                                             status={owner.status}
-                                                            // // Funtions
-                                                            // onClick={() => {
-                                                            //     console.log('Eliminar propietario con ID:', owner.idApartmentOwner);
-                                                            //     deleteApartmentOwner(owner.idApartmentOwner);
-                                                            // }}
+
+
                                                             onClickModal={() => handleModalEditApartmentOwner(owner)}
+
+                                                            showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
                                                         >
                                                         </Dropdownanchor>
                                                     ))
                                                 ) : (
-                                                    <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} />
+                                                    nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                        <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} /> : null
                                                 )}
                                     </DropdownInfo>
 
@@ -638,13 +658,13 @@ export const ApartmentDetails = (props) => {
                                     <DropdownInfo
 
                                         name={`${apartmentResidentsList.length} Residentes `}
-                                        action1={"Agregar residente existente"}
+                                        action1={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : "Agregar residente existente") : "Agregar residente existente"}
                                         onClickAction1={(e) => {
                                             e.preventDefault();
                                             handleApartmentResidentsModal();
                                         }}
 
-                                        action2={"Agregar nuevo residente"}
+                                        action2={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : "Agregar nuevo residente") : "Agregar nuevo residente"}
                                         toAction2={`/admin/residents/create/${id}`}
                                     >
                                         {loadingApartmentResidents ? <SmalSpinner /> :
@@ -671,17 +691,20 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleModalEditApartmentResident(resident)}
 
+                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+
                                                     ></Dropdownanchor>
                                                 ))
                                             ) : (
-                                                <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
+                                                nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} /> : null
                                             )}
                                     </DropdownInfo>
 
                                     <DropdownInfo
 
                                         name={`${assignedParkingSpacesList.length} Parqueaderos `}
-                                        action1={'Asignar parqueadero'}
+                                        action1={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : "Asignar Parqueadero") : "Asignar Parqueadero"}
                                         onClickAction1={(e) => {
                                             e.preventDefault();
                                             handleParkingSpacesModal();
@@ -713,10 +736,12 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleEditParkingSpaceModal(parking)}
 
+                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
                                                     ></Dropdownanchor>
                                                 ))
                                             ) : (
-                                                <NotificationsAlert to={`/ admin / residents / create / ${id} `} msg={` para agregar un residente.`} />
+                                                nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} /> : null
                                             )}
 
                                     </DropdownInfo>
@@ -725,7 +750,7 @@ export const ApartmentDetails = (props) => {
 
                                     <DropdownInfo
                                         name={`${vehiclesList.length} Vehiculos `}
-                                        action1={`Agregar nuevo vehiculo`}
+                                        action1={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : "Agregar nuevo vehiculo") : "Agregar nuevo vehiculo"}
                                         toAction1={`/admin/vehicle/create/${id}`}>
 
                                         {loadingVehicles ? <SmalSpinner /> :
@@ -744,7 +769,9 @@ export const ApartmentDetails = (props) => {
                                                     </Dropdownanchor>
                                                 ))
                                             ) : (
-                                                <NotificationsAlert to={`/admin/vehicle/create/${id}`} msg={` para agregar un vehiculo.`} />
+
+                                                nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                    <NotificationsAlert to={`/admin/vehicle/create/${id}`} msg={` para agregar un vehiculo.`} /> : null
                                             )}
                                     </DropdownInfo>
 

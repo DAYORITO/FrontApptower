@@ -229,23 +229,16 @@ export const UsersDetails = () => {
         const data = {
 
             iduser: idUser,
-            password: password
+            password: password,
+            passwordConfirm: confirmPassword
 
         }
 
 
-        if (password !== confirmPassword) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Las contraseñas no coinciden',
-            })
-            return
-        }
 
         await postRequest(event, 'users/password', 'PUT', {}, data, url, setErrorList, null, null);
-        setModalChangePassword(false)
         getuser(`users/${id}`)
+        setModalChangePassword(false)
 
     }
 
@@ -385,13 +378,13 @@ export const UsersDetails = () => {
 
                             >
                                 <Inputs name="Nueva contraseña" type={"password"}
-                                    onChange={e => setPassword(e.target.value)}
+                                    onChange={e => { setPassword(e.target.value); setErrorList([]) }}
                                     errors={errorList}
                                     identifier={'password'}
                                 ></Inputs>
 
                                 <Inputs name="Confirmar contraseña" type={"password"}
-                                    onChange={e => setConfirmPassword(e.target.value)}
+                                    onChange={e => { setConfirmPassword(e.target.value); setErrorList([]) }}
                                     errors={errorList}
                                     identifier={'passwordConfirm'}
                                 ></Inputs>

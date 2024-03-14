@@ -35,6 +35,14 @@ const token = Cookies.get('token');
 
 export const ResidentDetails = () => {
 
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+    const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+    const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
+
     // API URL
 
     const url = "http://localhost:3000/api/"
@@ -45,7 +53,7 @@ export const ResidentDetails = () => {
 
     const { id } = useParams();
 
-    const { idUserLogged } = useUserLogged()
+
 
     // Socket
 
@@ -402,9 +410,14 @@ export const ResidentDetails = () => {
                             // A3={`${docType} ${document}`}
                             A5={`Correo electrónico: ${email}`}
                             A6={`Teléfono: ${phone}`}
-                            A7={pdf}
+
+                            pdf={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : pdf) : pdf}
+
                             status={statusResident}
-                            actionOnClick2={EqualUser ? 'Cambiar contraseña.' : statusResident == 'Active' ? 'Desactivar' : 'Activar'}
+
+                            actionOnClick2={EqualUser ? 'Cambiar contraseña.' : (nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : (statusResident == 'Active' ? 'Desactivar' : 'Activar')) : (statusResident == 'Active' ? 'Desactivar' : 'Activar'))}
+
+
                             onClick2={EqualUser ? openModalChangePassword : () => ChangeStatusResident(event)}
                         // showBackButton={EqualUser ? false : true}
                         // onClickEdit={setShowModalEditApartment}
@@ -420,7 +433,9 @@ export const ResidentDetails = () => {
 
                         <DropdownInfo
                             name={`Informacion personal`}
-                            action1={'Editar informacion personal'}
+                            action1={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : 'Editar informacion personal') : 'Editar informacion personal'}
+
+
                             onClickAction1={EqualUser ? openModalEdit : null}
                             toAction1={!EqualUser ? `/admin/users/edit/${id}` : null}
 
@@ -466,7 +481,7 @@ export const ResidentDetails = () => {
 
                         </DropdownInfo>
 
-                        <DropdownInfo
+                        {nameRole ? (!nameRole.toLowerCase().includes('seguridad') || !nameRole.toLowerCase().includes('vigilancia') || !nameRole.toLowerCase().includes('vigilante') ? null : <DropdownInfo
                             name={`Reservas`}
                             action1={'Hacer nueva reserva'}
                             toAction1={`/admin/booking${idApartment}`}
@@ -487,7 +502,7 @@ export const ResidentDetails = () => {
                                 )
                             }
 
-                        </DropdownInfo>
+                        </DropdownInfo>) : null}
                     </Acordions>
 
                 </InfoDetails>

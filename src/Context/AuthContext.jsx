@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
     console.log(error, 'error AuthContext');
 
     const login = async (usuario, password) => {
+        setIsLoading(true);
         try {
             const response = await fetch('http://localhost:3000/api/login', {
                 method: 'POST',
@@ -67,6 +68,8 @@ export const AuthProvider = ({ children }) => {
             setIsLoggedIn(false);
             setUser(null);
             Cookies.set('isLoggedIn', false);
+        } finally {
+            setIsLoading(false);
         }
     };
 

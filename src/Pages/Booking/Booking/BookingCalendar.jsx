@@ -126,9 +126,11 @@ export const BookingCalendar = () => {
     }, [userData])
 
 
-
+    const userResident = ResidentData?.data?.residents?.find(resident => resident.iduser === Number(idUserLogged))?.idResident;
     const nameSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(id))?.spaceName;
     const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols.namerole.toLowerCase() : undefined;
+
+
 
     const selectedSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
 
@@ -170,7 +172,8 @@ export const BookingCalendar = () => {
         if (BookingData && BookingData.data && Array.isArray(BookingData.data.booking)) {
             const bookings = BookingData.data.booking;
             const events = bookings
-                .filter(booking => idSpace ? booking.Space.idSpace === idSpace : true)
+                .filter(booking => nameRole?.includes('residente') ? true : idSpace ? booking.Space.idSpace === idSpace : true)
+                .filter(booking => nameRole?.includes('residente') ? booking.idResident === userResident : true)
                 .map(booking => {
                     const startDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.StartTimeBooking}`);
                     const endDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.EndTimeBooking}`);
@@ -186,9 +189,7 @@ export const BookingCalendar = () => {
                 });
             setEvents(events);
         }
-    }, [BookingData, idSpace]);
-
-
+    }, [BookingData, idSpace, userResident, nameRole]);
 
 
     const handleSelectSlot = ({ start, data }) => {
@@ -257,7 +258,7 @@ export const BookingCalendar = () => {
         const data = {
 
             idSpace: idSpace,
-            idResident: idResident,
+            idResident: idResident ? idResident : Number(userResident),
             StartDateBooking: selectedDate,
             StartTimeBooking: hourStart,
             EndDateBooking: Date('0000-00-00T00:00:00.000Z'),
@@ -321,6 +322,8 @@ export const BookingCalendar = () => {
     const HourStartSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.startHour;
 
     const HourEndSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.endHour;
+
+
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
@@ -446,11 +449,10 @@ export const BookingCalendar = () => {
                                 type="time"
                                 value={hourEnd ? hourEnd : ''}
                                 onChange={e => setHourEnd(e.target.value)}
-                                min={selectedSpace ? selectedSpace.schedule.startHour : ""}
-                                max={selectedSpace ? selectedSpace.schedule.endHour : ''}
+                                min={HourStartSpace}
+                                max={HourEndSpace}
                                 errors={errors}
                                 identifier={'EndTimeBooking'}
-                            // errorMessage={hourEnd > HourEndSpace ? `La hora de fin debe ser menor a ${HourEndSpace}` : null}
 
                             />
 

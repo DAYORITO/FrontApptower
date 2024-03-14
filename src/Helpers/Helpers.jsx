@@ -41,7 +41,7 @@ export const usePaginator = (data, itemsPerPage = 10) => {
 
   const filteredData = () => {
     const startIndex = currentPage * itemsPerPage;
-    return data.slice(startIndex, startIndex + itemsPerPage);
+    return data?.slice(startIndex, startIndex + itemsPerPage);
   };
 
   const nextPage = () => {

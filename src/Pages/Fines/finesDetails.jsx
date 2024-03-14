@@ -18,6 +18,7 @@ import {
   useFetch,
   useFetchForFile,
   useFetchUserInformation,
+  useFetchget,
 } from "../../Hooks/useFetch";
 import {
   Dropdownanchor,
@@ -178,30 +179,48 @@ export const FinesDetail = () => {
   return (
     <>
       <Details>
-
-        {
-
-
-          loadingFines ? <Spinner /> :
-            <ContainerModule
-              to={'/admin/fines/'}
-              icon='file-plus'
-              A1={`Multa por `}
-              A2={`${fineType}`}
-              A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
-              A6={`Estado de pago: ${state}`}
-              actionOnClick2={paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'}
-              onClick2={() => { setShowModal(true) }}
-              // A7={pdf}
-              status={state}
+        {loadingFines ? (
+          <Spinner />
+        ) : (
+          <ContainerModule
+            to={"/admin/fines/"}
+            icon="file-plus"
+            A1={`Multa por `}
+            A2={`${fineType}`}
+            A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
+            A6={`Estado de pago: ${state}`}
+            actionOnClick2={ paymentproof ? 'Cambiar comprobante': 'Agregar comprobante de pago'}
+            // actionOnClick2={
+            //   state !== "Pagada" ? "Agregar comprobante de pago" : state !== "Pagada" && paymentproof !== null ? "Cambiar comprobante": undefined
+            // }
+            onClick2={
+              state !== "Pagada"
+                ? () => {
+                    openProofFilesModal();
+                  }
+                : undefined
+            }
+            actionOnClick3={
+              state !== "Pendiente" && state !== "Pagada"
+                ? "Aprobar pago"
+                : ""
+            }
+            onClick3={
+              state !== "Pendiente"
+                ? () => {
+                    handleEditClick({ idfines: id, state: "Pagada" });
+                  }
+                : ""
+            }
+            // A7={pdf}
+            status={state}
             // onClick2={EqualUser ? openModalChangePassword : null}
             // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
             // onClickEdit={setShowModalEditApartment}
             />
-        }
+        )}
 
         <InfoDetails>
-
           <Acordions>
             <DropdownInfo
               name={`Informacion de la multa`}
@@ -312,19 +331,9 @@ export const FinesDetail = () => {
                 }}
                 title={"Comprobante de pago"}
               >
-
-                <Uploader
-                  multiple
-                  label={"Agregar comprobante de pago"}
-                  onChange={(e) => {
-                    setPaymentproofFiles(e.target.files[0]);
-                  }}
-                />
-                <ImageContainer urls={[paymentproof]} name='Comprobante' />
-                {/* {
-
+                {
                   <div className="d-flex flex-column justify-content-center align-items-center">
-                    <ImageContainer urls={paymentproof} />
+                    <ImageContainer urls={[paymentproof]} />
                     <div style={{ width: "200px", height: "200px" }}>
                       <Uploader
                         label={"Agregar archivo"}
@@ -334,8 +343,7 @@ export const FinesDetail = () => {
                       />
                     </div>
                   </div>
-
-                } */}
+                }
               </Modal>
             </ModalContainer>
           </>,
@@ -359,17 +367,24 @@ export const FinesDetail = () => {
           </>,
           document.getElementById("modalRender")
         )}
-
-
       {addProofFilesModal &&
         createPortal(
           <>
             <ModalContainer ShowModal={setAaddProofFilesModal}>
               <Modal
                 showModal={setAaddProofFilesModal}
-                onClick={() => { setShowModal(false), handleEditClick({ idfines: id, state: "Por revisar", paymentproof: paymentproofFiles }) }}
-                title={paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'}
-              // showSave={showevidences ? false : true}
+                onClick={() => {
+                  setShowModal(false),
+                    setAaddProofFilesModal(false),
+                    handleEditClick({
+                      idUserLogged: idUserLogged,
+                      idfines: id,
+                      state: "Por revisar",
+                      paymentproof: paymentproofFiles,
+                    });
+                }}
+                title={"Agregar comprobante de pago"}
+                // showSave={showevidences ? false : true}
               >
                 <Uploader
                   multiple
@@ -378,16 +393,12 @@ export const FinesDetail = () => {
                     setPaymentproofFiles(e.target.files[0]);
                   }}
                 />
-                <ImageContainer urls={[paymentproof]} name='Comprobante' />
-
+                <ImageContainer urls={[paymentproof]} name="Comprobante" />
               </Modal>
             </ModalContainer>
           </>,
           document.getElementById("modalRender")
-        )
-
-      }
-
+        )}
       {modalImg &&
         createPortal(
           <>

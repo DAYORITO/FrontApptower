@@ -29,7 +29,8 @@ import {
 } from "../../../Hooks/permissionRols";
 import { Spinner } from "../../../Components/Spinner/Spinner";
 import { SocketContext } from "../../../Context/SocketContext";
-import { useUserLogged } from "../../../Helpers/Helpers";
+import { usePaginator, useUserLogged } from "../../../Helpers/Helpers";
+import { Paginator } from "../../../Components/Paginator/Paginator";
 
 function GuestIncome() {
 
@@ -40,6 +41,12 @@ function GuestIncome() {
   // User logged
 
   const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+
 
   const [LoadingSpiner, setLoadingSpiner] = useState(true);
   const token = Cookies.get("token");
@@ -79,7 +86,7 @@ function GuestIncome() {
       setGuestIncomeData(data.guestIncome);
       setOriginalGuestIncomeData(data.guestIncome);
     }
-  }, [data]);
+  }, [data, data.guestIncome]);
 
   useEffect(() => {
     if (data2 && data2.guestincomeparking) {
@@ -180,31 +187,9 @@ function GuestIncome() {
     });
   };
 
-  const totalPages = data.guestIncome
-    ? Math.ceil(data.guestIncome.length / 8)
-    : 0;
-  const pageNumbers = Array.from(
-    { length: totalPages },
-    (_, index) => index + 1
-  );
 
-  const [currentPage, setCurrentPage] = useState(0);
+  //buscar
 
-  const filteredDataguestIncome = () => {
-    if (data && data?.guestIncome) {
-      return guestIncomeData?.slice(currentPage, currentPage + 8);
-    } else {
-      return [];
-    }
-  };
-
-  const nextPage = () => {
-    setCurrentPage(currentPage + 8);
-  };
-
-  const PreviousPage = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 8);
-  };
   function handleChange(e) {
     searcher(e.target.value);
   }
@@ -235,11 +220,15 @@ function GuestIncome() {
     setGuestIncomeData(filteredData);
   }
 
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataguestIncome } = usePaginator(originalGuestIncomeData, 4);
+
+
   return (
     <>
       <ContainerTable
         title="Ingresos"
-        dropdown={<DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
         search={<SearchButton type="text" onChange={handleChange} />}
         buttonToGo={
           allowedPermissions["Ingresos"] &&
@@ -247,55 +236,7 @@ function GuestIncome() {
             <ButtonGoTo value="Crear Ingreso" href="create" />
           ) : null
         }
-        showPaginator={
-          <nav aria-label="Table Paging" className="mb- text-muted my-4">
-            <ul className="pagination justify-content-center mb-0">
-              <li className="page-item">
-                <a
-                  className="page-link"
-                  href="#"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    PreviousPage();
-                  }}
-                >
-                  Anterior
-                </a>
-              </li>
-              {pageNumbers.map((pageNumber) => (
-                <li
-                  key={pageNumber}
-                  className={`page-item ${currentPage + 1 === pageNumber ? "active" : ""
-                    }`}
-                >
-                  <a
-                    className="page-link"
-                    href="#"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setCurrentPage((pageNumber - 1) * 10);
-                    }}
-                  >
-                    {pageNumber}
-                  </a>
-                </li>
-              ))}
-
-              <li className="page-item">
-                <a
-                  className="page-link"
-                  href="#"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    nextPage();
-                  }}
-                >
-                  Siguiente
-                </a>
-              </li>
-            </ul>
-          </nav>
-        }
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage}/>}
       >
         <TablePerson>
           <Thead>
@@ -316,7 +257,7 @@ function GuestIncome() {
                             <Actions accion='Registrar salida'></Actions>
                             <Actions accion='Detalles del Ingreso'></Actions>
                         </Row> */}
-            {LoadingSpiner == true ? (
+            {LoadingSpiner ? (
               <div
                 style={{
                   display: "flex",
@@ -332,21 +273,21 @@ function GuestIncome() {
                 <Spinner />
               </div>
             ) : (
-              filteredDataguestIncome().map((Income) => (
+              filteredDataguestIncome()?.map((Income) => (
                 <Row
                   A3="Apto visitado"
                   A4={Income?.asociatedApartment?.apartmentName}
-                  A1={Income.asociatedVisitor.name}
-                  A2={Income.asociatedVisitor.lastname}
+                  A1={Income?.asociatedVisitor.name}
+                  A2={Income?.asociatedVisitor.lastname}
                   A7={
-                    Income.departureDate == null
+                    Income?.departureDate == null
                       ? "No registrada"
-                      : formatDate(Income.departureDate)
+                      : formatDate(Income?.departureDate)
                   }
-                  A6={formatDate(Income.startingDate)}
-                  to={`details/${Income.idGuest_income}`}
+                  A6={formatDate(Income?.startingDate)}
+                  to={`details/${Income?.idGuest_income}`}
                 >
-                  {Income.departureDate == null ? (
+                  {Income?.departureDate == null ? (
                     <Actions
                       accion="Registrar salida"
                       onClick={() => {
@@ -360,7 +301,6 @@ function GuestIncome() {
                     ""
                   )}
 
-                  <Actions accion="Detalles del Ingreso"></Actions>
                 </Row>
               ))
             )}
