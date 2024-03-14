@@ -179,7 +179,7 @@ export const Spaces = () => {
                   title={space.spaceName}
                   img={space.image}
 
-                  A2={`Horario: ${space?.openingTime} a ${space?.closingTime} Maximo: ${parseInt(space?.maxTime)} horas`}
+                  A2={`Horario: ${space?.openingTime} a ${space?.closingTime} Tiempo minimo: ${parseInt(space?.maxTime)} horas`}
 
                   status={space.status}
                   to={`/admin/booking/calendar/${space.idSpace}`}
@@ -217,11 +217,13 @@ export const Spaces = () => {
                 <Inputs name="Hora de cierre" type="time" identifier={'closingTime'} errors={errorList}
                   value={closingTime} onChange={e => setClosingTime(e.target.value)}></Inputs>
 
-                <Inputs min={1} name="Tiempo minimo" type="number" identifier={'minTime'} errors={errorList}
-                  value={minTime} onChange={e => setMinTime(e.target.value)}></Inputs>
+                <Inputs min={1} max={24} name="Minimo de horas" type="number"
+                  identifier={'minTime'} errors={errorList} value={minTime}
+                  onChange={e => setMinTime(e.target.value)} />
 
-                <Inputs name="Tiempo maximo" type="number" identifier={'maxTime'} errors={errorList}
-                  value={maxTime} onChange={e => setMaxTime(e.target.value)}></Inputs>
+                <Inputs min={1} max={24} name="Maximo de horas" type="number"
+                  identifier={'maxTime'} errors={errorList} value={maxTime}
+                  onChange={e => setMaxTime(e.target.value)} />
 
                 <InputsSelect id={"select"} options={statusList} name={"Estado"} identifier={'status'} errors={errorList}
                   value={status} onChange={e => setStatus(e.target.value)}
