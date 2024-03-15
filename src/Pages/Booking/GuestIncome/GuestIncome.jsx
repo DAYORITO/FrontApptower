@@ -203,7 +203,7 @@ function GuestIncome() {
     searchValue = searchValue.trim().toLowerCase();
 
     let filteredData = originalGuestIncomeData.filter((dato) => {
-      const apartmentName = dato?.asociatedApartment?.apartmentName
+      const apartmentName = dato?.guestIncomeApartment?.asociatedApartment?.apartmentName
         .toString()
         .toLowerCase();
       const guestFullName = (
@@ -221,7 +221,7 @@ function GuestIncome() {
   }
 
 
-  const { totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataguestIncome } = usePaginator(originalGuestIncomeData, 4);
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataguestIncome } = usePaginator(guestIncomeData, 4);
 
 
   return (
@@ -275,8 +275,8 @@ function GuestIncome() {
             ) : (
               filteredDataguestIncome()?.map((Income) => (
                 <Row
-                  A3="Apto visitado"
-                  A4={Income?.asociatedApartment?.apartmentName}
+                  A3="Ingreso a:"
+                  A4={Income.guestIncomeApartment ? Income?.guestIncomeApartment?.asociatedApartment?.apartmentName: "Servicio del conjunto"}
                   A1={Income?.asociatedVisitor.name}
                   A2={Income?.asociatedVisitor.lastname}
                   A7={
