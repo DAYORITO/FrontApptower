@@ -332,7 +332,7 @@ export const Residents = () => {
         <>
             <ContainerTable
                 title='Residentes'
-                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table='residents' />) :  <DropdownExcel table='residents' />}
                 search={<SearchButton value={search} onChange={searcher} />}
                 buttonToGo={
                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear')

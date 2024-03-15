@@ -198,11 +198,11 @@ export const Vehicle = () => {
 
       <ContainerTable
         title='Vehiculos'
-        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table='apartments' />) : <DropdownExcel table='apartments' />}
         search={<SearchButton value={search} onChange={searcher} />}
         buttonToGo={
           allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear')
-            ? <ButtonGoTo value='Crear Vehiculo' href='create' />
+            ? <ButtonGoTo value='Crear Vehiculo' href='/admin/vehicle/create/' />
             : null
         }
         showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}

@@ -250,7 +250,7 @@ function Fines() {
     return (
         <>
             <ContainerTable title='Multas'
-                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table='fines' />) : <DropdownExcel table='fines' />}
 
 
                 search2={<SearchSelect options={filterOptions} onChange={handleChange3} />}

@@ -438,7 +438,7 @@ function Visitors() {
     <>
       <ContainerTable
         title="Visitantes"
-        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table="visitors" />) : <DropdownExcel table="visitors" />}
         search2={<SearchSelect options={filterOptions} onChange={(e) => {
           setSelectedFilterParam(e.target.value);
           console.log(selectedFilterParam);
