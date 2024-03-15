@@ -22,6 +22,9 @@ import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols";
 import { Paginator } from "../../../Components/Paginator/Paginator";
 import { SocketContext } from "../../../Context/SocketContext";
+import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions";
+import { Acordions } from "../../../Components/Acordions/Acordions";
+import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo";
 
 
 export const ParkingSpaces = () => {
@@ -177,7 +180,7 @@ export const ParkingSpaces = () => {
 
   const apartmentList = apartments?.data && apartments?.data?.apartments
 
-    ? apartments.data.apartments
+    ? apartments?.data?.apartments
       .map(apartment => ({
         value: apartment.idApartment,
         label: `${apartment.apartmentName} - ${apartment.Tower.towerName}`
@@ -224,7 +227,7 @@ export const ParkingSpaces = () => {
     <>
       <ContainerTable
         title='Parqueaderos'
-        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table="parkingSpaces" />) : <DropdownExcel table="parkingSpaces" />}
         search2={<SearchSelect options={parkingTypes} value={searchForSelect} onChange={searcherForSelect}></SearchSelect>}
         search={<SearchButton value={search} onChange={searcher} />}
         buttonToGo={
@@ -326,6 +329,7 @@ export const ParkingSpaces = () => {
 
                 <Inputs type={"hidden"}
                   value={idParkingSpace} onChange={e => setIdParkingSpace(e.target.value)}></Inputs>
+
 
               </Modal>
             </ModalContainer>

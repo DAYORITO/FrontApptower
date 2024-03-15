@@ -4,6 +4,12 @@ import './Dropdowns.css';
 import { useFetch } from '../../Hooks/useFetch';
 import { useExcel } from '../../Hooks/useExcel';
 import { MiniSpinner, Spinner } from '../Spinner/Spinner';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Modal, ModalContainer } from '../Modals/ModalTwo';
+import { Accordion } from '../Accordion/Accordion';
+import { Checkboxs } from '../Checkbox/Checkboxs';
+import { postRequest } from '../../Helpers/Helpers';
 
 const ButtonGoTo = ({ value = 'New module', href, modalButton, onClick }) => {
     return (
@@ -16,30 +22,29 @@ const ButtonGoTo = ({ value = 'New module', href, modalButton, onClick }) => {
     );
 };
 
-const DropdownExcel = ({ downloadExcel }) => {
 
-    const url = "http://localhost:3000/api/"
+const DropdownExcel = ({ table = 'apartments' }) => {
+    const url = "http://localhost:3000/api/";
 
-    const { downloadExcelFile, loading } = useExcel(url)
+    const { downloadExcelFile, loading } = useExcel(url);
 
-    console.log(loading, 'loading')
+    const generateExel = () => {
+        downloadExcelFile({ table });
+    };
 
     return (
-        <div className="file-action mr-2   ">
+        <div className="file-action mr-2">
             <button
                 type="button"
-                className="btn  ext-muted"
-                onClick={downloadExcelFile}
+                className="btn ext-muted"
+                onClick={generateExel}
             >
-
-                {
-                    loading ?
-                        < MiniSpinner /> :
-                        <img className='icon-excel fe-16 ml-0' src='https://icons.veryicon.com/png/o/file-type/file-type-icon-library/xlm-1.png'></img>
-
-                }
-                {/* <i className="fe fe-download-cloud fe-16 ml-0"></i> */}
-
+                {loading ? <MiniSpinner /> :
+                    <img
+                        className='icon-excel fe-16 ml-0'
+                        src='https://icons.veryicon.com/png/o/file-type/file-type-icon-library/xlm-1.png'
+                        alt="Excel"
+                    />}
             </button>
         </div>
     );

@@ -178,7 +178,7 @@ export const Owners = () => {
         <>
             <ContainerTable
                 title='Propietarios'
-                dropdown={<DropdownExcel />}
+                dropdown={<DropdownExcel table='owners' />}
                 search={<SearchButton value={search} onChange={searcher} />}
                 buttonToGo={
                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear')

@@ -214,19 +214,6 @@ export const OwnersCreate = () => {
             onChange={e => setIdApartment(e.target.value)}
           ></InputsSelect>
 
-          <h6 className='mb-4 text-muted'>Datos de acceso</h6>
-
-          <Inputs name="Contraseña"
-            identifier={'password'} errors={errorList}
-            type='password' value={password} onChange={e => setPassword(e.target.value)} />
-          <Inputs name="Confirmar Contraseña"
-            identifier={'passwordConfirm'} errors={errorList}
-            type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} />
-
-        </FormColumn>
-
-        <FormColumn>
-
           {idApartment && (
             <>
               <Inputs
@@ -251,6 +238,21 @@ export const OwnersCreate = () => {
 
             </>
           )}
+
+          {/* <h6 className='mb-4 text-muted'>Datos de acceso</h6>
+
+          <Inputs name="Contraseña"
+            identifier={'password'} errors={errorList}
+            type='password' value={password} onChange={e => setPassword(e.target.value)} />
+          <Inputs name="Confirmar Contraseña"
+            identifier={'passwordConfirm'} errors={errorList}
+            type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} /> */}
+
+        </FormColumn>
+
+        <FormColumn>
+
+
 
           <Uploader name='pdf' label='Documento de indentidad' formatos='.pdf'
             onChange={e => setPdf(e.target.files[0])} />

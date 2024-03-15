@@ -217,15 +217,15 @@ export const FinesDetail = () => {
             // onClick2={EqualUser ? openModalChangePassword : null}
             // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
             // onClickEdit={setShowModalEditApartment}
-          />
+            />
         )}
 
         <InfoDetails>
           <Acordions>
             <DropdownInfo
               name={`Informacion de la multa`}
-              // action1={'Editar datos de la multa'}
-              // onClickAction1={openModalEdit}
+            // action1={'Editar datos de la multa'}
+            // onClickAction1={openModalEdit}
             >
               <ul className="list-unstyled">
                 <li>De: Administracion</li>
@@ -256,11 +256,10 @@ export const FinesDetail = () => {
 
           <Acordions>
             <DropdownInfo
-              name={`${evidenceFiles?.length} ${
-                evidenceFiles?.length == 1 ? "Evidencia" : "Evidencias"
-              }`}
-              // action1={'Agregar evidencia'}
-              // onClickAction1={openEvidenceFilesModal}
+              name={`${evidenceFiles?.length} ${evidenceFiles?.length == 1 ? "Evidencia" : "Evidencias"
+                }`}
+            // action1={'Agregar evidencia'}
+            // onClickAction1={openEvidenceFilesModal}
             >
               {loadingFines ? (
                 <SmalSpinner />
@@ -291,33 +290,26 @@ export const FinesDetail = () => {
 
           <Acordions>
             <DropdownInfo
-              name={"Comprobante de pago"}
-              action1={"Agregar comporbante de pago"}
+              name={'Comprobante de pago'}
+              action1={'Agregar comporbante de pago'}
               onClickAction1={openProofFilesModal}
             >
-              {loadingFines ? (
-                <SmalSpinner />
-              ) : paymentproof ? (
+              {loadingFines ? <SmalSpinner /> : paymentproof ? (
                 <>
                   <RowNotificactions
                     // Information
                     img={paymentproof}
                     to={paymentproof}
-                    name={"Valor pagado: "}
+                    name={'Valor pagado: '}
                     lastName={amount}
-                    msg={"Comprobante de pago"}
+                    msg={'Comprobante de pago'}
                     icon="file-plus"
                   />
-                  {state !== "Pagada" && state !== "Por revisar" && (
-                    <div className="mt-4 ml-2">
-                      <NotificationsAlert
-                        onClick={() => setShowModal(true)}
-                        msg={`agregar un comprobante.`}
-                      />
-                    </div>
-                  )}
+
                 </>
-              ) : null}
+              ) : <div className='mt-4 ml-2'>
+                <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
+              </div>}
             </DropdownInfo>
           </Acordions>
         </InfoDetails>
@@ -416,7 +408,7 @@ export const FinesDetail = () => {
                 showModal={setModalImg}
                 onClick={() => alert("Aqui funciona algo")}
                 title={"Evidencia de multa."}
-                // showSave={showevidences ? false : true}
+              // showSave={showevidences ? false : true}
               >
                 {/* <Uploader multiple label={"Agregar comprobante de pago"}
                   onChange={(e) => {
