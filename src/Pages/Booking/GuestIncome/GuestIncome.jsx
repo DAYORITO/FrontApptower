@@ -56,7 +56,7 @@ function GuestIncome() {
   // }
   dotSpinner.register();
   //se crea un estado para actualizar los datos al momento de cualquier accion
-  const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });
+  const [guestIncomeData, setGuestIncomeData] = useState([]);
   const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({
     guestIncomeParking: [],
   });
@@ -298,7 +298,7 @@ function GuestIncome() {
                       }}
                     ></Actions>
                   ) : (
-                    ""
+                    null
                   )}
 
                 </Row>
