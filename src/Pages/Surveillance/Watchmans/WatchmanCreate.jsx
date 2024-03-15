@@ -249,6 +249,7 @@ export const WatchmanCreate = () => {
                     required={false}
                     StyleInput={{ width: '100%', marginRight: '3.8rem' }}
                     containerStyle={{ width: '97%', marginLeft: '0.9rem' }}
+                    disabled
                 ></InputsSelect>
 
                 {opcionesRols.length > 0 && showForm ? (

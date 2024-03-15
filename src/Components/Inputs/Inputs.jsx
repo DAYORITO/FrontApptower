@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import './Inputs.css'
 
-function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage, className, validate = false, required = true, errors, min, max }) {
+function Inputs({ name, value, onChange, placeholder, identifier, type, list, options, id, readonly = false, inputStyle, errorMessage: externalErrorMessage, className, validate = false, required = true, errors, min, max, disabled }) {
   const [internalErrorMessage, setInternalErrorMessage] = useState(null);
   const [labelText, setLabelText] = useState(name);
   const [passwordShown, setPasswordShown] = useState(false);
@@ -127,10 +127,11 @@ function Inputs({ name, value, onChange, placeholder, identifier, type, list, op
             id={id}
             readOnly={readonly}
             list={list}
+            disabled={disabled}
             style={inputStyle}
             min={type === 'number' ? 0 : min}
             max={max}
-            step={type == 'time' ? "3600": false}
+            step={type == 'time' ? "3600" : false}
           />
           {type === 'password' && (
             <span

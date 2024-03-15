@@ -128,6 +128,7 @@ export const BookingCalendar = () => {
 
     const userResident = ResidentData?.data?.residents?.find(resident => resident.iduser === Number(idUserLogged))?.idResident;
     const nameSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(id))?.spaceName;
+    console.log("Name Space", nameSpace)
     const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols.namerole.toLowerCase() : undefined;
 
 
@@ -212,6 +213,7 @@ export const BookingCalendar = () => {
             };
         }
     };
+
 
     const hadleResidente = (selectedValue) => {
         const selectedValueAsNumber = Number(selectedValue.value);
@@ -319,11 +321,27 @@ export const BookingCalendar = () => {
     const maxCapacity = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.capacity;
     const isOverCapacity = amountPeople > maxCapacity;
 
-    const HourStartSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.startHour;
+    const HourStartSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.openingTime;
 
-    const HourEndSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.endHour;
+    const HourEndSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.closingTime;
 
 
+    const Label = (date) => {
+        const labelBooking = document.querySelector('.rbc-toolbar-label');
+        if (labelBooking) {
+            labelBooking.classList.add('booking');
+            if (id) {
+                const monthYear = dayjs(date).format('MMMM YYYY');
+                labelBooking.innerHTML = nameSpace ? `${nameSpace}  / ${monthYear}` : 'Reservas';
+            } else {
+                const monthYear = dayjs(date).format('MMMM YYYY');
+                labelBooking.innerHTML = `Reservas / ${monthYear}`;
+                // labelBooking.style.setProperty('margin-left', '99px', 'important');
+            }
+        }
+    }
+
+    Label(new Date());
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
@@ -338,6 +356,9 @@ export const BookingCalendar = () => {
                     dayPropGetter={dayPropGetter}
                     onSelectEvent={hadleSelectEvent}
                     onView={setCurrentView}
+                    onNavigate={(date) => {
+                        setTimeout(() => Label(date), 0)
+                    }}
                     popup
                     eventPropGetter={(event, start, end, isSelected) => {
                         return {
@@ -388,7 +409,7 @@ export const BookingCalendar = () => {
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
                             showModal={handleSelectSlot}
                             title={IsEditedBooking ? `Editar reserva` : 'Crear nueva reserva'}>
-                            {id ? <Inputs name="Zona común" value={nameSpace} /> :
+                            {id ? <Inputs name="Zona común" value={nameSpace} disabled /> :
                                 <Select2
                                     placeholder={'Zona común'}
                                     onChange={hadleSpace}
@@ -422,12 +443,14 @@ export const BookingCalendar = () => {
                                 onChange={e => setSelectedDate(e.target.value)}
                                 errors={errors}
                                 identifier={'StartDateBooking'}
+
                             ></Inputs> :
                                 <Inputs name="Fecha de inicio"
                                     type="date"
                                     value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
                                     onChange={e => selectedDate(e.target.value)}
                                     readonly={true}
+                                    disabled
                                 ></Inputs>}
 
 

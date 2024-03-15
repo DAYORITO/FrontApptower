@@ -78,14 +78,11 @@
 
 
 .rbc-toolbar-label {
-    text-transform: lowercase;
+    text-transform: capitalize;
     color: #313131;
-    margin-left: -49px !important;
+    margin-right: -80px !important;
     /* margin-top: 20px !important; */
 }
-
-
-
 
 
 
