@@ -175,6 +175,7 @@ function Inputs({
             style={inputStyle}
             min={type === "number" ? 0 : min}
             max={max}
+            step={type == 'time' ? "3600": false}
           />
           {type === "password" && (
             <span

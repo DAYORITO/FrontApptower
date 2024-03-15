@@ -46,7 +46,7 @@ export const ApartmentCreate = () => {
   const [area, setArea] = useState("");
   const [status, setStatus] = useState("Active");
 
-  let [isUniqueTower, setIsUniqueTower] = useState('false');
+  let [isUniqueTower, setIsUniqueTower] = useState('true');
 
   const [lastApartmentNumber, setLastApartmentNumber] = useState(0);
 
@@ -110,7 +110,7 @@ export const ApartmentCreate = () => {
         ></InputsSelect>
 
         {
-          isUniqueTower == 'false' ? (
+          isUniqueTower == 'true' ? (
             <Inputs
               name="Último apartamento del bloque anterior."
               type={"number"}

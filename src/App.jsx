@@ -83,10 +83,12 @@ const App = () => {
     const { data, load, error } = useFetchget('rols')
 
     useEffect(() => {
+
         if (data && userData && userData?.user) {
             const userRole = data?.rols?.find(role => role.idrole === userData?.user?.idrole)?.namerole;
             setNameRole(userRole);
         }
+        
     }, [data, userData]);
 
     //Consulta Privilegios

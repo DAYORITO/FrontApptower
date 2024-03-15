@@ -167,6 +167,8 @@ export const OwnerDetail = () => {
     setEmail(data.user.email)
     setPhone(data.user.phone)
 
+    setErrorList('')
+
   }
 
   const updatePersonalInfo = async (event) => {
@@ -205,6 +207,7 @@ export const OwnerDetail = () => {
 
     setIdOwner(id)
     setModalAssigApartmentToOwner(true)
+    setErrorList('')
 
   }
 
