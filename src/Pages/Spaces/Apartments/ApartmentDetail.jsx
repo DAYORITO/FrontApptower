@@ -652,12 +652,12 @@ export const ApartmentDetails = (props) => {
 
                                                             onClickModal={() => handleModalEditApartmentOwner(owner)}
 
-                                                            showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+                                                            showEditIcon={!nameRole?.toLowerCase().includes('vigilante') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase().includes('seguridad')}
                                                         >
                                                         </Dropdownanchor>
                                                     ))
                                                 ) : (
-                                                    nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                    nameRole && (!nameRole?.toLowerCase().includes('seguridad') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase().includes('vigilante')) ?
                                                         <NotificationsAlert to={`/admin/owners/create/${id}`} msg={` para agregar un Propietario.`} /> : null
                                                 )}
                                     </DropdownInfo>

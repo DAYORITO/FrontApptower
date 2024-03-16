@@ -9,7 +9,7 @@ export const RowNotificactions = ({
   type = "info",
   name,
   lastName,
-  msg = "",
+  msg = "Aqui va el mensaje",
   date,
   status,
   icon = "message-circle",
@@ -27,23 +27,27 @@ export const RowNotificactions = ({
 
   to = to?.owner
     ? `/admin/owners/details/${to?.owner?.idOwner}`
-    : to?.resident
-      ? `/admin/resident/details/${to.resident.iduser}`
-      : to?.apartment
-        ? `/admin/apartments/details/${to.apartment.idApartment}`
-        : to?.fine
-          ? `/admin/fines/details/${to.fine?.idFines}`
-          : to?.guest_income
-            ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}`
-            : to?.space
-              ? `/admin/spaces/`
-              : to?.idrole == 2
-                ? `/admin/resident/details/${to.iduser}`
-                : to?.idrole == 1
-                  ? `/admin/users/details/${to.iduser}`
-                  : to?.idrole == 3
-                    ? `/admin/watchman/details/${to.iduser}`
-                    : to;
+    : to?.resident && to.fine
+      ? `/admin/fines/details/${to.fine?.idFines}`
+      : to?.guest_income && to?.resident
+        ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}`
+        : to?.resident
+          ? `/admin/resident/details/${to.resident.iduser}`
+          : to?.apartment
+            ? `/admin/apartments/details/${to.apartment.idApartment}`
+            : to?.fine
+              ? `/admin/fines/details/${to.fine?.idFines}`
+              : to?.guest_income
+                ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}`
+                : to?.space
+                  ? `/admin/spaces/`
+                  : to?.idrole == 2
+                    ? `/admin/resident/details/${to.iduser}`
+                    : to?.idrole == 1
+                      ? `/admin/users/details/${to.iduser}`
+                      : to?.idrole == 3
+                        ? `/admin/watchman/details/${to.iduser}`
+                        : to;
 
   const handleLinkClick = (event) => {
     event.preventDefault();

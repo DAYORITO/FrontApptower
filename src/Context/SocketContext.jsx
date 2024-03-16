@@ -28,17 +28,20 @@ export const SocketProvider = ({ children }) => {
             })
         } else if (idRolLogged === 2) {
 
-            // socket.on('watchman-notifications', (notifications) => {
-
-            //     setNotifications(notifications)
-
-            // })
 
             socket.on('resident-notifications', (notifications) => {
+                const notificatiosToResidents = notifications.filter((notification) => {
+                    const resident = notification?.content?.information?.resident;
+                    if (Array.isArray(resident)) {
+                        return resident.some(res => res.resident.iduser === idUserLogged);
+                    }
+                    return false;
+                });
+            
+                setNotifications(notificatiosToResidents);
+            });
+            
 
-                setNotifications(notifications)
-
-            })
 
         }
         else if (idRolLogged === 1) {
@@ -69,7 +72,7 @@ export const SocketProvider = ({ children }) => {
 
 
     return (
-        <SocketContext.Provider value={{ socket, online, notifications, setNotifications , dashboarsdData}} >
+        <SocketContext.Provider value={{ socket, online, notifications, setNotifications, dashboarsdData }} >
 
             {children}
 
