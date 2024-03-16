@@ -135,6 +135,11 @@ export const Aside = () => {
         return !notification.seen && notification.iduser !== idUserLogged;
     });
 
+    const [activeLink, setActiveLink] = useState('');
+
+    const handleClick = (href) => {
+        setActiveLink(href);
+    };
 
     return (
         <>
@@ -190,7 +195,8 @@ export const Aside = () => {
                                 {allowedPermissions.includes('Notificaciones') && (
                                     <ListNav onClick={openNotifications}
                                         A1={filteredNotifications?.length}
-                                        module={'Notificaciones'} icon='fe fe-message-circle fe-16' />
+                                        module={'Notificaciones'} icon='fe fe-message-circle fe-16'
+                                    />
                                 )}
 
                                 {allowedPermissions.includes('Usuarios') && (

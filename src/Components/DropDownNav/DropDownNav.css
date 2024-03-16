@@ -13,17 +13,8 @@
 
 }
 
-.item-text span.active {
-    color: rgb(209, 0, 0) !important;
-}
-
-.item-text span.active {
-    background-color: rgb(209, 0, 0) !important;
-}
-
-.nav-item .active {
-    background-color: rgba(209, 0, 0, 0.8);
-    color: white;
+.nav-link.active {
+    color: rgb(148, 148, 148) !important;
 
 }
 
