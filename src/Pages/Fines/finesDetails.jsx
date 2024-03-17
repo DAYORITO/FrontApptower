@@ -144,6 +144,8 @@ export const FinesDetail = () => {
     setAaddProofFilesModal(true);
   };
   const handleEditClick = async (dataToUpdate) => {
+
+    console.log(dataToUpdate, 'dataToUpdate')
     setShowModaload(true);
 
     //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
@@ -189,15 +191,15 @@ export const FinesDetail = () => {
             A2={`${fineType}`}
             A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
             A6={`Estado de pago: ${state}`}
-            actionOnClick2={ paymentproof ? 'Cambiar comprobante': 'Agregar comprobante de pago'}
+            actionOnClick2={paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'}
             // actionOnClick2={
             //   state !== "Pagada" ? "Agregar comprobante de pago" : state !== "Pagada" && paymentproof !== null ? "Cambiar comprobante": undefined
             // }
             onClick2={
               state !== "Pagada"
                 ? () => {
-                    openProofFilesModal();
-                  }
+                  openProofFilesModal();
+                }
                 : undefined
             }
             actionOnClick3={
@@ -208,19 +210,44 @@ export const FinesDetail = () => {
             onClick3={
               state !== "Pendiente"
                 ? () => {
-                    handleEditClick({ idfines: id, state: "Pagada" });
-                  }
+                  handleEditClick({ idUserLogged: idUserLogged, idfines: id, state: "Pagada" });
+                }
                 : ""
             }
             // A7={pdf}
             status={state}
-            // onClick2={EqualUser ? openModalChangePassword : null}
-            // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
-            // onClickEdit={setShowModalEditApartment}
-            />
+          // onClick2={EqualUser ? openModalChangePassword : null}
+          // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
+          // onClickEdit={setShowModalEditApartment}
+          />
         )}
 
         <InfoDetails>
+
+          <Acordions>
+            <DropdownInfo
+              name={'Comprobante de pago'}
+              action1={'Agregar comporbante de pago'}
+              onClickAction1={openProofFilesModal}
+            >
+              {loadingFines ? <SmalSpinner /> : paymentproof ? (
+                <>
+                  <RowNotificactions
+                    // Information
+                    img={paymentproof}
+                    to={paymentproof}
+                    name={'Valor pagado: '}
+                    lastName={amount}
+                    msg={'Comprobante de pago'}
+                    icon="file-plus"
+                  />
+
+                </>
+              ) : <div className='mt-4 ml-2'>
+                <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
+              </div>}
+            </DropdownInfo>
+          </Acordions>
           <Acordions>
             <DropdownInfo
               name={`Informacion de la multa`}
@@ -288,30 +315,7 @@ export const FinesDetail = () => {
             </DropdownInfo>
           </Acordions>
 
-          <Acordions>
-            <DropdownInfo
-              name={'Comprobante de pago'}
-              action1={'Agregar comporbante de pago'}
-              onClickAction1={openProofFilesModal}
-            >
-              {loadingFines ? <SmalSpinner /> : paymentproof ? (
-                <>
-                  <RowNotificactions
-                    // Information
-                    img={paymentproof}
-                    to={paymentproof}
-                    name={'Valor pagado: '}
-                    lastName={amount}
-                    msg={'Comprobante de pago'}
-                    icon="file-plus"
-                  />
 
-                </>
-              ) : <div className='mt-4 ml-2'>
-                <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
-              </div>}
-            </DropdownInfo>
-          </Acordions>
         </InfoDetails>
       </Details>
       {showModal &&
@@ -384,7 +388,7 @@ export const FinesDetail = () => {
                     });
                 }}
                 title={"Agregar comprobante de pago"}
-                // showSave={showevidences ? false : true}
+              // showSave={showevidences ? false : true}
               >
                 <Uploader
                   multiple
