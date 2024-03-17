@@ -46,7 +46,6 @@ export const BookingCalendar = () => {
     const [status, setStatus] = useState(null);
     const [idbooking, setIdBooking] = useState(null);
     const [errors, setErrors] = useState([]);
-    console.log("Errors", errors)
 
 
     const [IsEditedBooking, setIsEditedBooking] = useState(false);
@@ -58,8 +57,6 @@ export const BookingCalendar = () => {
     const openBookingModal = (data) => {
 
         setErrors('')
-
-        console.log(data)
 
         if (data == null) {
 
@@ -74,8 +71,6 @@ export const BookingCalendar = () => {
 
 
         } else {
-
-            console.log("Data", data)
 
             setIsEditedBooking(true)
             setIdBooking(data.idbooking)
@@ -127,14 +122,14 @@ export const BookingCalendar = () => {
 
 
     const userResident = ResidentData?.data?.residents?.find(resident => resident.iduser === Number(idUserLogged))?.idResident;
-    const nameSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(id))?.spaceName;
+
     const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols.namerole.toLowerCase() : undefined;
 
 
 
-    const selectedSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
 
-    console.log("Selected Space", selectedSpace)
+
+    const selectedSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
 
     const colors = [
         'hsl(210, 70%, 60%)', // darker light blue
@@ -193,7 +188,6 @@ export const BookingCalendar = () => {
 
 
     const handleSelectSlot = ({ start, data }) => {
-        console.log("Data", data)
         if (dayjs(start).isAfter(dayjs().subtract(1, 'day'))) {
             setSelectedDate(start);
             setShowModal(true);
@@ -213,21 +207,18 @@ export const BookingCalendar = () => {
         }
     };
 
+
     const hadleResidente = (selectedValue) => {
         const selectedValueAsNumber = Number(selectedValue.value);
-        console.log("Selected Value:", selectedValueAsNumber);
         setIdResident(selectedValueAsNumber);
 
     };
 
     const hadleSpace = (selectedValue) => {
         const selectedValueAsNumber = Number(selectedValue.value);
-        console.log("Selected Value:", selectedValueAsNumber);
         setIdSpace(selectedValueAsNumber);
 
     };
-
-    console.log(ResidentData?.data?.residents, "Resident Data")
 
 
     const residentsOptions = ResidentData && ResidentData?.data?.residents
@@ -267,9 +258,6 @@ export const BookingCalendar = () => {
         }
 
 
-
-        console.log("Create data", data)
-
         try {
             await postRequest(event, 'booking', 'POST', setShowModal, data, url, setErrors, 'Reserva creada correctamente.')
 
@@ -299,7 +287,6 @@ export const BookingCalendar = () => {
 
         }
 
-        console.log("edit data holaaaaaaa", data)
 
         await postRequest(event, `booking`, 'PUT', setShowModal, data, url, setErrors, null, null)
         getBooking('booking')
@@ -310,7 +297,7 @@ export const BookingCalendar = () => {
 
     ///Aqui redirige a detalles de reservas 
     const hadleSelectEvent = (event) => {
-        if (currentView === 'agenda') {
+        if (currentView) {
             navigate(`/admin/booking/details/${event.id}`)
         }
 
@@ -319,11 +306,44 @@ export const BookingCalendar = () => {
     const maxCapacity = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.capacity;
     const isOverCapacity = amountPeople > maxCapacity;
 
-    const HourStartSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.startHour;
+    const HourStartSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.openingTime;
 
-    const HourEndSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.schedule?.endHour;
+    const HourEndSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace))?.closingTime;
 
 
+    const [nameSpace, setNameSpace] = useState('');
+
+
+    useEffect(() => {
+        const space = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
+        if (space) {
+            setNameSpace(space.spaceName);
+        }
+        Label(new Date(), currentView);
+    }, [idSpace, spaces, currentView]);
+
+
+    const Label = (date, view) => {
+        const labelBooking = document.querySelector('.rbc-toolbar-label');
+        if (labelBooking) {
+            labelBooking.classList.add('booking');
+            let formattedDate;
+            if (view === 'month') {
+                formattedDate = dayjs(date).format('MMMM YYYY');
+            } else if (view === 'day') {
+                return;
+            } else if (view === 'agenda') {
+                return;
+            }
+            if (id) {
+                labelBooking.innerHTML = nameSpace ? `${nameSpace}  / ${formattedDate}` : 'Reservas';
+            } else {
+                labelBooking.innerHTML = `Reservas / ${formattedDate}`;
+            }
+        }
+    }
+
+    Label(new Date(), currentView);
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
@@ -338,6 +358,9 @@ export const BookingCalendar = () => {
                     dayPropGetter={dayPropGetter}
                     onSelectEvent={hadleSelectEvent}
                     onView={setCurrentView}
+                    onNavigate={(date) => {
+                        setTimeout(() => Label(date, currentView), 0)
+                    }}
                     popup
                     eventPropGetter={(event, start, end, isSelected) => {
                         return {
@@ -388,7 +411,7 @@ export const BookingCalendar = () => {
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
                             showModal={handleSelectSlot}
                             title={IsEditedBooking ? `Editar reserva` : 'Crear nueva reserva'}>
-                            {id ? <Inputs name="Zona común" value={nameSpace} /> :
+                            {id ? <Inputs name="Zona común" value={nameSpace} disabled /> :
                                 <Select2
                                     placeholder={'Zona común'}
                                     onChange={hadleSpace}
@@ -397,6 +420,7 @@ export const BookingCalendar = () => {
                                     defaultOption={true}
                                     errors={errors}
                                     identifier={'idSpace'}
+                                    
                                 />
                             }
 
@@ -422,12 +446,14 @@ export const BookingCalendar = () => {
                                 onChange={e => setSelectedDate(e.target.value)}
                                 errors={errors}
                                 identifier={'StartDateBooking'}
+
                             ></Inputs> :
                                 <Inputs name="Fecha de inicio"
                                     type="date"
                                     value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''}
                                     onChange={e => selectedDate(e.target.value)}
                                     readonly={true}
+                                    disabled
                                 ></Inputs>}
 
 

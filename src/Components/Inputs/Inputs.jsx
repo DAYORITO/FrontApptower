@@ -22,6 +22,7 @@ function Inputs({
   errors,
   min,
   max,
+  disabled
 }) {
   const [internalErrorMessage, setInternalErrorMessage] = useState(null);
   const [labelText, setLabelText] = useState(name);
@@ -173,10 +174,11 @@ function Inputs({
             id={id}
             readOnly={readonly}
             list={list}
+            disabled={disabled}
             style={inputStyle}
             min={type === "number" ? 0 : min}
             max={max}
-            step={type == 'time' ? "3600": false}
+            step={type == 'time' ? "3600" : false}
           />
           {type === "password" && (
             <span

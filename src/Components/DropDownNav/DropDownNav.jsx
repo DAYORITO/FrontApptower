@@ -58,8 +58,10 @@ export const DropDownNav = ({
 
 export const ListNav = ({ href, module, icon = "fe fe-home", id = 'process', onClick, A1 = 0,
 }) => {
+  const [isActive, setIsActive] = useState(false);
+  
   return (
-    <li className="nav-item">
+    <li className={`nav-item ${isActive ? 'active' : ''}`}>
       <Link className="nav-link" to={href} onClick={onClick}>
         <div>
           <i className={icon} id='fas'></i>

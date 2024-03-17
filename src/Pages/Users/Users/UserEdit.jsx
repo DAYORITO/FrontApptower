@@ -31,6 +31,7 @@ export const UsersEdit = () => {
 
 
 
+
     const birthDate = new Date(editedUser.birthday);
 
 
@@ -56,6 +57,16 @@ export const UsersEdit = () => {
 
     const { error: putError, load: putLoad, } = useFetchput(`users/${iduser}`, editedUser);
     const { data: userData, load: userLoad, error: userError } = useFetchget(`users/${iduser}`);
+    const { data: userLogged, load: userLoadLogged, error: userErrorLogged } = useFetchget(`users/${Number(idUserLogged)}`);
+
+    const [EqualUser, setEqualUser] = useState(false);
+    console.log(EqualUser, "EqualUser");
+
+    useEffect(() => {
+        setEqualUser(userLogged?.user?.document === editedUser?.document);
+    }, [idUserLogged]);
+
+
 
     useEffect(() => {
         if (userData && userData.user) {
@@ -546,7 +557,6 @@ export const UsersEdit = () => {
                                         errors={errors}
                                         identifier={"status"}
                                     />
-
                                 </FormColumn>
 
                             </>
@@ -752,7 +762,7 @@ export const UsersEdit = () => {
                                     />
 
 
-                                    <InputsSelect
+                                    {EqualUser ? null : <InputsSelect
                                         id={"select"}
                                         options={estado}
                                         name={"Estado"}
@@ -761,7 +771,7 @@ export const UsersEdit = () => {
                                         errors={errors}
                                         identifier={"status"}
                                     ></InputsSelect>
-
+                                    }
 
 
                                 </FormColumn>
@@ -852,7 +862,7 @@ export const UsersEdit = () => {
                                 />
 
 
-                                <InputsSelect
+                                {EqualUser ? null : <InputsSelect
                                     id={"select"}
                                     options={estado}
                                     name={"Estado"}
@@ -861,6 +871,7 @@ export const UsersEdit = () => {
                                     errors={errors}
                                     identifier={"status"}
                                 ></InputsSelect>
+                                }
 
 
 

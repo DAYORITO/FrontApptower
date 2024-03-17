@@ -129,7 +129,7 @@ export const Booking = () => {
                     img={space.image}
                     small={false}
                     accions={false}
-                    A1={`Hora de apertura: ${new Date(`1970-01-01T${space?.schedule?.startHour}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} - Hora de cierre: ${new Date(`1970-01-01T${space?.schedule?.endHour}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}
+                    A1={`Hora de apertura: ${new Date(`1970-01-01T${space?.openingTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} - Hora de cierre: ${new Date(`1970-01-01T${space?.closingTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}
 
                     to={`/admin/booking/calendar/${space.idSpace}`}
                   /> : null
