@@ -171,7 +171,13 @@ export const useFetchForFile = async (url, data, method = "POST") => {
     const formData = new FormData();
 
     Object.keys(data).forEach((key) => {
-      formData.append(key, data[key]);
+      if (Array.isArray(data[key])) {
+        data[key].forEach((file, index) => {
+          formData.append(`${key}${index}`, file);
+        });
+      } else {
+        formData.append(key, data[key]);
+      }
     });
 
     const response = await fetch(url, {
@@ -212,8 +218,8 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 
 export const useFetchpost = async (endpoint, data) => {
   const url =
-    'https://apptowerbackend.onrender.com/api/'
-  // "http://localhost:3000/api/";
+    // 'https://apptowerbackend.onrender.com/api/'
+  "http://localhost:3000/api/";
 
   const abortController = new AbortController();
   const signal = abortController.signal;

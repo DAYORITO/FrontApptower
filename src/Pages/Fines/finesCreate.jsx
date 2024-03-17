@@ -278,9 +278,12 @@ function FinesCreate() {
         <FormColumn>
           <Uploader
             label="Adjuntar evidencia"
-            // multiple={true}
+            multiple={true}
             onChange={(e) => {
-              setEvidence(e.target.files[0]);
+              const filesArray = Array.from(e.target.files),
+                files = filesArray.map((file) => file);
+              setEvidence(files);
+              console.log("evidence", files);
             }}
           ></Uploader>
         </FormColumn>
