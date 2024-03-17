@@ -273,7 +273,7 @@ export const Watchman = () => {
 
             <ContainerTable
                 title='Vigilantes'
-                dropdown={<DropdownExcel />}
+                dropdown={<DropdownExcel table='guardShiftters' />}
                 search={<SearchButton value={search} onChange={searcher} />}
                 buttonToGo={
                     allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Crear')

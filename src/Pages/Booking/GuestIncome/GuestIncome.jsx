@@ -56,7 +56,7 @@ function GuestIncome() {
   // }
   dotSpinner.register();
   //se crea un estado para actualizar los datos al momento de cualquier accion
-  const [guestIncomeData, setGuestIncomeData] = useState({ guestIncome: [] });
+  const [guestIncomeData, setGuestIncomeData] = useState([]);
   const [guestIncomeParkingData, setGuestIncomeParkingData] = useState({
     guestIncomeParking: [],
   });
@@ -196,8 +196,8 @@ function GuestIncome() {
 
   function searcher(searchValue) {
     if (!searchValue) {
-      setGuestIncomeData(originalGuestIncomeData);
-      return;
+      
+      return setGuestIncomeData(originalGuestIncomeData);
     }
 
     searchValue = searchValue.trim().toLowerCase();
@@ -228,7 +228,7 @@ function GuestIncome() {
     <>
       <ContainerTable
         title="Ingresos"
-        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel />) : <DropdownExcel />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table="guestIncome" />) : <DropdownExcel table="guestIncome" />}
         search={<SearchButton type="text" onChange={handleChange} />}
         buttonToGo={
           allowedPermissions["Ingresos"] &&
@@ -298,7 +298,7 @@ function GuestIncome() {
                       }}
                     ></Actions>
                   ) : (
-                    ""
+                    null
                   )}
 
                 </Row>

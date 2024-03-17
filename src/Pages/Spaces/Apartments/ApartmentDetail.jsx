@@ -124,7 +124,7 @@ export const ApartmentDetails = (props) => {
 
     const [search, setSearch] = useState('');
 
-    let guestIncomesbyApartment = filter(search, guestIncomes?.data?.guestIncome, 'asociatedVisitor');
+    let guestIncomesbyApartment = filter(search, guestIncomes?.data?.guestIncomeToApartment, 'asociatedVisitor');
 
     // Seacher fines
 
@@ -179,6 +179,8 @@ export const ApartmentDetails = (props) => {
 
 
     }, [])
+
+
 
 
     // Funtion searcher
@@ -273,6 +275,7 @@ export const ApartmentDetails = (props) => {
     const apartmentList = apartments?.data && apartments?.data?.apartments
 
         ? apartments.data.apartments
+            // .filter(apartment => apartment.status === 'Active')
             .map(apartment => ({
                 value: apartment.idApartment,
                 label: `Apartamento ${apartment.apartmentName}`
@@ -367,6 +370,7 @@ export const ApartmentDetails = (props) => {
     const parkingSpacesList = parkingSpaces.data && parkingSpaces.data.parkingSpaces
         ? parkingSpaces.data.parkingSpaces
             .filter(parking => parking.parkingType === 'Private')
+            .filter(parking => parking.status === 'Active')
             .map(parking => ({
                 value: parking.idParkingSpace,
                 label: `${parking.parkingName} - ${parking.parkingType}`
@@ -529,7 +533,10 @@ export const ApartmentDetails = (props) => {
 
         // console.log("edit data", data)
 
-        await postRequest(event, 'assignedParkingSpaces', `PUT`, setShowParkingSpacesModal, data, url, setErrorList, null, socket);
+        await postRequest(event, 'assignedParkingSpaces', `PUT`,
+            setShowParkingSpacesModal, data, url,
+            setErrorList, null, socket
+        );
         getAssignedParkingSpaces(`assignedParkingSpaces/${id}`)
 
 
@@ -571,7 +578,9 @@ export const ApartmentDetails = (props) => {
             await delAssignedParkingSpaces('assignedParkingSpaces', { idAssignedParking: id });
         };
 
-        showConfirmationDialog('¿Estas seguro?', 'Esta acción no es reversible', 'Eliminar', deleteFunction);
+        await showConfirmationDialog(deleteFunction, setShowParkingSpacesModal);
+        getAssignedParkingSpaces(`assignedParkingSpaces/${idApartment}`)
+
     };
 
 
@@ -583,7 +592,6 @@ export const ApartmentDetails = (props) => {
         setToggleState(index)
     };
 
-    console.log(guestIncomesbyApartment)
 
     return (
         <>
@@ -736,12 +744,13 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleEditParkingSpaceModal(parking)}
 
-                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+                                                        showEditIcon={!nameRole?.toLowerCase().includes('vigilante') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase().includes('seguridad')}
                                                     ></Dropdownanchor>
                                                 ))
                                             ) : (
                                                 nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
-                                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} /> : null
+
+                                                    <NotificationsAlert msg={`Agrega un parqueadero existente.`} /> : null
                                             )}
 
                                     </DropdownInfo>
@@ -800,11 +809,11 @@ export const ApartmentDetails = (props) => {
 
                                                             // Information
                                                             icon="arrow-up-right"
-                                                            name={`${income.asociatedVisitor.name} `}
-                                                            lastName={` ${income.asociatedVisitor.lastname} `}
-                                                            date={format(new Date(income.createdAt), 'yyyy-MM-dd')}
-                                                            msg={`Se dirije al apartamento ${apartmentName} ${income.observations} `}
-                                                            to={`/admin/guest_income/details/${income.idGuest_income}`}
+                                                            name={`${income?.asociatedGuestIncome?.asociatedVisitor?.name} `}
+                                                            lastName={` ${income?.asociatedGuestIncome?.asociatedVisitor?.lastname} `}
+                                                            date={format(new Date(income?.asociatedGuestIncome?.createdAt), 'yyyy-MM-dd')}
+                                                            msg={`Se dirije al apartamento ${income?.asociatedApartment?.apartmentName} ${income?.asociatedGuestIncome?.observations} `}
+                                                            to={`/admin/guest_income/details/${income?.idGuest_income}`}
 
                                                             status="Active"
 
@@ -961,7 +970,7 @@ export const ApartmentDetails = (props) => {
                                 onClick={editingParkingSpace ? handleUpdateAssignedParking : handleCreateAssignedParking}
                                 showModal={setShowParkingSpacesModal}
                                 title={editingParkingSpace ? "Editar parqueadero" : "Asignar parqueadero"}
-                                buttonDelete={editingParkingSpace ? true : false}
+                                onClickForDelete={editingParkingSpace ? () => deleteParkingSpace(idAssignedParking) : null}
                             >
                                 <InputsSelect disabled id={"select"} options={apartmentList} name={"Apartamento"}
                                     identifier={'idApartment'} errors={errorList}

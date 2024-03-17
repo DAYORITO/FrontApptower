@@ -1,6 +1,5 @@
 .table-responsive {
     overflow-x: hidden;
-    /* background-color: white; */
 }
 
 .table {
@@ -13,3 +12,15 @@
 
     padding: 0 9% 0 9%;
 }
+
+@media (min-width: 992px) { 
+    .table th {
+      width: auto; 
+    }
+  }
+  
+  @media (max-width: 991px) { 
+    .table th {
+      width: 100%; 
+    }
+  }

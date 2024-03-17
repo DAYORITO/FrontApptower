@@ -107,6 +107,19 @@ export const AssignShiftsWatchman = () => {
     // }, []);
 
 
+    const Label = (date) => {
+        const labelBooking = document.querySelector('.rbc-toolbar-label');
+        if (labelBooking) {
+            labelBooking.classList.add('shifts-label');
+
+            const monthYear = dayjs(date).format('MMMM YYYY');
+            labelBooking.innerHTML = `Asignación de turnos / ${monthYear}`;
+            labelBooking.style.setProperty('margin-left', '-250px', 'important');
+
+        }
+    }
+
+    Label(new Date());
 
 
     return (
@@ -121,6 +134,9 @@ export const AssignShiftsWatchman = () => {
                     views={['week']}
                     view='week'
                     dayPropGetter={dayPropGetter}
+                    onNavigate={(date) => {
+                        setTimeout(() => Label(date), 0)
+                    }}
                     messages={{
                         next: 'Siguiente',
                         previous: 'Anterior',

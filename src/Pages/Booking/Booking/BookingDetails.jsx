@@ -11,6 +11,7 @@ import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotif
 import { ModalContainer, Modal, ModalImg } from "../../../Components/Modals/ModalTwo"
 import { Link } from "react-router-dom"
 import { useParams } from "react-router"
+import Select2 from '../../../Components/Inputs/Select2'
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
 const token = Cookies.get('token');
@@ -18,7 +19,7 @@ import Cookies from 'js-cookie';
 import moment from 'moment';
 import 'moment/locale/es';
 import { SocketContext } from '../../../Context/SocketContext'
-import { useUserLogged } from '../../../Helpers/Helpers'
+import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import Inputs from '../../../Components/Inputs/Inputs'
 import InputsSelect from '../../../Components/Inputs/InputsSelect'
 
@@ -45,7 +46,7 @@ export const BookingDetails = () => {
     const { idUserLogged } = useUserLogged()
 
 
-    const [idBooking, setIdBooking] = useState(id)
+    const [idBooking, setIdBooking] = useState(Number(id))
     const [StartDateBooking, setStartDateBooking] = useState('')
     const [StartTimeBooking, setStartTimeBooking] = useState('')
     const [EndDateBooking, setEndDateBooking] = useState('')
@@ -65,11 +66,17 @@ export const BookingDetails = () => {
 
     const [spaceImg, setSpaceImg] = useState('')
 
+    console.log(idSpace, 'idSpace')
+
 
     // Booking data
 
     const { data: booking, get: getBooking, loading: loadingBooking } = useFetch(url)
+    const { data: spaces, get: getSpaces, loading } = useFetch(url)
 
+    const nameSpace = spaces?.data?.spaces?.find(space => space.idSpace === Number(idSpace))?.spaceName
+
+    console.log('nameSpace: ', nameSpace)
     //Consulta Permisos
 
     const allowedPermissions = useAllowedPermissions
@@ -86,12 +93,17 @@ export const BookingDetails = () => {
         setEndTimeBooking(booking?.data?.booking?.EndTimeBooking)
         setAmountPeople(booking?.data?.booking?.amountPeople)
         setStatus(booking?.data?.booking?.status)
-
+        setIdResident(booking?.data?.booking?.idResident)
+        setIdSpace(booking?.data?.booking?.idSpace)
         setResident(booking?.data?.booking?.Resident)
         setSpace(booking?.data?.booking?.Space)
 
 
     }, [booking?.data?.booking])
+
+    useEffect(() => {
+        getSpaces('spaces')
+    }, [idSpace])
 
 
     useEffect(() => {
@@ -144,7 +156,8 @@ export const BookingDetails = () => {
         setShowModal(true)
     }
 
-
+    console.log('idSpace: ', idSpace)
+    console.log(idResident, 'idResident')
     const updateBooking = async (event) => {
 
         const data = {
@@ -152,16 +165,13 @@ export const BookingDetails = () => {
             // User logged
 
             idUserLogged: idUserLogged,
-
-            idbooking: idBooking,
-            idResident: idResident,
             idSpace: idSpace,
+            idResident: idResident,
+            idbooking: id,
             StartDateBooking: StartDateBooking,
             StartTimeBooking: StartTimeBooking,
-            EndDateBooking: StartTimeBooking,
             EndTimeBooking: hourEnd,
-            amountPeople: amountPeople,
-            status: status
+            amountPeople: amountPeople
 
 
 
@@ -169,10 +179,31 @@ export const BookingDetails = () => {
 
 
         await postRequest(event, 'booking', 'PUT', setShowModal, data, url, setErrorList, null, null);
-        getuser(`booking`)
+        getBooking(`booking/one/${id}`)
 
 
     }
+
+    const approveBooking = async (event) => {
+        const data = {
+            status: 'Aprobado',
+            idbooking: id
+        }
+
+        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, null);
+        getBooking(`booking/one/${id}`)
+    }
+
+    const cancelBooking = async (event) => {
+        const data = {
+            status: 'Cancelado',
+            idbooking: id
+        }
+
+        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, null);
+        getBooking(`booking/one/${id}`)
+    }
+
 
 
     return (
@@ -194,10 +225,10 @@ export const BookingDetails = () => {
                             A6={`Contacto residente: ${Resident?.user?.email} | ${Resident?.user?.phone}`}
                             status={status}
 
-                            onClick3={() => alert('Aqui va una funcion.')}
+                            onClick3={approveBooking}
                             actionOnClick3={`Aprobar`}
 
-                            onClick2={() => alert('Aqui va una funcion.')}
+                            onClick2={cancelBooking}
                             actionOnClick2={`Cancelar`}
                         // onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
@@ -214,18 +245,18 @@ export const BookingDetails = () => {
 
                         <DropdownInfo
                             name={`Detalle de reserva`}
-                            action1={'Editar reserva'}
-                            onClickAction1={openModalEdit}
+                        // action1={'Editar reserva'}
+                        // onClickAction1={openModalEdit}
                         >
 
                             <ul className='list-unstyled'>
 
                                 <li>Reserva para: {amountPeople} personas</li>
                                 <br />
-                                <li>Fecha de reserva: {moment(StartDateBooking).locale('es').format('LL')}</li>
+                                <li>Fecha de reserva: {moment.utc(StartDateBooking).locale('es').format('LL')}</li>
                                 <li>De: {moment(StartTimeBooking, "HH:mm:ss").format('h:mm A')} a {moment(EndTimeBooking, "HH:mm:ss").format('h:mm A')}</li>
                                 <br />
-                                <li>Reserva de:{`${Space?.spaceName}`} </li>
+                                <li>Reserva de: {`${Space?.spaceName}`} </li>
                                 <li>Reservado por: <Link to={`/admin/resident/details/${Resident?.user?.iduser}`}>{`${Resident?.user?.name} ${Resident?.user?.lastName}`}</Link> </li>
                                 <br />
 
@@ -282,11 +313,13 @@ export const BookingDetails = () => {
                                 showModal={setShowModal}
                                 title={"Editar reserva"}
                             >
+
+
                                 <Inputs
                                     name="Fecha de inicio"
                                     type="date"
                                     identifier={"StartDateBooking"}
-                                    value={StartDateBooking}
+                                    value={StartDateBooking ? new Date(StartDateBooking).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setStartDateBooking(e.target.value)}
                                 ></Inputs>
                                 <Inputs
@@ -295,13 +328,6 @@ export const BookingDetails = () => {
                                     identifier={"StartTimeBooking"}
                                     value={StartTimeBooking}
                                     onChange={(e) => setStartTimeBooking(e.target.value)}
-                                ></Inputs>
-                                <Inputs
-                                    name="Fecha de fin"
-                                    type="date"
-                                    identifier={"EndDateBooking"}
-                                    value={EndDateBooking}
-                                    onChange={(e) => setEndDateBooking(e.target.value)}
                                 ></Inputs>
                                 <Inputs
                                     name="Hora de fin"
@@ -314,16 +340,9 @@ export const BookingDetails = () => {
                                     name="Cantidad de personas"
                                     type="number"
                                     identifier={"amountPeople"}
-                                    value={amountPeople}
+                                    value={booking?.data?.booking?.amountPeople}
                                     onChange={(e) => setAmountPeople(e.target.value)}
                                 ></Inputs>
-                                <InputsSelect
-                                    name="Estado"
-                                    identifier={"status"}
-                                    value={status}
-                                    options={[{ label: 'Aprobado', value: 'Aprobado' }, { label: 'Pendiente', value: 'Pendiente' }, { label: 'Cancelado', value: 'Cancelado' }]}
-                                    onChange={(e) => setStatus(e.target.value)}
-                                ></InputsSelect>
                             </Modal>
                         </ModalContainer>
                     </>,
