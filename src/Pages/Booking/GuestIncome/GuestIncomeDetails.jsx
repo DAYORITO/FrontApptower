@@ -1,49 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import { Details } from "../../../Components/Details/details";
-import Inputs from "../../../Components/Inputs/Inputs";
-import InputsSelect from "../../../Components/Inputs/InputsSelect";
-import { docTypes, sexs, statusList } from "../../../Hooks/consts.hooks";
-import { TablePerson } from "../../../Components/Tables/Tables";
-import { TableDetails } from "../../../Components/TableDetails/TableDetails";
-import { NavDetails } from "../../../Components/NavDetails/NavDetails";
-import { NavListDetails } from "../../../Components/NavListDetails/NavListDetails";
-import { ListsDetails } from "../../../Components/ListsDetails/ListsDetails";
 import { InfoDetails } from "../../../Components/InfoDetails/InfoDetails";
-import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
-import { DetailsActions } from "../../../Components/DetailsActions/DetailsActions";
-import { idToPermissionName } from "../../../Hooks/permissionRols";
+import { Spinner } from "../../../Components/Spinner/Spinner";
 import {
   useAllowedPermissions,
   useFetch,
   useFetchForFile,
   useFetchUserInformation,
 } from "../../../Hooks/useFetch";
-import {
-  Dropdownanchor,
-  Dropdownanchor2,
-} from "../../../Components/DropDownAnchor/Dropdownanchor";
 import { ContainerModule } from "../../../Components/ContainerModule/ContainerModule";
 import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo";
 import { Acordions } from "../../../Components/Acordions/Acordions";
 import { RowNotificactions } from "../../../Components/RowNotificacions/RowNotificactions";
-import { NotificationsAlert } from "../../../Components/NotificationsAlert/NotificationsAlert";
-import { ModalContainer, Modal } from "../../../Components/Modals/ModalTwo";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import { format, set } from "date-fns";
-import { SmalSpinner, Spinner } from "../../../Components/Spinner/Spinner";
 import { createPortal } from "react-dom";
-import { Uploader } from "../../../Components/Uploader/Uploader";
 import { postRequest, useUserLogged } from "../../../Helpers/Helpers";
-import { Table, ThInfo } from "../../../Components/Table/Table";
-import { Thead } from "../../../Components/Thead/Thead";
 const token = Cookies.get("token");
 import Cookies from "js-cookie";
-import { da } from "date-fns/locale";
 import Swal from "sweetalert2";
-import ImageContainer from "../../../Components/ImgContainer/imageContainer";
-import moment from "moment";
 import { SocketContext } from "../../../Context/SocketContext";
 import { dotSpinner } from "ldrs";
 
@@ -85,6 +60,7 @@ const GuestIncomeDetails = () => {
   useEffect(() => {
     try {
       getGuestIncome(`guestIncome/${idGuest_income}`);
+      console.log("Datos de ingreso:", guestIncome);
     } catch (error) {
       console.error("Error al obtener datos de ingreso", error);
     }
@@ -118,7 +94,7 @@ const GuestIncomeDetails = () => {
     setCreatedAt(guestIncome?.data?.guestIncome?.createdAt);
     setUpdatedAt(guestIncome?.data?.guestIncome?.updatedAt);
 
-    setGuestIncomeParking(guestIncome?.data?.guestIncomeVehicle);
+    setGuestIncomeParking(guestIncome?.data?.guestIncome);
   }, [guestIncome?.data?.guestIncome]);
 
 
@@ -149,28 +125,7 @@ const GuestIncomeDetails = () => {
     setShowModaload(true);
 
     try {
-      if (guestIncomeParking !== null && guestIncomeParking !== undefined) {
-        const parkingUpdateData = {
-          idParkingSpace: guestIncomeParking.idParkingSpace,
-          status: "Active",
-          parkingType: "Public",
-        };
-        console.log("Datos a enviar:", dataToUpdate);
-        const parkingUpdateUrl =
-          "http://localhost:3000/api/parkingSpaces";
-
-        const parkingResponse = await useFetchForFile(
-          parkingUpdateUrl,
-          parkingUpdateData,
-          "PUT"
-        );
-
-        if (parkingResponse.error !== null && parkingResponse.error !== undefined) {
-          console.log("Error parqueadero:", parkingResponse.error);
-          throw new Error(`Error al actualizar el estado del espacio de estacionamiento: ${JSON.stringify(parkingResponse.error)}`);
-        }
-      }
-
+  
       const guestIncomeUpdateUrl =
         "http://localhost:3000/api/guestIncome";
 
@@ -207,6 +162,8 @@ const GuestIncomeDetails = () => {
   };
 
   console.log(asociatedVisitor);
+  console.log("Datos del ingreso:", guestIncome)
+  console.log("Datos del parqueadero:", guestIncomeParking)
   return (
     <>
       <Details>
@@ -218,7 +175,7 @@ const GuestIncomeDetails = () => {
             icon="arrow-up-right"
             A1={`Ingreso de `}
             A2={`${asociatedVisitor?.name} ${asociatedVisitor?.lastname}`}
-            A5={`Se dirige a: apartamento ${asociatedApartment?.apartmentName}`}
+            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento "+asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
             A6={`Autoriza: ${personAllowsAccess}`}
             status={"Active"}
             actionOnClick2={!departureDate ? "Marcar salida" : null}
@@ -254,9 +211,15 @@ const GuestIncomeDetails = () => {
                 </li>
                 <li>
                   Se dirige a:{" "}
-                  <Link
-                    to={`/admin/apartments/details/${asociatedApartment?.idApartment}`}
-                  >{`apartamento ${asociatedApartment?.apartmentName}`}</Link>{" "}
+                  {
+                    asociatedApartment?.apartmentName != null 
+                      ? (
+                        <Link to={`/admin/apartments/details/${asociatedApartment?.idApartment}`}>
+                          {`apartamento ${asociatedApartment?.apartmentName}`}
+                        </Link>
+                      ) 
+                      : "Servicio del conjunto"
+                  }
                 </li>
                 <br />
                 <li>Autoriza: {personAllowsAccess} </li>
