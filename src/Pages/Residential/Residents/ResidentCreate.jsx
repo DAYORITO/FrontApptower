@@ -17,7 +17,7 @@ export const ResidentCreate = (props) => {
 
   // API URL
 
-  const url = "http://localhost:3000/api/"
+  const url = import.meta.env.VITE_API_URL;
   // const url = "https://apptowerbackend.onrender.com/api/"
 
   const { id } = useParams()

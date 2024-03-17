@@ -11,7 +11,7 @@ import { SocketContext } from '../../../Context/SocketContext';
 export const ParkingSpacesCreate = () => {
 
   // const url = 'https://apptowerbackend.onrender.com/api/';
-  const url = 'http://localhost:3000/api/';
+  const url = import.meta.env.VITE_API_URL;
 
   // Socket
 

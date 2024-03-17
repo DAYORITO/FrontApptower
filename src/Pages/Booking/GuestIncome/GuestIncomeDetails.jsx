@@ -80,11 +80,7 @@ const GuestIncomeDetails = () => {
 
   // info guestincome relations
 
-  const {
-    data: guestIncome,
-    get: getGuestIncome,
-    loading: loadingGuestIncome,
-  } = useFetch(url);
+  const { data: guestIncome, get: getGuestIncome, loading: loadingGuestIncome, } = useFetch(url);
 
   useEffect(() => {
     try {
@@ -109,6 +105,10 @@ const GuestIncomeDetails = () => {
   const [guestIncomeParking, setGuestIncomeParking] = useState("");
 
   useEffect(() => {
+
+    console.log(guestIncome, 'guestIncome')
+
+
     setStartingDate(guestIncome?.data?.guestIncome?.startingDate);
     setDepartureDate(guestIncome?.data?.guestIncome?.departureDate);
     setPersonAllowsAccess(guestIncome?.data?.guestIncome?.personAllowsAccess);
@@ -147,7 +147,7 @@ const GuestIncomeDetails = () => {
 
   const handleEditClick = async (dataToUpdate) => {
     setShowModaload(true);
-  
+
     try {
       if (guestIncomeParking !== null && guestIncomeParking !== undefined) {
         const parkingUpdateData = {
@@ -158,22 +158,22 @@ const GuestIncomeDetails = () => {
         console.log("Datos a enviar:", dataToUpdate);
         const parkingUpdateUrl =
           "http://localhost:3000/api/parkingSpaces";
-  
+
         const parkingResponse = await useFetchForFile(
           parkingUpdateUrl,
           parkingUpdateData,
           "PUT"
         );
-  
+
         if (parkingResponse.error !== null && parkingResponse.error !== undefined) {
-          console.log("Error parqueadero:" ,parkingResponse.error);
+          console.log("Error parqueadero:", parkingResponse.error);
           throw new Error(`Error al actualizar el estado del espacio de estacionamiento: ${JSON.stringify(parkingResponse.error)}`);
         }
       }
-  
+
       const guestIncomeUpdateUrl =
         "http://localhost:3000/api/guestIncome";
-  
+
       const guestIncomeResponse = await useFetchForFile(
         guestIncomeUpdateUrl,
         dataToUpdate,
@@ -181,12 +181,12 @@ const GuestIncomeDetails = () => {
       );
 
       console.log("Respuesta ingreso:", guestIncomeResponse);
-  
+
       if (guestIncomeResponse.error !== null && guestIncomeResponse.error !== undefined) {
         console.log("Error ingreso:", guestIncomeResponse.error);
         throw new Error(`Error al actualizar los datos del ingreso del huésped: ${guestIncomeResponse.statusText}`);
       }
-  
+
       Swal.fire({
         icon: "success",
         title: "Salida registrada con éxito.",
@@ -225,18 +225,18 @@ const GuestIncomeDetails = () => {
             onClick2={
               !departureDate
                 ? () => {
-                    handleEditClick({
-                      idGuest_income: idGuest_income,
-                      departureDate: new Date(),
-                    });
-                  }
+                  handleEditClick({
+                    idGuest_income: idGuest_income,
+                    departureDate: new Date(),
+                  });
+                }
                 : null
             }
-            // // A7={pdf}
-            // status={state}
-            // onClick2={EqualUser ? openModalChangePassword : null}
-            // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
-            // onClickEdit={setShowModalEditApartment}
+          // // A7={pdf}
+          // status={state}
+          // onClick2={EqualUser ? openModalChangePassword : null}
+          // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
+          // onClickEdit={setShowModalEditApartment}
           />
         )}
 
@@ -244,8 +244,8 @@ const GuestIncomeDetails = () => {
           <Acordions>
             <DropdownInfo
               name={`Informacion del ingreso`}
-              // action1={'Editar datos de la multa'}
-              // onClickAction1={openModalEdit}
+            // action1={'Editar datos de la multa'}
+            // onClickAction1={openModalEdit}
             >
               <ul className="list-unstyled">
                 <li>
@@ -278,8 +278,8 @@ const GuestIncomeDetails = () => {
             <Acordions>
               <DropdownInfo
                 name={`Parqueadero asignado`}
-                // action1={'Agregar evidencia'}
-                // onClickAction1={openEvidenceFilesModal}
+              // action1={'Agregar evidencia'}
+              // onClickAction1={openEvidenceFilesModal}
               >
                 <RowNotificactions
                   // Information
