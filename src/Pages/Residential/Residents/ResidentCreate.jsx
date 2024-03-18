@@ -146,60 +146,78 @@ export const ResidentCreate = (props) => {
 
       <>
 
-        <InputsSelect disabled id={"select"} options={rolList} name={"Rol"}
-          value={idRol} onChange={e => setIdRol(e.target.value)}
-          StyleInput={{ width: '100%', marginRight: '3.8rem' }}
-          containerStyle={{ width: '97%', marginLeft: '0.9rem' }}
-          required={false}
-        ></InputsSelect>
+
 
 
         {/* <h6 className='mb-4 text-muted'>Informacion personal</h6> */}
         <h6 className='mb-4 w-100 ml-2 text-muted'>Informacion personal</h6>
 
         <FormColumn>
+
           <InputsSelect id={"select"} options={docTypes} name={"Tipo Documento"}
             identifier={'docType'} errors={errorList}
             value={docType} onChange={e => setDocType(e.target.value)}></InputsSelect>
+
         </FormColumn>
 
         <FormColumn>
+
           <Inputs name="Numero de documento" placeholder="1000000007"
             identifier={'document'} errors={errorList}
             value={document} onChange={e => setDocument(e.target.value)}></Inputs>
+
         </FormColumn>
 
         <FormColumn>
+
           <Inputs name="Nombre"
             identifier={'name'} errors={errorList}
             value={name} onChange={e => setName(e.target.value)}></Inputs>
+
         </FormColumn>
 
         <FormColumn>
+
           <Inputs name="Apellido"
             identifier={'lastName'} errors={errorList}
             value={lastName} onChange={e => setLastName(e.target.value)}></Inputs>
+
         </FormColumn>
 
         <FormColumn>
+
+          <InputsSelect id={"select"} options={sexs} name={"Sexo"}
+            identifier={'sex'} errors={errorList}
+            value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
+
+        </FormColumn>
+
+        <FormColumn>
+
+          <Inputs name="Fecha de nacimiento" type="Date"
+            identifier={'birthday'} errors={errorList}
+            value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
+
+        </FormColumn>
+
+        <FormColumn>
+
           <Inputs name="Correo" type="email"
             identifier={'email'} errors={errorList}
             value={email} onChange={e => setEmail(e.target.value)}></Inputs>
 
-          <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
-            onChange={e => setPdf(e.target.files[0])} />
-
 
         </FormColumn>
 
         <FormColumn>
+
           <Inputs name="Numero de telefono"
             identifier={'phone'} errors={errorList}
             value={phone} onChange={e => setPhone(e.target.value)}></Inputs>
 
-          <InputsSelect disabled id={"select"} options={residentsTypes} name={"Tipo de residente"}
-            identifier={'residentType'} errors={errorList}
-            value={residentType} onChange={e => setResidentType(e.target.value)}></InputsSelect>
+        </FormColumn>
+
+        <FormColumn>
 
           <InputsSelect
             id={"select"}
@@ -211,15 +229,10 @@ export const ResidentCreate = (props) => {
             disabled={id ? idApartment : ''}
           ></InputsSelect>
 
-          <Inputs name="Fecha de nacimiento" type="Date"
-            identifier={'birthday'} errors={errorList}
-            value={birthday} onChange={e => setBirthday(e.target.value)}></Inputs>
-          <InputsSelect id={"select"} options={sexs} name={"Sexo"}
-            identifier={'sex'} errors={errorList}
-            value={sex} onChange={e => setSex(e.target.value)}></InputsSelect>
         </FormColumn>
 
         <FormColumn>
+
           {idApartment && (
             <>
               <Inputs
@@ -232,7 +245,25 @@ export const ResidentCreate = (props) => {
 
             </>
           )}
+        </FormColumn>
 
+        <FormColumn>
+
+          <InputsSelect disabled id={"select"} options={residentsTypes} name={"Tipo de residente"}
+            identifier={'residentType'} errors={errorList}
+            value={residentType} onChange={e => setResidentType(e.target.value)}></InputsSelect>
+
+          <InputsSelect disabled id={"select"} options={rolList} name={"Rol"}
+            value={idRol} onChange={e => setIdRol(e.target.value)}
+            required={false}
+          ></InputsSelect>
+
+        </FormColumn>
+
+        <FormColumn>
+
+          <Uploader name='pdf' label='Carga de documento' formatos='.pdf'
+            onChange={e => setPdf(e.target.files[0])} />
           {/* <h6 className='mb-4 text-muted'>Datos de acceso</h6>
 
           <Inputs name="Contraseña"
@@ -242,35 +273,6 @@ export const ResidentCreate = (props) => {
             identifier={'passwordConfirm'} errors={errorList} type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} /> */}
 
         </FormColumn>
-
-
-        <FormColumn>
-
-
-
-
-
-        </FormColumn>
-
-        <FormColumn>
-
-        </FormColumn>
-
-        <FormColumn>
-
-
-
-
-
-        </FormColumn>
-
-
-
-
-
-
-
-
 
 
       </>
