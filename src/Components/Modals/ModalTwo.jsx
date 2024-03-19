@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { NotificationsAlert } from "../NotificationsAlert/NotificationsAlert";
 import { useAllowedPermissionsAndPrivileges } from "../../Hooks/useFetch";
 import { idToPermissionName, idToPrivilegesName } from "../../Hooks/permissionRols";
+import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
+
 
 export const ModalContainer = ({ children, showModal }) => {
   return (
@@ -16,10 +19,11 @@ export const ModalContainer = ({ children, showModal }) => {
   );
 };
 
-export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false }) => {
+export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false, horasDisponibles }) => {
 
   const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
   const [loading, setLoading] = useState(false);
+  const tooltipContent = `${horasDisponibles}`;
 
   const handleClick = async (e) => {
     setLoading(true);
@@ -47,18 +51,34 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
               <h5 className="modal-title" id="verticalModalTitle">
                 {title}
               </h5>
+
               <button
                 type="button"
                 className="modal__close"
                 onClick={() => showModal(false)}
               >
+
                 <i className="fe fe-16 fe-x"></i>
               </button>
+
             </div>
             <div className="modal-body" style={{ overflow: 'hidden', overflowY: "auto", maxHeight: "30rem" }}>
               {children}
             </div>
+
             <div className="modal-footer">
+              <img
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={tooltipContent}
+                src='https://icons.veryicon.com/png/o/object/home-icon-5/home-clock.png'
+                className="lightbulb"
+                data-tip="Horas"
+                data-for="tooltip1"
+              />
+
+
+
+              <Tooltip id="my-tooltip" className="my-tooltip" />
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"

@@ -156,10 +156,18 @@ export const UsersEdit = () => {
                     if (key === 'userImg' && editedUser[key] === null) {
                         return;
                     }
-                    if ((key === 'pdf' || key === 'newFile') && editedUser[key]) {
-                        formData.append(key, editedUser[key]);
+                    if (key === 'status') {
+                        // formData.append(key, editedUser.status);
+                        formData.append('state', editedUser.status);
+                    }
+                    if (key === 'sex') {
+                        formData.append(key, "No proporcionado");
                     } else {
-                        formData.append(key, editedUser[key]);
+                        if ((key === 'pdf' || key === 'newFile') && editedUser[key]) {
+                            formData.append(key, editedUser[key]);
+                        } else {
+                            formData.append(key, editedUser[key]);
+                        }
                     }
                 });
 
@@ -332,10 +340,12 @@ export const UsersEdit = () => {
     // Traer empresas de seguridad
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const { data: dataWatchman, load5, error5 } = useFetchget('watchman')
-    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
+
 
     const userWatchman = Array.isArray(dataWatchman.watchman) ? dataWatchman.watchman.find(watchman => watchman.iduser === editedUser.iduser) : null;
-    const enterpriceWatchman = userWatchman ? userWatchman.idEnterpriseSecurity : null;
+    const enterpriceWatchman = userWatchman ? userWatchman.idEnterpriseSecurity.value : null;
+
+    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
     const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
         ? dataEnterprice.enterpriseSecurity
@@ -353,6 +363,9 @@ export const UsersEdit = () => {
         }
     }, [userWatchman]);
 
+    useEffect(() => {
+        setSelectedEnterprice(enterpriceWatchman);
+    }, [enterpriceWatchman]);
 
     const handleEnterpriceSecurity = (selectedOption) => {
         setErrors([]);
@@ -360,7 +373,7 @@ export const UsersEdit = () => {
         setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedOption.value });
     };
 
-
+    console.log(editedUser, "editedUser");
 
     //Traer tipo de residencia
     const { data: dataResidentType, load6, error6 } = useFetchget('residents')
@@ -369,6 +382,7 @@ export const UsersEdit = () => {
 
     //Traer Apartamentos
     const ResidentApartament = userResidente && userResidente.apartments.length > 0 ? userResidente.apartments[0]?.idApartment : null;
+
 
     const [residentType, setResidentType] = useState(residentTypeUser);
     const [idApartment, setApartment] = useState(ResidentApartament);
@@ -631,7 +645,7 @@ export const UsersEdit = () => {
 
                                     <Uploader
                                         name='pdf'
-                                        label='Documento de Identidad'
+                                        label='Carga de documento'
                                         formatos='.pdf'
                                         onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0], newFile: e.target.files[0] })}
                                         validate={shouldValidate}

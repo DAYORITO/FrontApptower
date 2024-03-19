@@ -3,7 +3,7 @@ import "./Pages/Users/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import LogIn from './Pages/Users/LogIn/LogIn';
 import { Owners } from './Pages/Residential/Owners/Owners';
-
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ResidentCreate } from "./Pages/Residential/Residents/ResidentCreate";
 import VisitorsCreate from "./Pages/Residential/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";

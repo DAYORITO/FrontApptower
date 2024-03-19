@@ -281,7 +281,7 @@ export const Watchman = () => {
                         : null
                 }
                 showPaginator={
-                    watchmanData ?
+                    watchmanData && watchmanData.length > 0 ?
                         <Paginator
                             totalPages={totalPages}
                             currentPage={currentPage}

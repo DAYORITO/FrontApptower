@@ -345,6 +345,8 @@ export const BookingCalendar = () => {
 
     Label(new Date(), currentView);
 
+    
+
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <ContainerCalendar>
@@ -407,9 +409,10 @@ export const BookingCalendar = () => {
             </ContainerCalendar>
             {showModal && selectedDate &&
                 createPortal(
-                    <ModalContainer ShowModal={showModal} >
+                    <ModalContainer ShowModal={showModal}  >
                         <Modal onClick={IsEditedBooking ? updateBooking : createBooking}
                             showModal={handleSelectSlot}
+                            horasDisponibles={'Hola como estas jejeje'}
                             title={IsEditedBooking ? `Editar reserva` : 'Crear nueva reserva'}>
                             {id ? <Inputs name="Zona común" value={nameSpace} disabled /> :
                                 <Select2
@@ -420,7 +423,7 @@ export const BookingCalendar = () => {
                                     defaultOption={true}
                                     errors={errors}
                                     identifier={'idSpace'}
-                                    
+
                                 />
                             }
 
