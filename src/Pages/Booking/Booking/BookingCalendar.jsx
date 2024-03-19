@@ -27,6 +27,18 @@ dayjs.locale('es');
 
 export const BookingCalendar = () => {
 
+    const url = "http://localhost:3000/api/"
+    // const url = "https://apptowerbackend.onrender.com/api/"
+
+    const { data: spacesToBook, get: getSpacesToBook } = useFetch(url)
+
+    useEffect(() => {
+
+        getSpacesToBook(`spaces/${id}`)
+
+    }, [])
+
+
     // Configuración del calendario 
     const localizer = dayjsLocalizer(dayjs);
 
@@ -53,6 +65,12 @@ export const BookingCalendar = () => {
 
     const [selectedDate, setSelectedDate] = useState(null);
 
+
+    useEffect(() => {
+
+        setHourStart(spacesToBook?.data?.space?.openingTime)
+        setHourEnd(spacesToBook?.data?.space?.closingTime)
+    }, [spacesToBook])
 
     const openBookingModal = (data) => {
 
@@ -90,9 +108,6 @@ export const BookingCalendar = () => {
     }
 
 
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
-
     // Get Data
 
     const { data: spaces, get: getSpaces, loading } = useFetch(url)
@@ -102,6 +117,8 @@ export const BookingCalendar = () => {
     const { data: BookingData, get: getBooking } = useFetch(url)
 
     useEffect(() => {
+
+        getSpacesToBook(`spaces/${id}`)
         getSpaces('spaces')
         getResident('residents')
         getBooking('booking')
@@ -124,10 +141,6 @@ export const BookingCalendar = () => {
     const userResident = ResidentData?.data?.residents?.find(resident => resident.iduser === Number(idUserLogged))?.idResident;
 
     const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols.namerole.toLowerCase() : undefined;
-
-
-
-
 
     const selectedSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
 

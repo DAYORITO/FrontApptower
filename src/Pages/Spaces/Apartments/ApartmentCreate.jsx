@@ -21,7 +21,7 @@ export const ApartmentCreate = () => {
   const { socket } = useContext(SocketContext)
 
   // const url = 'https://apptowerbackend.onrender.com/api/';
-  const url = 'http://localhost:3000/api/';
+  const url = import.meta.env.VITE_API_URL;
 
   const { post: postApartment } = useFetch(url)
   const { data: towers, get: getTowers } = useFetch(url)

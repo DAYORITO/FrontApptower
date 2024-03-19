@@ -32,8 +32,7 @@ export const BookingDetails = () => {
     const token = Cookies.get('token');
     // API URL
 
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
+    const url = import.meta.env.VITE_API_URL;
 
     // Socket
 
@@ -186,21 +185,23 @@ export const BookingDetails = () => {
 
     const approveBooking = async (event) => {
         const data = {
+            idUserLogged: idUserLogged,
             status: 'Aprobado',
             idbooking: id
         }
 
-        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, null);
+        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, socket);
         getBooking(`booking/one/${id}`)
     }
 
     const cancelBooking = async (event) => {
         const data = {
+            idUserLogged: idUserLogged,
             status: 'Cancelado',
             idbooking: id
         }
 
-        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, null);
+        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, socket);
         getBooking(`booking/one/${id}`)
     }
 

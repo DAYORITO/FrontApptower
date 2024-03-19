@@ -81,10 +81,21 @@ function GuestIncome() {
 
   //   console.log(data);
 
+  function sortGuestIncome(guestIncome) {
+    return guestIncome.sort((a, b) => {
+      // Si a o b tienen fecha de salida null, los ponemos primero
+      if (a.departureDate === null) return -1;
+      if (b.departureDate === null) return 1;
+  
+      // Si ambos tienen fecha de salida, los ordenamos de forma descendente
+      return new Date(b.departureDate) - new Date(a.departureDate);
+    });
+  }
+
   useEffect(() => {
     if (data && data.guestIncome) {
-      setGuestIncomeData(data.guestIncome);
-      setOriginalGuestIncomeData(data.guestIncome);
+      setGuestIncomeData(sortGuestIncome(data.guestIncome));
+      setOriginalGuestIncomeData(sortGuestIncome(data.guestIncome));
     }
   }, [data, data.guestIncome]);
 
@@ -108,31 +119,6 @@ function GuestIncome() {
     console.log("Datos a actualizar:", dataToUpdate);
 
     try {
-      const verify = guestIncomeParkingData?.find(
-        (guestIncomeParking) =>
-          guestIncomeParking.idGuest_income === dataToUpdate.idGuest_income
-      );
-
-      if (verify !== null && verify !== undefined) {
-        const parkingUpdateData = {
-          idParkingSpace: verify.idParkingSpace,
-          status: "Active",
-          parkingType: "Public",
-        };
-        const parkingUpdateUrl =
-          "http://localhost:3000/api/parkingSpaces";
-
-        const parkingResponse = await useFetchForFile(
-          parkingUpdateUrl,
-          parkingUpdateData,
-          "PUT"
-        );
-
-        if (parkingResponse.error !== null && parkingResponse.error !== undefined) {
-          console.log("Error al actualizar el estado del espacio de estacionamiento:", parkingResponse.error);
-          throw new Error(parkingResponse.error);
-        }
-      }
 
       const guestIncomeUpdateUrl =
         "http://localhost:3000/api/guestIncome";

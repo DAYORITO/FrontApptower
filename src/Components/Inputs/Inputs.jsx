@@ -88,7 +88,7 @@ function Inputs({
     };
   }, []);
 
-  console.log("data para validar:", validateData);
+
 
   const organizarErrores = () => {
     if (errors) {
@@ -112,15 +112,23 @@ function Inputs({
   //   }
   // }, [value, validate]);
 
+  function removeError(errors, fieldToRemove) {
+    return errors.errors.filter(error => error.field !== fieldToRemove);
+  }
+
   const handleBlur = (event) => {
+    let errors2 = removeError(errors, identifier);
+    console.log("errors2:", errors2);
+    errors = errors2;
     const inputValue = event.target.value;
-    console.log("inputValue:", inputValue);
+
 
     if (inputValue === "") {
       setInternalErrorMessage("Este campo es requerido*");
     }else{
       setInternalErrorMessage(null);
     }
+    
 
     if (inputValue !== "" && validateData !== undefined) {
       const recordExists = validateData?.find(

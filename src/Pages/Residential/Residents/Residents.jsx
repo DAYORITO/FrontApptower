@@ -32,7 +32,7 @@ import { SocketContext } from '../../../Context/SocketContext'
 export const Residents = () => {
     const token = Cookies.get('token');
 
-    const url = "http://localhost:3000/api/"
+    const url = import.meta.env.VITE_API_URL;
     // const url = "https://apptowerbackend.onrender.com/api/
 
     // Socket

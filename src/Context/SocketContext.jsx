@@ -13,7 +13,6 @@ export const SocketProvider = ({ children }) => {
 
     const { idUserLogged, idRolLogged } = useUserLogged()
 
-    console.log(idRolLogged, 'idRolLogged')
 
     // Notifications
 
@@ -27,23 +26,24 @@ export const SocketProvider = ({ children }) => {
 
             })
         } else if (idRolLogged === 2) {
-
-
             socket.on('resident-notifications', (notifications) => {
-                const notificatiosToResidents = notifications.filter((notification) => {
+                const filteredNotifications = notifications.filter(notification => {
                     const resident = notification?.content?.information?.resident;
                     if (Array.isArray(resident)) {
-                        return resident.some(res => res.resident.iduser === idUserLogged);
+                        const residentToFilter = resident.find(res => res?.resident?.iduser === idUserLogged);
+                        return residentToFilter && residentToFilter.resident.iduser === idUserLogged;
+                    } else if (resident && typeof resident === 'object') {
+                        return resident.iduser === idUserLogged;
+                    } else {
+                        return false;
                     }
-                    return false;
                 });
-            
-                setNotifications(notificatiosToResidents);
+                setNotifications(filteredNotifications);
             });
-            
-
-
         }
+
+
+
         else if (idRolLogged === 1) {
 
             socket.on('all-notifications', (notifications) => {

@@ -153,17 +153,38 @@ function Fines() {
 
     function reorderFines(fines) {
         return fines.sort((a, b) => {
-            // Comparar por estado
-            if (a.state === "Pagada" && b.state !== "Pagada") return 1;
-            if (a.state !== "Pagada" && b.state === "Pagada") return -1;
+            // Primero, las multas "Por aprobar"
             if (a.state === "Por aprobar" && b.state !== "Por aprobar") return -1;
             if (a.state !== "Por aprobar" && b.state === "Por aprobar") return 1;
+    
+            // Si ambos son "Por aprobar", comparar por fecha
+            if (a.state === "Por aprobar" && b.state === "Por aprobar") {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return dateB - dateA;
+            }
+    
+            // Luego, las multas "Pendiente"
             if (a.state === "Pendiente" && b.state !== "Pendiente") return -1;
             if (a.state !== "Pendiente" && b.state === "Pendiente") return 1;
-            // Si ambos tienen el mismo estado, comparar por fecha de incidente (de más antiguo a más nuevo)
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-            return dateA - dateB;
+    
+            // Si ambos son "Pendiente", comparar por fecha
+            if (a.state === "Pendiente" && b.state === "Pendiente") {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return dateB - dateA;
+            }
+    
+            // Finalmente, las multas "Pagada"
+            if (a.state === "Pagada" && b.state !== "Pagada") return 1;
+            if (a.state !== "Pagada" && b.state === "Pagada") return -1;
+    
+            // Si ambos son "Pagada", comparar por fecha
+            if (a.state === "Pagada" && b.state === "Pagada") {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return dateB - dateA;
+            }
         })
     }
 
@@ -356,7 +377,6 @@ function Fines() {
                                             nameRole && !nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')
                                                 ?
                                                 <>
-                                                    <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} />
                                                     <Actions accion='Aprobar pago' onClick={() => {
                                                         handleEditClick({ idfines: fine.idFines, state: 'Pagada' });
                                                     }} />

@@ -52,6 +52,7 @@ function GuestIncomeCreate() {
   const [selectedApartments, setSelectedApartments] = useState([]);
   //mostrar el campo de parqueadero
   const [check1, setCheck1] = useState(false);
+  const [check2, setCheck2] = useState(false);
   //mostrar el nombre del visitante
   const [visitorname, setVisitorname] = useState(' ')
 
@@ -81,8 +82,13 @@ function GuestIncomeCreate() {
   const opciones = [
     { value: 'si', label: 'Si' },
     { value: 'no', label: 'No' },
-
   ]
+  const incometype=[
+    { value: 'si', label: 'Si' },
+    { value: 'no', label: 'No'}
+  ]
+  
+
   //Peticiones a la api
   const { data: dataVisitors, load: load1, error2 } = useFetchget('visitors')
   const { data, load, error } = useFetchget('apartments')
@@ -90,6 +96,7 @@ function GuestIncomeCreate() {
   const { data: dataResidentApartment, loading: loadResidentsApartment, error: errordata, get: getResidentApartment } = useFetch(url)
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
+  
 
   useEffect(() => {
     getResidentApartment('aparmentResidents')
@@ -103,6 +110,14 @@ function GuestIncomeCreate() {
       setCheck1(true)
     } else {
       setCheck1(false)
+    }
+  }
+
+  const handleChange2 = (e) => {
+    if (e.target.value === 'si') {
+      setCheck2(true)
+    } else {
+      setCheck2(false)
     }
   }
 
@@ -355,49 +370,29 @@ function GuestIncomeCreate() {
 
     try {
       // Crear el guestIncome
-      console.log("fecha de hoy: ", new Date());
-      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
+      const formData ={
         // User logged
         "idUserLogged": idUserLogged,
         "startingDate": new Date(),
         "departureDate": null,
-        "idApartment": id != null ? id : apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor?.value,
-      });
+      }
+      if(check2){
+        formData.idApartment = id != null ? id : apartment == null ?  "" : parseInt(apartment.value);
+      }
+      if(check1){
+        formData.idParkingSpace = parkingGuestIncome
+        formData.isGuestIncomeVehicle = true
+      }
+      console.log("Form Data:", formData);
+      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', formData);
 
       if (guestIncomeError) {
         setErrors(guestIncomeError);
-        throw new Error('Error al crear el ingreso de huésped');
+        throw new Error('Error al crear el ingreso');
 
-      }
-
-      if (guestIncomeResponse && check1) {
-        // Crear el guestIncomeParking
-        const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
-
-          // User logged
-          "idUserLogged": idUserLogged,
-
-          "idParkingSpace": parkingGuestIncome,
-          "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
-        });
-
-        if (guestIncomeParkingError) {
-          throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
-        }
-
-        // Desactivar el espacio de estacionamiento
-        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
-          "idParkingSpace": parkingGuestIncome,
-          "status": 'Inactive',
-          "parkingType": "Public"
-        }, 'PUT');
-
-        if (parkingError) {
-          throw new Error('Error al desactivar el espacio de estacionamiento');
-        }
       }
 
       // Éxito
@@ -459,9 +454,9 @@ function GuestIncomeCreate() {
 
 
     if (error) {
-      const errorData = error.errorData;
-      console.log("Errores front:", error);
-      setErrors(errorData);
+      // const errorData = error.errorData;
+      // console.log("Errores front:", error);
+      setErrors(error);
       setShowModaload(false);
       Swal.fire({
         title: 'Error',
@@ -484,10 +479,15 @@ function GuestIncomeCreate() {
         modalButton={<ModalButton disabled={LoadingSpiner} name="Crear visitante" onClick={setShowModalvisitor} />}
       >
         {LoadingSpiner && <Spinner></Spinner>}
-        <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+        <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}> 
+        <InputsSelect name={"Ingreso por apartamento"} options={incometype} onChange={handleChange2} required={false} ></InputsSelect>
+        </div>
+        {
+          check2 &&
+        <div className='d-flex justify-content-around mb-2' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
             {!id ?
-              <InputsSelect errors={errors} identifier={"idApartment"} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre*'} voidmessage='No hay torres registradas' onChange={(e) => { { id != null ? handleChange(id) : handleTowerChange(e.target.value) } }} options={towers} />
+              <InputsSelect errors={errors} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} voidmessage='No hay torres registradas' onChange={(e) => { { id != null ? handleChange(id) : handleTowerChange(e.target.value) } }} options={towers} />
               :
               <Inputs
                 key={apartment}
@@ -503,7 +503,7 @@ function GuestIncomeCreate() {
           <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
 
             {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} value={apartment} placeholder={'Apartamento'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} errors={errors} identifier={"idApartment"} value={apartment} placeholder={'Apartamento'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
               :
               <Inputs
                 key={apartment}
@@ -521,6 +521,7 @@ function GuestIncomeCreate() {
 
           </div>
         </div>
+        }
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
             <Select2 errors={errors} identifier={"idVisitor"} placeholder={'Visitante'} value={visitor} onChange={(selectedValue) => { handleSelectedVisitor(selectedValue), setVisitor(selectedValue), console.log("valor selec", selectedValue) }} options={visitorsData}></Select2>
@@ -531,15 +532,15 @@ function GuestIncomeCreate() {
 
         </div>
         <div style={{ display: LoadingSpiner ? 'none' : 'block', width: '100%' }}>
-          <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name="Ingreso con vehículo" style="width: 100%" id={'tipoingreso'} onChange={handleChange} options={opciones}></InputsSelect>
+          <InputsSelect inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name="Ingreso con vehículo" style="width: 100%" id={'tipoingreso'} required={false} onChange={handleChange} options={opciones}></InputsSelect>
         </div>
         {
           check1 &&
-          <InputsSelect name="Parqueadero" voidmessage='No hay parqueaderos disponibles' id={'tipoingreso'} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
+          <InputsSelect name="Parqueadero" voidmessage='No hay parqueaderos disponibles' identifier={"idParkingSpace"} errors={errors} onChange={(e) => setParkingGuestIncoming(e.target.value)} options={parkingSpots}></InputsSelect>
         }
         <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <Inputs name="Persona que permite el acceso" type="text" errors={errors} identifier={"personAllowsAccess"} onChange={(e) => { setPersonAllowsAccess(e.target.value) }}></Inputs>
-          <Inputs name="Observaciones" type="text" errors={errors} identifier={"observations"} onChange={(e) => { setObservations(e.target.value) }}></Inputs>
+          <Inputs name="Observaciones" type="text" errors={errors} identifier={"observations"} required={false} onChange={(e) => { setObservations(e.target.value) }}></Inputs>
         </div>
       </FormContainer>
       {
