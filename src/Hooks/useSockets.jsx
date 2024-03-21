@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 
-export const useSocket = (server = 'https://apptowerbackend.onrender.com/api/') => {
+export const useSocket = (server = import.meta.env.VITE_API_URL.replace("/api/", "")) => {
 
 
     // Sockets
