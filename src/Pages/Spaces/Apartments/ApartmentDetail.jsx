@@ -699,12 +699,12 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleModalEditApartmentResident(resident)}
 
-                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+                                                        showEditIcon={!nameRole?.toLowerCase()?.includes('vigilante') && !nameRole?.toLowerCase()?.includes('vigilancia') && !nameRole?.toLowerCase()?.includes('seguridad')}
 
                                                     ></Dropdownanchor>
                                                 ))
                                             ) : (
-                                                nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                nameRole && (!nameRole?.toLowerCase()?.includes('seguridad') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase()?.includes('vigilante')) ?
                                                     <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} /> : null
                                             )}
                                     </DropdownInfo>
