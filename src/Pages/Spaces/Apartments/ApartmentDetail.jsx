@@ -457,7 +457,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'apartments', 'PUT', setShowModalEditApartment, data, url, setErrorList, null, null);
+        await postRequest(event, 'apartments', 'PUT', setShowModalEditApartment, data, url, setErrorList, null, socket);
 
 
 
