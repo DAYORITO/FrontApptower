@@ -146,7 +146,7 @@ export const BookingCalendar = () => {
 
     const userResident = ResidentData?.data?.residents?.find(resident => resident.iduser === Number(idUserLogged))?.idResident;
 
-    const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols.namerole.toLowerCase() : undefined;
+    const nameRole = typeof RolsData?.data?.rols?.namerole === 'string' ? RolsData.data.rols?.namerole?.toLowerCase() : undefined;
 
     const selectedSpace = spaces?.data?.spaces?.find(space => space.idSpace === parseInt(idSpace));
 
@@ -434,12 +434,12 @@ export const BookingCalendar = () => {
                                         <strong>{event.title}</strong>
                                         <p>{event.status}</p>
                                     </div>
-                                    {nameRole.includes('residente') && status !== 'Por revisar' ? null : <Accions action1={'Editar'} onClickAction1={(e) => {
+                                    <Accions action1={'Editar'} onClickAction1={(e) => {
                                         e.preventDefault();
                                         const booking = BookingData.data.booking.find(booking => booking.idbooking === event.id);
                                         handleSelectSlot(event);
                                         openBookingModal(booking);
-                                    }} />}
+                                    }} />
                                 </div>
                             ),
                         },

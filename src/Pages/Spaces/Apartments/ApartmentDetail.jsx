@@ -46,9 +46,13 @@ export const ApartmentDetails = (props) => {
 
     const { idUserLogged, idRolLogged } = useUserLogged()
 
+    console.log(idRolLogged, "idRolLogged")
+
     const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
 
     const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+    console.log(nameRole, "nameRole")
 
 
 
@@ -593,6 +597,8 @@ export const ApartmentDetails = (props) => {
     };
 
 
+
+
     return (
         <>
             <Details>
@@ -651,9 +657,7 @@ export const ApartmentDetails = (props) => {
 
 
                                                             onClickModal={() => handleModalEditApartmentOwner(owner)}
-
-                                                            showEditIcon={!nameRole?.toLowerCase().includes('vigilante') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase().includes('seguridad')}
-                                                        >
+                                                            showEditIcon={nameRole ? (!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')) : false}  >
                                                         </Dropdownanchor>
                                                     ))
                                                 ) : (
@@ -699,7 +703,7 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleModalEditApartmentResident(resident)}
 
-                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+                                                        showEditIcon={!nameRole === 'vigilante'}
 
                                                     ></Dropdownanchor>
                                                 ))
