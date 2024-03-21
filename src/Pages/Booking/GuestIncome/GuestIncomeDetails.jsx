@@ -93,7 +93,7 @@ const GuestIncomeDetails = () => {
     setCreatedAt(guestIncome?.data?.guestIncome?.createdAt);
     setUpdatedAt(guestIncome?.data?.guestIncome?.updatedAt);
 
-    setGuestIncomeParking(guestIncome?.data?.guestIncome);
+    setGuestIncomeParking(guestIncome?.data?.guestIncomeVehicle);
   }, [guestIncome?.data?.guestIncome]);
 
 
