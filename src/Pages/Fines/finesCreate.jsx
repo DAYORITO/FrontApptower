@@ -44,7 +44,18 @@ function FinesCreate() {
   const [apartmets, setApartments] = useState({ apartments: [] });
   const [showModal, setShowmodal] = useState(false);
   const [errors, setErrors] = useState([{}])
-  console.log("Errores", errors);
+
+  // Limid date calculated
+  
+  useEffect(() => {
+    const today = new Date();
+    const oneMonthFromNow = new Date(today);
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+    const formattedLimitDate = oneMonthFromNow.toISOString().split('T')[0]; // Esto te dará la fecha en formato YYYY-MM-DD
+    setLimitDate(formattedLimitDate);
+  }, []);
+  
+  console.log(limitDate);
 
   const { data, load, error } = useFetchget("apartments");
   // console.log(data);
@@ -249,6 +260,7 @@ function FinesCreate() {
             name="Fecha límite de pago"
             identifier={"paymentDate"}
             errors={errors}
+            value={limitDate}
             onChange={(e) => {
               setLimitDate(e.target.value);
             }}
