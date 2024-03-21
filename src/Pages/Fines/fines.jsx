@@ -191,7 +191,7 @@ function Fines() {
         setShowModaload(true);
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        let response = await useFetchForFile('http://localhost:3000/api/fines', dataToUpdate, 'PUT')
+        let response = await useFetchForFile(`${import.meta.env.VITE_API_URL}fines`, dataToUpdate, 'PUT')
         // .then((responseData) => {
 
         console.log("respuesta de api holi", response)

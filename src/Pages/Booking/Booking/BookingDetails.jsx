@@ -74,6 +74,8 @@ export const BookingDetails = () => {
     const { data: spaces, get: getSpaces, loading } = useFetch(url)
     const { data: rols, get: getRols } = useFetch(url)
 
+    console.log(booking, 'booking')
+
     let nameRole = rols?.data?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole
 
     if (nameRole) {

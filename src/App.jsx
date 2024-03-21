@@ -285,7 +285,7 @@ const App = () => {
                                 {/* Towers */}
                                 <Route path='towers' element={
                                     allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar')
-                                        ? (nameRole.toLowerCase().includes('residente') ? null : <Towers />)
+                                        ? (nameRole?.toLowerCase()?.includes('residente') ? null : <Towers />)
                                         : <NotFound />
                                 } />
 

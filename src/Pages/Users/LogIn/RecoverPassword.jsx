@@ -16,8 +16,7 @@ export const RecoverPassword = () => {
         e.preventDefault();
 
         try {
-            const userCheck = await fetch('http://localhost:3000/api/email', {
-                // const userCheck = await fetch('http://localhost:3000/api/email', {
+            const userCheck = await fetch(`${import.meta.env.VITE_API_URL}email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,7 +29,7 @@ export const RecoverPassword = () => {
                 console.log(userData.message);
                 Cookies.set("email", email);
 
-                const sendCode = await fetch('http://localhost:3000/api/email', {
+                const sendCode = await fetch(`${import.meta.env.VITE_API_URL}email`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

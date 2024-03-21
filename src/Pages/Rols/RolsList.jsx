@@ -14,8 +14,8 @@ import dataNotFoundImg from "../../assets/dataNotFound.jpg"
 import { Spinner } from 'react-bootstrap'
 
 export const Rols = () => {
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
+
+    const url = import.meta.env.VITE_API_URL
 
     // Get Data
 

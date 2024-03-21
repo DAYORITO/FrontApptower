@@ -228,7 +228,7 @@ export const Aside = () => {
                                     allowedPermissions && allowedPermissions.includes('Reservas')
                                         ?
 
-                                        (nameRole.toLocaleLowerCase().includes('residente'))
+                                        (nameRole?.toLowerCase()?.includes('residente'))
                                             ? <ListNav module={'Reservas'} href='booking/calendar' icon='fe fe-calendar fe-24' />
                                             : <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24' />
 

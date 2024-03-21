@@ -97,7 +97,7 @@ export const RolsEditNew = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/rols/namerole/${editedRols?.namerole}`)
+        fetch(`${import.meta.env.VITE_API_URL}rols/namerole/${editedRols?.namerole}`)
             .then(response => response.json())
             .then(data => {
                 setIsNameRoleTaken(data && data.message ? true : false);
@@ -156,7 +156,7 @@ export const RolsEditNew = () => {
 
 
 
-                const response = await fetch(`http://localhost:3000/api/rols/${idrole}`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}rols/${idrole}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
