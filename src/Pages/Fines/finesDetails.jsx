@@ -57,8 +57,7 @@ export const FinesDetail = () => {
   const token = Cookies.get("token");
   // API URL
 
-  const url = "http://localhost:3000/api/";
-  // const url = "https://apptowerbackend.onrender.com/api/"
+  const url = import.meta.env.VITE_API_URL;
 
   // Fine informacion
 
@@ -150,7 +149,7 @@ export const FinesDetail = () => {
 
     //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
     let response = await useFetchForFile(
-      "http://localhost:3000/api/fines",
+      `${import.meta.env.VITE_API_URL}fines`,
       dataToUpdate,
       "PUT"
     );

@@ -46,7 +46,7 @@ function FinesCreate() {
   const [errors, setErrors] = useState([{}])
 
   // Limid date calculated
-  
+
   useEffect(() => {
     const today = new Date();
     const oneMonthFromNow = new Date(today);
@@ -54,7 +54,7 @@ function FinesCreate() {
     const formattedLimitDate = oneMonthFromNow.toISOString().split('T')[0]; // Esto te dará la fecha en formato YYYY-MM-DD
     setLimitDate(formattedLimitDate);
   }, []);
-  
+
   console.log(limitDate);
 
   const { data, load, error } = useFetchget("apartments");
@@ -148,8 +148,7 @@ function FinesCreate() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("antes de enviar: ", idApartment?.value);
-    // const url = 'https://apptowerbackend.onrender.com/api/fines';
-    const url = "http://localhost:3000/api/fines";
+    const url = `${import.meta.env.VITE_API_URL}fines`;
     const data = {
 
       // User logged
@@ -157,7 +156,7 @@ function FinesCreate() {
       idUserLogged: idUserLogged,
 
       fineType: fineType,
-      idApartment: idApartment?.value,
+      idApartment: id == null || id == undefined ? idApartment?.value : id,
       incidentDate: incidentDate,
       paymentDate: limitDate,
       amount: Math.round(parseFloat(amount) * 100) / 100,

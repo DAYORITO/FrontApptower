@@ -1,6 +1,6 @@
 export const useApiUpdate = async (dataToUpdate, endpoint, files) => {
   // const url = `https://apptowerbackend.onrender.com/api/`;
-  const url = "http://localhost:3000/api/";
+  const url = import.meta.env.VITE_API_URL;
 
   const formData = new FormData();
   for (const key in dataToUpdate) {

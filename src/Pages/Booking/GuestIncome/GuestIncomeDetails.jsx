@@ -37,8 +37,7 @@ const GuestIncomeDetails = () => {
   const token = Cookies.get("token");
   // API URL
 
-  const url = "http://localhost:3000/api/";
-  // const url = "https://apptowerbackend.onrender.com/api/"
+  const url = import.meta.env.VITE_API_URL;
 
   // guest income informacion
 
@@ -125,9 +124,8 @@ const GuestIncomeDetails = () => {
     setShowModaload(true);
 
     try {
-  
-      const guestIncomeUpdateUrl =
-        "http://localhost:3000/api/guestIncome";
+
+      const guestIncomeUpdateUrl = `${import.meta.env.VITE_API_URL}guestIncome`;
 
       const guestIncomeResponse = await useFetchForFile(
         guestIncomeUpdateUrl,
@@ -175,7 +173,7 @@ const GuestIncomeDetails = () => {
             icon="arrow-up-right"
             A1={`Ingreso de `}
             A2={`${asociatedVisitor?.name} ${asociatedVisitor?.lastname}`}
-            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento "+asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
+            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento " + asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
             A6={`Autoriza: ${personAllowsAccess}`}
             status={"Active"}
             actionOnClick2={!departureDate ? "Marcar salida" : null}
@@ -212,12 +210,12 @@ const GuestIncomeDetails = () => {
                 <li>
                   Se dirige a:{" "}
                   {
-                    asociatedApartment?.apartmentName != null 
+                    asociatedApartment?.apartmentName != null
                       ? (
                         <Link to={`/admin/apartments/details/${asociatedApartment?.idApartment}`}>
                           {`apartamento ${asociatedApartment?.apartmentName}`}
                         </Link>
-                      ) 
+                      )
                       : "Servicio del conjunto"
                   }
                 </li>

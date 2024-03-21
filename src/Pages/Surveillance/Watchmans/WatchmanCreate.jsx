@@ -123,7 +123,7 @@ export const WatchmanCreate = () => {
     const [isEmailTaken, setIsEmailTaken] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/document/${document}`)
+        fetch(`${import.meta.env.VITE_API_URL}users/document/${document}`)
             .then(response => response.json())
             .then(data => {
                 setIsDocumentTaken(data && data.message ? true : false);
@@ -135,7 +135,7 @@ export const WatchmanCreate = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/email/${email}`)
+        fetch(`${import.meta.env.VITE_API_URL}users/email/${email}`)
             .then(response => response.json())
             .then(data => {
                 setIsEmailTaken(data && data.message ? true : false);
@@ -185,7 +185,7 @@ export const WatchmanCreate = () => {
         }
 
         let userResponse;
-        userResponse = await useFetchForFile('http://localhost:3000/api/users', {
+        userResponse = await useFetchForFile(`${import.meta.env.VITE_API_URL}users`, {
             docType: documentType,
             name,
             email,
@@ -203,7 +203,7 @@ export const WatchmanCreate = () => {
         });
 
         if (userResponse.response) {
-            const watchmanResponse = await useFetchForFile('http://localhost:3000/api/watchman', {
+            const watchmanResponse = await useFetchForFile(`${import.meta.env.VITE_API_URL}watchman`, {
                 idEnterpriseSecurity: userResponse.response.idEnterpriseSecurity,
                 iduser: userResponse.response.iduser,
             });

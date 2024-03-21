@@ -121,7 +121,7 @@ export const UsersEdit = () => {
     }, [editedUser?.email]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/document/${editedUser.document}`)
+        fetch(`${import.meta.env.VITE_API_URL}users/document/${editedUser.document}`)
             .then(response => response.json())
             .then(data => {
                 setIsDocumentTaken(data && data.message ? true : false);
@@ -133,7 +133,7 @@ export const UsersEdit = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/email/${editedUser.email}`)
+        fetch(`${import.meta.env.VITE_API_URL}users/email/${editedUser.email}`)
             .then(response => response.json())
             .then(data => {
                 setIsEmailTaken(data && data.message ? true : false);
@@ -173,7 +173,7 @@ export const UsersEdit = () => {
                     }
                 });
 
-                const response = await fetch(`http://localhost:3000/api/users/${iduser}`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}users/${iduser}`, {
                     method: 'PUT',
                     body: formData,
                 });

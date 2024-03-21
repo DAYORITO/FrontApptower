@@ -29,7 +29,7 @@ export const AssignShiftsWatchman = () => {
 
     console.log("idwatchman", idWatch)
 
-    const url = 'http://localhost:3000/api/';
+    const url = import.meta.env.VITE_API_URL;
     const { data: watchman, get: getWatchman } = useFetch(url);
     const { data: ShiftsData, get: getshifts } = useFetch(url);
 

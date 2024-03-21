@@ -86,7 +86,7 @@ function GuestIncome() {
       // Si a o b tienen fecha de salida null, los ponemos primero
       if (a.departureDate === null) return -1;
       if (b.departureDate === null) return 1;
-  
+
       // Si ambos tienen fecha de salida, los ordenamos de forma descendente
       return new Date(b.departureDate) - new Date(a.departureDate);
     });
@@ -120,8 +120,7 @@ function GuestIncome() {
 
     try {
 
-      const guestIncomeUpdateUrl =
-        "http://localhost:3000/api/guestIncome";
+      const guestIncomeUpdateUrl = `${import.meta.env.VITE_API_URL}guestIncome`;
 
       const { response: guestIncomeResponse, error } = await useFetchForFile(
         guestIncomeUpdateUrl,
@@ -182,7 +181,7 @@ function GuestIncome() {
 
   function searcher(searchValue) {
     if (!searchValue) {
-      
+
       return setGuestIncomeData(originalGuestIncomeData);
     }
 
@@ -222,7 +221,7 @@ function GuestIncome() {
             <ButtonGoTo value="Crear Ingreso" href="create" />
           ) : null
         }
-        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage}/>}
+        showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
       >
         <TablePerson>
           <Thead>
@@ -262,7 +261,7 @@ function GuestIncome() {
               filteredDataguestIncome()?.map((Income) => (
                 <Row
                   A3="Ingreso a:"
-                  A4={Income.guestIncomeApartment ? Income?.guestIncomeApartment?.asociatedApartment?.apartmentName: "Servicio del conjunto"}
+                  A4={Income.guestIncomeApartment ? Income?.guestIncomeApartment?.asociatedApartment?.apartmentName : "Servicio del conjunto"}
                   A1={Income?.asociatedVisitor.name}
                   A2={Income?.asociatedVisitor.lastname}
                   A7={
