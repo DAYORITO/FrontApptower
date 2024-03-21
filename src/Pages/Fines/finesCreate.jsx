@@ -34,7 +34,7 @@ function FinesCreate() {
 
   const { id } = useParams();
   const [fineType, setFineType] = useState("");
-  const [idApartment, setIdApartment] = useState("");
+  const [idApartment, setIdApartment] = useState(id ? id : "");
   const [incidentDate, setIncidentDate] = useState("");
   const [limitDate, setLimitDate] = useState("");
   const [amount, setAmount] = useState("");
@@ -146,7 +146,7 @@ function FinesCreate() {
       idUserLogged: idUserLogged,
 
       fineType: fineType,
-      idApartment: idApartment?.value,
+      idApartment: id == null || id== undefined ? idApartment?.value : id,
       incidentDate: incidentDate,
       paymentDate: limitDate,
       amount: Math.round(parseFloat(amount) * 100) / 100,
