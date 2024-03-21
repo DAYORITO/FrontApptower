@@ -227,6 +227,7 @@ export const Watchman = () => {
         });
     }
 
+    filterData = filterData.sort((a, b) => b.user.iduser - a.user.iduser);
 
 
 
@@ -281,7 +282,7 @@ export const Watchman = () => {
                         : null
                 }
                 showPaginator={
-                    watchmanData ?
+                    watchmanData && watchmanData.length > 0 ?
                         <Paginator
                             totalPages={totalPages}
                             currentPage={currentPage}

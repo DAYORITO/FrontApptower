@@ -30,6 +30,7 @@ export const UsersEdit = () => {
     const [errors, setErrors] = useState([]);
 
 
+    console.log(editedUser, "editedUser")
 
 
     const birthDate = new Date(editedUser.birthday);
@@ -81,7 +82,8 @@ export const UsersEdit = () => {
                 pdf: user.pdf,
                 newFile: user.pdf,
                 status: user.status,
-                userImg: null
+                userImg: null,
+
             });
             setUsersData([user]);
         }
@@ -156,10 +158,18 @@ export const UsersEdit = () => {
                     if (key === 'userImg' && editedUser[key] === null) {
                         return;
                     }
-                    if ((key === 'pdf' || key === 'newFile') && editedUser[key]) {
-                        formData.append(key, editedUser[key]);
+                    if (key === 'status') {
+                        // formData.append(key, editedUser.status);
+                        formData.append('state', editedUser.status);
+                    }
+                    if (key === 'sex') {
+                        formData.append(key, "No proporcionado");
                     } else {
-                        formData.append(key, editedUser[key]);
+                        if ((key === 'pdf' || key === 'newFile') && editedUser[key]) {
+                            formData.append(key, editedUser[key]);
+                        } else {
+                            formData.append(key, editedUser[key]);
+                        }
                     }
                 });
 
@@ -193,6 +203,15 @@ export const UsersEdit = () => {
                     Swal.fire({
                         title: 'Error',
                         text: 'Debe de ser mayor de edad',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                if (!editedUser?.pdf) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Debe de subir un documento',
                         icon: 'error',
                     });
                     return;
@@ -332,10 +351,13 @@ export const UsersEdit = () => {
     // Traer empresas de seguridad
     const { data: dataEnterprice, load4, error4 } = useFetchget('enterpricesecurity')
     const { data: dataWatchman, load5, error5 } = useFetchget('watchman')
-    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
-    const userWatchman = Array.isArray(dataWatchman.watchman) ? dataWatchman.watchman.find(watchman => watchman.iduser === editedUser.iduser) : null;
-    const enterpriceWatchman = userWatchman ? userWatchman.idEnterpriseSecurity : null;
+
+    const userWatchman = Array.isArray(dataWatchman?.watchman) ? dataWatchman?.watchman?.find(watchman => watchman.iduser === editedUser.iduser) : null;
+    console.log(userWatchman, "userWatchman");
+    const enterpriceWatchman = userWatchman ? userWatchman?.idEnterpriseSecurity : null;
+
+    const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
     const enterpriceOptions = dataEnterprice && dataEnterprice.enterpriseSecurity
         ? dataEnterprice.enterpriseSecurity
@@ -353,14 +375,31 @@ export const UsersEdit = () => {
         }
     }, [userWatchman]);
 
+    useEffect(() => {
+        const enterprice = enterpriceOptions.find(option => option.value === enterpriceWatchman);
+        setSelectedEnterprice(enterprice);
+    }, [enterpriceWatchman]);
+
 
     const handleEnterpriceSecurity = (selectedOption) => {
         setErrors([]);
         setSelectedEnterprice(selectedOption);
-        setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedOption.value });
+        setEditedUser(prevState => ({
+            ...prevState,
+            idEnterpriseSecurity: selectedOption.value
+        }));
     };
 
 
+    useEffect(() => {
+        setEditedUser(prevState => ({
+            ...prevState,
+            idEnterpriseSecurity: enterpriceWatchman
+        }));
+    }, [enterpriceWatchman]);
+
+
+    console.log(editedUser, "editedUser");
 
     //Traer tipo de residencia
     const { data: dataResidentType, load6, error6 } = useFetchget('residents')
@@ -369,6 +408,7 @@ export const UsersEdit = () => {
 
     //Traer Apartamentos
     const ResidentApartament = userResidente && userResidente.apartments.length > 0 ? userResidente.apartments[0]?.idApartment : null;
+
 
     const [residentType, setResidentType] = useState(residentTypeUser);
     const [idApartment, setApartment] = useState(ResidentApartament);
@@ -392,6 +432,8 @@ export const UsersEdit = () => {
             idApartment: idApartmentNumber
         }));
     }, [idApartment]);
+
+    console.log(selectedEnterprice, "selectedEnterprice");
 
     return (
 
@@ -560,7 +602,7 @@ export const UsersEdit = () => {
                                 </FormColumn>
 
                             </>
-                        ) : nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') ? (
+                        ) : nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? (
                             <>
 
 
@@ -617,7 +659,6 @@ export const UsersEdit = () => {
                                         onChange={handleEnterpriceSecurity}
                                         options={enterpriceOptions}
                                         value={selectedEnterprice}
-
                                         errors={errors}
                                         identifier={"idEnterpriseSecurity"}
                                     />
@@ -631,7 +672,7 @@ export const UsersEdit = () => {
 
                                     <Uploader
                                         name='pdf'
-                                        label='Documento de Identidad'
+                                        label='Carga de documento'
                                         formatos='.pdf'
                                         onChange={e => setEditedUser({ ...editedUser, pdf: e.target.files[0], newFile: e.target.files[0] })}
                                         validate={shouldValidate}

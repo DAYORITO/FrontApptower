@@ -67,6 +67,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                     setShowModaload(false);
                     return;
                 }
+
                 else {
                     if (responseData.role) {
                         const role = responseData.role.toLowerCase();
@@ -117,7 +118,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                 <div className="form-information-childs">
                     <img src={ImageIcono} alt="" className='iconperson' />
                     <form className="form" onSubmit={handleLogin}>
-                        <InputsLogIn placeholder='Usuario' type='text' value={username} onChange={(newValue) => setUsername(newValue)} onKeyPress={handleKeyPress} errors={error} identifier={'usuario'} />
+                        <InputsLogIn placeholder='Correo' type='text' value={username} onChange={(newValue) => setUsername(newValue)} onKeyPress={handleKeyPress} errors={error} identifier={'usuario'} />
                         <InputsLogIn placeholder='Contraseña' type='password' value={loginPassword} onChange={(newValue) => setLoginPassword(newValue)} onKeyPress={handleKeyPress} errors={error} identifier={'password'} />
 
                         <div>
