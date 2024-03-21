@@ -227,6 +227,7 @@ export const Watchman = () => {
         });
     }
 
+    filterData = filterData.sort((a, b) => b.user.iduser - a.user.iduser);
 
 
 

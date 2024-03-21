@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import io from 'socket.io-client';
 import { LoadingPage } from '../Pages/PagesAdicional/Loading';
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -11,7 +12,6 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState([{}]);
-
 
     console.log(error, 'error AuthContext');
 
@@ -30,20 +30,10 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             if (!response.ok) {
-                let errorMessage = 'Usuario o contraseña incorrectos.';
-                if (data.message === 'Ha ocurrido un problema, comunícate con el Administrador') {
-                    errorMessage = 'Ocurrio algo inesperado, Comunicate con el administrador.';
-                }
-
-                Cookies.set('token', data.token);
-                const tokenExpiryDate = new Date();
-                tokenExpiryDate.setSeconds(tokenExpiryDate.getSeconds() + data.expires_in);
-                setTokenExpiry(tokenExpiryDate);
-
                 Swal.fire({
                     icon: 'error',
                     title: '¡Error!',
-                    text: errorMessage,
+                    text: 'Usuario o contraseña incorrectos.',
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -83,85 +73,42 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-   
-
 
     const fetchUserData = (token) => {
-        return fetch('http://localhost:3000/api/login/access', {
+        return fetch('https://apptowerbackend.onrender.com/api/login/access', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
             credentials: 'include',
         })
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 401) {
-                    // Si el token ha expirado, muestra el SweetAlert y refresca el token
-                    return Swal.fire({
-                        title: '¡Atención!',
-                        text: 'Tu sesión ha expirado. ¿Deseas renovarla?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Sí',
-                        cancelButtonText: 'No',
-                    }).then(async (result) => {
-                        if (result.isConfirmed) {
-                            try {
-                                const refreshResponse = await fetch('http://localhost:3000/api/login/refreshToken', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Authorization': `Bearer ${Cookies.get('token')}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    credentials: 'include',
-                                });
-    
-                                if (!refreshResponse.ok) {
-                                    throw new Error('Error al renovar el token');
-                                }
-    
-                                const refreshData = await refreshResponse.json();
-                                Cookies.set('token', refreshData.token);
-                                // Una vez renovado el token, vuelve a intentar obtener los datos del usuario
-                                return fetchUserData(refreshData.token);
-                            } catch (error) {
-                                console.error('Error al renovar el token:', error);
-                                // Maneja el error de renovación de token aquí
-                                throw new Error('Error al renovar el token');
-                            }
-                        } else {
-                            throw new Error('El usuario no desea renovar la sesión');
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al obtener el usuario');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data?.user) {
+                    try {
+                        const user = JSON.parse(decodeURIComponent(data.user));
+                        if (user) {
+                            setUser(user);
+                            setIsLoggedIn(true);
+                            Cookies.set('isLoggedIn', 'true');
                         }
-                    });
-                }
-                throw new Error('Error al obtener el usuario');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data?.user) {
-                try {
-                    const user = JSON.parse(decodeURIComponent(data.user));
-                    if (user) {
-                        setUser(user);
-                        setIsLoggedIn(true);
-                        Cookies.set('isLoggedIn', 'true');
+                    } catch (e) {
+                        console.error('Error parsing user data:', e);
                     }
-                } catch (e) {
-                    console.error('Error parsing user data:', e);
-                    throw new Error('Error al parsear los datos del usuario');
                 }
-            }
-        })
-        .catch(error => {
-            console.error('Error al obtener el usuario:', error.message);
-            setIsLoggedIn(false);
-            setUser(null);
-            Cookies.set('isLoggedIn', 'false');
-        });
+            })
+            .catch(error => {
+                console.error('Error al obtener el usuario:', error.message);
+                setIsLoggedIn(false);
+                setUser(null);
+                Cookies.set('isLoggedIn', 'false');
+            });
     };
-    
 
     useEffect(() => {
         const token = Cookies.get('token');

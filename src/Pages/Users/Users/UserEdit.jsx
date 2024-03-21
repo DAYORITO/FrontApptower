@@ -30,6 +30,7 @@ export const UsersEdit = () => {
     const [errors, setErrors] = useState([]);
 
 
+    console.log(editedUser, "editedUser")
 
 
     const birthDate = new Date(editedUser.birthday);
@@ -81,7 +82,8 @@ export const UsersEdit = () => {
                 pdf: user.pdf,
                 newFile: user.pdf,
                 status: user.status,
-                userImg: null
+                userImg: null,
+
             });
             setUsersData([user]);
         }
@@ -201,6 +203,15 @@ export const UsersEdit = () => {
                     Swal.fire({
                         title: 'Error',
                         text: 'Debe de ser mayor de edad',
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                if (!editedUser?.pdf) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Debe de subir un documento',
                         icon: 'error',
                     });
                     return;
@@ -342,8 +353,9 @@ export const UsersEdit = () => {
     const { data: dataWatchman, load5, error5 } = useFetchget('watchman')
 
 
-    const userWatchman = Array.isArray(dataWatchman.watchman) ? dataWatchman.watchman.find(watchman => watchman.iduser === editedUser.iduser) : null;
-    const enterpriceWatchman = userWatchman ? userWatchman.idEnterpriseSecurity.value : null;
+    const userWatchman = Array.isArray(dataWatchman?.watchman) ? dataWatchman?.watchman?.find(watchman => watchman.iduser === editedUser.iduser) : null;
+    console.log(userWatchman, "userWatchman");
+    const enterpriceWatchman = userWatchman ? userWatchman?.idEnterpriseSecurity : null;
 
     const [selectedEnterprice, setSelectedEnterprice] = useState(null);
 
@@ -364,14 +376,28 @@ export const UsersEdit = () => {
     }, [userWatchman]);
 
     useEffect(() => {
-        setSelectedEnterprice(enterpriceWatchman);
+        const enterprice = enterpriceOptions.find(option => option.value === enterpriceWatchman);
+        setSelectedEnterprice(enterprice);
     }, [enterpriceWatchman]);
+
 
     const handleEnterpriceSecurity = (selectedOption) => {
         setErrors([]);
         setSelectedEnterprice(selectedOption);
-        setEditedUser({ ...editedUser, idEnterpriseSecurity: selectedOption.value });
+        setEditedUser(prevState => ({
+            ...prevState,
+            idEnterpriseSecurity: selectedOption.value
+        }));
     };
+
+
+    useEffect(() => {
+        setEditedUser(prevState => ({
+            ...prevState,
+            idEnterpriseSecurity: enterpriceWatchman
+        }));
+    }, [enterpriceWatchman]);
+
 
     console.log(editedUser, "editedUser");
 
@@ -406,6 +432,8 @@ export const UsersEdit = () => {
             idApartment: idApartmentNumber
         }));
     }, [idApartment]);
+
+    console.log(selectedEnterprice, "selectedEnterprice");
 
     return (
 
@@ -574,7 +602,7 @@ export const UsersEdit = () => {
                                 </FormColumn>
 
                             </>
-                        ) : nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') ? (
+                        ) : nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? (
                             <>
 
 
@@ -631,7 +659,6 @@ export const UsersEdit = () => {
                                         onChange={handleEnterpriceSecurity}
                                         options={enterpriceOptions}
                                         value={selectedEnterprice}
-
                                         errors={errors}
                                         identifier={"idEnterpriseSecurity"}
                                     />

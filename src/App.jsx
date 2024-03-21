@@ -88,7 +88,7 @@ const App = () => {
             const userRole = data?.rols?.find(role => role.idrole === userData?.user?.idrole)?.namerole;
             setNameRole(userRole);
         }
-        
+
     }, [data, userData]);
 
     //Consulta Privilegios
@@ -284,8 +284,9 @@ const App = () => {
 
                                 {/* Towers */}
                                 <Route path='towers' element={
-                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
-                                        <Towers /> : <NotFound />
+                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar')
+                                        ? (nameRole.toLowerCase().includes('residente') ? null : <Towers />)
+                                        : <NotFound />
                                 } />
 
 
@@ -382,14 +383,16 @@ const App = () => {
                                         <Booking /> : <NotFound />
                                 } />
 
+                                <Route path='booking/calendar/:id?' element={
+                                    <BookingCalendar />
+                                } />
+
+
                                 <Route path='booking/details/:id' element={
                                     allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Listar') ?
                                         <BookingDetails /> : <NotFound />
                                 } />
 
-                                <Route path='booking/calendar/:id?' element={
-                                    <BookingCalendar />
-                                } />
 
 
                                 {/* Vehicles */}

@@ -19,11 +19,13 @@ export const ModalContainer = ({ children, showModal }) => {
   );
 };
 
-export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false, horasDisponibles }) => {
+export const Modal = ({ title, showSave = true, children, showModal, onClick, onClickClose, onClickForDelete, buttonDelete = false, hoursAvailable, toolTip = false }) => {
 
   const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
   const [loading, setLoading] = useState(false);
-  const tooltipContent = `${horasDisponibles}`;
+  const tooltipContent = `${hoursAvailable}`;
+
+  <div />
 
   const handleClick = async (e) => {
     setLoading(true);
@@ -67,22 +69,28 @@ export const Modal = ({ title, showSave = true, children, showModal, onClick, on
             </div>
 
             <div className="modal-footer">
-              <img
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={tooltipContent}
-                src='https://icons.veryicon.com/png/o/object/home-icon-5/home-clock.png'
-                className="lightbulb"
-                data-tip="Horas"
-                data-for="tooltip1"
-              />
+              {toolTip ?
+                <>
+                  <img
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={tooltipContent}
+                    src='https://icons.veryicon.com/png/o/object/home-icon-5/home-clock.png'
+                    className="lightbulb"
+                    data-tip="Horas"
+                    data-for="tooltip1"
+                  />
 
+                  <Tooltip id="my-tooltip" className="my-tooltip" />
+                </>
 
-
-              <Tooltip id="my-tooltip" className="my-tooltip" />
+                : null}
               <button
                 type="button"
                 className="btn mb-2 btn-secondary"
-                onClick={() => { showModal(false); }}
+                onClick={(e) => {
+                  showModal(false);
+                }}
+
               >
                 Cerrar
               </button>

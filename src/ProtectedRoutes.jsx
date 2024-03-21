@@ -23,7 +23,6 @@ export const ProtectedRoutes = () => {
         return <LoadingPage />;
     }
 
-
     if (!isLoggedIn) {
         return <LogIn />;
     }

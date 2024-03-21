@@ -42,7 +42,7 @@ export const Users = () => {
 
     let userList = filter(search, UserData?.data?.user, "name")
 
-    userList = userList.sort((a, b) => a.iduser - b.iduser);
+    userList = userList.sort((a, b) => b.iduser - a.iduser);
 
     const searcher = (e) => {
 
