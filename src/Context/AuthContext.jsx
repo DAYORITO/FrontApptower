@@ -47,6 +47,8 @@ export const AuthProvider = ({ children }) => {
             setError(response.errors);
 
             Cookies.set('token', data.token);
+            Cookies.set('user', data.user);
+            Cookies.set('permisosAndPrivileges', data.permisosAndPrivileges);
             if (data.user && typeof data.user === 'string') {
                 try {
                     const user = JSON.parse(decodeURIComponent(data.user));
