@@ -345,7 +345,12 @@ export const useAllowedPermissions = (idToPermissionName) => {
     const PermissionsUser = Cookies.get("permisosAndPrivileges");
 
     if (PermissionsUser) {
-      const privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
+      let privileges;
+      try {
+        privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
+      } catch (error) {
+        console.error("Error parsing PermissionsUser", error);
+      }
 
       if (privileges) {
         const permissions = privileges.map(
@@ -378,9 +383,12 @@ export const useAllowedPermissionsAndPrivileges = (
     const permisosAndPrivileges = Cookies.get("permisosAndPrivileges");
 
     if (permisosAndPrivileges) {
-      const privileges = JSON.parse(
-        permisosAndPrivileges
-      ).PermissionsAndPrivileges;
+      let privileges;
+      try {
+        privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+      } catch (error) {
+        console.error("Error parsing permisosAndPrivileges", error);
+      }
 
       if (privileges) {
         const allowedPermissions = {};
