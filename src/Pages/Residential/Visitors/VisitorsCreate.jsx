@@ -72,7 +72,7 @@ function VisitorsCreate() {
         //   modalButton={
         //   <ModalButton name={"Agregar visitante"} onClick={() => setShowModal(true)} />
         // }
-        buttons={<FormButton name={"Crear"} backButton={"regresar"} onClick={handleSubmit} />}
+        buttons={<FormButton name={"Crear"} backButton={"Cancelar"} onClick={handleSubmit} />}
       >
         <InputsSelect name="Tipo de documento" identifier={"documentType"} value={documentType} errors={errors} options={docTypes} onChange={(e) => setDocumentType(e.target.value)} />
         <Inputs name="Numero Documento" identifier={"documentNumber"} value={document} required={true} validateData={visitorsData?.data?.visitors} errors={errors} onChange={(e) => setDocument(e.target.value)} />
