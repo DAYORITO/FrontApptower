@@ -11,25 +11,23 @@ import { useNavigate } from 'react-router-dom';
 export const ResetPassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState([{}]);
+    const [showModaload, setShowModaload] = useState(false);
 
     const email = Cookies.get('email');
     const navigate = useNavigate();
 
     const handleResetPassword = async (event) => {
         event.preventDefault();
-
-        if (password !== confirmPassword) {
-            Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
-            return;
-        }
+        setShowModaload(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}users/reset`, {
+            const response = await fetch(`http://localhost:3000/api/users/reset`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, newPassword: password }),
+                body: JSON.stringify({ email, newPassword: password, confirmPassword: confirmPassword }),
             });
 
 
@@ -46,21 +44,24 @@ export const ResetPassword = () => {
 
 
             } else {
-                Swal.fire('Error', data.message, 'error');
+                if (data.errors && data.errors.length > 0) {
+                    setError(data.errors);
+
+                    Swal.fire('Error', data.errors[0].message, 'error');
+                } else {
+                    Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                }
             }
+
+            setShowModaload(false);
 
         } catch (error) {
             console.error('Error al restablecer la contraseña:', error);
-
-            // Mostrar un mensaje de error más específico o realizar otras acciones según el tipo de error.
-            if (error instanceof TypeError) {
-                Swal.fire('Error', 'Error de tipo al restablecer la contraseña', 'error');
-            } else if (error instanceof SyntaxError) {
-                Swal.fire('Error', 'Error de sintaxis al restablecer la contraseña', 'error');
-            } else {
-                Swal.fire('Error', 'Ocurrió un error al restablecer la contraseña', 'error');
-            }
+            Swal.fire('Error', 'Ocurrió un error al restablecer la contraseña', 'error');
+        } finally {
+            setShowModaload(false);
         }
+
     }
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -89,18 +90,33 @@ export const ResetPassword = () => {
                                 value={password}
                                 onChange={(newValue) => setPassword(newValue)}
                                 onKeyPress={handleKeyPress}
+                                errors={error}
+                                identifier={'newPassword'}
                             />
 
 
                             <InputsLogIn
-                                placeholder='Confirma tu contraseña'
+                                placeholder='Confirmar contraseña'
                                 type='password'
                                 onKeyPress={handleKeyPress}
                                 value={confirmPassword}
                                 onChange={(newValue) => setConfirmPassword(newValue)}
+                                errors={error}
+                                identifier={'confirmPassword'}
 
                             />
-                            <button className='boton-login' type='submit'>Restablecer contraseña</button>
+
+                            <button className='boton-login' type='submit' disabled={showModaload}>
+                                {showModaload ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Restableciendo...
+                                    </>
+                                ) : (
+                                    <>
+                                        Restablecer contraseña
+                                    </>
+                                )}
+                            </button>
                         </form>
                     </div>
                 </div>

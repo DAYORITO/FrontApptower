@@ -5,15 +5,19 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { set } from 'date-fns';
 
 
 export const RecoverPassword = () => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
+    const [error, setError] = useState([{}]);
+    const [showModaload, setShowModaload] = useState(false);
 
     const handleEmailSubmit = async (e) => {
         e.preventDefault();
+        setShowModaload(true);
 
         try {
             const userCheck = await fetch(`${import.meta.env.VITE_API_URL}email`, {
@@ -57,6 +61,8 @@ export const RecoverPassword = () => {
                         showConfirmButton: false,
                         timer: 1500
                     });
+                    setError(error.errors);
+                    setShowModaload(false);
                 }
             } else {
                 const error = await userCheck.json();
@@ -64,13 +70,16 @@ export const RecoverPassword = () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se encontró el correo proporcionado',
+                    text: error.errors[0].message,
                     showConfirmButton: false,
                     timer: 1500
                 });
+                setError(error.errors);
+                setShowModaload(false);
             }
         } catch (error) {
             console.error('Error al enviar el correo electrónico:', error);
+
         }
     };
 
@@ -96,12 +105,24 @@ export const RecoverPassword = () => {
 
                         <form className="form" onSubmit={handleEmailSubmit}>
                             {/* <p>Ingresa tu correo  </p> */}
-                            <InputsLogIn placeholder='Correo' type='email' value={email} onChange={(newValue) => setEmail(newValue)} onKeyPress={handleKeyPress} />
+                            <InputsLogIn placeholder='Correo' type='email' errors={error} identifier={'email'} value={email} onChange={(newValue) => setEmail(newValue)} onKeyPress={handleKeyPress} />
 
-                            <button className='boton-login'>Enviar Código</button><br />
+                            <button className='boton-login' disabled={showModaload}>
+                                {showModaload ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Validando...
+                                    </>
+                                ) : (
+                                    <>
+                                        Enviar Código
+                                    </>
+                                )}
+                            </button>
+
                             <div>
-                                <Link to="/" class="buttonStyle" id="sign-up">Regresar</Link>
+                                <Link to="/" className="buttonStyle" id="sign-up">Regresar</Link>
                             </div>
+
                         </form>
 
                     </div>
