@@ -235,7 +235,7 @@ const GuestIncomeDetails = () => {
             </DropdownInfo>
           </Acordions>
 
-          {guestIncomeParking ? (
+          {guestIncomeParking?.asociatedParkingSpace ? (
             <Acordions>
               <DropdownInfo
                 name={`Parqueadero asignado`}

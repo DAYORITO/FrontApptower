@@ -170,13 +170,16 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 
     Object.keys(data).forEach((key) => {
       if (Array.isArray(data[key])) {
-        data[key].forEach((file, index) => {
-          formData.append(`${key}${index}`, file);
-        });
+          data[key].forEach((file) => {
+              formData.append(key, file);
+          });
       } else {
-        formData.append(key, data[key]);
+          formData.append(key, data[key]);
       }
     });
+  for (let pair of formData.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]); 
+}
 
     const response = await fetch(url, {
       method: method,
@@ -184,7 +187,7 @@ export const useFetchForFile = async (url, data, method = "POST") => {
       signal,
     });
 
-    console.log(formData);
+    
 
     if (!response.ok) {
       const errorData = await response.json();
