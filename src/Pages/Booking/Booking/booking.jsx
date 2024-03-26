@@ -1,5 +1,5 @@
 import { BigCard } from "../../../Components/BigCard/BigCard";
-import { ButtonGoTo, SearchButton } from "../../../Components/Buttons/Buttons";
+import { ButtonGoTo, DropdownExcel, SearchButton } from "../../../Components/Buttons/Buttons";
 import { ContainerTable } from "../../../Components/ContainerTable/ContainerTable";
 import { TablePerson } from "../../../Components/Tables/Tables";
 import { useEffect, useState } from "react";
@@ -16,14 +16,19 @@ import { name } from "dayjs/locale/es";
 export const Booking = () => {
   const token = Cookies.get('token');
 
-  // const url = "http://localhost:3000/api/"
-  const url = "https://apptowerbackend.onrender.com/api/"
+  const url = import.meta.env.VITE_API_URL
 
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
 
   //Consulta Privilegios
 
   const allowedPermissions = useAllowedPermissionsAndPrivileges(idToPermissionName, idToPrivilegesName);
+
+  const { idUserLogged, idRolLogged } = useUserLogged()
+
+  const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
+
+  const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
 
 
   useEffect(() => {
@@ -115,6 +120,7 @@ export const Booking = () => {
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona común' />}
         showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
         buttonToGo={<ButtonGoTo value='Todas las reservas' href='calendar/' />}
+        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table="bookings" />) : <DropdownExcel table="bookings" />}
 
       >
         <TablePerson>

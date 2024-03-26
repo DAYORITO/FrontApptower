@@ -12,7 +12,8 @@ import InputTextArea from "../../../Components/Inputs/InputTextArea"
 
 
 export const VehicleCreate = (props) => {
-    const url = "http://localhost:3000/api/"
+    
+    const url = import.meta.env.VITE_API_URL;
 
     // Socket
 

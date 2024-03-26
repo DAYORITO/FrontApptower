@@ -54,8 +54,6 @@ function Fines() {
 
     const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
 
-
-
     const filterOptions = [{ label: 'Fecha incidente', value: "incidentDate" },
     { label: 'Fecha límite de pago', value: 'paymentDate' },
     // { label: 'Fecha de creación', value: "createdAt" },
@@ -156,29 +154,29 @@ function Fines() {
             // Primero, las multas "Por aprobar"
             if (a.state === "Por aprobar" && b.state !== "Por aprobar") return -1;
             if (a.state !== "Por aprobar" && b.state === "Por aprobar") return 1;
-    
+
             // Si ambos son "Por aprobar", comparar por fecha
             if (a.state === "Por aprobar" && b.state === "Por aprobar") {
                 const dateA = new Date(a.createdAt);
                 const dateB = new Date(b.createdAt);
                 return dateB - dateA;
             }
-    
+
             // Luego, las multas "Pendiente"
             if (a.state === "Pendiente" && b.state !== "Pendiente") return -1;
             if (a.state !== "Pendiente" && b.state === "Pendiente") return 1;
-    
+
             // Si ambos son "Pendiente", comparar por fecha
             if (a.state === "Pendiente" && b.state === "Pendiente") {
                 const dateA = new Date(a.createdAt);
                 const dateB = new Date(b.createdAt);
                 return dateB - dateA;
             }
-    
+
             // Finalmente, las multas "Pagada"
             if (a.state === "Pagada" && b.state !== "Pagada") return 1;
             if (a.state !== "Pagada" && b.state === "Pagada") return -1;
-    
+
             // Si ambos son "Pagada", comparar por fecha
             if (a.state === "Pagada" && b.state === "Pagada") {
                 const dateA = new Date(a.createdAt);
@@ -193,7 +191,7 @@ function Fines() {
         setShowModaload(true);
 
         //se llama a la funcion useApiUpdate y se le pasa como parametro los datos que se van a actualizar y el endpoint
-        let response = await useFetchForFile('http://localhost:3000/api/fines', dataToUpdate, 'PUT')
+        let response = await useFetchForFile(`${import.meta.env.VITE_API_URL}fines`, dataToUpdate, 'PUT')
         // .then((responseData) => {
 
         console.log("respuesta de api holi", response)
@@ -244,10 +242,19 @@ function Fines() {
     const [currentPage, setCurrentPage] = useState(0);
 
     const filteredDatafines = () => {
-        if (data && data.fines && fines.length > 0) {
-            return fines?.slice(currentPage, currentPage + 8);
+        if (nameRole && (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia'))) {
+            if (data && data.fines && fines.length > 0) {
+                const userFines = fines.filter(fine => fine.iduser === idUserLogged);
+                return userFines?.slice(currentPage * 8, currentPage * 8 + 8);
+            } else {
+                return [];
+            }
         } else {
-            return [];
+            if (data && data.fines && fines.length > 0) {
+                return fines?.slice(currentPage * 8, currentPage * 8 + 8);
+            } else {
+                return [];
+            }
         }
     };
 

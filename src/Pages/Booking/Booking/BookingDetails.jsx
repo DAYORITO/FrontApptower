@@ -32,8 +32,7 @@ export const BookingDetails = () => {
     const token = Cookies.get('token');
     // API URL
 
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
+    const url = import.meta.env.VITE_API_URL;
 
     // Socket
 
@@ -43,7 +42,7 @@ export const BookingDetails = () => {
 
     const { id } = useParams();
 
-    const { idUserLogged } = useUserLogged()
+    const { idUserLogged, idRolLogged } = useUserLogged()
 
 
     const [idBooking, setIdBooking] = useState(Number(id))
@@ -73,10 +72,19 @@ export const BookingDetails = () => {
 
     const { data: booking, get: getBooking, loading: loadingBooking } = useFetch(url)
     const { data: spaces, get: getSpaces, loading } = useFetch(url)
+    const { data: rols, get: getRols } = useFetch(url)
+
+    console.log(booking, 'booking')
+
+    let nameRole = rols?.data?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole
+
+    if (nameRole) {
+        nameRole = nameRole.toLowerCase()
+    }
 
     const nameSpace = spaces?.data?.spaces?.find(space => space.idSpace === Number(idSpace))?.spaceName
 
-    console.log('nameSpace: ', nameSpace)
+
     //Consulta Permisos
 
     const allowedPermissions = useAllowedPermissions
@@ -104,6 +112,10 @@ export const BookingDetails = () => {
     useEffect(() => {
         getSpaces('spaces')
     }, [idSpace])
+
+    useEffect(() => {
+        getRols('rols')
+    }, [idRolLogged])
 
 
     useEffect(() => {
@@ -184,24 +196,30 @@ export const BookingDetails = () => {
 
     }
 
+    const [isBookingProcessed, setIsBookingProcessed] = useState(false);
+
     const approveBooking = async (event) => {
         const data = {
+            idUserLogged: idUserLogged,
             status: 'Aprobado',
             idbooking: id
         }
 
-        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, null);
+        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, socket);
         getBooking(`booking/one/${id}`)
+        setIsBookingProcessed(true);
     }
 
     const cancelBooking = async (event) => {
         const data = {
+            idUserLogged: idUserLogged,
             status: 'Cancelado',
             idbooking: id
         }
 
-        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, null);
+        await postRequest(event, 'booking/status', 'PUT', null, data, url, setErrorList, null, socket);
         getBooking(`booking/one/${id}`)
+        setIsBookingProcessed(true);
     }
 
 
@@ -225,11 +243,11 @@ export const BookingDetails = () => {
                             A6={`Contacto residente: ${Resident?.user?.email} | ${Resident?.user?.phone}`}
                             status={status}
 
-                            onClick3={approveBooking}
-                            actionOnClick3={`Aprobar`}
+                            onClick3={isBookingProcessed ? null : approveBooking}
+                            actionOnClick3={nameRole && nameRole.includes('residente') ? null : `Aprobar`}
 
-                            onClick2={cancelBooking}
-                            actionOnClick2={`Cancelar`}
+                            onClick2={isBookingProcessed ? null : cancelBooking}
+                            actionOnClick2={nameRole && nameRole.includes('residente') ? null : `Cancelar`}
                         // onClick2={EqualUser ? openModalChangePassword : null}
                         // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? true : false}
                         // onClickEdit={setShowModalEditApartment}

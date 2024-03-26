@@ -15,8 +15,9 @@ import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { Spinner } from 'react-bootstrap'
 
 export const Users = () => {
-    const url = "http://localhost:3000/api/"
-    // const url = "https://apptowerbackend.onrender.com/api/"
+
+
+    const url = import.meta.env.VITE_API_URL
 
     // Get Data
 
@@ -42,7 +43,7 @@ export const Users = () => {
 
     let userList = filter(search, UserData?.data?.user, "name")
 
-    userList = userList.sort((a, b) => a.iduser - b.iduser);
+    userList = userList.sort((a, b) => b.iduser - a.iduser);
 
     const searcher = (e) => {
 

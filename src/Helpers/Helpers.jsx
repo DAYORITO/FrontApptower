@@ -15,9 +15,16 @@ export const useUserLogged = () => {
     const encodedUser = Cookies.get('user');
     if (encodedUser) {
       const decodedUser = decodeURIComponent(encodedUser);
-      const userLogged = JSON.parse(decodedUser);
-      setIdUserLogged(userLogged.iduser);
-      setIdRolLogged(userLogged.idrole);
+      let userLogged;
+      try {
+        userLogged = JSON.parse(decodedUser);
+      } catch (error) {
+        console.error("Error parsing decodedUser", error);
+      }
+      if (userLogged) {
+        setIdUserLogged(userLogged.iduser);
+        setIdRolLogged(userLogged.idrole);
+      }
     }
   }, []);
 

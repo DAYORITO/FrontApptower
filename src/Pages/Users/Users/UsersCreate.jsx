@@ -105,7 +105,7 @@ export const UsersCreate = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/document/${document}`)
+        fetch(`${import.meta.env.VITE_API_URL}users/document/${document}`)
             .then(response => response.json())
             .then(data => {
                 setIsDocumentTaken(data && data.message ? true : false);
@@ -117,7 +117,7 @@ export const UsersCreate = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/users/email/${email}`)
+        fetch(`${import.meta.env.VITE_API_URL}users/email/${email}`)
             .then(response => response.json())
             .then(data => {
                 setIsEmailTaken(data && data.message ? true : false);
@@ -166,7 +166,7 @@ export const UsersCreate = () => {
         }
 
         try {
-            const userResponse = await useFetchForFile('http://localhost:3000/api/users', {
+            const userResponse = await useFetchForFile(`${import.meta.env.VITE_API_URL}users`, {
 
                 // User logged
 
@@ -195,13 +195,13 @@ export const UsersCreate = () => {
 
                 if (namerole === 'Residente' || namerole === 'Residentes') {
 
-                    await useFetchForFile('http://localhost:3000/api/residents', {
+                    await useFetchForFile(`${import.meta.env.VITE_API_URL}residents`, {
                         residentType: userResponse.response.residentType,
                         iduser: userResponse.response.iduser,
                         idApartment: userResponse.response.idApartment,
                     });
                 } else if (namerole === 'Vigilante' || namerole === 'Vigilantes' || namerole === 'Seguridad') {
-                    await useFetchForFile('http://localhost:3000/api/watchman',
+                    await useFetchForFile(`${import.meta.env.VITE_API_URL}watchman`,
                         {
                             iduser: userResponse.response.iduser,
                             idEnterpriseSecurity: userResponse.response.idEnterpriseSecurity,

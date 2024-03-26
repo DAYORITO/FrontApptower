@@ -32,7 +32,7 @@ import { SocketContext } from '../../../Context/SocketContext'
 export const Residents = () => {
     const token = Cookies.get('token');
 
-    const url = "http://localhost:3000/api/"
+    const url = import.meta.env.VITE_API_URL;
     // const url = "https://apptowerbackend.onrender.com/api/
 
     // Socket
@@ -332,7 +332,7 @@ export const Residents = () => {
         <>
             <ContainerTable
                 title='Residentes'
-                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table='residents' />) :  <DropdownExcel table='residents' />}
+                dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table='residents' />) : <DropdownExcel table='residents' />}
                 search={<SearchButton value={search} onChange={searcher} />}
                 buttonToGo={
                     allowedPermissions['Residentes'] && allowedPermissions['Residentes'].includes('Crear')

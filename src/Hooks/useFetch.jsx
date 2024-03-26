@@ -75,8 +75,7 @@ export const useFetch = (baseUrl) => {
 // 1. Start UseFetch by Id
 
 export const useFetchgetById = (endpoint, id) => {
-  // const url = 'http://localhost:3000/api/';
-  const url = "https://apptowerbackend.onrender.com/api/";
+  const url = import.meta.env.VITE_API_URL;
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
   const [error, setError] = useState(null);
@@ -117,8 +116,7 @@ export const useFetchgetById = (endpoint, id) => {
 // 2. start useFetch get All
 
 export const useFetchget = (endpoint) => {
-  const url = "https://apptowerbackend.onrender.com/api/";
-  // const url = 'http://localhost:3000/api/';
+  const url = import.meta.env.VITE_API_URL;
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
   const [error, setError] = useState(null);
@@ -217,9 +215,7 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 // 4. Start useFetch post
 
 export const useFetchpost = async (endpoint, data) => {
-  const url =
-    // 'https://apptowerbackend.onrender.com/api/'
-  "http://localhost:3000/api/";
+  const url = import.meta.env.VITE_API_URL;
 
   const abortController = new AbortController();
   const signal = abortController.signal;
@@ -349,7 +345,12 @@ export const useAllowedPermissions = (idToPermissionName) => {
     const PermissionsUser = Cookies.get("permisosAndPrivileges");
 
     if (PermissionsUser) {
-      const privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
+      let privileges;
+      try {
+        privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
+      } catch (error) {
+        console.error("Error parsing PermissionsUser", error);
+      }
 
       if (privileges) {
         const permissions = privileges.map(
@@ -382,9 +383,12 @@ export const useAllowedPermissionsAndPrivileges = (
     const permisosAndPrivileges = Cookies.get("permisosAndPrivileges");
 
     if (permisosAndPrivileges) {
-      const privileges = JSON.parse(
-        permisosAndPrivileges
-      ).PermissionsAndPrivileges;
+      let privileges;
+      try {
+        privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+      } catch (error) {
+        console.error("Error parsing permisosAndPrivileges", error);
+      }
 
       if (privileges) {
         const allowedPermissions = {};

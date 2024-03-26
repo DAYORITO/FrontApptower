@@ -10,7 +10,7 @@ import { postRequest } from '../../../Helpers/Helpers';
 import FormColumn from '../../../Components/Forms/FormColumn';
 
 export const SpacesCreate = () => {
-  const url = "http://localhost:3000/api/";
+  const url = import.meta.env.VITE_API_URL;
   const [spaceType, setSpaceType] = useState("");
   const [image, setImage] = useState("");
   const [spaceName, setSpaceName] = useState("");

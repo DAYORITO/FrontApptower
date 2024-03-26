@@ -3,7 +3,7 @@ import "./Pages/Users/LogIn/LogIn.css"
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import LogIn from './Pages/Users/LogIn/LogIn';
 import { Owners } from './Pages/Residential/Owners/Owners';
-
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ResidentCreate } from "./Pages/Residential/Residents/ResidentCreate";
 import VisitorsCreate from "./Pages/Residential/Visitors/VisitorsCreate";
 import { Layout } from "./Pages/Layout/Layout";
@@ -88,7 +88,7 @@ const App = () => {
             const userRole = data?.rols?.find(role => role.idrole === userData?.user?.idrole)?.namerole;
             setNameRole(userRole);
         }
-        
+
     }, [data, userData]);
 
     //Consulta Privilegios
@@ -284,8 +284,9 @@ const App = () => {
 
                                 {/* Towers */}
                                 <Route path='towers' element={
-                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar') ?
-                                        <Towers /> : <NotFound />
+                                    allowedPermissions['Apartamentos'] && allowedPermissions['Apartamentos'].includes('Listar')
+                                        ? (nameRole?.toLowerCase()?.includes('residente') ? null : <Towers />)
+                                        : <NotFound />
                                 } />
 
 
@@ -382,14 +383,16 @@ const App = () => {
                                         <Booking /> : <NotFound />
                                 } />
 
+                                <Route path='booking/calendar/:id?' element={
+                                    <BookingCalendar />
+                                } />
+
+
                                 <Route path='booking/details/:id' element={
                                     allowedPermissions['Reservas'] && allowedPermissions['Reservas'].includes('Listar') ?
                                         <BookingDetails /> : <NotFound />
                                 } />
 
-                                <Route path='booking/calendar/:id?' element={
-                                    <BookingCalendar />
-                                } />
 
 
                                 {/* Vehicles */}

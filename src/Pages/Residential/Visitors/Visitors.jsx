@@ -363,7 +363,7 @@ function Visitors() {
         }
 
         // Desactivar el espacio de estacionamiento
-        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`http://localhost:3000/api/parkingSpaces`, {
+        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`${import.meta.env.VITE_API_URL}parkingSpaces`, {
           "idParkingSpace": parkingGuestIncome,
           "status": 'Inactive'
         }, 'PUT');

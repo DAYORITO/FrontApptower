@@ -44,7 +44,18 @@ function FinesCreate() {
   const [apartmets, setApartments] = useState({ apartments: [] });
   const [showModal, setShowmodal] = useState(false);
   const [errors, setErrors] = useState([{}])
-  console.log("Errores", errors);
+
+  // Limid date calculated
+
+  useEffect(() => {
+    const today = new Date();
+    const oneMonthFromNow = new Date(today);
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+    const formattedLimitDate = oneMonthFromNow.toISOString().split('T')[0]; // Esto te dará la fecha en formato YYYY-MM-DD
+    setLimitDate(formattedLimitDate);
+  }, []);
+
+  console.log(limitDate);
 
   const { data, load, error } = useFetchget("apartments");
   // console.log(data);
@@ -137,8 +148,7 @@ function FinesCreate() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("antes de enviar: ", idApartment?.value);
-    // const url = 'https://apptowerbackend.onrender.com/api/fines';
-    const url = "http://localhost:3000/api/fines";
+    const url = `${import.meta.env.VITE_API_URL}fines`;
     const data = {
 
       // User logged
@@ -146,7 +156,7 @@ function FinesCreate() {
       idUserLogged: idUserLogged,
 
       fineType: fineType,
-      idApartment: id == null || id== undefined ? idApartment?.value : id,
+      idApartment: id == null || id == undefined ? idApartment?.value : id,
       incidentDate: incidentDate,
       paymentDate: limitDate,
       amount: Math.round(parseFloat(amount) * 100) / 100,
@@ -249,6 +259,7 @@ function FinesCreate() {
             name="Fecha límite de pago"
             identifier={"paymentDate"}
             errors={errors}
+            value={limitDate}
             onChange={(e) => {
               setLimitDate(e.target.value);
             }}

@@ -39,7 +39,7 @@ export const UsersDetails = () => {
     const token = Cookies.get('token');
     // API URL
 
-    const url = "http://localhost:3000/api/"
+    const url = import.meta.env.VITE_API_URL
     // const url = "https://apptowerbackend.onrender.com/api/"
 
 
@@ -332,7 +332,7 @@ export const UsersDetails = () => {
                                     value={lastName} onChange={e => setLastName(e.target.value)} errors={errorList} identifier={'lastName'}></Inputs>
 
                                 <Inputs name="Fecha de Nacimiento" type={"date"}
-                                    value={birthday} onChange={e => setBirthday(e.target.value)} identifier={"birthday"} errors={errorList}></Inputs>
+                                    value={birthday ? new Date(birthday).toISOString().split('T')[0] : ''} onChange={e => setBirthday(e.target.value)} identifier={"birthday"} errors={errorList}></Inputs>
 
                                 <Inputs name="Correo electronico" type={"text"}
                                     value={email} onChange={e => setEmail(e.target.value)} identifier={'email'} errors={errorList}></Inputs>

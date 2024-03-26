@@ -37,8 +37,7 @@ const GuestIncomeDetails = () => {
   const token = Cookies.get("token");
   // API URL
 
-  const url = "http://localhost:3000/api/";
-  // const url = "https://apptowerbackend.onrender.com/api/"
+  const url = import.meta.env.VITE_API_URL;
 
   // guest income informacion
 
@@ -55,11 +54,7 @@ const GuestIncomeDetails = () => {
 
   // info guestincome relations
 
-  const {
-    data: guestIncome,
-    get: getGuestIncome,
-    loading: loadingGuestIncome,
-  } = useFetch(url);
+  const { data: guestIncome, get: getGuestIncome, loading: loadingGuestIncome, } = useFetch(url);
 
   useEffect(() => {
     try {
@@ -85,6 +80,10 @@ const GuestIncomeDetails = () => {
   const [guestIncomeParking, setGuestIncomeParking] = useState("");
 
   useEffect(() => {
+
+    console.log(guestIncome, 'guestIncome')
+
+
     setStartingDate(guestIncome?.data?.guestIncome?.startingDate);
     setDepartureDate(guestIncome?.data?.guestIncome?.departureDate);
     setPersonAllowsAccess(guestIncome?.data?.guestIncome?.personAllowsAccess);
@@ -123,12 +122,11 @@ const GuestIncomeDetails = () => {
 
   const handleEditClick = async (dataToUpdate) => {
     setShowModaload(true);
-  
+
     try {
-  
-      const guestIncomeUpdateUrl =
-        "http://localhost:3000/api/guestIncome";
-  
+
+      const guestIncomeUpdateUrl = `${import.meta.env.VITE_API_URL}guestIncome`;
+
       const guestIncomeResponse = await useFetchForFile(
         guestIncomeUpdateUrl,
         dataToUpdate,
@@ -136,12 +134,12 @@ const GuestIncomeDetails = () => {
       );
 
       console.log("Respuesta ingreso:", guestIncomeResponse);
-  
+
       if (guestIncomeResponse.error !== null && guestIncomeResponse.error !== undefined) {
         console.log("Error ingreso:", guestIncomeResponse.error);
         throw new Error(`Error al actualizar los datos del ingreso del huésped: ${guestIncomeResponse.statusText}`);
       }
-  
+
       Swal.fire({
         icon: "success",
         title: "Salida registrada con éxito.",
@@ -175,25 +173,25 @@ const GuestIncomeDetails = () => {
             icon="arrow-up-right"
             A1={`Ingreso de `}
             A2={`${asociatedVisitor?.name} ${asociatedVisitor?.lastname}`}
-            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento "+asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
+            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento " + asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
             A6={`Autoriza: ${personAllowsAccess}`}
             status={"Active"}
             actionOnClick2={!departureDate ? "Marcar salida" : null}
             onClick2={
               !departureDate
                 ? () => {
-                    handleEditClick({
-                      idGuest_income: idGuest_income,
-                      departureDate: new Date(),
-                    });
-                  }
+                  handleEditClick({
+                    idGuest_income: idGuest_income,
+                    departureDate: new Date(),
+                  });
+                }
                 : null
             }
-            // // A7={pdf}
-            // status={state}
-            // onClick2={EqualUser ? openModalChangePassword : null}
-            // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
-            // onClickEdit={setShowModalEditApartment}
+          // // A7={pdf}
+          // status={state}
+          // onClick2={EqualUser ? openModalChangePassword : null}
+          // showBackButton={EqualUser && allowedPermissions.includes('Usuarios') ? false : true}
+          // onClickEdit={setShowModalEditApartment}
           />
         )}
 
@@ -201,8 +199,8 @@ const GuestIncomeDetails = () => {
           <Acordions>
             <DropdownInfo
               name={`Informacion del ingreso`}
-              // action1={'Editar datos de la multa'}
-              // onClickAction1={openModalEdit}
+            // action1={'Editar datos de la multa'}
+            // onClickAction1={openModalEdit}
             >
               <ul className="list-unstyled">
                 <li>
@@ -212,12 +210,12 @@ const GuestIncomeDetails = () => {
                 <li>
                   Se dirige a:{" "}
                   {
-                    asociatedApartment?.apartmentName != null 
+                    asociatedApartment?.apartmentName != null
                       ? (
                         <Link to={`/admin/apartments/details/${asociatedApartment?.idApartment}`}>
                           {`apartamento ${asociatedApartment?.apartmentName}`}
                         </Link>
-                      ) 
+                      )
                       : "Servicio del conjunto"
                   }
                 </li>
@@ -241,8 +239,8 @@ const GuestIncomeDetails = () => {
             <Acordions>
               <DropdownInfo
                 name={`Parqueadero asignado`}
-                // action1={'Agregar evidencia'}
-                // onClickAction1={openEvidenceFilesModal}
+              // action1={'Agregar evidencia'}
+              // onClickAction1={openEvidenceFilesModal}
               >
                 <RowNotificactions
                   // Information

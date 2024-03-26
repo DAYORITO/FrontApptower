@@ -23,6 +23,11 @@ export const Aside = () => {
 
     const token = Cookies.get('token');
 
+
+    const { idUserLogged, idRolLogged } = useUserLogged()
+
+
+
     // Socket
 
     const { notifications, socket, setNotifications } = useContext(SocketContext)
@@ -44,6 +49,8 @@ export const Aside = () => {
     const [nameRole, setNameRole] = useState('');
     const { data, load, error } = useFetchget('rols')
 
+    console.log(nameRole, 'nameRole')
+
 
     useEffect(() => {
         if (data && userData && userData?.user) {
@@ -56,21 +63,22 @@ export const Aside = () => {
 
     const url = "https://apptowerbackend.onrender.com/api/"
 
-    const { data: resident, get: getResidentByDocument, loading } = useFetch(url)
+    const { data: resident, get: getResident, loading } = useFetch(url)
+
+    console.log(resident, 'resident')
     const { data: apartmentResidents, get: getApartmentResidents } = useFetch(url)
 
+    const IdApartment = resident?.data?.residents?.find(resident => resident.iduser === idUserLogged)?.apartments[0]?.idApartment;
+
+
+    const rutadetailsapartment = `apartments/details/${IdApartment}`
 
     useEffect(() => {
-        if (resident && resident.data && resident.data.residente) {
-            setIdResidents(resident.data.residente.idResident);
-        }
-        if (apartmentResidents && apartmentResidents.data && apartmentResidents.data.apartmentResidents) {
-            setIdapartaments(apartmentResidents.data.apartmentResidents.idApartment);
-        }
-    }, [resident, apartmentResidents]);
+        getResident('residents')
+
+    }, [])
 
 
-    const rutadetailsapartment = `apartments/details/${idApartment}`
 
 
     // Seen notification
@@ -118,7 +126,6 @@ export const Aside = () => {
 
     };
 
-    const { idUserLogged, idRolLogged } = useUserLogged()
 
     const filteredNotifications = notifications.filter((notification) => {
 
@@ -219,18 +226,12 @@ export const Aside = () => {
 
                                 {
                                     allowedPermissions && allowedPermissions.includes('Reservas')
-                                        ? (
-                                            <>
-                                                {
-                                                    allowedPermissions.includes('Apartamentos') &&
-                                                        (nameRole === 'Residente' || nameRole === 'Residentes')
-                                                        ? <ListNav module={'Reservas'} href='booking/calendar' icon='fe fe-calendar fe-24' />
-                                                        : <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24' />
+                                        ?
 
+                                        (nameRole?.toLowerCase()?.includes('residente'))
+                                            ? <ListNav module={'Reservas'} href='booking/calendar' icon='fe fe-calendar fe-24' />
+                                            : <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24' />
 
-                                                }
-                                            </>
-                                        )
                                         : null
                                 }
 
@@ -282,11 +283,9 @@ export const Aside = () => {
                                             )}
 
 
-
                                             {allowedPermissions.includes('Apartamentos') && (
-                                                <DropDownList subprocess={"Bloques"} href='towers' ></DropDownList>
+                                                nameRole === 'Residente' ? null : <DropDownList subprocess={"Bloques"} href='towers' />
                                             )}
-
 
                                             {allowedPermissions.includes('Parqueaderos') && (
                                                 <DropDownList subprocess={"Parqueaderos"} href='parkingSpaces/'></DropDownList>

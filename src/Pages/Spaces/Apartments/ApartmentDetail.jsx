@@ -31,7 +31,7 @@ export const ApartmentDetails = (props) => {
 
     // API URL
 
-    const url = "http://localhost:3000/api/"
+    const url = import.meta.env.VITE_API_URL;
     // const url = "https://apptowerbackend.onrender.com/api/"
 
     // Apartment information
@@ -46,9 +46,13 @@ export const ApartmentDetails = (props) => {
 
     const { idUserLogged, idRolLogged } = useUserLogged()
 
+    console.log(idRolLogged, "idRolLogged")
+
     const { data: dataRols, loadRols, errorRols } = useFetchget('rols');
 
     const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
+
+    console.log(nameRole, "nameRole")
 
 
 
@@ -457,7 +461,7 @@ export const ApartmentDetails = (props) => {
 
         console.log("edit data", data)
 
-        await postRequest(event, 'apartments', 'PUT', setShowModalEditApartment, data, url, setErrorList, null, null);
+        await postRequest(event, 'apartments', 'PUT', setShowModalEditApartment, data, url, setErrorList, null, socket);
 
 
 
@@ -593,6 +597,8 @@ export const ApartmentDetails = (props) => {
     };
 
 
+
+
     return (
         <>
             <Details>
@@ -651,9 +657,7 @@ export const ApartmentDetails = (props) => {
 
 
                                                             onClickModal={() => handleModalEditApartmentOwner(owner)}
-
-                                                            showEditIcon={!nameRole?.toLowerCase().includes('vigilante') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase().includes('seguridad')}
-                                                        >
+                                                            showEditIcon={nameRole ? (!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')) : false}  >
                                                         </Dropdownanchor>
                                                     ))
                                                 ) : (
@@ -699,12 +703,12 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleModalEditApartmentResident(resident)}
 
-                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+                                                        showEditIcon={!nameRole === 'vigilante'}
 
                                                     ></Dropdownanchor>
                                                 ))
                                             ) : (
-                                                nameRole && (!nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('vigilante')) ?
+                                                nameRole && (!nameRole?.toLowerCase()?.includes('seguridad') && !nameRole?.toLowerCase().includes('vigilancia') && !nameRole?.toLowerCase()?.includes('vigilante')) ?
                                                     <NotificationsAlert to={`/admin/residents/create/${id}`} msg={` para agregar un residente.`} /> : null
                                             )}
                                     </DropdownInfo>

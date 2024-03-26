@@ -141,7 +141,7 @@ export const Watchman = () => {
                 }
 
 
-                const response = await fetch('http://localhost:3000/api/watchman', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}watchman`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -227,6 +227,7 @@ export const Watchman = () => {
         });
     }
 
+    filterData = filterData.sort((a, b) => b.user.iduser - a.user.iduser);
 
 
 
@@ -281,7 +282,7 @@ export const Watchman = () => {
                         : null
                 }
                 showPaginator={
-                    watchmanData ?
+                    watchmanData && watchmanData.length > 0 ?
                         <Paginator
                             totalPages={totalPages}
                             currentPage={currentPage}
