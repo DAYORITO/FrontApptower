@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (usuario, password) => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}login`, {
+            const response = await fetch(`https://apptowerbackend.onrender.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
