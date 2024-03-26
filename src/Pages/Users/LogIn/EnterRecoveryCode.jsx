@@ -9,23 +9,18 @@ import { Link, useNavigate } from 'react-router-dom';
 export const EnterRecoveryCode = () => {
     const [recoveryCode, setRecoveryCode] = useState('');
     const [verifiedRecoveryCode, setVerifiedRecoveryCode] = useState(null);
+    const [showModaload, setShowModaload] = useState(false);
+    const [error, setError] = useState([{}]);
     console.log(recoveryCode);
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        Swal.fire({
-            title: 'Cargando...',
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        setShowModaload(true);
 
 
         try {
-            const response = await fetch('https://apptowerbackend.onrender.com/api/email/verify', {
+            const response = await fetch('http://localhost:3000/api/email/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,8 +44,15 @@ export const EnterRecoveryCode = () => {
 
                 setVerifiedRecoveryCode(recoveryCode);
             } else {
-                Swal.fire('Error', data.message, 'error');
+                if (data.errors && data.errors.length > 0) {
+                    setError(data.errors);
+                    Swal.fire('Error', data.errors[0].message, 'error');
+                } else {
+                    Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                }
             }
+
+            setShowModaload(false);
 
         } catch (error) {
             Swal.fire('Error', 'Ocurrió un error al verificar el código', 'error');
@@ -79,9 +81,20 @@ export const EnterRecoveryCode = () => {
 
                         <form className="form" onSubmit={handleSubmit}>
 
-                            <InputsLogIn placeholder='Codigo' type='text' value={recoveryCode} onChange={(newValue) => setRecoveryCode(newValue)} onKeyPress={handleKeyPress} />
+                            <InputsLogIn placeholder='Codigo' errors={error} identifier={'recoveryCode'} type='text' value={recoveryCode} onChange={(newValue) => setRecoveryCode(newValue)} onKeyPress={handleKeyPress} />
 
-                            <button className='boton-login' type='submit'>Enviar Codigo</button><br />
+
+                            <button className='boton-login' type='submit' disabled={showModaload}>
+                                {showModaload ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Validando...
+                                    </>
+                                ) : (
+                                    <>
+                                        Validar Código
+                                    </>
+                                )}
+                            </button><br />
                             <Link to="/recoverpassword" class="buttonStyle" id="sign-up">Regresar</Link>
                         </form>
 

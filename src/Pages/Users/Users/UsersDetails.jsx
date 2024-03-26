@@ -238,7 +238,6 @@ export const UsersDetails = () => {
 
         await postRequest(event, 'users/password', 'PUT', {}, data, url, setErrorList, null, null);
         getuser(`users/${id}`)
-        setModalChangePassword(false)
 
     }
 
