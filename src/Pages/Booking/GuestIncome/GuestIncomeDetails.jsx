@@ -93,7 +93,7 @@ const GuestIncomeDetails = () => {
     setCreatedAt(guestIncome?.data?.guestIncome?.createdAt);
     setUpdatedAt(guestIncome?.data?.guestIncome?.updatedAt);
 
-    setGuestIncomeParking(guestIncome?.data?.guestIncomeVehicle);
+    setGuestIncomeParking(guestIncome?.data?.guestIncome);
   }, [guestIncome?.data?.guestIncome]);
 
 
@@ -235,7 +235,7 @@ const GuestIncomeDetails = () => {
             </DropdownInfo>
           </Acordions>
 
-          {guestIncomeParking ? (
+          {guestIncomeParking?.asociatedParkingSpace ? (
             <Acordions>
               <DropdownInfo
                 name={`Parqueadero asignado`}

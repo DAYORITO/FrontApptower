@@ -148,7 +148,7 @@ function FinesCreate() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("antes de enviar: ", idApartment?.value);
-    const url = `${import.meta.env.VITE_API_URL}fines`;
+    const url = `http://localhost:3000/api/fines`;
     const data = {
 
       // User logged
@@ -288,6 +288,7 @@ function FinesCreate() {
         </FormColumn>
         <FormColumn>
           <Uploader
+            validate={true}
             label="Adjuntar evidencia"
             multiple={true}
             onChange={(e) => {
