@@ -29,6 +29,7 @@
     z-index: 1000;
     position: absolute;
     top: 3.2rem;
+    /* top: 2.95rem; */
     right: -0.8rem;
     font-family: inherit;
     font-size: 2.5vh;

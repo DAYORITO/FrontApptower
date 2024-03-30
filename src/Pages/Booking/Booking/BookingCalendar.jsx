@@ -276,7 +276,6 @@ export const BookingCalendar = () => {
             idResident: idResident ? idResident : Number(userResident),
             StartDateBooking: selectedDate,
             StartTimeBooking: hourStart,
-            EndDateBooking: Date('0000-00-00T00:00:00.000Z'),
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
         }
@@ -309,7 +308,6 @@ export const BookingCalendar = () => {
             idSpace: idSpace,
             StartDateBooking: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             StartTimeBooking: hourStart,
-            EndDateBooking: new Date().toISOString().split('T')[0],
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
             status: status
