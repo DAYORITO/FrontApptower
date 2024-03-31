@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
 
             const data = await response.json();
 
+
             if (!response.ok) {
                 Swal.fire({
                     icon: 'error',
