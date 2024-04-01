@@ -12,12 +12,11 @@ export const useUserLogged = () => {
   const [idRolLogged, setIdRolLogged] = useState('');
 
   useEffect(() => {
-    const encodedUser = Cookies.get('user');
+    const encodedUser = localStorage.getItem('user');
     if (encodedUser) {
-      const decodedUser = decodeURIComponent(encodedUser);
       let userLogged;
       try {
-        userLogged = JSON.parse(decodedUser);
+        userLogged = JSON.parse(encodedUser);
       } catch (error) {
         console.error("Error parsing decodedUser", error);
       }

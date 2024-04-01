@@ -170,16 +170,16 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 
     Object.keys(data).forEach((key) => {
       if (Array.isArray(data[key])) {
-          data[key].forEach((file) => {
-              formData.append(key, file);
-          });
+        data[key].forEach((file) => {
+          formData.append(key, file);
+        });
       } else {
-          formData.append(key, data[key]);
+        formData.append(key, data[key]);
       }
     });
-  for (let pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
 
     const response = await fetch(url, {
       method: method,
@@ -187,7 +187,7 @@ export const useFetchForFile = async (url, data, method = "POST") => {
       signal,
     });
 
-    
+
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -345,12 +345,13 @@ export const useAllowedPermissions = (idToPermissionName) => {
   const [allowedPermissions, setAllowedPermissions] = useState([]);
 
   useEffect(() => {
-    const PermissionsUser = Cookies.get("permisosAndPrivileges");
+    const PermissionsUser = localStorage.getItem("permisosAndPrivileges");
 
     if (PermissionsUser) {
       let privileges;
       try {
         privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
+        console.log("Privileges after parsing: ", privileges);
       } catch (error) {
         console.error("Error parsing PermissionsUser", error);
       }
@@ -366,6 +367,7 @@ export const useAllowedPermissions = (idToPermissionName) => {
           (id) => idToPermissionName[id]
         );
 
+        console.log("Allowed permissions after mapping: ", allowedPermissions);
         setAllowedPermissions(allowedPermissions);
       }
     }
@@ -383,12 +385,13 @@ export const useAllowedPermissionsAndPrivileges = (
   const [allowedPermissions, setAllowedPermissions] = useState({});
 
   useEffect(() => {
-    const permisosAndPrivileges = Cookies.get("permisosAndPrivileges");
+    const permisosAndPrivileges = localStorage.getItem("permisosAndPrivileges");
 
     if (permisosAndPrivileges) {
       let privileges;
       try {
         privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
+        console.log("Privileges after parsing: ", privileges);
       } catch (error) {
         console.error("Error parsing permisosAndPrivileges", error);
       }
@@ -406,6 +409,7 @@ export const useAllowedPermissionsAndPrivileges = (
           allowedPermissions[permissionName].push(privilegeName);
         });
 
+        console.log("Allowed permissions after mapping: ", allowedPermissions);
         setAllowedPermissions(allowedPermissions);
       } else {
         console.log("No privileges found");

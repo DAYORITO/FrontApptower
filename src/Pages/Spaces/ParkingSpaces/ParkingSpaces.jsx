@@ -28,7 +28,7 @@ import { DropdownInfo } from "../../../Components/DropdownInfo/DropdownInfo";
 
 
 export const ParkingSpaces = () => {
-  const token = Cookies.get('token');
+
 
   const url = import.meta.env.VITE_API_URL;
   // const url = "https://appparkingTypebackend.onrender.com/api/"

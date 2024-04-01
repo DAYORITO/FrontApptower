@@ -21,7 +21,7 @@ export const Aside = () => {
 
     const { user, login, logout } = useAuth();
 
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('token');
 
 
     const { idUserLogged, idRolLogged } = useUserLogged()

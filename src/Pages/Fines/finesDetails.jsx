@@ -43,7 +43,6 @@ import { Uploader } from "../../Components/Uploader/Uploader";
 import { postRequest, useUserLogged } from "../../Helpers/Helpers";
 import { Table, ThInfo } from "../../Components/Table/Table";
 import { Thead } from "../../Components/Thead/Thead";
-const token = Cookies.get("token");
 import Cookies from "js-cookie";
 import { da } from "date-fns/locale";
 import Swal from "sweetalert2";
@@ -54,7 +53,7 @@ import { ModalContainerload, Modaload } from "../../Components/Modals/Modal";
 import { dotSpinner } from "ldrs";
 
 export const FinesDetail = () => {
-  const token = Cookies.get("token");
+
   // API URL
 
   const url = import.meta.env.VITE_API_URL;

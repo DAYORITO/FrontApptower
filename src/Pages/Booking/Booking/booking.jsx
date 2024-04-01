@@ -14,7 +14,6 @@ import { Paginator } from "../../../Components/Paginator/Paginator";
 import { name } from "dayjs/locale/es";
 
 export const Booking = () => {
-  const token = Cookies.get('token');
 
   const url = import.meta.env.VITE_API_URL
 

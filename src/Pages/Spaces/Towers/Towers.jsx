@@ -24,14 +24,12 @@ import dataNotFoundImg from "../../../assets/dataNotFound.jpg"
 import { Spinner } from "../../../Components/Spinner/Spinner"
 import { idToPermissionName, idToPrivilegesName } from "../../../Hooks/permissionRols"
 
-import Cookies from 'js-cookie'
 import { Paginator } from "../../../Components/Paginator/Paginator"
 import { set } from "date-fns"
 
 
 
 export const Towers = () => {
-    const token = Cookies.get('token');
 
     const url = import.meta.env.VITE_API_URL;
     // const url = "https://apptowerbackend.onrender.com/api/"

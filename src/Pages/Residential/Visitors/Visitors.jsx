@@ -30,7 +30,6 @@ import { Spinner } from "../../../Components/Spinner/Spinner";
 import { useUserLogged } from "../../../Helpers/Helpers";
 
 function Visitors() {
-  const token = Cookies.get('token');
   const url = "https://apptowerbackend.onrender.com/api/";
 
 
@@ -40,8 +39,6 @@ function Visitors() {
 
   const nameRole = dataRols?.rols?.find(rol => rol.idrole === idRolLogged)?.namerole;
 
-
-  // const token = Cookies.get('token');
 
   const [errors, setErrors] = useState([{}]);
   const filterOptions = [{ label: 'Nombre', value: 'name' }, { label: 'Documento', value: 'documentNumber' }, { label: 'Acceso', value: 'access' }];

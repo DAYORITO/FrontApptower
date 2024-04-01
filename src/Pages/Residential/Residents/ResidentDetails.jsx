@@ -31,7 +31,7 @@ import { Uploader } from '../../../Components/Uploader/Uploader'
 import { postRequest, useUserLogged } from '../../../Helpers/Helpers'
 import Swal from 'sweetalert2'
 import { SocketContext } from '../../../Context/SocketContext'
-const token = Cookies.get('token');
+const token = localStorage.getItem('token');
 
 export const ResidentDetails = () => {
 

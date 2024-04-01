@@ -73,7 +73,7 @@ const App = () => {
 
     console.log(online ? 'Online' : 'Offline')
 
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('token');
     const [userRole, setUserRole] = useState('');
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);

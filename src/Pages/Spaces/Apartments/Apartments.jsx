@@ -26,8 +26,6 @@ import { SocketContext } from '../../../Context/SocketContext'
 
 export const Apartments = () => {
 
-  const token = Cookies.get('token');
-
   const url = import.meta.env.VITE_API_URL;
   // const url = "https://apptowerbackend.onrender.com/api/"
 

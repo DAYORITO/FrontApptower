@@ -64,7 +64,7 @@ function FinesCreate() {
   const [userData, setUserData] = useState({});
 
   //
-  const token = Cookies.get('token');
+  const token = localStorage.getItem('token');
   // console.log("Datos piopio", userData)
 
   //Funcion para obtener el documento del usuario

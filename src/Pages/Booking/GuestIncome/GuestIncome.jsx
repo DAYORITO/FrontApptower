@@ -49,7 +49,6 @@ function GuestIncome() {
 
 
   const [LoadingSpiner, setLoadingSpiner] = useState(true);
-  const token = Cookies.get("token");
   // const {permisos} = useAuth()
   // if(!permisos.incudes("Ver Ingreso")){
   //     navigate

@@ -16,7 +16,6 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { createPortal } from "react-dom";
 import { postRequest, useUserLogged } from "../../../Helpers/Helpers";
-const token = Cookies.get("token");
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { SocketContext } from "../../../Context/SocketContext";
@@ -34,7 +33,6 @@ import { ModalContainerload, Modaload } from "../../../Components/Modals/Modal";
 // import { set } from 'date-fns';
 
 const GuestIncomeDetails = () => {
-  const token = Cookies.get("token");
   // API URL
 
   const url = import.meta.env.VITE_API_URL;

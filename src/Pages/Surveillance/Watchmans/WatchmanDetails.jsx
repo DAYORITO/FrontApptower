@@ -33,7 +33,7 @@ import { Table, ThInfo } from '../../../Components/Table/Table'
 import { Thead } from '../../../Components/Thead/Thead'
 import Swal from 'sweetalert2'
 import { Th } from '../../../Components/Th/Th'
-const token = Cookies.get('token');
+const token = localStorage.getItem('token');
 
 export const WatchmanDetails = () => {
 
