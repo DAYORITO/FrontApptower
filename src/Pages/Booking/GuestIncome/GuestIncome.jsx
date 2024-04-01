@@ -211,7 +211,7 @@ function GuestIncome() {
   return (
     <>
       <ContainerTable
-        title="Ingresos"
+        title="Ingresos de visitantes"
         dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table="guestIncome" />) : <DropdownExcel table="guestIncome" />}
         search={<SearchButton type="text" onChange={handleChange} />}
         buttonToGo={

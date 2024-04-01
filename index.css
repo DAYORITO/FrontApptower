@@ -28,14 +28,27 @@
 
 /* End tarjeta de tabla y formulario */
 
+@media (max-width: 1048px) {
+  .myNav.expanded {
+    width: 25vw !important;
+    background-color: rgba(255, 255, 255, 1) !important;
+    position: absolute;
+    z-index: 2000;
+  }
+
+}
 
 @media screen and (max-width: 1024px) {
 
   .myNav.collapsed {
-    width: 5vw;
+    width: 13vw;
     background-color: transparent !important;
     /* position: relative;  */
 
+  }
+
+  .myNav.collapsed .navbar-toggler-icon .fe-menu:before {
+    color: rgb(0, 0, 0);
   }
 
   .myNav.collapsed .myNav-header {
@@ -69,10 +82,10 @@
 
 
   .myNav.expanded {
-    width: 100vw !important;
+    width: 53vw !important;
     background-color: rgba(255, 255, 255, 1) !important;
     position: absolute;
-    z-index: 1;
+    z-index: 2000;
   }
 
 

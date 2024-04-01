@@ -255,9 +255,9 @@ const App = () => {
                                 } />
 
                                 <Route path='fines/details/:id' element={
-                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
-                                        <FinesDetail />
-                                        : <NotFound />
+
+                                    <FinesDetail />
+
                                 } />
 
 
@@ -289,17 +289,20 @@ const App = () => {
                                         : <NotFound />
                                 } />
 
-
-
                                 {/* Owners */}
                                 <Route path='owners' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
                                         <Owners /> : <NotFound />
                                 } />
 
-                                <Route path='owners/details/:id' element={
+                                {/* <Route path='owners/details/:id' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
                                         <OwnerDetail /> : <NotFound />
+                                } /> */}
+
+                                <Route path='owners/details/:id' element={
+
+                                    <OwnerDetail />
                                 } />
                                 <Route path='owners/create' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?

@@ -83,11 +83,11 @@ function GuestIncomeCreate() {
     { value: 'si', label: 'Si' },
     { value: 'no', label: 'No' },
   ]
-  const incometype=[
+  const incometype = [
     { value: 'si', label: 'Si' },
-    { value: 'no', label: 'No'}
+    { value: 'no', label: 'No' }
   ]
-  
+
 
   //Peticiones a la api
   const { data: dataVisitors, load: load1, error2 } = useFetchget('visitors')
@@ -96,7 +96,7 @@ function GuestIncomeCreate() {
   const { data: dataResidentApartment, loading: loadResidentsApartment, error: errordata, get: getResidentApartment } = useFetch(url)
   const { data: dataParkingSpaces, load: load3, error3 } = useFetchget('parkingSpaces')
   const { data: dataTowers, load: load4, error5 } = useFetchget('towers')
-  
+
 
   useEffect(() => {
     getResidentApartment('aparmentResidents')
@@ -160,8 +160,8 @@ function GuestIncomeCreate() {
     if (apartment) {
       const towerId = getTower(apartment);
       getDataTowers(towerId);
-      if(id!=null && id!=undefined){
-      setPhone(getPhone(id != null ? id : apartment));
+      if (id != null && id != undefined) {
+        setPhone(getPhone(id != null ? id : apartment));
       }
     }
   }, [apartment]);
@@ -370,7 +370,7 @@ function GuestIncomeCreate() {
 
     try {
       // Crear el guestIncome
-      const formData ={
+      const formData = {
         // User logged
         "idUserLogged": idUserLogged,
         "startingDate": new Date(),
@@ -379,10 +379,10 @@ function GuestIncomeCreate() {
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor?.value,
       }
-      if(check2){
-        formData.idApartment = id != null ? id : apartment == null ?  "" : parseInt(apartment.value);
+      if (check2) {
+        formData.idApartment = id != null ? id : apartment == null ? "" : parseInt(apartment.value);
       }
-      if(check1){
+      if (check1) {
         formData.idParkingSpace = parkingGuestIncome
         formData.isGuestIncomeVehicle = true
       }
@@ -474,53 +474,53 @@ function GuestIncomeCreate() {
 
   return (
     <>
-      <FormContainer name='Crear Ingreso'
+      <FormContainer name='Crear ingreso de visitante'
         buttons={<FormButton name='Crear' disabled={LoadingSpiner} backButton='Cancelar' onClick={handleSubmit} />}
         modalButton={<ModalButton disabled={LoadingSpiner} name="Crear visitante" onClick={setShowModalvisitor} />}
       >
         {LoadingSpiner && <Spinner></Spinner>}
-        <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}> 
-        <InputsSelect name={"Ingreso por apartamento"} options={incometype} onChange={handleChange2} required={false} ></InputsSelect>
+        <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+          <InputsSelect name={"Ingreso por apartamento"} options={incometype} onChange={handleChange2} required={false} ></InputsSelect>
         </div>
         {
           check2 &&
-        <div className='d-flex justify-content-around mb-2' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-          <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
-            {!id ?
-              <InputsSelect errors={errors} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} voidmessage='No hay torres registradas' onChange={(e) => { { id != null ? handleChange(id) : handleTowerChange(e.target.value) } }} options={towers} />
-              :
-              <Inputs
-                key={apartment}
-                name="Torre"
-                value={nameTower || ""}
-                type="text"
-                readonly={true}
-                inputStyle={{ backgroundColor: '#F8F8F8' }}
-              />
-            }
+          <div className='d-flex justify-content-around mb-2' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+            <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }} >
+              {!id ?
+                <InputsSelect errors={errors} inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} name={'Torre'} voidmessage='No hay torres registradas' onChange={(e) => { { id != null ? handleChange(id) : handleTowerChange(e.target.value) } }} options={towers} />
+                :
+                <Inputs
+                  key={apartment}
+                  name="Torre"
+                  value={nameTower || ""}
+                  type="text"
+                  readonly={true}
+                  inputStyle={{ backgroundColor: '#F8F8F8' }}
+                />
+              }
+            </div>
+
+            <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+
+              {!id ?
+                <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} errors={errors} identifier={"idApartment"} value={apartment} placeholder={'Apartamento'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
+                :
+                <Inputs
+                  key={apartment}
+                  name="Apartamento"
+                  value={getApartmentName(apartment) || ""}
+                  type="text"
+                  readonly={true}
+                  inputStyle={{ backgroundColor: '#F8F8F8' }}
+                />}
+
+            </div>
+            <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
+
+              <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8', display: LoadingSpiner ? 'none' : 'block' }}></Inputs>
+
+            </div>
           </div>
-
-          <div className="mr-1" style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-
-            {!id ?
-              <Select2 inputStyle={{ display: LoadingSpiner ? 'none' : 'block' }} errors={errors} identifier={"idApartment"} value={apartment} placeholder={'Apartamento'} voidmessage='Selecciona una torre' onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
-              :
-              <Inputs
-                key={apartment}
-                name="Apartamento"
-                value={getApartmentName(apartment) || ""}
-                type="text"
-                readonly={true}
-                inputStyle={{ backgroundColor: '#F8F8F8' }}
-              />}
-
-          </div>
-          <div style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
-
-            <Inputs name='Telefono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8', display: LoadingSpiner ? 'none' : 'block' }}></Inputs>
-
-          </div>
-        </div>
         }
         <div className='d-flex justify-content-around' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
           <div className='mr-1' style={{ width: '100%', display: LoadingSpiner ? 'none' : 'block' }}>
