@@ -23,6 +23,7 @@ export const Aside = () => {
 
     const token = localStorage.getItem('token');
 
+    
 
     const { idUserLogged, idRolLogged } = useUserLogged()
 
@@ -323,6 +324,7 @@ export const Aside = () => {
                         <ListNav module={'Salir'} onClick={e => {
                             e.preventDefault();
                             logout();
+                            
                         }} icon='fe fe-log-out fe-24' />
                     </div>
 

@@ -26,9 +26,6 @@ const LoginForm = ({ setShowLoginForm }) => {
     const { error, setError } = useAuth();
 
 
-
-
-
     const handleLogin = async (event) => {
         event.preventDefault();
         setShowModaload(true)

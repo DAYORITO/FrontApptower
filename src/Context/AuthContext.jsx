@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('isLoggedIn', 'true');
             setIsLoggedIn(true);
 
+
             return data.token;
 
         } catch (error) {
@@ -73,6 +74,35 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            fetchUserData(token)
+                .then(() => setIsLoggedIn(true))
+                .catch(() => setIsLoggedIn(false))
+                .finally(() => setIsLoading(false));
+
+            const timer = setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('isLoggedIn', 'false');
+                localStorage.removeItem('user');
+                localStorage.removeItem('permisosAndPrivileges');
+                setIsLoggedIn(false);
+            }, 45 * 60 * 1000);
+
+            return () => clearTimeout(timer);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
+    const timerId = setTimeout(() => {
+        console.log('Esta función se ejecutará después de 5 segundos');
+    }, 5000);
+
+
+    clearTimeout(timerId);
 
 
     const fetchUserData = (token) => {
@@ -150,6 +180,7 @@ export const AuthProvider = ({ children }) => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                window.location.href = '/#/';
             }
         });
     };

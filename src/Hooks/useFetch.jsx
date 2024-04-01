@@ -351,7 +351,6 @@ export const useAllowedPermissions = (idToPermissionName) => {
       let privileges;
       try {
         privileges = JSON.parse(PermissionsUser).PermissionsAndPrivileges;
-        console.log("Privileges after parsing: ", privileges);
       } catch (error) {
         console.error("Error parsing PermissionsUser", error);
       }
@@ -366,8 +365,6 @@ export const useAllowedPermissions = (idToPermissionName) => {
         const allowedPermissions = uniquePermissions.map(
           (id) => idToPermissionName[id]
         );
-
-        console.log("Allowed permissions after mapping: ", allowedPermissions);
         setAllowedPermissions(allowedPermissions);
       }
     }
@@ -391,7 +388,6 @@ export const useAllowedPermissionsAndPrivileges = (
       let privileges;
       try {
         privileges = JSON.parse(permisosAndPrivileges).PermissionsAndPrivileges;
-        console.log("Privileges after parsing: ", privileges);
       } catch (error) {
         console.error("Error parsing permisosAndPrivileges", error);
       }
@@ -409,10 +405,9 @@ export const useAllowedPermissionsAndPrivileges = (
           allowedPermissions[permissionName].push(privilegeName);
         });
 
-        console.log("Allowed permissions after mapping: ", allowedPermissions);
         setAllowedPermissions(allowedPermissions);
       } else {
-        console.log("No privileges found");
+        console.log("No permisosAndPrivileges found");
       }
     } else {
       console.log("No permisosAndPrivileges found");
