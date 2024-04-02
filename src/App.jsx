@@ -218,9 +218,7 @@ const App = () => {
                                         : <NotFound />
                                 } /> */}
                                 <Route path='guest_income/details/:id' element={
-                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
-                                        <GuestIncomeDetails />
-                                        : <NotFound />
+                                    <GuestIncomeDetails />
                                 } />
 
 
@@ -416,8 +414,7 @@ const App = () => {
                                         <VehicleCreate /> : <NotFound />
                                 } />
                                 <Route path='vehicle/create/:id?' element={
-                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear') ?
-                                        <VehicleCreate /> : <NotFound />
+                                    <VehicleCreate />
                                 } />
 
                                 <Route path="*" element={<NotFound />} />

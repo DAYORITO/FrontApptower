@@ -375,6 +375,7 @@ export const ApartmentDetails = (props) => {
         ? parkingSpaces.data.parkingSpaces
             .filter(parking => parking.parkingType === 'Private')
             .filter(parking => parking.status === 'Active')
+            .filter(parking => parking.apartmentAssigned.apartmentWithParking === null)
             .map(parking => ({
                 value: parking.idParkingSpace,
                 label: `${parking.parkingName} - ${parking.parkingType}`
@@ -609,14 +610,14 @@ export const ApartmentDetails = (props) => {
 
                         <>
                             <ContainerModule
-                                to='/admin/apartments/'
+                                to={nameRole && nameRole.toLowerCase().includes('residente') ? null : '/admin/apartments/'}
                                 A1={`Apartamento ${apartmentName}`}
                                 A5={`Bloque: ${towerName} `}
                                 A6={`Area: ${area} m²`}
 
                                 onClick2={setShowModalEditApartment}
 
-                                actionOnClick2={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : 'Editar apartamento') : 'Editar apartamento'}
+                                actionOnClick2={nameRole && nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('residente') ? null : 'Editar apartamento') : 'Editar apartamento'}
                                 status={status}
                             />
                             <InfoDetails>
@@ -657,7 +658,7 @@ export const ApartmentDetails = (props) => {
 
 
                                                             onClickModal={() => handleModalEditApartmentOwner(owner)}
-                                                            showEditIcon={nameRole ? (!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')) : false}  >
+                                                            showEditIcon={nameRole ? (!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad') && !nameRole.toLowerCase().includes('residente')) : false}  >
                                                         </Dropdownanchor>
                                                     ))
                                                 ) : (
@@ -703,7 +704,7 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleModalEditApartmentResident(resident)}
 
-                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
+                                                        showEditIcon={nameRole && !nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
 
                                                     ></Dropdownanchor>
                                                 ))
@@ -737,7 +738,7 @@ export const ApartmentDetails = (props) => {
                                                         name={"Plaza " + parking.parkingSpace.parkingName}
 
                                                         // Details
-                                                        to={`/admin/parkingSpaces/${parking.parkingSpace.parkingName}`}
+                                                        to={nameRole && !nameRole.toLowerCase().includes('residente') ? `/admin/parkingSpaces/${parking.parkingSpace.parkingName}` : null}
 
                                                         // Funtions
                                                         // onClick={() => {
@@ -763,7 +764,7 @@ export const ApartmentDetails = (props) => {
 
                                     <DropdownInfo
                                         name={`${vehiclesList.length} Vehiculos `}
-                                        action1={nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : "Agregar nuevo vehiculo") : "Agregar nuevo vehiculo"}
+                                        action1={nameRole && nameRole ? (nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') || nameRole.toLowerCase().includes('vigilante') ? null : "Agregar nuevo vehiculo") : "Agregar nuevo vehiculo"}
                                         toAction1={`/admin/vehicle/create/${id}`}>
 
                                         {loadingVehicles ? <SmalSpinner /> :
@@ -775,7 +776,7 @@ export const ApartmentDetails = (props) => {
                                                         name={vehicle.licenseplate != null ? vehicle.licenseplate : vehicle.idvehicle}
 
                                                         // Details
-                                                        to={`/admin/vehicle/${vehicle.licenseplate}`}
+                                                        to={nameRole && !nameRole.toLowerCase().includes('residente') ? `/admin/vehicle/${vehicle.licenseplate}` : null}
                                                     // Funtions
 
                                                     >
@@ -796,7 +797,7 @@ export const ApartmentDetails = (props) => {
 
                                     <DropdownInfo
                                         name={`${guestIncomesbyApartment.length} Ingresos `}
-                                        action1={'Agregar nuevo ingreso'}
+                                        action1={nameRole && !nameRole.toLowerCase().includes('residente') ? 'Agregar nuevo ingreso' : null}
                                         toAction1={`/admin/guest_income/create/${id}`}>
 
                                         <DetailsActions>
@@ -827,7 +828,9 @@ export const ApartmentDetails = (props) => {
                                                 ))
                                             ) : (
                                                 <div className='mt-4 ml-2'>
-                                                    <NotificationsAlert to={`/admin/guest_income/create/${id}`} msg={` para agregar un ingreso.`} />
+                                                    {nameRole && !nameRole.toLowerCase().includes('residente') ? <NotificationsAlert to={`/admin/guest_income/create/${id}`} msg={` para agregar un ingreso.`} /> :
+                                                        <NotificationsAlert msg={`No hay ingresos`} />
+                                                    }
 
                                                 </div>
                                             )}
@@ -835,7 +838,7 @@ export const ApartmentDetails = (props) => {
 
                                     <DropdownInfo
                                         name={`${fineByApartment.length} Multas `}
-                                        action1={'Agregar nueva multa'}
+                                        action1={nameRole && !nameRole.toLowerCase().includes('residente') ? 'Agregar nueva multa' : null}
                                         toAction1={`/admin/fines/create/${id}`}>
 
 
@@ -867,7 +870,9 @@ export const ApartmentDetails = (props) => {
                                                 ))
                                             ) : (
                                                 <div className='mt-4 ml-2'>
-                                                    <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} />
+                                                    {nameRole && !nameRole.toLowerCase().includes('residente') ? <NotificationsAlert to={`/admin/fines/create/${id}`} msg={` para agregar un multa.`} /> :
+                                                        <NotificationsAlert msg={`No hay multas`} />
+                                                    }
 
                                                 </div>
                                             )}

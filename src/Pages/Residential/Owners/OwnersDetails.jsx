@@ -48,7 +48,16 @@ export const OwnerDetail = () => {
 
   // User logged
 
-  const { idUserLogged } = useUserLogged()
+  const { idUserLogged, idRolLogged } = useUserLogged();
+
+  const { data: rols, get: getRols } = useFetch(url);
+
+  useEffect(() => {
+    getRols(`rols`);
+  }, []);
+
+  const nameRole = rols?.data?.rols?.find((rol) => rol.idrole == idRolLogged)?.namerole.toLowerCase();
+
 
   const [idOwner, setIdOwner] = useState(id)
   const [idUser, setIdUser] = useState("")
@@ -313,17 +322,17 @@ export const OwnerDetail = () => {
             <ContainerModule
 
               icon='user'
-              to='/admin/owners/'
+              to={nameRole && !nameRole.includes('residente') ? '/admin/owners/' : null}
 
               A1={`Propietario ${name}`}
               A2={`${lastName}`}
               // A3={`${docType} ${document}`}
               A5={`Correo electrónico: ${email}`}
               A6={`Teléfono: ${phone}`}
-              A7={pdf}
+              A7={nameRole && !nameRole.includes('residente') ? pdf : null}
               status={statusOwner}
               onClickEdit={openModalEdit}
-              actionOnClick2={statusOwner == 'Active' ? 'Desactivar' : 'Activar'}
+              actionOnClick2={nameRole && !nameRole.includes('residente') ? (statusOwner == 'Active' ? 'Desactivar' : 'Activar') : null}
               onClick2={() => ChangeStatusOwner(event)}
             />
 
@@ -337,7 +346,7 @@ export const OwnerDetail = () => {
 
             <DropdownInfo
               name={`Informacion personal`}
-              action1={'Editar informacion personal'}
+              action1={nameRole && !nameRole.includes('residente') ? 'Editar informacion personal' : null}
               onClickAction1={openModalEdit}
             >
 
@@ -358,7 +367,7 @@ export const OwnerDetail = () => {
 
             <DropdownInfo
               name={`Propiedades`}
-              action1={'Asignar apartamento'}
+              action1={nameRole && !nameRole.includes('residente') ? 'Asignar apartamento' : null}
               onClickAction1={openModalAssingApartmentToOwner}
             >
 

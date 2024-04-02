@@ -263,7 +263,8 @@ export const ParkingSpaces = () => {
                   status={parking.status}
                   icon='map-pin'
 
-                  onClick={() => openModal(parking)}
+                  onClick={nameRole && (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia')) ? null : () => openModal(parking)}
+
 
                 >
                   {/* {

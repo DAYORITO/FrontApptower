@@ -42,7 +42,16 @@ const GuestIncomeDetails = () => {
   const { id } = useParams();
   dotSpinner.register();
 
-  const { idUserLogged } = useUserLogged();
+  const { idUserLogged, idRolLogged } = useUserLogged();
+
+  const { data: rols, get: getRols } = useFetch(url);
+
+  useEffect(() => {
+    getRols(`rols`);
+  }, []);
+
+  const nameRole = rols?.data?.rols?.find((rol) => rol.idrole == idRolLogged)?.namerole.toLowerCase();
+
 
   // Socket
 
@@ -167,14 +176,14 @@ const GuestIncomeDetails = () => {
           <Spinner />
         ) : (
           <ContainerModule
-            to={"/admin/guest_income/"}
+            to={nameRole && !nameRole.includes('residente') ? "/admin/guest_income/" : `/admin/guest_income/details/${id}`}
             icon="arrow-up-right"
             A1={`Ingreso de `}
             A2={`${asociatedVisitor?.name} ${asociatedVisitor?.lastname}`}
-            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento " + asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
+            A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartamento " + asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
             A6={`Autoriza: ${personAllowsAccess}`}
             status={"Active"}
-            actionOnClick2={!departureDate ? "Marcar salida" : null}
+            actionOnClick2={!departureDate && nameRole && !nameRole.includes('residente') ? "Marcar salida" : null}
             onClick2={
               !departureDate
                 ? () => {

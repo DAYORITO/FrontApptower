@@ -86,8 +86,8 @@ export const filter = (search, myData, searcher, searcher2) => {
     console.log(searcher)
     data = myData.filter((dato) =>
       searcher2 != null ?
-        dato[searcher][searcher2].toLowerCase().includes(search.toLowerCase()) :
-        dato[searcher].toLowerCase().includes(search.toLowerCase())
+        dato[searcher] && dato[searcher][searcher2] && dato[searcher][searcher2].toLowerCase().includes(search.toLowerCase()) :
+        dato[searcher] && dato[searcher].toLowerCase().includes(search.toLowerCase())
 
     );
   }

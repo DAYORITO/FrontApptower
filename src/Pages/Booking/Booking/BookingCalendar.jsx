@@ -178,7 +178,7 @@ export const BookingCalendar = () => {
     const [events, setEvents] = useState([]);
 
 
-
+    const [isAllReservationsView, setIsAllReservationsView] = useState(id ? false : true);
 
 
     // se encarga de actualizar el calendario con las reservas y conversión de fechas
@@ -189,9 +189,13 @@ export const BookingCalendar = () => {
                 .filter(booking =>
                     nameRole.includes('residente')
                         ? booking.idResident === userResident
-                        : idSpace
-                            ? booking.Space.idSpace === idSpace
-                            : true
+                        : isAllReservationsView
+                            ? true
+                            : idSpace
+                                ? booking.Space.idSpace === idSpace
+                                : id
+                                    ? booking.Space.idSpace === parseInt(id)
+                                    : true
                 )
                 .map(booking => {
                     const startDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.StartTimeBooking}`);
