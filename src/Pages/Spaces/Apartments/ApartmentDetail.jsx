@@ -703,7 +703,7 @@ export const ApartmentDetails = (props) => {
 
                                                         onClickModal={() => handleModalEditApartmentResident(resident)}
 
-                                                        showEditIcon={!nameRole === 'vigilante'}
+                                                        showEditIcon={!nameRole.toLowerCase().includes('vigilante') && !nameRole.toLowerCase().includes('vigilancia') && !nameRole.toLowerCase().includes('seguridad')}
 
                                                     ></Dropdownanchor>
                                                 ))
