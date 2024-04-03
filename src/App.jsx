@@ -372,7 +372,7 @@ const App = () => {
 
                                 {/* Notifications */}
                                 <Route path='notifications' element={
-                                    allowedPermissions['Notificaciones'] ?
+                                    allowedPermissions['Notificaciones'] && allowedPermissions['Notificaciones'].includes('Listar') ?
                                         <Notifications /> : <NotFound />
                                 } />
 

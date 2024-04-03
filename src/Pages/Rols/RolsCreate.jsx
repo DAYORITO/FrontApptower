@@ -211,7 +211,7 @@ export const RolsCreate = () => {
                             <Accordion title={permiso.label}
                                 error={errors?.errors?.find(err => err.field === 'detailsRols')}
                                 isFirstAccordion={index === 0} >
-                                {permiso.options.map((opcion, optionIndex) => (
+                                {(permiso.label === 'Notificaciones' ? permiso.options.filter(opcion => opcion === 'Listar') : permiso.label === 'Visitantes' ? permiso.options.filter(opcion => opcion === 'Listar' || opcion === 'Crear') : permiso.label === 'Ingresos' ? permiso.options.filter(opcion => opcion === 'Listar' || opcion === 'Crear') : permiso.label === 'Multas' ? permiso.options.filter(opcion => opcion === 'Listar' || opcion === 'Crear') : permiso.options).map((opcion, optionIndex) => (
                                     console.log(opcion, 'opcion'),
                                     <Checkboxs
                                         key={optionIndex}
@@ -226,7 +226,7 @@ export const RolsCreate = () => {
                 </div>
 
 
-            </FormContainer>
+            </FormContainer >
         </>
     )
 

@@ -17,6 +17,7 @@ export const Booking = () => {
 
   const url = import.meta.env.VITE_API_URL
 
+
   const { data: spaces, get: getSpaces, loading } = useFetch(url)
 
   //Consulta Privilegios
