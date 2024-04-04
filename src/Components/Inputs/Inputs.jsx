@@ -149,7 +149,6 @@ function Inputs({
     if (errors) {
       setErrorMessageToShow(organizarErrores());
     }
-    console.log("errors en el input:", errors);
   }, [errors]);
 
   const togglePasswordVisibility = () => {

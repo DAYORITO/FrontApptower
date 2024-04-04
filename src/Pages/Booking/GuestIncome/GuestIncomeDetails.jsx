@@ -176,7 +176,7 @@ const GuestIncomeDetails = () => {
             A5={`Se dirige a: ${asociatedApartment?.apartmentName != null ? "apartmaento " + asociatedApartment?.apartmentName : "Sercivio del conjunto"}`}
             A6={`Autoriza: ${personAllowsAccess}`}
             status={"Active"}
-            actionOnClick2={!departureDate ? "Marcar salida" : null}
+            actionOnClick2={!departureDate ? "Registrar salida" : null}
             onClick2={
               !departureDate
                 ? () => {

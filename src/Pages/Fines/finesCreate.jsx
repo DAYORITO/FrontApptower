@@ -278,7 +278,7 @@ function FinesCreate() {
             required={true}
           ></Inputs>
           <InputTextArea
-            name="Descripción"
+            name="Detalles"
             identifier={"details"}
             errors={errors}
             onChange={(e) => {

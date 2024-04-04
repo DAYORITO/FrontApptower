@@ -78,7 +78,7 @@ function VisitorsCreate() {
         <Inputs name="Numero Documento" identifier={"documentNumber"} value={document} required={true} validateData={visitorsData?.data?.visitors} errors={errors} onChange={(e) => setDocument(e.target.value)} />
         <Inputs name="Nombre" identifier={"name"} value={name} errors={errors} onChange={(e) => setName(e.target.value)} />
         <Inputs name="Apellido" identifier={"lastname"} value={lastname} errors={errors} type="text" onChange={(e) => setLastName(e.target.value)} />
-        <InputsSelect name="Genero" identifier={"genre"} value={genre} errors={errors} options={sexs} onChange={(e) => setGenre(e.target.value)} />
+        <InputsSelect name="Género" identifier={"genre"} value={genre} errors={errors} options={sexs} onChange={(e) => setGenre(e.target.value)} />
 
 
       </FormContainer>
