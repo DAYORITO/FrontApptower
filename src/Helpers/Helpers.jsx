@@ -12,12 +12,11 @@ export const useUserLogged = () => {
   const [idRolLogged, setIdRolLogged] = useState('');
 
   useEffect(() => {
-    const encodedUser = Cookies.get('user');
+    const encodedUser = localStorage.getItem('user');
     if (encodedUser) {
-      const decodedUser = decodeURIComponent(encodedUser);
       let userLogged;
       try {
-        userLogged = JSON.parse(decodedUser);
+        userLogged = JSON.parse(encodedUser);
       } catch (error) {
         console.error("Error parsing decodedUser", error);
       }
@@ -87,8 +86,8 @@ export const filter = (search, myData, searcher, searcher2) => {
     console.log(searcher)
     data = myData.filter((dato) =>
       searcher2 != null ?
-        dato[searcher][searcher2].toLowerCase().includes(search.toLowerCase()) :
-        dato[searcher].toLowerCase().includes(search.toLowerCase())
+        dato[searcher] && dato[searcher][searcher2] && dato[searcher][searcher2].toLowerCase().includes(search.toLowerCase()) :
+        dato[searcher] && dato[searcher].toLowerCase().includes(search.toLowerCase())
 
     );
   }

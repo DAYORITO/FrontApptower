@@ -2,17 +2,18 @@
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
-    justify-content: space-between;
+    justify-content: flex-start !important;
+    align-content: flex-start !important;
     width: 100%;
 }
 
 .accordion-item {
     flex-basis: calc(29% - 8px);
+
 }
 
 .accordion-title {
     color: rgb(37, 37, 37);
-    /* background: linear-gradient(120deg, #d8d8d8, #c6deff93); */
     background: linear-gradient(90deg,
             rgba(4, 29, 58, 0.308) 0%,
             rgba(63, 118, 123, 0.521) 35%,

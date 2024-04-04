@@ -14,7 +14,6 @@ import { useParams } from "react-router"
 import Select2 from '../../../Components/Inputs/Select2'
 import { SmalSpinner, Spinner } from '../../../Components/Spinner/Spinner'
 import { createPortal } from 'react-dom'
-const token = Cookies.get('token');
 import Cookies from 'js-cookie';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -28,8 +27,6 @@ moment.updateLocale('es', {
 });
 
 export const BookingDetails = () => {
-
-    const token = Cookies.get('token');
     // API URL
 
     const url = import.meta.env.VITE_API_URL;

@@ -320,7 +320,7 @@ export const RolsEditNew = () => {
                                 error={error?.errors?.find(err => err.field === 'detailsRols')}
                                 isFirstAccordion={index === 0}
                             >
-                                {permiso.options.map((opcion, optionIndex) => (
+                                {(permiso.label === 'Notificaciones' ? permiso.options.filter(opcion => opcion === 'Listar') : permiso.label === 'Visitantes' || permiso.label === 'Ingresos' || permiso.label === 'Multas' ? permiso.options.filter(opcion => opcion === 'Listar' || opcion === 'Crear') : permiso.options).map((opcion, optionIndex) => (
                                     <Checkboxs
                                         key={optionIndex}
                                         label={opcion}

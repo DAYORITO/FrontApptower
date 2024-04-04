@@ -35,7 +35,6 @@ function Fines() {
     const [showModaload, setShowModaload] = useState(false);
     // const [search, setSearch] = useState('');
     dotSpinner.register()
-    const token = Cookies.get('token');
     const [showModal, setShowModal] = useState(false);
     const [evidenceFiles, setEvidenceFiles] = useState();
     const [paymentproof, setPaymentproof] = useState();

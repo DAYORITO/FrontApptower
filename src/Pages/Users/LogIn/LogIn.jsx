@@ -21,13 +21,9 @@ const LoginForm = ({ setShowLoginForm }) => {
     const { user, login, logout } = useAuth();
     const [username, setUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
-    const token = Cookies.get('token');
     const navigate = useNavigate();
     dotSpinner.register()
     const { error, setError } = useAuth();
-
-
-
 
 
     const handleLogin = async (event) => {

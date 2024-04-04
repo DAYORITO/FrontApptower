@@ -43,7 +43,6 @@ import { Uploader } from "../../Components/Uploader/Uploader";
 import { postRequest, useUserLogged } from "../../Helpers/Helpers";
 import { Table, ThInfo } from "../../Components/Table/Table";
 import { Thead } from "../../Components/Thead/Thead";
-const token = Cookies.get("token");
 import Cookies from "js-cookie";
 import { da } from "date-fns/locale";
 import Swal from "sweetalert2";
@@ -54,7 +53,7 @@ import { ModalContainerload, Modaload } from "../../Components/Modals/Modal";
 import { dotSpinner } from "ldrs";
 
 export const FinesDetail = () => {
-  const token = Cookies.get("token");
+
   // API URL
 
   const url = import.meta.env.VITE_API_URL;
@@ -63,7 +62,16 @@ export const FinesDetail = () => {
 
   const { id } = useParams();
 
-  const { idUserLogged } = useUserLogged();
+  const { idUserLogged, idRolLogged } = useUserLogged();
+
+  const { data: rols, get: getRols } = useFetch(url);
+
+  useEffect(() => {
+    getRols(`rols`);
+  }, []);
+
+  const nameRole = rols?.data?.rols?.find((rol) => rol.idrole == idRolLogged)?.namerole.toLowerCase();
+
   dotSpinner.register();
 
   // Socket
@@ -184,13 +192,21 @@ export const FinesDetail = () => {
           <Spinner />
         ) : (
           <ContainerModule
-            to={"/admin/fines/"}
+            to={nameRole && !nameRole.includes('residente') ? "/admin/fines/" : `/admin/fines/details/${id}`}
             icon="file-plus"
             A1={`Multa por `}
             A2={`${fineType}`}
             A5={`Multado por: ${userTaxer?.name} ${userTaxer?.lastName}`}
             A6={`Estado de pago: ${state}`}
-            actionOnClick2={paymentproof ? 'Cambiar comprobante' : 'Agregar comprobante de pago'}
+            actionOnClick2={
+              (nameRole && nameRole.includes('vigilante')) ||
+                (nameRole && nameRole.includes('seguridad')) ||
+                (nameRole && nameRole.includes('vigilancia'))
+                ? null
+                : paymentproof
+                  ? 'Cambiar comprobante'
+                  : 'Agregar comprobante de pago'
+            }
             // actionOnClick2={
             //   state !== "Pagada" ? "Agregar comprobante de pago" : state !== "Pagada" && paymentproof !== null ? "Cambiar comprobante": undefined
             // }
@@ -223,10 +239,10 @@ export const FinesDetail = () => {
 
         <InfoDetails>
 
-          <Acordions>
+          {nameRole && (nameRole.includes('vigilante') || nameRole.includes('seguridad') || nameRole.includes('vigilancia')) ? null : <Acordions>
             <DropdownInfo
               name={'Comprobante de pago'}
-              action1={'Agregar comporbante de pago'}
+              action1={'Agregar comprobante de pago'}
               onClickAction1={openProofFilesModal}
             >
               {loadingFines ? <SmalSpinner /> : paymentproof ? (
@@ -246,7 +262,9 @@ export const FinesDetail = () => {
                 <NotificationsAlert onClick={() => setShowModal(true)} msg={`agregar un comprobante.`} />
               </div>}
             </DropdownInfo>
-          </Acordions>
+          </Acordions>}
+
+
           <Acordions>
             <DropdownInfo
               name={`Informacion de la multa`}

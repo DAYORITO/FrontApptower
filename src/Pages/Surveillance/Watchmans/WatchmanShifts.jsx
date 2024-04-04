@@ -23,7 +23,7 @@ export const WatchmanShifts = () => {
     const [watchmanId, setWatchmanId] = useState(null);
     const [idUser, setIdUser] = useState(null);
 
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('token');
     const [userRole, setUserRole] = useState('');
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
@@ -67,7 +67,6 @@ export const WatchmanShifts = () => {
 
 
     useEffect(() => {
-        const shiftData = JSON.parse(localStorage.getItem(`shiftStarted_${watchmanId}`));
         if (shiftData && shiftData.started) {
             setStartDisabled(true);
             setEndDisabled(false);
@@ -95,8 +94,6 @@ export const WatchmanShifts = () => {
         setStartDisabled(true);
         setEndDisabled(false);
         setTurnState('Dentro de turno');
-
-        localStorage.setItem(`shiftStarted_${watchmanId}`, JSON.stringify({ started: true }));
 
         console.log('Data:', data);
 
@@ -134,7 +131,6 @@ export const WatchmanShifts = () => {
             setDisplayedEnd(new Date(data.end).toLocaleTimeString());
             setEndDisabled(true);
             setTurnState('Fuera de turno');
-            localStorage.setItem(`shiftStarted_${watchmanId}`, JSON.stringify({ started: false }));
 
             console.log('Data:', data);
 

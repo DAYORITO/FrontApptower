@@ -21,7 +21,8 @@ export const Aside = () => {
 
     const { user, login, logout } = useAuth();
 
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('token');
+
 
 
     const { idUserLogged, idRolLogged } = useUserLogged()
@@ -228,7 +229,7 @@ export const Aside = () => {
                                     allowedPermissions && allowedPermissions.includes('Reservas')
                                         ?
 
-                                        (nameRole?.toLowerCase()?.includes('residente'))
+                                        (nameRole && nameRole?.toLowerCase()?.includes('residente'))
                                             ? <ListNav module={'Reservas'} href='booking/calendar' icon='fe fe-calendar fe-24' />
                                             : <ListNav module={'Reservas'} href='booking' icon='fe fe-calendar fe-24' />
 
@@ -276,7 +277,7 @@ export const Aside = () => {
                                             {allowedPermissions.includes('Apartamentos') && (
 
                                                 (nameRole === 'Residente' || nameRole === 'Residentes') ?
-                                                    < DropDownList subprocess={"Apartamentos"} href={rutadetailsapartment} />
+                                                    < DropDownList subprocess={"Mi Apartamento"} href={rutadetailsapartment} />
                                                     : <DropDownList subprocess={"Apartamentos"} href='apartments/' ></DropDownList>
 
 
@@ -323,6 +324,7 @@ export const Aside = () => {
                         <ListNav module={'Salir'} onClick={e => {
                             e.preventDefault();
                             logout();
+
                         }} icon='fe fe-log-out fe-24' />
                     </div>
 

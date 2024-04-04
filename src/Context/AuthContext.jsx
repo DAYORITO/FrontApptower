@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
 
     console.log(error, 'error AuthContext');
 
+
     const login = async (usuario, password) => {
         setIsLoading(true);
         try {
@@ -28,6 +29,9 @@ export const AuthProvider = ({ children }) => {
             });
 
             const data = await response.json();
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('permisosAndPrivileges', JSON.stringify(data.permisosAndPrivileges));
 
             if (!response.ok) {
                 Swal.fire({
@@ -40,13 +44,12 @@ export const AuthProvider = ({ children }) => {
                 setIsLoggedIn(false);
                 setUser(null);
                 setError(data.errors);
-                Cookies.set('isLoggedIn', false);
+                localStorage.setItem('isLoggedIn', 'false');
                 return;
             }
 
             setError(response.errors);
 
-            Cookies.set('token', data.token);
             if (data.user && typeof data.user === 'string') {
                 try {
                     const user = JSON.parse(decodeURIComponent(data.user));
@@ -56,9 +59,8 @@ export const AuthProvider = ({ children }) => {
                 }
             }
             await fetchUserData(data.token);
-            Cookies.set('isLoggedIn', true);
+            localStorage.setItem('isLoggedIn', 'true');
             setIsLoggedIn(true);
-
 
 
             return data.token;
@@ -67,18 +69,52 @@ export const AuthProvider = ({ children }) => {
             console.error('Error de inicio de sesión:', error.message);
             setIsLoggedIn(false);
             setUser(null);
-            Cookies.set('isLoggedIn', false);
+            localStorage.setItem('isLoggedIn', 'false');
         } finally {
             setIsLoading(false);
         }
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            fetchUserData(token)
+                .then(() => setIsLoggedIn(true))
+                .catch(() => setIsLoggedIn(false))
+                .finally(() => setIsLoading(false));
+
+            const timer = setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('isLoggedIn', 'false');
+                localStorage.removeItem('user');
+                localStorage.removeItem('permisosAndPrivileges');
+                setIsLoggedIn(false);
+            }, 45 * 60 * 1000);
+
+            return () => clearTimeout(timer);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
+    const timerId = setTimeout(() => {
+        console.log('Esta función se ejecutará después de 5 segundos');
+    }, 5000);
+
+
+    clearTimeout(timerId);
+
 
     const fetchUserData = (token) => {
+        if (!token) {
+            console.error('Token not found in localStorage');
+            return;
+        }
         return fetch('https://apptowerbackend.onrender.com/api/login/access', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
             },
             credentials: 'include',
         })
@@ -95,7 +131,7 @@ export const AuthProvider = ({ children }) => {
                         if (user) {
                             setUser(user);
                             setIsLoggedIn(true);
-                            Cookies.set('isLoggedIn', 'true');
+                            localStorage.setItem('isLoggedIn', 'true');
                         }
                     } catch (e) {
                         console.error('Error parsing user data:', e);
@@ -106,12 +142,12 @@ export const AuthProvider = ({ children }) => {
                 console.error('Error al obtener el usuario:', error.message);
                 setIsLoggedIn(false);
                 setUser(null);
-                Cookies.set('isLoggedIn', 'false');
+                localStorage.setItem('isLoggedIn', 'false');
             });
     };
 
     useEffect(() => {
-        const token = Cookies.get('token');
+        const token = localStorage.getItem('token');
         if (token) {
             fetchUserData(token)
                 .then(() => setIsLoggedIn(true))
@@ -131,11 +167,10 @@ export const AuthProvider = ({ children }) => {
             cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.isConfirmed) {
-                Cookies.remove('token');
-                Cookies.remove('isLoggedIn');
-                Cookies.remove('user');
-                Cookies.remove('permisosAndPrivileges');
-                Cookies.remove('privileges');
+                localStorage.removeItem('token');
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('user');
+                localStorage.removeItem('permisosAndPrivileges');
                 setUser(null);
                 setIsLoggedIn(false);
                 Swal.fire({
@@ -145,10 +180,10 @@ export const AuthProvider = ({ children }) => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                window.location.href = '/#/';
             }
-
         });
-    }
+    };
     return (
         <AuthContext.Provider value={{ login, logout, isLoggedIn, isLoading, error, setError }}>
             {children}

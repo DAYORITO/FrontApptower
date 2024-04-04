@@ -71,8 +71,8 @@ export const BookingCalendar = () => {
 
     useEffect(() => {
 
-        setHourStart(spacesToBook?.data?.space?.openingTime)
-        setHourEnd(spacesToBook?.data?.space?.closingTime)
+        // setHourStart(spacesToBook?.data?.space?.openingTime)
+        // setHourEnd(spacesToBook?.data?.space?.closingTime)
         setMaxTime(spacesToBook?.data?.space?.maxTime)
         setMinTime(spacesToBook?.data?.space?.minTime)
     }, [spacesToBook])
@@ -178,7 +178,7 @@ export const BookingCalendar = () => {
     const [events, setEvents] = useState([]);
 
 
-
+    const [isAllReservationsView, setIsAllReservationsView] = useState(id ? false : true);
 
 
     // se encarga de actualizar el calendario con las reservas y conversión de fechas
@@ -189,9 +189,13 @@ export const BookingCalendar = () => {
                 .filter(booking =>
                     nameRole.includes('residente')
                         ? booking.idResident === userResident
-                        : idSpace
-                            ? booking.Space.idSpace === idSpace
-                            : true
+                        : isAllReservationsView
+                            ? true
+                            : idSpace
+                                ? booking.Space.idSpace === idSpace
+                                : id
+                                    ? booking.Space.idSpace === parseInt(id)
+                                    : true
                 )
                 .map(booking => {
                     const startDate = new Date(`${booking.StartDateBooking.split('T')[0]}T${booking.StartTimeBooking}`);
@@ -276,7 +280,6 @@ export const BookingCalendar = () => {
             idResident: idResident ? idResident : Number(userResident),
             StartDateBooking: selectedDate,
             StartTimeBooking: hourStart,
-            EndDateBooking: Date('0000-00-00T00:00:00.000Z'),
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
         }
@@ -309,7 +312,6 @@ export const BookingCalendar = () => {
             idSpace: idSpace,
             StartDateBooking: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             StartTimeBooking: hourStart,
-            EndDateBooking: new Date().toISOString().split('T')[0],
             EndTimeBooking: hourEnd,
             amountPeople: amountPeople,
             status: status

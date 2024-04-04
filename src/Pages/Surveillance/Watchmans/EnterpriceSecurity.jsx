@@ -286,7 +286,7 @@ export const EnterpriceSecurity = () => {
                                     errors={errorList}
                                     identifier={'nameEnterprice'}
                                 ></Inputs>
-                                <Inputs name="Dirección" type='text' value={address} onChange={e => { setAddress(e.target.value); setErrorList([]); }} required={false}
+                                <Inputs name="Dirección" type='text' value={address} onChange={e => { setAddress(e.target.value); setErrorList([]); }}
                                     errors={errorList}
                                     identifier={'address'}
                                 ></Inputs>
@@ -294,7 +294,7 @@ export const EnterpriceSecurity = () => {
                                     errors={errorList}
                                     identifier={'email'}
                                 ></Inputs>
-                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => { setPhone(e.target.value); setErrorList([]); }} required={false}
+                                <Inputs name="Teléfono" type='number' value={phone} onChange={e => { setPhone(e.target.value); setErrorList([]); }}
                                     errors={errorList}
                                     identifier={'phone'}
                                 ></Inputs>

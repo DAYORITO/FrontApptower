@@ -26,6 +26,8 @@ export const AssignShiftsWatchman = () => {
     const [lastNameWatchman, setLastNameWatchman] = useState('');
     const [idWatch, setIdWatch] = useState('');
     const [events, setEvents] = useState([]);
+    const [error, setError] = useState([]);
+    const [IsEditedShifs, setIsEditedShifs] = useState(false);
 
     console.log("idwatchman", idWatch)
 
@@ -64,13 +66,45 @@ export const AssignShiftsWatchman = () => {
         }
     }, [ShiftsData, idWatch]);
 
+    const [currentView, setCurrentView] = useState('week');
+    const [idShifts, setIdShifts] = useState('');
 
-    const handleSelectSlot = ({ start }) => {
-        if (dayjs(start).isAfter(dayjs().subtract(1, 'day'))) {
-            setSelectedDate(start);
+    const hadleSelectEvent = (event) => {
+        if (currentView === 'week') {
+            setIsEditedShifs(true);
+            setSelectedDate(event.start);
             setShowModal(true);
+            setStartHour(dayjs(event.start).format('HH:mm'));
+            setEndHour(dayjs(event.end).format('HH:mm'));
+            const selectedEvent = events.find(e => e.start === event.start && e.end === event.end);
+            if (selectedEvent) {
+                const { idshifts } = selectedEvent;
+                setIdShifts(idshifts);
+                console.log("idshifts holaaaaaa:", idshifts);
+            }
         }
     };
+
+
+
+    const handleSelectSlot = ({ start }) => {
+        console.log(`handleSelectSlot: startHour=${startHour}, endHour=${endHour}`);
+        const isExistingShift = events.some(event => dayjs(event.start).isSame(start, 'hour'));
+        if (isExistingShift) {
+            setSelectedDate(start);
+            setShowModal(true);
+            setIsEditedShifs(true);
+            setStartHour(dayjs(start).format('HH:mm'));
+            setEndHour(dayjs(start).add(1, 'hour').format('HH:mm'));
+        } else {
+            setSelectedDate(start);
+            setShowModal(true);
+            setIsEditedShifs(false);
+            setStartHour('');
+            setEndHour('');
+        }
+    };
+
 
     const dayPropGetter = date => {
         if (dayjs(date).isBefore(dayjs(), 'day')) {
@@ -87,24 +121,56 @@ export const AssignShiftsWatchman = () => {
         const data = {
             idwatchman: Number(idWatch),
             date: dayjs(selectedDate).format('YYYY-MM-DD'),
-            start: `${startHour}:00`,
-            end: `${endHour}:00`
+
         };
 
+        if (startHour) {
+            data.start = `${startHour}:00`;
+        }
+
+        if (endHour) {
+            data.end = `${endHour}:00`;
+        }
+
+
         try {
-            await postRequest(event, 'guardshifts', 'POST', setShowModal, data, url, 'Turno asignado exitosamente.');
+            await postRequest(event, 'guardshifts', 'POST', setShowModal, data, url, setError);
             getshifts('guardshifts');
         } catch (error) {
             console.error("Error creating guardshifts: ", error);
         }
     };
 
-    // useEffect(() => {
-    //     const elements = document.querySelectorAll('');
-    //     elements.forEach(element => {
-    //         element.style.marginLeft = '-100px';
-    //     });
-    // }, []);
+
+    const updateShifts = async (event) => {
+
+        console.log("idshifs", events)
+
+        const data = {
+            idwatchman: Number(idWatch),
+            date: dayjs(selectedDate).format('YYYY-MM-DD'),
+            idshifts: Number(idShifts)
+
+        };
+
+        if (startHour) {
+            data.start = `${startHour}:00`;
+        }
+
+        if (endHour) {
+            data.end = `${endHour}:00`;
+        }
+
+        try {
+            await postRequest(event, `guardshifts/${idShifts}`, 'PUT', setShowModal, data, url, setError);
+            getshifts('guardshifts');
+        } catch (error) {
+            console.error("Error creating guardshifts: ", error);
+        }
+
+    };
+
+
 
 
     const Label = (date) => {
@@ -131,6 +197,8 @@ export const AssignShiftsWatchman = () => {
                     events={events}
                     selectable
                     onSelectSlot={handleSelectSlot}
+                    onSelectEvent={hadleSelectEvent}
+                    onView={setCurrentView}
                     views={['week']}
                     view='week'
                     dayPropGetter={dayPropGetter}
@@ -156,11 +224,13 @@ export const AssignShiftsWatchman = () => {
             </ContainerCalendar>
             {showModal && selectedDate && createPortal(
                 <ModalContainer ShowModal={showModal}>
-                    <Modal onClick={createShifts} showModal={handleSelectSlot} title={`Asignar turno día ${dayjs(selectedDate).format('dddd')}`}>
+                    <Modal onClick={IsEditedShifs ? updateShifts : createShifts} showModal={handleSelectSlot}
+                        title={IsEditedShifs ? `Editar turno día ${dayjs(selectedDate).format('dddd')}` : `Asignar turno día ${dayjs(selectedDate).format('dddd')}`}
+                    >
                         <Inputs name="Vigilante" value={`${nameWatchan} ${lastNameWatchman}`} readonly={true} />
                         <Inputs name="Fecha Turno" type="date" value={selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : ''} onChange={e => setSelectedDate(e.target.value)} readonly={true} />
-                        <Inputs name="Hora Inicio" type="time" value={startHour} onChange={e => setStartHour(e.target.value)} />
-                        <Inputs name="Hora Fin" type="time" value={endHour} onChange={e => setEndHour(e.target.value)} />
+                        <Inputs name="Hora Inicio" type="time" value={startHour} onChange={e => setStartHour(e.target.value)} errors={error} identifier={'start'} />
+                        <Inputs name="Hora Fin" type="time" value={endHour} onChange={e => setEndHour(e.target.value)} errors={error} identifier={'end'} />
                     </Modal>
                 </ModalContainer>,
                 document.getElementById('modalRender')

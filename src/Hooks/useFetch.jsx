@@ -170,16 +170,16 @@ export const useFetchForFile = async (url, data, method = "POST") => {
 
     Object.keys(data).forEach((key) => {
       if (Array.isArray(data[key])) {
-          data[key].forEach((file) => {
-              formData.append(key, file);
-          });
+        data[key].forEach((file) => {
+          formData.append(key, file);
+        });
       } else {
-          formData.append(key, data[key]);
+        formData.append(key, data[key]);
       }
     });
-  for (let pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
 
     const response = await fetch(url, {
       method: method,
@@ -187,7 +187,7 @@ export const useFetchForFile = async (url, data, method = "POST") => {
       signal,
     });
 
-    
+
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -345,7 +345,7 @@ export const useAllowedPermissions = (idToPermissionName) => {
   const [allowedPermissions, setAllowedPermissions] = useState([]);
 
   useEffect(() => {
-    const PermissionsUser = Cookies.get("permisosAndPrivileges");
+    const PermissionsUser = localStorage.getItem("permisosAndPrivileges");
 
     if (PermissionsUser) {
       let privileges;
@@ -365,7 +365,6 @@ export const useAllowedPermissions = (idToPermissionName) => {
         const allowedPermissions = uniquePermissions.map(
           (id) => idToPermissionName[id]
         );
-
         setAllowedPermissions(allowedPermissions);
       }
     }
@@ -383,7 +382,7 @@ export const useAllowedPermissionsAndPrivileges = (
   const [allowedPermissions, setAllowedPermissions] = useState({});
 
   useEffect(() => {
-    const permisosAndPrivileges = Cookies.get("permisosAndPrivileges");
+    const permisosAndPrivileges = localStorage.getItem("permisosAndPrivileges");
 
     if (permisosAndPrivileges) {
       let privileges;
@@ -408,7 +407,7 @@ export const useAllowedPermissionsAndPrivileges = (
 
         setAllowedPermissions(allowedPermissions);
       } else {
-        console.log("No privileges found");
+        console.log("No permisosAndPrivileges found");
       }
     } else {
       console.log("No permisosAndPrivileges found");

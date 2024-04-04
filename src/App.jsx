@@ -73,7 +73,7 @@ const App = () => {
 
     console.log(online ? 'Online' : 'Offline')
 
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('token');
     const [userRole, setUserRole] = useState('');
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
@@ -218,9 +218,7 @@ const App = () => {
                                         : <NotFound />
                                 } /> */}
                                 <Route path='guest_income/details/:id' element={
-                                    allowedPermissions['Ingresos'] && allowedPermissions['Ingresos'].includes('Listar') ?
-                                        <GuestIncomeDetails />
-                                        : <NotFound />
+                                    <GuestIncomeDetails />
                                 } />
 
 
@@ -255,9 +253,9 @@ const App = () => {
                                 } />
 
                                 <Route path='fines/details/:id' element={
-                                    allowedPermissions['Multas'] && allowedPermissions['Multas'].includes('Listar') ?
-                                        <FinesDetail />
-                                        : <NotFound />
+
+                                    <FinesDetail />
+
                                 } />
 
 
@@ -289,17 +287,20 @@ const App = () => {
                                         : <NotFound />
                                 } />
 
-
-
                                 {/* Owners */}
                                 <Route path='owners' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
                                         <Owners /> : <NotFound />
                                 } />
 
-                                <Route path='owners/details/:id' element={
+                                {/* <Route path='owners/details/:id' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Listar') ?
                                         <OwnerDetail /> : <NotFound />
+                                } /> */}
+
+                                <Route path='owners/details/:id' element={
+
+                                    <OwnerDetail />
                                 } />
                                 <Route path='owners/create' element={
                                     allowedPermissions['Propietarios'] && allowedPermissions['Propietarios'].includes('Crear') ?
@@ -371,7 +372,7 @@ const App = () => {
 
                                 {/* Notifications */}
                                 <Route path='notifications' element={
-                                    allowedPermissions['Notificaciones'] ?
+                                    allowedPermissions['Notificaciones'] && allowedPermissions['Notificaciones'].includes('Listar') ?
                                         <Notifications /> : <NotFound />
                                 } />
 
@@ -413,8 +414,7 @@ const App = () => {
                                         <VehicleCreate /> : <NotFound />
                                 } />
                                 <Route path='vehicle/create/:id?' element={
-                                    allowedPermissions['Vehiculos'] && allowedPermissions['Vehiculos'].includes('Crear') ?
-                                        <VehicleCreate /> : <NotFound />
+                                    <VehicleCreate />
                                 } />
 
                                 <Route path="*" element={<NotFound />} />

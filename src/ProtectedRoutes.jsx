@@ -9,7 +9,7 @@ import { idToPermissionName, idToPrivilegesName } from "./Hooks/permissionRols";
 
 export const ProtectedRoutes = () => {
     const { isLoading, isLoggedIn } = useAuth();
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('token');
 
     const { data: userData, get: getUser, loading: loadingUser } = useFetchUserInformation(token);
 

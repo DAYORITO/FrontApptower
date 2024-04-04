@@ -28,7 +28,6 @@ import { SocketContext } from '../../../Context/SocketContext'
 
 
 export const Owners = () => {
-    const token = Cookies.get('token');
 
     // socket 
 
