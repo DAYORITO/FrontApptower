@@ -23,7 +23,7 @@ function FormButton({ name, funcion, disabled, backButton, to, onClick, bstyle }
 
   return (
     <>
-      <div className='d-flex justify-content-end mt-2' style={{ width: '100%', position: 'sticky', top: 0, backgroundColor: 'white', bstyle }}>
+      <div className='d-flex justify-content-end mt-2' style={{ width: '100%', position: 'sticky', top: 0, bottom: -110, paddingTop: 5, backgroundColor: 'white', bstyle }}>
         <div className="form-group mr-2">
           {loading ? (
             <button className="btn btn-primary" type="button" disabled>

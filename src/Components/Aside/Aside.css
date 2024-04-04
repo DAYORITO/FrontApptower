@@ -18,6 +18,24 @@
     transition: all 0.5s linear;
 }
 
+.tooltipAside {
+    width: 7.3%;
+    height: 10%;
+    transition: opacity 2s ease-in-out;
+    z-index: 10000;
+}
+
+.my-tooltip {
+    background-color: #333333f5 !important;
+    color: #fff !important;
+    border-radius: 9px !important;
+    padding: 10px !important;
+    font-size: 13px !important;
+    width: 85% !important;
+    height: auto !important;
+
+}
+
 /* Styles for the expanded version of the navigation bar */
 .myNav.expanded {
     min-width: 18%;
@@ -116,4 +134,3 @@
 .myNav.collapsed .myNav-header-img {
     display: none;
 }
-
