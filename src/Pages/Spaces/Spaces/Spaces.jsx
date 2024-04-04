@@ -20,6 +20,7 @@ import Cookies from 'js-cookie'
 import { Paginator } from "../../../Components/Paginator/Paginator";
 import { set } from "date-fns";
 import { SocketContext } from "../../../Context/SocketContext";
+import InputTextArea from "../../../Components/Inputs/InputTextArea";
 
 export const Spaces = () => {
 
@@ -83,6 +84,9 @@ export const Spaces = () => {
   const [maxTime, setMaxTime] = useState("");
   const [minTime, setMinTime] = useState("");
 
+  const [rules, setRules] = useState("");
+
+
   const [status, setStatus] = useState('');
 
   // Erros 
@@ -137,6 +141,7 @@ export const Spaces = () => {
 
       area: area,
       capacity: capacity,
+      rules: rules,
       status: status
 
     }
@@ -244,6 +249,16 @@ export const Spaces = () => {
 
                 <Inputs name="Capacidad" type={"number"} identifier={'capacity'} errors={errorList}
                   value={capacity} onChange={e => setCapacity(e.target.value)}></Inputs>
+
+                <InputTextArea
+                  value={rules}
+                  name="rules"
+                  identifier={"rules"}
+                  errors={errorList}
+                  onChange={(e) => {
+                    setRules(e.target.value);
+                  }}
+                ></InputTextArea>
 
 
                 <Inputs type={"hidden"}

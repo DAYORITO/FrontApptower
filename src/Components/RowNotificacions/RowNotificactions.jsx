@@ -33,23 +33,27 @@ export const RowNotificactions = ({
         ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}`
         : to?.booking && to?.resident
           ? `/admin/booking/details/${to.booking.idbooking}`
-          : to?.resident
+          : to?.resident?.idrole == 2
             ? `/admin/resident/details/${to.resident.iduser}`
-            : to?.apartment
-              ? `/admin/apartments/details/${to.apartment.idApartment}`
-              : to?.fine
-                ? `/admin/fines/details/${to.fine?.idFines}`
-                : to?.guest_income
-                  ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}`
-                  : to?.space
-                    ? `/admin/spaces/`
-                    : to?.idrole == 2
-                      ? `/admin/resident/details/${to.iduser}`
-                      : to?.idrole == 1
-                        ? `/admin/users/details/${to.iduser}`
-                        : to?.idrole == 3
-                          ? `/admin/watchman/details/${to.iduser}`
-                          : to;
+            : to?.resident?.idrole == 1
+              ? `/admin/users/details/${to.resident.iduser}`
+              : to?.resident
+                ? `/admin/resident/details/${to.resident.iduser}`
+                : to?.apartment
+                  ? `/admin/apartments/details/${to.apartment.idApartment}`
+                  : to?.fine
+                    ? `/admin/fines/details/${to.fine?.idFines}`
+                    : to?.guest_income
+                      ? `/admin/guest_income/details/${to.guest_income?.idGuest_income}`
+                      : to?.space
+                        ? `/admin/spaces/`
+                        : to?.idrole == 2
+                          ? `/admin/resident/details/${to.iduser}`
+                          : to?.idrole == 1
+                            ? `/admin/users/details/${to.iduser}`
+                            : to?.idrole == 3
+                              ? `/admin/watchman/details/${to.iduser}`
+                              : to;
 
   const handleLinkClick = (event) => {
     event.preventDefault();

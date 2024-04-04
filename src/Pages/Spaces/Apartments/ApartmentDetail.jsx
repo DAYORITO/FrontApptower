@@ -636,9 +636,9 @@ export const ApartmentDetails = (props) => {
                                                                 || nameRole.toLowerCase().includes('vigilancia')
                                                                 || nameRole.toLowerCase().includes('vigilante')
                                                                 ? null
-                                                                : "Asignar Parqueadero"
+                                                                : "Asignar propietario"
                                                         )
-                                                        : "Asignar Parqueadero"
+                                                        : "Asignar Propietario"
                                                 )
                                         }
                                         toAction1={`/admin/owners/create/${id}`}>
