@@ -148,7 +148,7 @@ function FinesCreate() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("antes de enviar: ", idApartment?.value);
-    const url = `http://localhost:3000/api/fines`;
+    const url = import.meta.env.VITE_API_URL + `fines`;
     const data = {
 
       // User logged
@@ -163,7 +163,7 @@ function FinesCreate() {
       details: description,
       state: "Pendiente",
       evidenceFiles: evidence,
-      iduser: parseInt(userData?.user.iduser),
+      iduser: idUserLogged,
     };
 
     console.log("Data:", data);
@@ -278,7 +278,7 @@ function FinesCreate() {
             required={true}
           ></Inputs>
           <InputTextArea
-            name="Descripción"
+            name="Detalles"
             identifier={"details"}
             errors={errors}
             onChange={(e) => {

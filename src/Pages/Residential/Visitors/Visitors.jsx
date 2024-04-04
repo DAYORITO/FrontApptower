@@ -85,6 +85,7 @@ function Visitors() {
   const [visitorname, setVisitorname] = useState("");
 
   //Se crean los estados para los datos del formulario
+  const [check2, setCheck2] = useState(false);
   const [apartment, setApartment] = useState(null);
   const [personAllowsAccesss, setPersonAllowsAccess] = useState("");
   const [observationss, setObservations] = useState("");
@@ -145,6 +146,13 @@ function Visitors() {
       setCheck1(false);
     }
   };
+  const handleChange2 = (e) => {
+    if (e.target.value === 'si') {
+      setCheck2(true)
+    } else {
+      setCheck2(false)
+    }
+  }
   function sortByCreatedAtDescending(data) {
     // Copia el array para no modificar el original
     const sortedData = [...data];
@@ -331,56 +339,48 @@ function Visitors() {
     setShowModaload(true);
 
     try {
-      console.log('Esta es la fecha de hoy', new Date());
       // Crear el guestIncome
-      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', {
-        "startingDate": new Date().toISOString(),
+      const formData ={
+        // User logged
+        "idUserLogged": idUserLogged,
+        "startingDate": new Date(),
         "departureDate": null,
-        "idApartment": apartment?.value,
         "personAllowsAccess": personAllowsAccesss,
         "observations": observationss ? observationss : "Sin observaciones",
         "idVisitor": visitor,
-      });
+      }
+      if(check2){
+        formData.idApartment = parseInt(apartment?.value);
+      }
+      if(check1){
+        formData.idParkingSpace = parkingGuestIncome
+        formData.isGuestIncomeVehicle = true
+      }
+      console.log("Form Data:", formData);
+      const { response: guestIncomeResponse, error: guestIncomeError } = await useFetchpost('guestIncome', formData);
 
       if (guestIncomeError) {
-        const errorData = guestIncomeError.errorData;
-        setErrors(errorData);
-        throw new Error('Error al crear el ingreso de huésped');
-      }
+        setErrors(guestIncomeError);
+        throw new Error('Error al crear el ingreso');
 
-      if (guestIncomeResponse && check1) {
-        // Crear el guestIncomeParking
-        const { response: guestIncomeParkingResponse, error: guestIncomeParkingError } = await useFetchpost('guestincomeparking', {
-          "idParkingSpace": parkingGuestIncome,
-          "idGuest_income": guestIncomeResponse.guestIncome.idGuest_income
-        });
-
-        if (guestIncomeParkingError) {
-          throw new Error('Error al crear el ingreso del huésped para el estacionamiento');
-        }
-
-        // Desactivar el espacio de estacionamiento
-        const { response: parkingResponse, error: parkingError } = await useFetchForFile(`${import.meta.env.VITE_API_URL}parkingSpaces`, {
-          "idParkingSpace": parkingGuestIncome,
-          "status": 'Inactive'
-        }, 'PUT');
-
-        if (parkingError) {
-          throw new Error('Error al desactivar el espacio de estacionamiento');
-        }
       }
 
       // Éxito
       setShowModaload(false);
+      setShowmodal(false);
+      setErrors({})
       console.log('Respuesta exitosa:', guestIncomeResponse);
       Swal.fire({
         title: 'Éxito',
         text: 'Ingreso creado exitosamente',
         icon: 'success',
       }).then(() => {
-        setShowmodal(false);
+
+        if (socket) { socket.disconnect(); socket.connect(); console.log('disconnect and re coneect socket') };
+        navigate(-1);
       });
     } catch (error) {
+
       setShowModaload(false);
       Swal.fire({
         title: 'Error',
@@ -443,7 +443,7 @@ function Visitors() {
           setSelectedFilterValue('');
           setVisitorsData(visitorsDataOriginal);
         }}></SearchSelect>}
-        search={selectedFilterParam == "access" ? <SearchSelect options={accessOptions} label="Buscar visitante" onChange={handleChangeFilter} /> : <SearchButton value={selectedFilterValue} label="Buscar visitante" onChange={handleChangeFilter} />}
+        search={selectedFilterParam === "access" ? <SearchSelect options={accessOptions} label="Buscar visitante" onChange={handleChangeFilter} /> : <SearchButton label="Buscar visitante" onChange={handleChangeFilter} />}
         buttonToGo={
           allowedPermissions['Visitantes'] && allowedPermissions['Visitantes'].includes('Crear')
             ? <ButtonGoTo value="Crear Visitante" href="/admin/visitors/create" />
@@ -545,20 +545,19 @@ function Visitors() {
           <>
             <ModalContainer ShowModal={setShowmodal}>
               <Modal title={"Crear Ingreso"} showModal={setShowmodal} onClick={handleSubmit}>
-                <InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value) }} options={towers} />
-                <div className="mb-4">
-                  <Select2 placeholder={'Apartamento'} identifier={"idApartment"} errors={errors} value={apartment} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue) }} options={selectedApartments}></Select2>
-                </div>
-
-                <Inputs name='Teléfono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs>
-
+              <InputsSelect name={"Ingreso por apartamento"} options={opciones} onChange={handleChange2} required={false} ></InputsSelect>
+              {check2 && 
+                <><InputsSelect name={'Torre'} onChange={(e) => { handleTowerChange(e.target.value); } } options={towers} /><div className="mb-4">
+                    <Select2 placeholder={'Apartamento'} identifier={"idApartment"} errors={errors} value={apartment} onChange={(selectedValue) => { handlePhoneSetted(selectedValue), setApartment(selectedValue); } } options={selectedApartments}></Select2>
+                  </div><Inputs name='Teléfono' readonly={true} value={phone} inputStyle={{ backgroundColor: '#F8F8F8' }}></Inputs></>
+                }
                 <div
                   className="d-flex justify-content-around"
                   style={{ width: "100%" }}
                 >
                   <div className="mr-1" style={{ width: "100%" }}>
                     <Inputs
-                      name={"Visitante"}
+                      name={"Nro. Documento"}
                       value={documentNumber}
                       readonly={true}
                     ></Inputs>
@@ -581,8 +580,9 @@ function Visitors() {
                 {/* <Inputs name="Apartamento" list={'opciones'} options={apartmentsOptions}></Inputs> */}
                 {check1 && (
                   <InputsSelect
-                    name="Parqueadero*"
-                    id={"tipoingreso"}
+                    name="Parqueadero"
+                    identifier={'idParkingSpace'}
+                    errors={errors}
                     onChange={(e) => setParkingGuestIncoming(e.target.value)}
                     options={parkingSpots}
                   ></InputsSelect>

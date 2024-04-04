@@ -193,7 +193,7 @@ function Fines() {
         let response = await useFetchForFile(`${import.meta.env.VITE_API_URL}fines`, dataToUpdate, 'PUT')
         // .then((responseData) => {
 
-        console.log("respuesta de api holi", response)
+        // console.log("respuesta de api holi", response)
         if (response.response != null) {
             setShowModaload(false);
             Swal.fire({
@@ -211,23 +211,22 @@ function Fines() {
                     if (dataToUpdate.paymentproof) {
                         fine.paymentproof = response.response.results.paymentproof;
                     }
-                    console.log("Encontrado! ", fine, "id", fine.idFines)
+                    // console.log("Encontrado! ", fine, "id", fine.idFines)
                     fine.state = dataToUpdate.state;
                 }
 
                 return fine;
 
             });
-            console.log("regiostro actualizado: ", updatedfine)
+            console.log("registro actualizado: ", updatedfine)
             setFines(updatedfine);
         } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
-                text: 'Algo salió mal!',
+                title: 'Actualizacion fallida',
+                text: 'Debes adjuntar un archivo y debe ser de extension jpeg, jpg, png o pdf',
             });
             setShowModaload(false);
-
         }
 
 
