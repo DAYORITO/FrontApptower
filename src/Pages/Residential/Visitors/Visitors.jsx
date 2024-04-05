@@ -27,7 +27,8 @@ import { set } from "date-fns";
 import Cookies from 'js-cookie'
 import { idToPermissionName, idToPrivilegesName } from '../../../Hooks/permissionRols'
 import { Spinner } from "../../../Components/Spinner/Spinner";
-import { useUserLogged } from "../../../Helpers/Helpers";
+import { usePaginator, useUserLogged } from "../../../Helpers/Helpers";
+import { Paginator } from "../../../Components/Paginator/Paginator";
 
 function Visitors() {
   const url = "https://apptowerbackend.onrender.com/api/";
@@ -391,11 +392,13 @@ function Visitors() {
     }
   }
 
-  const totalPages = visitorsData ? Math.ceil(visitorsData.length / 8) : 0;
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  // const totalPages = visitorsData ? Math.ceil(visitorsData.length / 8) : 0;
+  // const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
-  const [currentPage, setCurrentPage] = useState(0);
+  // const [currentPage, setCurrentPage] = useState(0);
+
+  const { totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataVisitor } = usePaginator(visitorsData, 4)
 
   const filteredDatavisitor = () => {
     if (visitorsData.length > 0) {
@@ -450,23 +453,24 @@ function Visitors() {
             : null
         }
         showPaginator={
-          <nav aria-label="Table Paging" className="mb- text-muted my-4">
-            <ul className="pagination justify-content-center mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-              </li>
-              {pageNumbers.map((pageNumber) => (
-                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-                  <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                </li>
-              ))}
+          // <nav aria-label="Table Paging" className="mb- text-muted my-4">
+          //   <ul className="pagination justify-content-center mb-0">
+          //     <li className="page-item">
+          //       <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
+          //     </li>
+          //     {pageNumbers.map((pageNumber) => (
+          //       <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
+          //         <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
+          //       </li>
+          //     ))}
 
 
-              <li className="page-item">
-                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-              </li>
-            </ul>
-          </nav >
+          //     <li className="page-item">
+          //       <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
+          //     </li>
+          //   </ul>
+          // </nav >
+          <Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage}></Paginator>
         }
       >
         <TablePerson>
@@ -479,7 +483,7 @@ function Visitors() {
           <Tbody>
             {LoadingSpine == true ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
               <Spinner />
-            </div> : filteredDatavisitor().map(visitor => (
+            </div> : filteredDataVisitor().map(visitor => (
               <Row
                 A3={visitor.documentType}
                 A4={visitor.documentNumber}
