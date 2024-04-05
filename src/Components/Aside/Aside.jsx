@@ -16,6 +16,8 @@ import { RowNotificactions } from '../RowNotificacions/RowNotificactions';
 import { NotificationsAlert } from '../NotificationsAlert/NotificationsAlert';
 import { SocketContext } from '../../Context/SocketContext';
 import { useUserLogged } from '../../Helpers/Helpers';
+import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
 
 export const Aside = () => {
 
@@ -326,9 +328,21 @@ export const Aside = () => {
                             logout();
 
                         }} icon='fe fe-log-out fe-24' />
+
+
                     </div>
 
                 </div>
+                {/* <img
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content='Creada por: Alejandra Aguirre, Emmanuel Tabares, Daniel'
+                    src='https://icons.veryicon.com/png/o/object/home-icon-5/home-clock.png'
+                    className="tooltipAside"
+                    data-tip="Horas"
+                    data-for="tooltip1"
+                />
+
+                <Tooltip id="my-tooltip" className="my-tooltip" /> */}
 
             </nav >
 

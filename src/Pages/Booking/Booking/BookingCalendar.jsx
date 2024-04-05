@@ -71,11 +71,14 @@ export const BookingCalendar = () => {
 
     useEffect(() => {
 
-        // setHourStart(spacesToBook?.data?.space?.openingTime)
-        // setHourEnd(spacesToBook?.data?.space?.closingTime)
+        setHourStart(spacesToBook?.data?.space?.openingTime)
         setMaxTime(spacesToBook?.data?.space?.maxTime)
-        setMinTime(spacesToBook?.data?.space?.minTime)
+        setHourEnd(`${maxTime + parseInt(hourStart)}:00:00`)
+
+
     }, [spacesToBook])
+
+
 
     const openBookingModal = (data) => {
 

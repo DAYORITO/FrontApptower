@@ -8,6 +8,7 @@ import InputsSelect from '../../../Components/Inputs/InputsSelect';
 import { spacesTypes } from '../../../Hooks/consts.hooks';
 import { postRequest } from '../../../Helpers/Helpers';
 import FormColumn from '../../../Components/Forms/FormColumn';
+import InputTextArea from '../../../Components/Inputs/InputTextArea';
 
 export const SpacesCreate = () => {
   const url = import.meta.env.VITE_API_URL;
@@ -21,6 +22,7 @@ export const SpacesCreate = () => {
   const [status, setStatus] = useState("Active");
   const [minTime, setMinTime] = useState(1);
   const [maxTime, setMaxTime] = useState(""); // Inicialmente establecido en 0
+  const [rules, setRules] = useState(""); // Inicialmente establecido en 0
 
   const [errorList, setErrorList] = useState([]);
   const navigate = useNavigate();
@@ -48,6 +50,7 @@ export const SpacesCreate = () => {
       maxTime: maxTime,
       area: area,
       capacity: capacity,
+      rules: rules,
       status: status
     };
 
@@ -72,6 +75,15 @@ export const SpacesCreate = () => {
         <Inputs min={1} max={24} name="Minimo de horas" type="number" identifier={'minTime'} errors={errorList} value={minTime} onChange={e => setMinTime(e.target.value)} />
         <Inputs min={1} max={24} name="Maximo de horas" type="number" identifier={'maxTime'} errors={errorList} value={maxTime} onChange={e => setMaxTime(e.target.value)} />
       </FormColumn>
+      <InputTextArea
+        value={rules}
+        name="rules"
+        identifier={"rules"}
+        errors={errorList}
+        onChange={(e) => {
+          setRules(e.target.value);
+        }}
+      ></InputTextArea>
       <Uploader label={'Foto de zona común'} name="img" onChange={e => setImage(e.target.files[0])} />
     </FormContainer>
   );

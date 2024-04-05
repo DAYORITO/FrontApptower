@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import './ContainerTable.css'
 
-export const ContainerTable = ({ title = 'Nombre modulo',search2 , children, dropdown, search, buttonToGo, showPaginator }) => {
+export const ContainerTable = ({ title = 'Nombre modulo', search2, children, dropdown, search, buttonToGo, showPaginator }) => {
 
 
     return (
