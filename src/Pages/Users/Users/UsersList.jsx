@@ -143,7 +143,11 @@ export const Users = () => {
                                             to={redirectTo}
                                         >
                                             {allowedPermissions['Usuarios'] && allowedPermissions['Usuarios'].includes('Editar') ? (
-                                                <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
+                                                <>
+                                                    <Actions accion='Editar' href={`/admin/users/edit/${user.iduser}`} />
+                                                    {user.pdf ? <Actions accion='Documento' icon='file' href={user.pdf} /> : null}
+                                                </>
+
                                             ) : null}
                                         </Row>
                                     );

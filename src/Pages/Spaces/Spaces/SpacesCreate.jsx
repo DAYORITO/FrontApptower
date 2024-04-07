@@ -77,7 +77,7 @@ export const SpacesCreate = () => {
       </FormColumn>
       <InputTextArea
         value={rules}
-        name="rules"
+        name="Reglas de la zona común"
         identifier={"rules"}
         errors={errorList}
         onChange={(e) => {
