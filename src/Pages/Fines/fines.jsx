@@ -23,8 +23,9 @@ import FileUploader from '../../Components/ImgContainer/FileSelector';
 import Inputs from '../../Components/Inputs/Inputs';
 import { Spinner } from '../../Components/Spinner/Spinner';
 import { fineTypes } from '../../Hooks/consts.hooks';
-import { useUserLogged } from '../../Helpers/Helpers';
+import { usePaginator, useUserLogged } from '../../Helpers/Helpers';
 import { NotificationsAlert } from '../../Components/NotificationsAlert/NotificationsAlert';
+import { Paginator } from '../../Components/Paginator/Paginator';
 
 
 
@@ -232,39 +233,31 @@ function Fines() {
 
     };
 
-
-    const totalPages = fines ? Math.ceil(fines.length / 8) : 0;
-    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+    const {totalPages, currentPage, nextPage, previousPage, filteredData: filteredDataFines}= usePaginator(fines, 4)
 
 
-    const [currentPage, setCurrentPage] = useState(0);
-
-    const filteredDatafines = () => {
-        if (nameRole && (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia'))) {
-            if (data && data.fines && fines.length > 0) {
-                const userFines = fines.filter(fine => fine.iduser === idUserLogged);
-                return userFines?.slice(currentPage * 8, currentPage * 8 + 8);
-            } else {
-                return [];
-            }
-        } else {
-            if (data && data.fines && fines.length > 0) {
-                return fines?.slice(currentPage * 8, currentPage * 8 + 8);
-            } else {
-                return [];
-            }
-        }
-    };
-
-    const nextPage = () => {
-        setCurrentPage(currentPage + 8)
-    }
+    // const totalPages = fines ? Math.ceil(fines.length / 8) : 0;
+    // const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
-    const PreviousPage = () => {
-        if (currentPage > 0)
-            setCurrentPage(currentPage - 8)
-    }
+    // const [currentPage, setCurrentPage] = useState(0);
+
+    // const filteredDatafines = () => {
+    //     if (nameRole && (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia'))) {
+    //         if (data && data.fines && fines.length > 0) {
+    //             const userFines = fines.filter(fine => fine.iduser === idUserLogged);
+    //             return userFines?.slice(currentPage * 8, currentPage * 8 + 8);
+    //         } else {
+    //             return [];
+    //         }
+    //     } else {
+    //         if (data && data.fines && fines.length > 0) {
+    //             return fines?.slice(currentPage * 8, currentPage * 8 + 8);
+    //         } else {
+    //             return [];
+    //         }
+    //     }
+    // };
 
 
 
@@ -288,24 +281,7 @@ function Fines() {
                         : null
                 }
                 showPaginator={
-                    <nav aria-label="Table Paging" className="mb- text-muted my-4">
-                        <ul className="pagination justify-content-center mb-0">
-                            <li className="page-item">
-                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); PreviousPage(); }}>Anterior</a>
-                            </li>
-                            {pageNumbers.map((pageNumber) => (
-                                <li key={pageNumber} className={`page-item ${currentPage + 1 === pageNumber ? 'active' : ''}`}>
-
-                                    <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); setCurrentPage((pageNumber - 1) * 10); }}>{pageNumber}</a>
-                                </li>
-                            ))}
-
-
-                            <li className="page-item">
-                                <a className="page-link" href="#" onClick={(event) => { event.preventDefault(); nextPage(); }}>Siguiente</a>
-                            </li>
-                        </ul>
-                    </nav >
+                  <Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage}></Paginator>
                 }
             >
                 <TablePerson>
@@ -321,7 +297,7 @@ function Fines() {
                     <Tbody>
                         {LoadingSpiner == true ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', position: 'fixed', left: '52%', top: '45%', transform: 'translate(-50%, -24%)' }}>
                             <Spinner />
-                        </div> : filteredDatafines()?.map(fine => (
+                        </div> : filteredDataFines()?.map(fine => (
                             <Row
                                 key={fine.idFines}
                                 A1={fine.fineType}
