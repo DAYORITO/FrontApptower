@@ -314,15 +314,15 @@ function GuestIncomeCreate() {
           console.log("Phone Number:", user.phone);
         } else {
           console.log("No phone number registered for this resident.");
-          setPhone("No se cuenta con un numero.");
+          setPhone("No aplica.");
         }
       } else {
         console.log("No active resident found for the selected apartment.");
-        setPhone("Nadie habita");
+        setPhone("No aplica");
       }
     } else {
       console.log("No data or apartmentResidents property found.");
-      setPhone("No se encontro el apartamento");
+      setPhone("No aplica");
     }
   };
 
