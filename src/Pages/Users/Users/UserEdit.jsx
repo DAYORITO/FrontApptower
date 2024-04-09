@@ -82,7 +82,6 @@ export const UsersEdit = () => {
                 pdf: user.pdf,
                 newFile: user.pdf,
                 status: user.status,
-                userImg: null,
 
             });
             setUsersData([user]);
@@ -155,7 +154,7 @@ export const UsersEdit = () => {
             try {
                 const formData = new FormData();
                 Object.keys(editedUser).forEach(key => {
-                    if (key === 'userImg' && editedUser[key] === null) {
+                    if ((key === 'userImg' || key === 'pdf' || key === 'newFile') && !editedUser[key]) {
                         return;
                     }
                     if (key === 'status') {

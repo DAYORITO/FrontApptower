@@ -108,6 +108,7 @@ export const Spaces = () => {
 
     setArea(data?.area)
     setCapacity(data?.capacity)
+    setRules(data?.rules)
 
     setOpeningTime(data?.openingTime)
     setClosingTime(data?.closingTime)
@@ -252,7 +253,7 @@ export const Spaces = () => {
 
                 <InputTextArea
                   value={rules}
-                  name="rules"
+                  name="Reglas de la zona común"
                   identifier={"rules"}
                   errors={errorList}
                   onChange={(e) => {

@@ -334,11 +334,15 @@ export const Watchman = () => {
                                                 to={`details/${watchman.iduser}`}
                                             >
                                                 {allowedPermissions['Vigilantes'] && allowedPermissions['Vigilantes'].includes('Editar') && (
-                                                    <Actions accion='Editar' onClick={(e) => {
-                                                        e.preventDefault();
-                                                        handleModal(watchman);
-                                                    }} />
+                                                    <>
+                                                        <Actions accion='Editar' onClick={(e) => {
+                                                            e.preventDefault();
+                                                            handleModal(watchman);
+                                                        }} />
+                                                        {watchman?.user?.pdf ? <Actions accion='Documento' icon='file' href={watchman?.user?.pdf} /> : null}
+                                                    </>
                                                 )}
+
 
                                                 <Actions accion='Asignar Turno' href={`/admin/watchman/assignshift/${watchman?.user?.iduser}`} />
                                             </Row>

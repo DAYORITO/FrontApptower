@@ -286,6 +286,25 @@ export const BookingDetails = () => {
 
                         </DropdownInfo>
 
+                        <Acordions>
+                            <DropdownInfo
+                                name={`Reglas del espacio: ${Space?.spaceName}`}
+                            // action1={'Agregar comporbante de pago'}
+                            // onClickAction1={openProofFilesModal}
+                            >
+                                <ul className='list-unstyled'>
+
+                                    <li>{`${Space?.rules ? Space?.rules : 'No Establecida'} `}  </li>
+
+                                    {/* <li>Genero: {sex == 'M' ? 'Mascualino' : 'Femenino'}</li> */}
+                                    {/* <li>{email}</li>
+<li>{phone}</li> */}
+
+
+                                </ul>
+                            </DropdownInfo>
+                        </Acordions>
+
                     </Acordions>
                     {
                         Space ?
@@ -313,6 +332,7 @@ export const BookingDetails = () => {
                                 </DropdownInfo>
                             </Acordions> : null
                     }
+
 
 
                 </InfoDetails>

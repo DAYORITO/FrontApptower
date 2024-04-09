@@ -120,7 +120,6 @@ export const Booking = () => {
         search={<SearchButton value={search} onChange={searcher} placeholder='Buscar zona común' />}
         showPaginator={<Paginator totalPages={totalPages} currentPage={currentPage} nextPage={nextPage} previousPage={previousPage} />}
         buttonToGo={<ButtonGoTo value='Todas las reservas' href='calendar/' />}
-        dropdown={nameRole ? (nameRole.toLowerCase().includes('vigilante') || nameRole.toLowerCase().includes('seguridad') || nameRole.toLowerCase().includes('vigilancia') ? null : <DropdownExcel table="bookings" />) : <DropdownExcel table="bookings" />}
 
       >
         <TablePerson>

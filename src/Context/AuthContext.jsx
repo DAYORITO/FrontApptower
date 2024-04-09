@@ -85,10 +85,18 @@ export const AuthProvider = ({ children }) => {
 
             const timer = setTimeout(() => {
                 localStorage.removeItem('token');
-                localStorage.removeItem('isLoggedIn', 'false');
+                localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('user');
                 localStorage.removeItem('permisosAndPrivileges');
                 setIsLoggedIn(false);
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Tu sesión ha expirado.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                window.location.href = '/#/';
             }, 45 * 60 * 1000);
 
             return () => clearTimeout(timer);

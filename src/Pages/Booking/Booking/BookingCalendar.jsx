@@ -71,7 +71,7 @@ export const BookingCalendar = () => {
 
     useEffect(() => {
 
-        setHourStart(spacesToBook?.data?.space?.openingTime)
+        // setHourStart(spacesToBook?.data?.space?.openingTime)
         setMaxTime(spacesToBook?.data?.space?.maxTime)
         setHourEnd(`${maxTime + parseInt(hourStart)}:00:00`)
 
@@ -79,6 +79,17 @@ export const BookingCalendar = () => {
     }, [spacesToBook])
 
 
+    const resetModal = () => {
+        setIsEditedBooking(false);
+        setIdSpace(Number(id));
+        setIdResident(null);
+        setDateStart(selectedDate);
+        setHourStart('');
+        setDateEnd('');
+        setHourEnd('');
+        setAmountPeople('');
+        setStatus('');
+    };
 
     const openBookingModal = (data) => {
 
@@ -96,6 +107,7 @@ export const BookingCalendar = () => {
             setDateEnd('')
             setHourEnd('')
             setAmountPeople('')
+            setShowModal(true)
 
 
         } else {
@@ -110,10 +122,10 @@ export const BookingCalendar = () => {
             setHourEnd(data.EndTimeBooking)
             setAmountPeople(data.amountPeople)
             setStatus(data.status)
-
+            setShowModal(true)
 
         }
-        setShowModal(true)
+
     }
 
 
@@ -124,6 +136,8 @@ export const BookingCalendar = () => {
     const { data: RolsData, get: getRols } = useFetch(url)
     const { data: ResidentData, get: getResident } = useFetch(url)
     const { data: BookingData, get: getBooking } = useFetch(url)
+
+    console.log(BookingData, 'BookingData')
 
     useEffect(() => {
 
@@ -221,7 +235,11 @@ export const BookingCalendar = () => {
     const handleSelectSlot = ({ start, data }) => {
         if (dayjs(start).isAfter(dayjs().subtract(1, 'day'))) {
             setSelectedDate(start);
-            setShowModal(true);
+            if (data) {
+                openBookingModal(data);
+            } else {
+                openBookingModal(null);
+            }
 
 
         }
@@ -405,6 +423,10 @@ export const BookingCalendar = () => {
      \n Horario de cierre: ${convertTo12HourFormat(HourEndSpace)}. 
 `;
 
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setIsEditedBooking(false);
+    };
 
 
     return (
@@ -433,20 +455,30 @@ export const BookingCalendar = () => {
                     }}
                     components={{
                         agenda: {
-                            event: ({ event }) => (
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                        <strong>{event.title}</strong>
-                                        <p>{event.status}</p>
+                            event: ({ event }) => {
+                                const booking = BookingData.data.booking.find(booking => booking.idbooking === event.id);
+                                return (
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <strong>{event.title}</strong>
+                                            {booking && <p>Estado: {booking.status}</p>}
+                                        </div>
+                                        {nameRole && nameRole.includes('residente') && booking && booking.status === 'Por revisar' ?
+                                            <Accions action1={'Editar'} onClickAction1={(e) => {
+                                                e.preventDefault();
+                                                handleSelectSlot(event);
+                                                openBookingModal(booking);
+                                            }} />
+                                            : nameRole && !nameRole.includes('residente') ?
+                                                <Accions action1={'Editar'} onClickAction1={(e) => {
+                                                    e.preventDefault();
+                                                    handleSelectSlot(event);
+                                                    openBookingModal(booking);
+                                                }} /> : null
+                                        }
                                     </div>
-                                    <Accions action1={'Editar'} onClickAction1={(e) => {
-                                        e.preventDefault();
-                                        const booking = BookingData.data.booking.find(booking => booking.idbooking === event.id);
-                                        handleSelectSlot(event);
-                                        openBookingModal(booking);
-                                    }} />
-                                </div>
-                            ),
+                                );
+                            },
                         },
                     }}
                     messages={{
